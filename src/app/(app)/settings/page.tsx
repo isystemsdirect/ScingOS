@@ -119,18 +119,12 @@ export default function SettingsPage() {
                 </Table>
             </CardContent>
             <CardFooter className="border-t p-6">
-                 <div className="grid w-full gap-4">
-                    <h4 className="text-md font-semibold">Add New Certification</h4>
-                    <div className="grid md:grid-cols-3 gap-4">
-                        <Input placeholder="Field of Inspection (e.g. Home Inspector)" />
-                        <Input placeholder="License or Certification ID" />
-                        <Input placeholder="Certifying Body (e.g. InterNACHI)" />
-                    </div>
-                    <div className="flex">
-                      <Button><PlusCircle className="mr-2 h-4 w-4" />Add Certification</Button>
-                      <p className="text-xs text-muted-foreground ml-auto">*Verification may take 24-48 hours.</p>
-                    </div>
-                 </div>
+                <Button asChild>
+                    <Link href="/settings/certifications/add">
+                        <PlusCircle className="mr-2 h-4 w-4" />Add Certification
+                    </Link>
+                </Button>
+                <p className="text-xs text-muted-foreground ml-auto">*Verification may take 24-48 hours.</p>
             </CardFooter>
           </Card>
           <Card>
