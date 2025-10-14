@@ -1,0 +1,206 @@
+
+{
+  "inspectionTypeCategories": [
+    {
+      "id": "A",
+      "name": "Pre-acquisition / Real-estate due diligence (10)",
+      "types": [
+        "General property condition assessment (PCA)",
+        "Residential home inspection (buyer)",
+        "Seller pre-listing inspection",
+        "Commercial building inspection (office/retail/industrial)",
+        "Multi-family due-diligence unit walks (sampled or 100%)",
+        "Roof condition survey (low-slope/steep)",
+        "ADA/Accessibility compliance survey",
+        "Site & pavement assessment (parking/sidewalks/curb/gutters)",
+        "Moisture intrusion/basement foundation survey",
+        "Seismic risk screening (RVS) / wind/hurricane risk screening"
+      ]
+    },
+    {
+      "id": "B",
+      "name": "Pre-design / Site & utilities (5)",
+      "types": [
+        "Boundary & topographic survey (with utility locates)",
+        "Geotechnical investigation/borings",
+        "Phase I environmental site assessment (ESA)",
+        "Wetlands/floodplain/erosion control review",
+        "Traffic/ingress–egress safety review"
+      ]
+    },
+    {
+      "id": "C",
+      "name": "Plan reviews / Permitting (4)",
+      "types": [
+        "Building code plan review",
+        "Fire/life-safety plan review",
+        "Structural peer review",
+        "Energy/compliance model review"
+      ]
+    },
+    {
+      "id": "D",
+      "name": "Construction phase QA/QC & special inspections (20)",
+      "types": [
+        "Excavation/trenching safety inspection",
+        "Footing/foundation inspection",
+        "Concrete placement (slump, cylinders, rebar)",
+        "Masonry special inspection",
+        "Structural steel bolting/welding",
+        "Cold-formed steel framing",
+        "Wood framing/sheathing",
+        "Firestopping/penetrations",
+        "Fireproofing thickness/adhesion",
+        "Roofing/waterproofing (membrane, flashing)",
+        "Exterior envelope (air/vapor barrier)",
+        "Window/curtain wall installation",
+        "Plumbing rough/pressure tests",
+        "Mechanical rough (duct, equipment set)",
+        "Electrical rough (raceways, bonding, grounding)",
+        "Low-voltage/IT/security rough",
+        "Insulation & air-sealing",
+        "Site utilities (water/sewer/storm/power)",
+        "Accessibility rough-in checks",
+        "Final building official inspection (CO readiness)"
+      ]
+    },
+    {
+      "id": "E",
+      "name": "Commissioning (Cx) & start-up (8)",
+      "types": [
+        "HVAC functional performance testing",
+        "Controls/BAS point-to-point",
+        "Air/water balancing (TAB)",
+        "Domestic hot water commissioning",
+        "Lighting controls/occupancy/daylight tuning",
+        "Emergency power/ATS/generator start-up",
+        "Life-safety systems integrated test (fire alarm + elevator + door holds)",
+        "O&M documentation/training verification"
+      ]
+    },
+    {
+      "id": "F",
+      "name": "Turnover / Close-out (5)",
+      "types": [
+        "Substantial completion punch list",
+        "Life-safety final (AHJ sign-off)",
+        "Elevator final acceptance",
+        "As-built/record drawings verification",
+        "Warranty baseline walk (day-0)"
+      ]
+    },
+    {
+      "id": "G",
+      "name": "Property management recurring (Ops) (30)",
+      "types": [
+        "Annual general building inspection",
+        "Unit turns/move-in/move-out inspections",
+        "Housekeeping/common area safety",
+        "Roofing semiannual walk (membrane, drains, penetrations)",
+        "Exterior walls/façade (balconies, sealants)",
+        "Parking lot & garage (structural/spalling/leak)",
+        "Sidewalk/trip hazard survey",
+        "Stair/handrail/guard compliance",
+        "Doors/hardware/egress checks",
+        "Fire doors annual inspection",
+        "Fire alarm annual inspection & testing",
+        "Sprinkler/standpipe annual inspection",
+        "Fire pump weekly/monthly runs & annual test",
+        "Portable extinguisher monthly/annual",
+        "Emergency lighting/exit signs monthly/annual",
+        "Smoke control/stair pressurization test (as required)",
+        "Elevator monthly + annual (with licensed inspector)",
+        "Boiler/pressure vessel annual (jurisdictional)",
+        "Cooling tower hygiene/Legionella program checks",
+        "Chiller/RTU seasonal start/layup",
+        "Electrical IR thermography (panels, switchgear)",
+        "Arc-flash labeling audit (interval)",
+        "Generator monthly runs/annual load test",
+        "Backflow preventer annual test",
+        "Domestic water quality checks (lead/copper sampling when needed)",
+        "Pool/spa daily/weekly (where applicable)",
+        "Playground ASTM compliance check",
+        "Pest management inspections",
+        "Security/CCTV/access control checks",
+        "Janitorial quality audits"
+      ]
+    },
+    {
+      "id": "H",
+      "name": "Incident / Forensic (6)",
+      "types": [
+        "Water loss/leak origin & mapping",
+        "Mold assessment & clearance",
+        "Fire damage structural assessment",
+        "Storm/hail/wind damage assessment",
+        "Settlement/structural movement monitoring",
+        "Insurance claim scope & cost validation"
+      ]
+    },
+    {
+      "id": "I",
+      "name": "Environmental / HSE (12)",
+      "types": [
+        "Phase II ESA (sampling)",
+        "Lead-based paint (LBP) inspection/risk assessment",
+        "Asbestos survey (pre-reno/demo) & clearance",
+        "Radon measurement/mitigation verification",
+        "Indoor air quality (IAQ) testing",
+        "Silica exposure checks (during work)",
+        "Hazardous materials storage/secondary containment",
+        "Spill prevention (SPCC) inspections",
+        "UST/AST inspections",
+        "Noise/vibration monitoring",
+        "Stormwater (SWPPP) inspections",
+        "OSHA general industry/site safety audits"
+      ]
+    },
+    {
+      "id": "J",
+      "name": "Regulated equipment (specialty) (15)",
+      "types": [
+        "Elevators/escalators/dumbwaiters (jurisdictional)",
+        "Boilers/pressure vessels (jurisdictional)",
+        "Cranes/hoists/overhead doors",
+        "Commercial kitchen hoods/suppression",
+        "Medical gas systems",
+        "Compressed air/steam systems",
+        "High-piled storage/rack stability",
+        "Lightning protection system (NFPA 780)",
+        "Fall-protection/anchorage inspections",
+        "Fire hydrant flow tests",
+        "Access control/egress interlocks",
+        "Smoke vents/heat vents (industrial)",
+        "Kilns/ovens/furnaces",
+        "Solar PV + rapid shutdown compliance",
+        "EVSE (EV charger) electrical safety checks"
+      ]
+    },
+    {
+      "id": "K",
+      "name": "Energy & sustainability (8)",
+      "types": [
+        "ASHRAE Level 1/2/3 energy audits",
+        "Blower door/duct leakage tests",
+        "Envelope thermal imaging survey",
+        "Benchmarking (ENERGY STAR) verification",
+        "Retro-commissioning (RCx)",
+        "Utility sub-meter verification",
+        "Renewables performance inspection (PV, solar thermal)",
+        "Green certifications periodic verification (LEED/O&M, BREEAM In-Use)"
+      ]
+    },
+    {
+      "id": "L",
+      "name": "Lender/insurer (6)",
+      "types": [
+        "Lender PCNA/PCRA (with reserve study)",
+        "CAT risk (wind/hail/seismic) underwriting surveys",
+        "Builder’s risk inspections (during construction)",
+        "Vacancy/security risk checks",
+        "Fire protection impairment audits",
+        "Business interruption risk surveys"
+      ]
+    }
+  ]
+}

@@ -9,8 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { InspectionTypeList } from "@/components/inspection-type-list";
 
 export default function NewInspectionPage() {
   return (
@@ -31,26 +30,16 @@ export default function NewInspectionPage() {
             </div>
             <Card>
               <CardHeader>
-                <CardTitle>Step 1: Property Details</CardTitle>
+                <CardTitle>Step 1: Select Inspection Type</CardTitle>
                 <CardDescription>
-                  Enter the address of the property you are inspecting.
+                  Choose the type of inspection you are performing from the list below.
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid gap-6">
-                  <div className="grid gap-3">
-                    <Label htmlFor="address">Property Address</Label>
-                    <Input
-                      id="address"
-                      type="text"
-                      className="w-full"
-                      placeholder="123 Main Street, Anytown, USA"
-                    />
-                  </div>
-                  <Button className="w-full sm:w-auto self-end">
-                    Next: Select Devices
-                  </Button>
-                </div>
+                <InspectionTypeList />
+                <Button className="w-full sm:w-auto mt-6">
+                    Next: Property Details
+                </Button>
               </CardContent>
             </Card>
           </div>
@@ -59,5 +48,3 @@ export default function NewInspectionPage() {
     </div>
   );
 }
-
-    
