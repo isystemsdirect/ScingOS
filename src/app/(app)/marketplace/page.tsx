@@ -1,5 +1,5 @@
 import Image from "next/image"
-import { ListFilter, MapPin, Search, Star } from "lucide-react"
+import { ListFilter, MapPin, Search, Star, ShieldCheck } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -98,8 +98,9 @@ export default function MarketplacePage() {
                 <p className="font-semibold text-sm mb-2">Certifications</p>
                 <div className="flex flex-wrap gap-2">
                   {inspector.certifications.map((cert) => (
-                    <Badge key={cert} variant="secondary">
-                      {cert}
+                    <Badge key={cert.id} variant="secondary" className="gap-1">
+                      <ShieldCheck className="h-3 w-3" />
+                      {cert.name}
                     </Badge>
                   ))}
                 </div>

@@ -1,3 +1,4 @@
+
 {
   "entities": {
     "user": {
@@ -22,23 +23,33 @@
         },
         "certifications": {
           "type": "array",
+          "description": "A list of the user's professional certifications.",
           "items": {
             "type": "object",
             "properties": {
               "name": {
-                "type": "string"
+                "type": "string",
+                "description": "The name of the certification (e.g., InterNACHI Certified Professional Inspector)."
               },
               "id": {
-                "type": "string"
+                "type": "string",
+                "description": "The license or certification number."
+              },
+              "certifyingBody": {
+                "type": "string",
+                "description": "The organization that issued the certification (e.g., InterNACHI)."
               },
               "expiresAt": {
                 "type": "string",
-                "format": "date"
+                "format": "date",
+                "description": "The expiration date of the certification."
               },
               "verified": {
-                "type": "boolean"
+                "type": "boolean",
+                "description": "Indicates if the certification has been verified by Scingular."
               }
-            }
+            },
+            "required": ["name", "id", "certifyingBody"]
           }
         },
         "companyId": {

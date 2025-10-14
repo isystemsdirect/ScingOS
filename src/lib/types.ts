@@ -31,6 +31,14 @@ export type Inspection = {
   executiveSummary: string;
 };
 
+export type Certification = {
+  name: string;
+  id: string;
+  certifyingBody: string;
+  expiresAt: string;
+  verified: boolean;
+};
+
 export type Inspector = {
   id: string;
   name: string;
@@ -38,7 +46,7 @@ export type Inspector = {
   imageHint: string;
   rating: number;
   reviews: number;
-  certifications: string[];
+  certifications: Certification[];
   location: string;
   onCall: boolean;
 };

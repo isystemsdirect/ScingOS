@@ -90,10 +90,62 @@ export const mockInspections: Inspection[] = [
 ];
 
 export const mockInspectors: Inspector[] = [
-  { id: 'USR-001', name: 'John Doe', avatarUrl: getImageUrl('avatar1'), imageHint: getImageHint('avatar1'), rating: 4.9, reviews: 124, certifications: ['InterNACHI Certified', 'Licensed Drone Pilot', 'Level II Thermographer'], location: 'Anytown, CA', onCall: true },
-  { id: 'USR-002', name: 'Jane Smith', avatarUrl: getImageUrl('avatar2'), imageHint: getImageHint('avatar2'), rating: 4.8, reviews: 98, certifications: ['CCPIA Certified', 'LiDAR Specialist'], location: 'Anytown, CA', onCall: false },
-  { id: 'USR-003', name: 'Mike Johnson', avatarUrl: getImageUrl('avatar3'), imageHint: getImageHint('avatar3'), rating: 4.9, reviews: 210, certifications: ['Master Inspector', 'Sonar & Underwater Certified'], location: 'Someville, TX', onCall: true },
-  { id: 'USR-004', name: 'Emily White', avatarUrl: getImageUrl('avatar4'), imageHint: getImageHint('avatar4'), rating: 5.0, reviews: 75, certifications: ['InterNACHI Certified', 'Spectrometer Analyst'], location: 'Anytown, CA', onCall: true },
+  { 
+    id: 'USR-001', 
+    name: 'John Doe', 
+    avatarUrl: getImageUrl('avatar1'), 
+    imageHint: getImageHint('avatar1'), 
+    rating: 4.9, 
+    reviews: 124, 
+    certifications: [
+      { name: 'InterNACHI Certified Professional Inspector', id: 'NACHI230101', certifyingBody: 'InterNACHI', expiresAt: '2025-01-01', verified: true },
+      { name: 'Licensed Drone Pilot (Part 107)', id: 'FA3LCE123', certifyingBody: 'Federal Aviation Administration', expiresAt: '2024-06-15', verified: true },
+      { name: 'Level II Thermographer', id: 'ITC-456B', certifyingBody: 'Infrared Training Center', expiresAt: '2026-11-30', verified: false },
+    ], 
+    location: 'Anytown, CA', 
+    onCall: true 
+  },
+  { 
+    id: 'USR-002', 
+    name: 'Jane Smith', 
+    avatarUrl: getImageUrl('avatar2'), 
+    imageHint: getImageHint('avatar2'), 
+    rating: 4.8, 
+    reviews: 98, 
+    certifications: [
+        { name: 'Commercial Property Inspector', id: 'CCPIA-789', certifyingBody: 'CCPIA', expiresAt: '2025-03-20', verified: true },
+        { name: 'LiDAR Scanning Professional', id: 'LSP-2023-XYZ', certifyingBody: 'National Geodetic Survey', expiresAt: '2024-12-01', verified: false },
+    ], 
+    location: 'Anytown, CA', 
+    onCall: false 
+  },
+  { 
+    id: 'USR-003', 
+    name: 'Mike Johnson', 
+    avatarUrl: getImageUrl('avatar3'), 
+    imageHint: getImageHint('avatar3'), 
+    rating: 4.9, 
+    reviews: 210, 
+    certifications: [
+        { name: 'Certified Master Inspector', id: 'CMI-001', certifyingBody: 'InterNACHI', expiresAt: '2025-01-01', verified: true },
+        { name: 'Commercial Diving Supervisor', id: 'ADS-1234', certifyingBody: 'Association of Diving Contractors', expiresAt: '2024-08-01', verified: true },
+    ], 
+    location: 'Someville, TX', 
+    onCall: true 
+  },
+  { 
+    id: 'USR-004', 
+    name: 'Emily White', 
+    avatarUrl: getImageUrl('avatar4'), 
+    imageHint: getImageHint('avatar4'), 
+    rating: 5.0, 
+    reviews: 75, 
+    certifications: [
+        { name: 'Spectrometer Analyst', id: 'SPEC-987', certifyingBody: 'Coblentz Society', expiresAt: '2025-07-22', verified: false },
+    ], 
+    location: 'Anytown, CA', 
+    onCall: true 
+  },
 ];
 
 export const mockDevices: Device[] = [

@@ -10,7 +10,8 @@ import {
 } from "@/components/ui/card";
 import { mockInspectors } from "@/lib/data";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { Briefcase, Calendar, Edit, Mail, MapPin, Phone, Star } from "lucide-react";
+import { Briefcase, Calendar, Edit, Mail, MapPin, Phone, Star, ShieldCheck } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 
 export default function ProfilePage() {
   const user = mockInspectors[0];
@@ -85,13 +86,24 @@ export default function ProfilePage() {
                 </div>
             </div>
 
+            <Separator />
+
             <div>
                 <h3 className="text-xl font-semibold">Certifications</h3>
-                <div className="flex flex-wrap gap-2 mt-4">
+                <div className="space-y-4 mt-4">
                 {user.certifications.map((cert) => (
-                    <Badge key={cert} variant="secondary" className="text-base py-1 px-3">
-                    {cert}
-                    </Badge>
+                    <div key={cert.id} className="flex items-start gap-4">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted">
+                            <ShieldCheck className="h-6 w-6 text-primary" />
+                        </div>
+                        <div className="flex-1">
+                            <p className="font-semibold">{cert.name}</p>
+                            <p className="text-sm text-muted-foreground">
+                                ID: {cert.id} {cert.verified && <Badge variant="secondary" className="ml-2">Verified</Badge>}
+                            </p>
+                            <p className="text-xs text-muted-foreground">Expires: {cert.expiresAt}</p>
+                        </div>
+                    </div>
                 ))}
                 </div>
             </div>
