@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   MoreHorizontal,
   PlusCircle,
@@ -100,7 +101,11 @@ export default function DevicesPage() {
                       {getStatusIcon(device.status)}
                     </div>
                   </TableCell>
-                  <TableCell className="font-medium">{device.name}</TableCell>
+                  <TableCell className="font-medium">
+                     <Link href={`/devices/${device.id}`} className="hover:underline">
+                      {device.name}
+                    </Link>
+                  </TableCell>
                   <TableCell>
                     <Badge variant="outline">{device.type.replace('Key-', '')}</Badge>
                   </TableCell>
@@ -110,28 +115,10 @@ export default function DevicesPage() {
                   <TableCell className="hidden md:table-cell">
                     {device.lastSeen}
                   </TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          aria-haspopup="true"
-                          size="icon"
-                          variant="ghost"
-                        >
-                          <MoreHorizontal className="h-4 w-4" />
-                          <span className="sr-only">Toggle menu</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem>View Logs</DropdownMenuItem>
-                        <DropdownMenuItem>Update Firmware</DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem className="text-destructive">
-                          Unregister
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                  <TableCell className="text-right">
+                     <Button asChild size="sm">
+                        <Link href={`/devices/${device.id}`}>View Dashboard</Link>
+                     </Button>
                   </TableCell>
                 </TableRow>
               ))}
