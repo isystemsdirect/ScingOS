@@ -106,7 +106,7 @@ export default function SettingsPage() {
               </div>
             </CardContent>
             <CardFooter className="border-t px-6 py-4">
-                <Button>Save Availability</Button>
+                <Button>Save Changes</Button>
             </CardFooter>
           </Card>
           <Card>
