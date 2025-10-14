@@ -95,6 +95,7 @@ export const mockInspectors: Inspector[] = [
     name: 'John Doe', 
     avatarUrl: getImageUrl('avatar1'), 
     imageHint: getImageHint('avatar1'), 
+    bio: "With over 15 years of experience in residential and commercial inspections, I specialize in structural assessments and thermal imaging. My goal is to provide clients with a thorough and unbiased evaluation of their property. I'm a certified InterNACHI inspector and a licensed drone pilot.",
     rating: 4.9, 
     reviews: 124, 
     certifications: [
@@ -110,6 +111,7 @@ export const mockInspectors: Inspector[] = [
     name: 'Jane Smith', 
     avatarUrl: getImageUrl('avatar2'), 
     imageHint: getImageHint('avatar2'), 
+    bio: "I am a CCPIA certified commercial property inspector with a focus on large-scale projects and LiDAR scanning. I provide detailed 3D models and data analysis for developers and property managers.",
     rating: 4.8, 
     reviews: 98, 
     certifications: [
@@ -124,6 +126,7 @@ export const mockInspectors: Inspector[] = [
     name: 'Mike Johnson', 
     avatarUrl: getImageUrl('avatar3'), 
     imageHint: getImageHint('avatar3'), 
+    bio: "As a Certified Master Inspector and a former commercial diver, I have a unique skill set for inspecting underwater structures, bridges, and other marine infrastructure.",
     rating: 4.9, 
     reviews: 210, 
     certifications: [
@@ -138,6 +141,7 @@ export const mockInspectors: Inspector[] = [
     name: 'Emily White', 
     avatarUrl: getImageUrl('avatar4'), 
     imageHint: getImageHint('avatar4'), 
+    bio: "My expertise is in materials science and analysis. I use advanced spectrometry to detect and identify potential issues with building materials, from asbestos to Chinese drywall.",
     rating: 5.0, 
     reviews: 75, 
     certifications: [

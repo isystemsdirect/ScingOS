@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { mockInspectors } from "@/lib/data"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
+import { Label } from "@/components/ui/label"
 
 export default function SettingsPage() {
   const user = mockInspectors[0];
@@ -32,13 +33,21 @@ export default function SettingsPage() {
               <div className="grid gap-6">
                 <div className="grid grid-cols-2 gap-4">
                     <div className="grid gap-3">
-                        <label htmlFor="name">Full Name</label>
-                        <Input id="name" type="text" className="w-full" defaultValue="John Doe" />
+                        <Label htmlFor="name">Full Name</Label>
+                        <Input id="name" type="text" className="w-full" defaultValue={user.name} />
                     </div>
                     <div className="grid gap-3">
-                        <label htmlFor="email">Email</label>
+                        <Label htmlFor="email">Email</Label>
                         <Input id="email" type="email" className="w-full" defaultValue="john.doe@scingular.com" />
                     </div>
+                </div>
+                 <div className="grid gap-3">
+                    <Label htmlFor="bio">Professional Bio</Label>
+                    <Textarea id="bio" defaultValue={user.bio} placeholder="Tell us about your experience, specialties, and what makes you a great inspector." />
+                </div>
+                 <div className="grid gap-3">
+                    <Label htmlFor="profile-picture">Profile Picture</Label>
+                    <Input id="profile-picture" type="file" />
                 </div>
               </div>
             </CardContent>
@@ -102,18 +111,32 @@ export default function SettingsPage() {
             <CardHeader>
               <CardTitle>Company Details</CardTitle>
               <CardDescription>
-                Update your company's branding and information.
+                Update your company's branding and information. This is optional for freelance inspectors.
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid gap-6">
                  <div className="grid gap-3">
-                    <label htmlFor="company-name">Company Name</label>
+                    <Label htmlFor="company-name">Company Name</Label>
                     <Input id="company-name" type="text" className="w-full" defaultValue="Doe Inspections LLC" />
                 </div>
-                <div className="grid gap-3">
-                    <label htmlFor="logo">Company Logo</label>
-                    <Input id="logo" type="file" />
+                 <div className="grid md:grid-cols-2 gap-4">
+                    <div className="grid gap-3">
+                        <Label htmlFor="company-phone">Company Phone</Label>
+                        <Input id="company-phone" type="tel" placeholder="(555) 555-5555"/>
+                    </div>
+                    <div className="grid gap-3">
+                        <Label htmlFor="company-logo">Company Logo</Label>
+                        <Input id="company-logo" type="file" />
+                    </div>
+                </div>
+                 <div className="grid gap-3">
+                    <Label htmlFor="company-address">Company Address</Label>
+                    <Input id="company-address" type="text" placeholder="123 Business Rd, Suite 100" />
+                </div>
+                 <div className="grid gap-3">
+                    <Label htmlFor="company-bio">Company Bio</Label>
+                    <Textarea id="company-bio" placeholder="Describe your company's mission, services, and values." />
                 </div>
               </div>
             </CardContent>

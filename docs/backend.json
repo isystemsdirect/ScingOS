@@ -15,6 +15,10 @@
           "format": "email",
           "description": "The user's email address."
         },
+        "bio": {
+          "type": "string",
+          "description": "A short professional biography of the user."
+        },
         "roles": {
           "type": "array",
           "items": {
@@ -68,6 +72,14 @@
       "properties": {
         "name": {
           "type": "string"
+        },
+        "bio": {
+          "type": "string",
+          "description": "A description of the company."
+        },
+        "phone": {
+          "type": "string",
+          "description": "The company's primary phone number."
         },
         "billingCustomerId": {
           "type": "string"

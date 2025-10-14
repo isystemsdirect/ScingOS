@@ -69,6 +69,13 @@ export default function ProfilePage() {
             </div>
 
             <div className="grid gap-4">
+                <h3 className="text-xl font-semibold">About Me</h3>
+                <p className="text-sm text-muted-foreground">{user.bio}</p>
+            </div>
+            
+            <Separator />
+
+            <div className="grid gap-4">
                 <h3 className="text-xl font-semibold">Contact Information</h3>
                 <div className="grid md:grid-cols-2 gap-4 text-sm">
                     <div className="flex items-center gap-3">

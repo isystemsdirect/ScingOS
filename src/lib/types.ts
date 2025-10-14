@@ -44,6 +44,7 @@ export type Inspector = {
   name: string;
   avatarUrl: string;
   imageHint: string;
+  bio: string;
   rating: number;
   reviews: number;
   certifications: Certification[];
