@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { CircleUser, Home, LineChart, Package, Package2, PanelLeft, Search, Settings, ShoppingCart, Users2, PlusCircle, Trash2 } from "lucide-react"
+import { CircleUser, Home, LineChart, Package, Package2, PanelLeft, Search, Settings, ShoppingCart, Users2, PlusCircle, Trash2, Globe, Linkedin, Facebook } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -48,6 +48,32 @@ export default function SettingsPage() {
                     <Label htmlFor="bio">Professional Bio</Label>
                     <Textarea id="bio" defaultValue={user.bio} placeholder="Tell us about your experience, specialties, and what makes you a great inspector." />
                 </div>
+                <Separator />
+                 <div className="grid gap-6">
+                    <h4 className="text-lg font-semibold">Website & Socials</h4>
+                    <div className="grid gap-3">
+                        <Label htmlFor="website">Website</Label>
+                         <div className="relative">
+                            <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Input id="website" type="url" placeholder="https://your-website.com" className="pl-9" />
+                        </div>
+                    </div>
+                     <div className="grid md:grid-cols-3 gap-4">
+                         <div className="grid gap-3">
+                            <Label htmlFor="whatsapp">WhatsApp</Label>
+                            <Input id="whatsapp" type="tel" placeholder="+15551234567" />
+                        </div>
+                         <div className="grid gap-3">
+                            <Label htmlFor="facebook">Facebook</Label>
+                            <Input id="facebook" type="text" placeholder="yourprofile" />
+                        </div>
+                         <div className="grid gap-3">
+                            <Label htmlFor="linkedin">LinkedIn</Label>
+                            <Input id="linkedin" type="text" placeholder="yourprofile" />
+                        </div>
+                    </div>
+                </div>
+                 <Separator />
                  <div className="grid gap-3">
                     <Label htmlFor="profile-picture">Profile Selfie</Label>
                     <Input id="profile-picture" type="file" accept="image/*" />
