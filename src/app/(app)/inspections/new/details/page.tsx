@@ -2,7 +2,7 @@
 'use client';
 
 import Link from "next/link";
-import { ChevronLeft, PlusCircle, User, Users } from "lucide-react";
+import { ChevronLeft, PlusCircle, User, Users, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -53,7 +53,10 @@ export default function NewInspectionDetailsPage() {
                     <h3 className="font-semibold text-lg">Property Address</h3>
                     <div className="grid gap-3">
                         <Label htmlFor="street-address">Street Address</Label>
-                        <Input id="street-address" placeholder="123 Main St" />
+                        <div className="relative">
+                          <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                          <Input id="street-address" placeholder="Search for an address..." className="pl-9" />
+                        </div>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div className="grid gap-3">
@@ -114,4 +117,3 @@ export default function NewInspectionDetailsPage() {
     </div>
   );
 }
-
