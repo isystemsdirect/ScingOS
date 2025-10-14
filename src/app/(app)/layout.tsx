@@ -85,6 +85,10 @@ export default function AppLayout({
                 <Users className="h-4 w-4" />
                 Clients
               </NavLink>
+               <NavLink href="/teams">
+                <Users className="h-4 w-4" />
+                Teams
+              </NavLink>
               <NavLink href="/library">
                 <Library className="h-4 w-4" />
                 Standards Library
@@ -167,6 +171,10 @@ export default function AppLayout({
                 <NavLink href="/clients" isMobile>
                   <Users className="h-5 w-5" />
                   Clients
+                </NavLink>
+                 <NavLink href="/teams" isMobile>
+                  <Users className="h-5 w-5" />
+                  Teams
                 </NavLink>
                 <NavLink href="/library" isMobile>
                   <Library className="h-5 w-5" />
