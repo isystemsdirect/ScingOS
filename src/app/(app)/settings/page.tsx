@@ -12,6 +12,7 @@ import { mockInspectors } from "@/lib/data"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
 
 export default function SettingsPage() {
   const user = mockInspectors[0];
@@ -56,6 +57,28 @@ export default function SettingsPage() {
             </CardContent>
             <CardFooter className="border-t px-6 py-4">
               <Button>Save Profile</Button>
+            </CardFooter>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Marketplace Availability</CardTitle>
+              <CardDescription>
+                Control your visibility in the inspector marketplace.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between rounded-lg border p-4">
+                <div>
+                  <h4 className="font-medium">Available for Dispatch</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Enable this to appear as 'On-Call' and available for immediate dispatch requests from the marketplace.
+                  </p>
+                </div>
+                <Switch defaultChecked={user.onCall} />
+              </div>
+            </CardContent>
+            <CardFooter className="border-t px-6 py-4">
+                <Button>Save Availability</Button>
             </CardFooter>
           </Card>
           <Card>
