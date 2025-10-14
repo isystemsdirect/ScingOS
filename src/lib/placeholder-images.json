@@ -1,3 +1,70 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero",
+      "description": "Abstract architectural lines of a modern building",
+      "imageUrl": "https://picsum.photos/seed/hero/1920/1080",
+      "imageHint": "architecture building"
+    },
+    {
+      "id": "avatar1",
+      "description": "Avatar of an inspector",
+      "imageUrl": "https://picsum.photos/seed/avatar1/100/100",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "avatar2",
+      "description": "Avatar of another inspector",
+      "imageUrl": "https://picsum.photos/seed/avatar2/100/100",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "avatar3",
+      "description": "Avatar of a third inspector",
+      "imageUrl": "https://picsum.photos/seed/avatar3/100/100",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "avatar4",
+      "description": "Avatar of a fourth inspector",
+      "imageUrl": "https://picsum.photos/seed/avatar4/100/100",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "inspection-roof",
+      "description": "A drone shot of a residential roof",
+      "imageUrl": "https://picsum.photos/seed/roof1/600/400",
+      "imageHint": "roof house"
+    },
+    {
+      "id": "inspection-foundation",
+      "description": "A crack in a concrete foundation",
+      "imageUrl": "https://picsum.photos/seed/foundation1/600/400",
+      "imageHint": "concrete crack"
+    },
+    {
+      "id": "inspection-electrical",
+      "description": "An open electrical panel",
+      "imageUrl": "https://picsum.photos/seed/electrical1/600/400",
+      "imageHint": "electrical panel"
+    },
+    {
+      "id": "inspection-plumbing",
+      "description": "Pipes under a sink with a small leak",
+      "imageUrl": "https://picsum.photos/seed/plumbing1/600/400",
+      "imageHint": "pipes plumbing"
+    },
+    {
+      "id": "inspection-thermal",
+      "description": "A thermal image of a wall showing heat loss",
+      "imageUrl": "https://picsum.photos/seed/thermal1/600/400",
+      "imageHint": "thermal image"
+    },
+    {
+      "id": "inspection-lidar",
+      "description": "A 3D lidar scan of a room",
+      "imageUrl": "https://picsum.photos/seed/lidar1/600/400",
+      "imageHint": "3d scan"
+    }
+  ]
 }
