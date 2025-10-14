@@ -1,3 +1,4 @@
+
 'use client'
 
 import Link from "next/link";
@@ -70,9 +71,11 @@ export default function Dashboard() {
             <p className="text-sm text-muted-foreground">Here's a summary of your activity.</p>
         </div>
         <div className="ml-auto flex items-center gap-2">
-            <Button>
+            <Button asChild>
+              <Link href="/inspections/new">
                 <PlusCircle className="h-4 w-4 mr-2" />
                 Start New Inspection
+              </Link>
             </Button>
              <Button variant="outline">
                 <Cpu className="h-4 w-4 mr-2" />
@@ -225,3 +228,5 @@ export default function Dashboard() {
     </div>
   );
 }
+
+    

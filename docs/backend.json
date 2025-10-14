@@ -153,6 +153,59 @@
           "items": { "type": "string" }
         }
       }
+    },
+    "telemetry": {
+      "title": "Telemetry",
+      "description": "A telemetry event from a device.",
+      "type": "object",
+      "properties": {
+        "keyId": {
+          "type": "string"
+        },
+        "deviceId": {
+          "type": "string"
+        },
+        "inspectionId": {
+          "type": "string"
+        },
+        "timestampUtc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "location": {
+          "type": "object",
+          "properties": {
+            "lat": {
+              "type": "number"
+            },
+            "lng": {
+              "type": "number"
+            },
+            "alt": {
+              "type": "number"
+            }
+          }
+        },
+        "payloadType": {
+          "type": "string",
+          "enum": [
+            "lidar_pointcloud",
+            "video_chunk",
+            "image",
+            "spectra",
+            "sonar_ping",
+            "thermal_frame",
+            "audio_chunk"
+          ]
+        },
+        "payloadRef": {
+          "type": "string",
+          "format": "uri"
+        },
+        "metadata": {
+          "type": "object"
+        }
+      }
     }
   },
   "auth": {
@@ -178,6 +231,12 @@
     "/standards/{standardId}": {
       "schema": { "$ref": "#/entities/standard" },
       "description": "Inspection standards"
+    },
+    "/telemetry/{telemetryId}": {
+      "schema": { "$ref": "#/entities/telemetry" },
+      "description": "Telemetry events"
     }
   }
 }
+
+    

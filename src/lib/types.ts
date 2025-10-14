@@ -1,3 +1,4 @@
+
 export type InspectionStatus = "Draft" | "In Progress" | "Inspector Approved" | "Client Approved" | "Final";
 export type DeviceKey = "Key-Drone" | "Key-LiDAR" | "Key-Thermal" | "Key-Spectrometer" | "Key-Sonar" | "Key-VideoHD" | "Key-Audio" | "Key-GPS";
 
@@ -69,3 +70,27 @@ export type SubscriptionPlan = {
   isCurrent?: boolean;
   cta: string;
 };
+
+export type TelemetryEvent = {
+  keyId: string;
+  deviceId: string;
+  inspectionId?: string;
+  timestampUtc: string;
+  location?: {
+    lat: number;
+    lng: number;
+    alt?: number;
+  };
+  payloadType:
+    | 'lidar_pointcloud'
+    | 'video_chunk'
+    | 'image'
+    | 'spectra'
+    | 'sonar_ping'
+    | 'thermal_frame'
+    | 'audio_chunk';
+  payloadRef?: string;
+  metadata?: Record<string, any>;
+};
+
+    
