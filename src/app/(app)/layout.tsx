@@ -99,7 +99,7 @@ export default function AppLayout({
               </NavLink>
               <NavLink href="/devices">
                 <Cpu className="h-4 w-4" />
-                Devices
+                Workstation Max
               </NavLink>
               <NavLink href="/finances">
                 <DollarSign className="h-4 w-4" />
@@ -186,7 +186,7 @@ export default function AppLayout({
                 </NavLink>
                 <NavLink href="/devices" isMobile>
                   <Cpu className="h-5 w-5" />
-                  Devices
+                  Workstation Max
                 </NavLink>
                 <NavLink href="/finances" isMobile>
                   <DollarSign className="h-5 w-5" />
