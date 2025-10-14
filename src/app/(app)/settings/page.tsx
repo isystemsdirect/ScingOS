@@ -46,8 +46,11 @@ export default function SettingsPage() {
                     <Textarea id="bio" defaultValue={user.bio} placeholder="Tell us about your experience, specialties, and what makes you a great inspector." />
                 </div>
                  <div className="grid gap-3">
-                    <Label htmlFor="profile-picture">Profile Picture</Label>
-                    <Input id="profile-picture" type="file" />
+                    <Label htmlFor="profile-picture">Profile Selfie</Label>
+                    <Input id="profile-picture" type="file" accept="image/*" />
+                    <p className="text-xs text-muted-foreground">
+                        For verification, please upload a clear photo of your face. Photos without a detectable face will be rejected.
+                    </p>
                 </div>
               </div>
             </CardContent>
