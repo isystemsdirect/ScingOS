@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import Link from "next/link";
@@ -60,8 +61,10 @@ export default function NewInspectionPage() {
                 <CardContent>
                    <InspectionTypeList selectionMode="multiple" />
                    <Separator className="my-6" />
-                   <Button className="w-full sm:w-auto">
-                    Next: Add Property Details
+                   <Button className="w-full sm:w-auto" asChild>
+                     <Link href="/inspections/new/details">
+                        Next: Add Property Details
+                     </Link>
                   </Button>
                 </CardContent>
               </Card>

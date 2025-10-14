@@ -206,6 +206,40 @@
           "type": "object"
         }
       }
+    },
+    "client": {
+      "title": "Client",
+      "description": "A client for whom an inspection is performed.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The client's full name."
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "The client's email address."
+        },
+        "phone": {
+          "type": "string",
+          "description": "The client's phone number."
+        },
+        "address": {
+          "type": "object",
+          "properties": {
+            "street": { "type": "string" },
+            "city": { "type": "string" },
+            "state": { "type": "string" },
+            "zip": { "type": "string" }
+          },
+          "description": "The client's mailing address."
+        },
+        "createdAt": {
+          "type": "number"
+        }
+      },
+      "required": ["name", "email"]
     }
   },
   "auth": {
@@ -235,8 +269,10 @@
     "/telemetry/{telemetryId}": {
       "schema": { "$ref": "#/entities/telemetry" },
       "description": "Telemetry events"
+    },
+    "/clients/{clientId}": {
+        "schema": { "$ref": "#/entities/client"},
+        "description": "Inspection clients"
     }
   }
 }
-
-    

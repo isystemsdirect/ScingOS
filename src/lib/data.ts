@@ -1,4 +1,4 @@
-import type { Inspection, Inspector, Device, SubscriptionPlan } from './types';
+import type { Inspection, Inspector, Device, SubscriptionPlan, Client } from './types';
 import { PlaceHolderImages } from './placeholder-images';
 
 const getImageUrl = (id: string) => PlaceHolderImages.find(p => p.id === id)?.imageUrl || '';
@@ -215,4 +215,47 @@ export const mockSubscriptionPlans: SubscriptionPlan[] = [
     ],
     cta: "Contact Sales"
   },
+];
+
+
+export const mockClients: Client[] = [
+    {
+        id: "CLI-001",
+        name: "Stark Industries",
+        email: "contact@stark.com",
+        phone: "212-555-0100",
+        address: {
+            street: "10880 Malibu Point",
+            city: "Malibu",
+            state: "CA",
+            zip: "90265"
+        },
+        createdAt: "2023-01-15T00:00:00Z"
+    },
+    {
+        id: "CLI-002",
+        name: "Wayne Enterprises",
+        email: "info@wayne-ent.com",
+        phone: "212-555-0199",
+        address: {
+            street: "1007 Mountain Drive",
+            city: "Gotham City",
+            state: "NJ",
+            zip: "07001"
+        },
+        createdAt: "2023-02-20T00:00:00Z"
+    },
+    {
+        id: "CLI-003",
+        name: "Cyberdyne Systems",
+        email: "hr@cyberdyne.com",
+        phone: "408-555-0155",
+        address: {
+            street: "18144 El Camino Real",
+            city: "Sunnyvale",
+            state: "CA",
+            zip: "94087"
+        },
+        createdAt: "2023-05-10T00:00:00Z"
+    }
 ];

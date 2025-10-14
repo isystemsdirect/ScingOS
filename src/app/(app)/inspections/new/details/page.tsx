@@ -1,0 +1,117 @@
+
+'use client';
+
+import Link from "next/link";
+import { ChevronLeft, PlusCircle, User, Users } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
+import { mockClients } from "@/lib/data";
+import { ClientForm } from "@/components/client-form";
+
+export default function NewInspectionDetailsPage() {
+
+  return (
+    <div className="flex min-h-screen w-full flex-col">
+      <div className="flex flex-col sm:gap-4 sm:py-4">
+        <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 max-w-4xl mx-auto w-full">
+          <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
+            <div className="flex items-center gap-4">
+              <Link href="/inspections/new">
+                <Button variant="outline" size="icon" className="h-7 w-7">
+                  <ChevronLeft className="h-4 w-4" />
+                  <span className="sr-only">Back</span>
+                </Button>
+              </Link>
+              <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
+                New Inspection: Details
+              </h1>
+            </div>
+            <Card>
+              <CardHeader>
+                <CardTitle>Step 3: Property & Client Information</CardTitle>
+                <CardDescription>
+                  Enter the address of the property to be inspected and the client's details.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="grid gap-8">
+                <div className="grid gap-4">
+                    <h3 className="font-semibold text-lg">Property Address</h3>
+                    <div className="grid gap-3">
+                        <Label htmlFor="street-address">Street Address</Label>
+                        <Input id="street-address" placeholder="123 Main St" />
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div className="grid gap-3">
+                            <Label htmlFor="city">City</Label>
+                            <Input id="city" placeholder="Anytown" />
+                        </div>
+                        <div className="grid gap-3">
+                            <Label htmlFor="state">State / Province</Label>
+                            <Input id="state" placeholder="CA" />
+                        </div>
+                        <div className="grid gap-3">
+                            <Label htmlFor="zip">ZIP / Postal Code</Label>
+                            <Input id="zip" placeholder="12345" />
+                        </div>
+                    </div>
+                </div>
+
+                <Separator />
+
+                <div className="grid gap-4">
+                     <h3 className="font-semibold text-lg">Client Information</h3>
+                    <Tabs defaultValue="new-client">
+                        <TabsList className="grid w-full grid-cols-2">
+                            <TabsTrigger value="new-client"><PlusCircle className="mr-2 h-4 w-4"/>Add New Client</TabsTrigger>
+                            <TabsTrigger value="existing-client"><Users className="mr-2 h-4 w-4" />Select Existing Client</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="new-client">
+                            <ClientForm />
+                        </TabsContent>
+                        <TabsContent value="existing-client">
+                            <div className="grid gap-4 pt-4">
+                               <div className="space-y-4">
+                                {mockClients.map(client => (
+                                    <button key={client.id} className="w-full text-left p-4 rounded-lg border flex items-center gap-4 hover:bg-muted/50 transition-colors">
+                                        <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center">
+                                            <User className="h-5 w-5 text-muted-foreground" />
+                                        </div>
+                                        <div>
+                                            <p className="font-semibold">{client.name}</p>
+                                            <p className="text-sm text-muted-foreground">{client.email}</p>
+                                        </div>
+                                    </button>
+                                ))}
+                               </div>
+                            </div>
+                        </TabsContent>
+                    </Tabs>
+                </div>
+
+                <Separator />
+                <Button className="w-full sm:w-auto">Review & Confirm</Button>
+
+              </CardContent>
+            </Card>
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+}
+

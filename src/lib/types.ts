@@ -1,4 +1,5 @@
 
+
 export type InspectionStatus = "Draft" | "In Progress" | "Inspector Approved" | "Client Approved" | "Final";
 export type DeviceKey = "Key-Drone" | "Key-LiDAR" | "Key-Thermal" | "Key-Spectrometer" | "Key-Sonar" | "Key-VideoHD" | "Key-Audio" | "Key-GPS";
 
@@ -93,4 +94,16 @@ export type TelemetryEvent = {
   metadata?: Record<string, any>;
 };
 
-    
+export type Client = {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+    address: {
+        street: string;
+        city: string;
+        state: string;
+        zip: string;
+    };
+    createdAt: string;
+};
