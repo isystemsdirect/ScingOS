@@ -90,7 +90,7 @@ export default function LandingPage() {
             <div className="mb-4 inline-block rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
               The Future of Inspection is Here
             </div>
-            <h1 className="font-headline text-4xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl lg:text-7xl">
+            <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl lg:text-7xl">
               AI-Powered Inspections with{" "}
               <span className="text-primary">Scingular</span>
             </h1>
@@ -113,10 +113,10 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section id="features" className="w-full bg-card/50 py-20 md:py-32">
+        <section id="features" className="w-full bg-muted/20 py-20 md:py-32">
           <div className="container mx-auto">
             <div className="text-center">
-              <h2 className="font-headline text-3xl font-bold text-foreground sm:text-4xl">
+              <h2 className="text-3xl font-bold text-foreground sm:text-4xl">
                 A Revolutionary Feature Set
               </h2>
               <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
@@ -126,10 +126,10 @@ export default function LandingPage() {
             </div>
             <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               {features.map((feature) => (
-                <Card key={feature.title} className="bg-background/70 shadow-lg transition-transform hover:scale-105 hover:shadow-xl">
+                <Card key={feature.title} className="bg-background/70 shadow-lg transition-transform hover:scale-105 hover:shadow-primary/10">
                   <CardHeader className="flex flex-row items-center gap-4 pb-4">
                     {feature.icon}
-                    <CardTitle className="font-headline text-xl">{feature.title}</CardTitle>
+                    <CardTitle className="text-xl">{feature.title}</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <p className="text-muted-foreground">
