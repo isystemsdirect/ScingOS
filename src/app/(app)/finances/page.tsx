@@ -60,47 +60,6 @@ export default function FinancesPage() {
         </Card>
       </div>
 
-      <Card>
-        <CardHeader>
-            <CardTitle>Subscription Plan</CardTitle>
-            <CardDescription>You are currently on the Pro plan.</CardDescription>
-        </CardHeader>
-        <CardContent>
-             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-                {mockSubscriptionPlans.map((plan) => (
-                <Card key={plan.name} className={cn("flex flex-col", plan.isCurrent && "border-primary ring-2 ring-primary")}>
-                    <CardHeader>
-                    <CardTitle>{plan.name}</CardTitle>
-                    <CardDescription>
-                        <span className="text-3xl font-bold">{plan.price}</span>
-                        <span className="text-muted-foreground">{plan.pricePeriod}</span>
-                    </CardDescription>
-                    </CardHeader>
-                    <CardContent className="flex-1 grid gap-4">
-                    <ul className="grid gap-2 text-sm text-muted-foreground">
-                        {plan.features.map((feature) => (
-                        <li key={feature} className="flex items-center gap-2">
-                            <Check className="h-4 w-4 text-primary" />
-                            {feature}
-                        </li>
-                        ))}
-                    </ul>
-                    </CardContent>
-                    <CardFooter>
-                    <Button
-                        className="w-full"
-                        disabled={plan.isCurrent}
-                        variant={plan.isCurrent ? "outline" : "default"}
-                    >
-                        {plan.cta}
-                    </Button>
-                    </CardFooter>
-                </Card>
-                ))}
-            </div>
-        </CardContent>
-      </Card>
-
       <div className="grid md:grid-cols-2 gap-8">
         <Card>
             <CardHeader>
@@ -154,6 +113,47 @@ export default function FinancesPage() {
             </CardContent>
         </Card>
       </div>
+
+      <Card>
+        <CardHeader>
+            <CardTitle>Subscription Plan</CardTitle>
+            <CardDescription>You are currently on the Pro plan.</CardDescription>
+        </CardHeader>
+        <CardContent>
+             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                {mockSubscriptionPlans.map((plan) => (
+                <Card key={plan.name} className={cn("flex flex-col", plan.isCurrent && "border-primary ring-2 ring-primary")}>
+                    <CardHeader>
+                    <CardTitle>{plan.name}</CardTitle>
+                    <CardDescription>
+                        <span className="text-3xl font-bold">{plan.price}</span>
+                        <span className="text-muted-foreground">{plan.pricePeriod}</span>
+                    </CardDescription>
+                    </CardHeader>
+                    <CardContent className="flex-1 grid gap-4">
+                    <ul className="grid gap-2 text-sm text-muted-foreground">
+                        {plan.features.map((feature) => (
+                        <li key={feature} className="flex items-center gap-2">
+                            <Check className="h-4 w-4 text-primary" />
+                            {feature}
+                        </li>
+                        ))}
+                    </ul>
+                    </CardContent>
+                    <CardFooter>
+                    <Button
+                        className="w-full"
+                        disabled={plan.isCurrent}
+                        variant={plan.isCurrent ? "outline" : "default"}
+                    >
+                        {plan.cta}
+                    </Button>
+                    </CardFooter>
+                </Card>
+                ))}
+            </div>
+        </CardContent>
+      </Card>
 
     </div>
   )
