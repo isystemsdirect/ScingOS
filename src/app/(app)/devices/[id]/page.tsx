@@ -144,10 +144,10 @@ export default function DeviceDashboardPage({ params }: { params: { id: string }
                     <CardTitle>Device Controls</CardTitle>
                 </CardHeader>
                 <CardContent className="grid grid-cols-2 gap-4">
-                    <Button variant="outline"><Play className="mr-2"/>Run Diagnostics</Button>
+                    <Button variant="outline"><Play className="mr-2"/>Diagnostics</Button>
                     <Button variant="outline"><RotateCcw className="mr-2"/>Calibrate</Button>
-                    <Button variant="secondary" className="bg-blue-600/20 text-blue-400 border-blue-500/50 hover:bg-blue-600/30"><Settings className="mr-2"/>Firmware Update</Button>
-                    <Button variant="destructive"><Power className="mr-2"/>Reboot Device</Button>
+                    <Button variant="secondary" className="bg-blue-600/20 text-blue-400 border-blue-500/50 hover:bg-blue-600/30"><Settings className="mr-2"/>Update Firmware</Button>
+                    <Button variant="destructive"><Power className="mr-2"/>Reboot</Button>
                 </CardContent>
             </Card>
             <Card>

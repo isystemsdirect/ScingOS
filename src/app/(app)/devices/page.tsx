@@ -117,7 +117,7 @@ export default function DevicesPage() {
                   </TableCell>
                   <TableCell className="text-right">
                      <Button asChild size="sm">
-                        <Link href={`/devices/${device.id}`}>View Dashboard</Link>
+                        <Link href={`/devices/${device.id}`}>Dashboard</Link>
                      </Button>
                   </TableCell>
                 </TableRow>
