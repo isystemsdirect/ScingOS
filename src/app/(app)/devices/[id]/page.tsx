@@ -1,7 +1,7 @@
 
 'use client';
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 import {
   ChevronLeft,
   Wifi,
@@ -57,7 +57,8 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export default function DeviceDashboardPage({ params }: { params: { id: string } }) {
+export default function DeviceDashboardPage() {
+  const params = useParams<{ id: string }>();
   const device = mockDevices.find(d => d.id === params.id);
 
   if (!device) {
