@@ -13,6 +13,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
+import { Separator } from "@/components/ui/separator"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 export default function SettingsPage() {
   const user = mockInspectors[0];
@@ -150,13 +152,57 @@ export default function SettingsPage() {
                         <Input id="company-logo" type="file" />
                     </div>
                 </div>
-                 <div className="grid gap-3">
-                    <Label htmlFor="company-address">Company Address</Label>
-                    <Input id="company-address" type="text" placeholder="123 Business Rd, Suite 100" />
-                </div>
+                <div className="grid md:grid-cols-2 gap-4">
+                    <div className="grid gap-3">
+                        <Label htmlFor="company-address">Company Address</Label>
+                        <Input id="company-address" type="text" placeholder="123 Business Rd, Suite 100" />
+                    </div>
+                    <div className="grid gap-3">
+                        <Label htmlFor="company-ein">Company EIN</Label>
+                        <Input id="company-ein" type="text" placeholder="12-3456789" />
+                    </div>
+                 </div>
                  <div className="grid gap-3">
                     <Label htmlFor="company-bio">Company Bio</Label>
                     <Textarea id="company-bio" placeholder="Describe your company's mission, services, and values." />
+                </div>
+                <Separator />
+                <div className="grid gap-6">
+                    <h4 className="text-lg font-semibold">Active Insurance Policies</h4>
+                    <div className="grid md:grid-cols-2 gap-4">
+                        <div className="grid gap-3">
+                            <Label htmlFor="insurance-type">Policy Type</Label>
+                            <Select>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select insurance type" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="general">General Liability</SelectItem>
+                                    <SelectItem value="professional">Professional Liability (E&O)</SelectItem>
+                                    <SelectItem value="workers-comp">Workers' Compensation</SelectItem>
+                                    <SelectItem value="auto">Commercial Auto</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className="grid gap-3">
+                            <Label htmlFor="insurance-provider">Insurance Provider</Label>
+                            <Input id="insurance-provider" type="text" placeholder="Lloyds of London" />
+                        </div>
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-4">
+                        <div className="grid gap-3">
+                            <Label htmlFor="policy-number">Policy Number</Label>
+                            <Input id="policy-number" type="text" placeholder="ABC123456789" />
+                        </div>
+                         <div className="grid gap-3">
+                            <Label htmlFor="policy-expiry">Expiration Date</Label>
+                            <Input id="policy-expiry" type="date" />
+                        </div>
+                    </div>
+                    <div className="grid gap-3">
+                        <Label htmlFor="insurance-cert">Certificate of Insurance (PDF)</Label>
+                        <Input id="insurance-cert" type="file" accept=".pdf" />
+                    </div>
                 </div>
               </div>
             </CardContent>
