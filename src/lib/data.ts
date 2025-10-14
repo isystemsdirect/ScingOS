@@ -103,6 +103,14 @@ export const mockInspectors: Inspector[] = [
       { name: 'Licensed Drone Pilot (Part 107)', id: 'FA3LCE123', certifyingBody: 'Federal Aviation Administration', expiresAt: '2024-06-15', verified: true },
       { name: 'Level II Thermographer', id: 'ITC-456B', certifyingBody: 'Infrared Training Center', expiresAt: '2026-11-30', verified: false },
     ], 
+    offeredServices: [
+        "General property condition assessment (PCA)",
+        "Residential home inspection (buyer)",
+        "Roof condition survey (low-slope/steep)",
+        "Moisture intrusion/basement foundation survey",
+        "HVAC functional performance testing",
+        "Envelope thermal imaging survey"
+    ],
     location: 'Anytown, CA', 
     onCall: true 
   },
@@ -118,6 +126,11 @@ export const mockInspectors: Inspector[] = [
         { name: 'Commercial Property Inspector', id: 'CCPIA-789', certifyingBody: 'CCPIA', expiresAt: '2025-03-20', verified: true },
         { name: 'LiDAR Scanning Professional', id: 'LSP-2023-XYZ', certifyingBody: 'National Geodetic Survey', expiresAt: '2024-12-01', verified: false },
     ], 
+    offeredServices: [
+        "Commercial building inspection (office/retail/industrial)",
+        "Boundary & topographic survey (with utility locates)",
+        "Phase I environmental site assessment (ESA)"
+    ],
     location: 'Anytown, CA', 
     onCall: false 
   },
@@ -133,6 +146,11 @@ export const mockInspectors: Inspector[] = [
         { name: 'Certified Master Inspector', id: 'CMI-001', certifyingBody: 'InterNACHI', expiresAt: '2025-01-01', verified: true },
         { name: 'Commercial Diving Supervisor', id: 'ADS-1234', certifyingBody: 'Association of Diving Contractors', expiresAt: '2024-08-01', verified: true },
     ], 
+    offeredServices: [
+        "Water loss/leak origin & mapping",
+        "Storm/hail/wind damage assessment",
+        "Settlement/structural movement monitoring"
+    ],
     location: 'Someville, TX', 
     onCall: true 
   },
@@ -147,6 +165,11 @@ export const mockInspectors: Inspector[] = [
     certifications: [
         { name: 'Spectrometer Analyst', id: 'SPEC-987', certifyingBody: 'Coblentz Society', expiresAt: '2025-07-22', verified: false },
     ], 
+    offeredServices: [
+        "Asbestos survey (pre-reno/demo) & clearance",
+        "Lead-based paint (LBP) inspection/risk assessment",
+        "Indoor air quality (IAQ) testing"
+    ],
     location: 'Anytown, CA', 
     onCall: true 
   },
