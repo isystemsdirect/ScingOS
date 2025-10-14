@@ -12,6 +12,8 @@ import { mockInspectors } from "@/lib/data";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Briefcase, Calendar, Edit, Mail, MapPin, Phone, Star, ShieldCheck } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import inspectionData from "@/lib/inspection-types.json";
 
 export default function ProfilePage() {
   const user = mockInspectors[0];
@@ -113,6 +115,27 @@ export default function ProfilePage() {
                     </div>
                 ))}
                 </div>
+            </div>
+
+            <Separator />
+
+            <div>
+              <h3 className="text-xl font-semibold">Offered Services</h3>
+              <p className="text-sm text-muted-foreground mt-1 mb-4">This is a comprehensive list of inspection types you can be matched with in the Marketplace.</p>
+              <Accordion type="multiple" className="w-full">
+                {inspectionData.inspectionTypeCategories.map((category) => (
+                  <AccordionItem value={category.id} key={category.id}>
+                    <AccordionTrigger>{category.name}</AccordionTrigger>
+                    <AccordionContent>
+                      <ul className="list-disc pl-5 space-y-2 text-muted-foreground">
+                        {category.types.map((type) => (
+                          <li key={type}>{type}</li>
+                        ))}
+                      </ul>
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
             </div>
           </CardContent>
         </Card>
