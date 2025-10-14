@@ -1,5 +1,6 @@
 
-import { Check, CreditCard, Download, PlusCircle, DollarSign, ClipboardCheck } from "lucide-react"
+
+import { Check, CreditCard, Download, PlusCircle, DollarSign, ClipboardCheck, University, Mail } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -64,16 +65,32 @@ export default function FinancesPage() {
         <Card>
             <CardHeader>
                 <CardTitle>Payment Methods</CardTitle>
-                <CardDescription>Manage your saved credit and debit cards.</CardDescription>
+                <CardDescription>Manage your saved payment methods for invoicing.</CardDescription>
             </CardHeader>
             <CardContent className="grid gap-4">
                 <div className="border rounded-lg p-4 flex items-center">
-                    <CreditCard className="h-6 w-6 mr-4" />
+                    <CreditCard className="h-6 w-6 mr-4 text-primary" />
                     <div className="flex-1">
                         <p className="font-medium">Visa ending in 1234</p>
                         <p className="text-sm text-muted-foreground">Expires 08/2026</p>
                     </div>
                     <Button variant="ghost" size="sm">Remove</Button>
+                </div>
+                 <div className="border rounded-lg p-4 flex items-center">
+                    <University className="h-6 w-6 mr-4 text-primary" />
+                    <div className="flex-1">
+                        <p className="font-medium">Chase Bank (ACH)</p>
+                        <p className="text-sm text-muted-foreground">Checking account ending in 5678</p>
+                    </div>
+                    <Button variant="ghost" size="sm">Remove</Button>
+                </div>
+                 <div className="border rounded-lg p-4 flex items-center bg-muted/50">
+                    <Mail className="h-6 w-6 mr-4 text-muted-foreground" />
+                    <div className="flex-1">
+                        <p className="font-medium">Mail-in Check</p>
+                        <p className="text-sm text-muted-foreground">Allow clients to pay by physical check.</p>
+                    </div>
+                    <Button variant="secondary" size="sm">Enable</Button>
                 </div>
             </CardContent>
             <CardFooter className="border-t pt-6">
