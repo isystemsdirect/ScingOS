@@ -20,13 +20,13 @@ const mockInvoices = [
     { id: 'INV-2024-003', date: '2024-05-15', amount: '$29.00', status: 'Paid' },
 ]
 
-export default function BillingPage() {
+export default function FinancesPage() {
   return (
     <div className="flex flex-col gap-8">
       <div>
-        <h1 className="text-3xl font-bold">Subscriptions & Billing</h1>
+        <h1 className="text-3xl font-bold">Finances</h1>
         <p className="text-muted-foreground">
-          Manage your plan, payment methods, and view billing history.
+          Manage your plan, payment methods, and view your transaction history.
         </p>
       </div>
 
@@ -93,7 +93,7 @@ export default function BillingPage() {
         </Card>
         <Card>
             <CardHeader>
-            <CardTitle>Billing History</CardTitle>
+            <CardTitle>Transaction History</CardTitle>
             <CardDescription>View and download your past invoices.</CardDescription>
             </CardHeader>
             <CardContent>

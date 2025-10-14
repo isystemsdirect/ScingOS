@@ -19,6 +19,7 @@ import {
   ChevronDown,
   User,
   Library,
+  DollarSign,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -96,9 +97,9 @@ export default function AppLayout({
                 <Cpu className="h-4 w-4" />
                 Devices
               </NavLink>
-              <NavLink href="/billing">
-                <CreditCard className="h-4 w-4" />
-                Billing
+              <NavLink href="/finances">
+                <DollarSign className="h-4 w-4" />
+                Finances
               </NavLink>
             </nav>
           </div>
@@ -179,9 +180,9 @@ export default function AppLayout({
                   <Cpu className="h-5 w-5" />
                   Devices
                 </NavLink>
-                <NavLink href="/billing" isMobile>
-                  <CreditCard className="h-5 w-5" />
-                  Billing
+                <NavLink href="/finances" isMobile>
+                  <DollarSign className="h-5 w-5" />
+                  Finances
                 </NavLink>
               </nav>
             </SheetContent>
