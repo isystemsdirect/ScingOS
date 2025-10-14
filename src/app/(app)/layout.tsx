@@ -50,6 +50,7 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { mockInspectors } from "@/lib/data";
 import { NavLink } from "@/components/nav-link";
 import { AiSearchDialog } from "@/components/ai-search-dialog";
+import { Separator } from "@/components/ui/separator";
 
 
 export default function AppLayout({
@@ -89,6 +90,9 @@ export default function AppLayout({
                 <Users className="h-4 w-4" />
                 Teams & Dispatch
               </NavLink>
+              
+              <Separator className="my-2 bg-sidebar-border" />
+
               <NavLink href="/library">
                 <Library className="h-4 w-4" />
                 Standards Library
@@ -97,6 +101,9 @@ export default function AppLayout({
                 <Store className="h-4 w-4" />
                 Marketplace
               </NavLink>
+
+              <Separator className="my-2 bg-sidebar-border" />
+
               <NavLink href="/devices">
                 <Cpu className="h-4 w-4" />
                 Workstation Max
@@ -176,6 +183,7 @@ export default function AppLayout({
                   <Users className="h-5 w-5" />
                   Teams & Dispatch
                 </NavLink>
+                 <Separator className="my-2 bg-sidebar-border" />
                 <NavLink href="/library" isMobile>
                   <Library className="h-5 w-5" />
                   Standards Library
@@ -184,6 +192,7 @@ export default function AppLayout({
                   <Store className="h-5 w-5" />
                   Marketplace
                 </NavLink>
+                 <Separator className="my-2 bg-sidebar-border" />
                 <NavLink href="/devices" isMobile>
                   <Cpu className="h-5 w-5" />
                   Workstation Max
