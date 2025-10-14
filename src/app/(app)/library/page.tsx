@@ -1,3 +1,4 @@
+
 import {
   BookMarked,
   FileText,
@@ -125,6 +126,7 @@ export default function LibraryPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Title</TableHead>
+                <TableHead className="hidden sm:table-cell">Ref. ID</TableHead>
                 <TableHead className="hidden md:table-cell">
                   Jurisdiction
                 </TableHead>
@@ -141,6 +143,7 @@ export default function LibraryPage() {
                       {standard.docType}
                     </div>
                   </TableCell>
+                  <TableCell className="hidden sm:table-cell font-mono text-xs">{standard.id}</TableCell>
                   <TableCell className="hidden md:table-cell">
                     {standard.jurisdiction}
                   </TableCell>
