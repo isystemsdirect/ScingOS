@@ -1,0 +1,160 @@
+{
+  "entities": {
+    "user": {
+      "title": "User",
+      "description": "A user of the application.",
+      "type": "object",
+      "properties": {
+        "displayName": {
+          "type": "string",
+          "description": "The user's display name."
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "The user's email address."
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "certifications": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "id": {
+                "type": "string"
+              },
+              "expiresAt": {
+                "type": "string",
+                "format": "date"
+              },
+              "verified": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "companyId": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "number"
+        }
+      },
+      "required": ["displayName", "email"]
+    },
+    "company": {
+      "title": "Company",
+      "description": "A company or organization.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "billingCustomerId": {
+          "type": "string"
+        },
+        "subscriptionId": {
+          "type": "string"
+        },
+        "address": {
+          "type": "object",
+          "properties": {
+            "street": { "type": "string" },
+            "city": { "type": "string" },
+            "state": { "type": "string" },
+            "zip": { "type": "string" }
+          }
+        },
+        "branding": {
+          "type": "object",
+          "properties": {
+            "logoUrl": { "type": "string" },
+            "primaryColor": { "type": "string" },
+            "font": { "type": "string" }
+          }
+        },
+        "createdAt": {
+          "type": "number"
+        }
+      }
+    },
+    "key": {
+      "title": "Key",
+      "description": "A device or API key.",
+      "type": "object",
+      "properties": {
+        "lariSubEngine": { "type": "string" },
+        "requiredEntitlement": { "type": "string" },
+        "serverBucket": { "type": "string" }
+      }
+    },
+    "subscription": {
+      "title": "Subscription",
+      "description": "A subscription plan.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "entitlements": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "limits": {
+          "type": "object",
+          "properties": {
+            "inspectors": { "oneOf": [{ "type": "number" }, { "type": "string" }] },
+            "storageGB": { "oneOf": [{ "type": "number" }, { "type": "string" }] }
+          }
+        }
+      }
+    },
+    "standard": {
+      "title": "Standard",
+      "description": "An inspection standard document.",
+      "type": "object",
+      "properties": {
+        "jurisdiction": { "type": "string" },
+        "docType": { "type": "string" },
+        "title": { "type": "string" },
+        "fullTextUrl": { "type": "string" },
+        "effectiveDate": { "type": "string", "format": "date" },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  },
+  "auth": {
+    "providers": ["email", "google.com", "apple.com"]
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/user" },
+      "description": "User profiles"
+    },
+    "/companies/{companyId}": {
+      "schema": { "$ref": "#/entities/company" },
+      "description": "Company information"
+    },
+    "/keys/{keyId}": {
+      "schema": { "$ref": "#/entities/key" },
+      "description": "Device and API keys"
+    },
+    "/subscriptions/{subscriptionId}": {
+      "schema": { "$ref": "#/entities/subscription" },
+      "description": "Subscription plans"
+    },
+    "/standards/{standardId}": {
+      "schema": { "$ref": "#/entities/standard" },
+      "description": "Inspection standards"
+    }
+  }
+}
