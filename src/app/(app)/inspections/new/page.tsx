@@ -1,4 +1,6 @@
 
+'use client';
+
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -10,8 +12,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { InspectionTypeList } from "@/components/inspection-type-list";
+import { useState } from "react";
+import { Separator } from "@/components/ui/separator";
 
 export default function NewInspectionPage() {
+  const [primaryType, setPrimaryType] = useState<string | null>(null);
+
   return (
     <div className="flex min-h-screen w-full flex-col">
       <div className="flex flex-col sm:gap-4 sm:py-4">
@@ -30,18 +36,36 @@ export default function NewInspectionPage() {
             </div>
             <Card>
               <CardHeader>
-                <CardTitle>Step 1: Select Inspection Type</CardTitle>
+                <CardTitle>Step 1: Select Primary Inspection Type</CardTitle>
                 <CardDescription>
-                  Choose the type of inspection you are performing from the list below.
+                  Choose the main type of inspection you are performing from the list below.
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <InspectionTypeList />
-                <Button className="w-full sm:w-auto mt-6">
-                    Next: Property Details
-                </Button>
+                <InspectionTypeList
+                  selectionMode="single"
+                  onSelectionChange={(selection) => setPrimaryType(selection as string)}
+                />
               </CardContent>
             </Card>
+
+            {primaryType && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Step 2: Add-on Inspections (Optional)</CardTitle>
+                  <CardDescription>
+                    You can add multiple secondary inspections to this project.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                   <InspectionTypeList selectionMode="multiple" />
+                   <Separator className="my-6" />
+                   <Button className="w-full sm:w-auto">
+                    Next: Add Property Details
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
           </div>
         </main>
       </div>
