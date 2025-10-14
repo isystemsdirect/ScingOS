@@ -83,7 +83,7 @@ export default function ClientProfilePage({ params }: { params: { id: string } }
                 <div className="flex items-center justify-between">
                     <h3 className="text-xl font-semibold">Inspection History</h3>
                     <Button asChild>
-                        <Link href="/inspections/new"><PlusCircle className="mr-2 h-4 w-4" />Start New Inspection</Link>
+                        <Link href={{pathname: "/inspections/new", query: { clientId: client.id }}}><PlusCircle className="mr-2 h-4 w-4" />Start New Inspection</Link>
                     </Button>
                 </div>
                  <Card>

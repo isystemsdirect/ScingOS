@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import Link from "next/link";
@@ -14,8 +15,18 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import { useSearchParams } from "next/navigation";
+import { mockClients } from "@/lib/data";
+import { Suspense } from "react";
 
-export default function NewInspectionReviewPage() {
+
+function NewInspectionReviewContent() {
+  const searchParams = useSearchParams();
+  const clientId = searchParams.get('clientId');
+
+  // Find the selected client from mock data, or use the first one as a fallback for the demo
+  const selectedClient = mockClients.find(c => c.id === clientId) || mockClients[0];
+
 
   // This data would be passed from previous steps in a real app
   const inspectionDetails = {
@@ -30,12 +41,7 @@ export default function NewInspectionReviewPage() {
       state: "CA",
       zip: "12345",
     },
-    client: {
-      id: "CLI-001",
-      name: "Stark Industries",
-      email: "tony@stark.com",
-      phone: "(212) 555-0100"
-    }
+    client: selectedClient
   };
 
   return (
@@ -44,7 +50,7 @@ export default function NewInspectionReviewPage() {
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 max-w-4xl mx-auto w-full">
           <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
             <div className="flex items-center gap-4">
-              <Link href="/inspections/new/details">
+              <Link href={{pathname: "/inspections/new/details", query: { clientId: clientId ?? undefined }}}>
                 <Button variant="outline" size="icon" className="h-7 w-7">
                   <ChevronLeft className="h-4 w-4" />
                   <span className="sr-only">Back</span>
@@ -67,7 +73,7 @@ export default function NewInspectionReviewPage() {
                     <div className="flex items-center justify-between">
                         <h3 className="font-semibold text-lg">Inspection Scope</h3>
                         <Button variant="ghost" size="sm" asChild>
-                            <Link href="/inspections/new"><Edit className="mr-2 h-4 w-4" />Edit</Link>
+                            <Link href={{pathname: "/inspections/new", query: {clientId: clientId ?? undefined}}}><Edit className="mr-2 h-4 w-4" />Edit</Link>
                         </Button>
                     </div>
                     <div className="grid gap-2">
@@ -90,7 +96,7 @@ export default function NewInspectionReviewPage() {
                     <div className="flex items-center justify-between">
                         <h3 className="font-semibold text-lg">Property & Client</h3>
                          <Button variant="ghost" size="sm" asChild>
-                            <Link href="/inspections/new/details"><Edit className="mr-2 h-4 w-4" />Edit</Link>
+                            <Link href={{pathname: "/inspections/new/details", query: {clientId: clientId ?? undefined}}}><Edit className="mr-2 h-4 w-4" />Edit</Link>
                         </Button>
                     </div>
                     <div className="grid md:grid-cols-2 gap-6">
@@ -124,4 +130,12 @@ export default function NewInspectionReviewPage() {
       </div>
     </div>
   );
+}
+
+export default function NewInspectionReviewPage() {
+  return (
+    <Suspense>
+      <NewInspectionReviewContent />
+    </Suspense>
+  )
 }

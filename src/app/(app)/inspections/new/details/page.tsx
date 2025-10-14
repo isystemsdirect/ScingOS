@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import Link from "next/link";
@@ -22,8 +23,13 @@ import {
 } from "@/components/ui/tabs";
 import { mockClients } from "@/lib/data";
 import { ClientForm } from "@/components/client-form";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function NewInspectionDetailsPage() {
+function NewInspectionDetailsContent() {
+  const searchParams = useSearchParams();
+  const clientId = searchParams.get('clientId');
+  const selectedClient = mockClients.find(c => c.id === clientId);
 
   return (
     <div className="flex min-h-screen w-full flex-col">
@@ -31,7 +37,7 @@ export default function NewInspectionDetailsPage() {
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 max-w-4xl mx-auto w-full">
           <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
             <div className="flex items-center gap-4">
-              <Link href="/inspections/new">
+              <Link href={{ pathname: "/inspections/new", query: { clientId: clientId ?? undefined }}}>
                 <Button variant="outline" size="icon" className="h-7 w-7">
                   <ChevronLeft className="h-4 w-4" />
                   <span className="sr-only">Back</span>
@@ -78,37 +84,50 @@ export default function NewInspectionDetailsPage() {
 
                 <div className="grid gap-4">
                      <h3 className="font-semibold text-lg">Client Information</h3>
-                    <Tabs defaultValue="new-client">
-                        <TabsList className="grid w-full grid-cols-2">
-                            <TabsTrigger value="new-client"><PlusCircle className="mr-2 h-4 w-4"/>Add New Client</TabsTrigger>
-                            <TabsTrigger value="existing-client"><Users className="mr-2 h-4 w-4" />Select Existing Client</TabsTrigger>
-                        </TabsList>
-                        <TabsContent value="new-client">
-                            <ClientForm />
-                        </TabsContent>
-                        <TabsContent value="existing-client">
-                            <div className="grid gap-4 pt-4">
-                               <div className="space-y-4">
-                                {mockClients.map(client => (
-                                    <button key={client.id} className="w-full text-left p-4 rounded-lg border flex items-center gap-4 hover:bg-muted/50 transition-colors">
-                                        <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center">
-                                            <User className="h-5 w-5 text-muted-foreground" />
-                                        </div>
-                                        <div>
-                                            <p className="font-semibold">{client.name}</p>
-                                            <p className="text-sm text-muted-foreground">{client.email}</p>
-                                        </div>
-                                    </button>
-                                ))}
-                               </div>
-                            </div>
-                        </TabsContent>
-                    </Tabs>
+                     {selectedClient ? (
+                       <div className="p-4 rounded-lg border bg-muted/50 flex items-center gap-4">
+                           <div className="h-10 w-10 rounded-full bg-background flex items-center justify-center">
+                               <User className="h-5 w-5 text-muted-foreground" />
+                           </div>
+                           <div>
+                               <p className="font-semibold">{selectedClient.name}</p>
+                               <p className="text-sm text-muted-foreground">{selectedClient.email}</p>
+                           </div>
+                           <Link href="/inspections/new/details" className="ml-auto text-sm underline">Change client</Link>
+                       </div>
+                     ) : (
+                      <Tabs defaultValue="new-client">
+                          <TabsList className="grid w-full grid-cols-2">
+                              <TabsTrigger value="new-client"><PlusCircle className="mr-2 h-4 w-4"/>Add New Client</TabsTrigger>
+                              <TabsTrigger value="existing-client"><Users className="mr-2 h-4 w-4" />Select Existing Client</TabsTrigger>
+                          </TabsList>
+                          <TabsContent value="new-client">
+                              <ClientForm />
+                          </TabsContent>
+                          <TabsContent value="existing-client">
+                              <div className="grid gap-4 pt-4">
+                                <div className="space-y-4">
+                                  {mockClients.map(client => (
+                                      <Link key={client.id} href={{pathname: "/inspections/new/details", query: {clientId: client.id}}} className="w-full text-left p-4 rounded-lg border flex items-center gap-4 hover:bg-muted/50 transition-colors">
+                                          <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center">
+                                              <User className="h-5 w-5 text-muted-foreground" />
+                                          </div>
+                                          <div>
+                                              <p className="font-semibold">{client.name}</p>
+                                              <p className="text-sm text-muted-foreground">{client.email}</p>
+                                          </div>
+                                      </Link>
+                                  ))}
+                                </div>
+                              </div>
+                          </TabsContent>
+                      </Tabs>
+                     )}
                 </div>
 
                 <Separator />
                  <Button asChild className="w-full sm:w-auto">
-                    <Link href="/inspections/new/review">Review & Confirm</Link>
+                    <Link href={{pathname: "/inspections/new/review", query: {clientId: clientId ?? undefined}}}>Review & Confirm</Link>
                 </Button>
 
               </CardContent>
@@ -117,5 +136,14 @@ export default function NewInspectionDetailsPage() {
         </main>
       </div>
     </div>
-  );
+  )
+}
+
+
+export default function NewInspectionDetailsPage() {
+  return (
+    <Suspense>
+      <NewInspectionDetailsContent />
+    </Suspense>
+  )
 }

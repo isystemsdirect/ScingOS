@@ -15,9 +15,12 @@ import {
 import { InspectionTypeList } from "@/components/inspection-type-list";
 import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
+import { useSearchParams } from "next/navigation";
 
 export default function NewInspectionPage() {
   const [primaryType, setPrimaryType] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+  const clientId = searchParams.get('clientId');
 
   return (
     <div className="flex min-h-screen w-full flex-col">
@@ -25,7 +28,7 @@ export default function NewInspectionPage() {
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 max-w-4xl mx-auto w-full">
           <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
             <div className="flex items-center gap-4">
-              <Link href="/inspections">
+              <Link href={clientId ? `/clients/${clientId}` : "/inspections"}>
                 <Button variant="outline" size="icon" className="h-7 w-7">
                   <ChevronLeft className="h-4 w-4" />
                   <span className="sr-only">Back</span>
@@ -62,7 +65,7 @@ export default function NewInspectionPage() {
                    <InspectionTypeList selectionMode="multiple" />
                    <Separator className="my-6" />
                    <Button className="w-full sm:w-auto" asChild>
-                     <Link href="/inspections/new/details">
+                     <Link href={{ pathname: "/inspections/new/details", query: { clientId: clientId ?? undefined }}}>
                         Next: Add Property Details
                      </Link>
                   </Button>
