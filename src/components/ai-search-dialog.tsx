@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -69,12 +70,12 @@ export function AiSearchDialog() {
           className="w-full justify-start text-sm text-muted-foreground md:w-2/3 lg:w-1/3"
         >
           <Search className="mr-2 h-4 w-4" />
-          <span>Search with Scing</span>
+          <span>Search with Scingular AI</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[625px]">
         <DialogHeader>
-          <DialogTitle>SCING AI Search</DialogTitle>
+          <DialogTitle>Scingular AI Search</DialogTitle>
           <DialogDescription>
             Cross-reference your query against a vast library of codes and standards.
           </DialogDescription>
