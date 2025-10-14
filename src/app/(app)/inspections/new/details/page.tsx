@@ -107,7 +107,9 @@ export default function NewInspectionDetailsPage() {
                 </div>
 
                 <Separator />
-                <Button className="w-full sm:w-auto">Review & Confirm</Button>
+                 <Button asChild className="w-full sm:w-auto">
+                    <Link href="/inspections/new/review">Review & Confirm</Link>
+                </Button>
 
               </CardContent>
             </Card>
