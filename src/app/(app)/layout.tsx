@@ -80,6 +80,10 @@ export default function AppLayout({
                   3
                 </Badge>
               </NavLink>
+              <NavLink href="/clients">
+                <Users className="h-4 w-4" />
+                Clients
+              </NavLink>
               <NavLink href="/library">
                 <Library className="h-4 w-4" />
                 Standards Library
@@ -158,6 +162,10 @@ export default function AppLayout({
                   <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
                     3
                   </Badge>
+                </NavLink>
+                <NavLink href="/clients" isMobile>
+                  <Users className="h-5 w-5" />
+                  Clients
                 </NavLink>
                 <NavLink href="/library" isMobile>
                   <Library className="h-5 w-5" />

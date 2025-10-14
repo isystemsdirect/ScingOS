@@ -114,7 +114,7 @@ export default function NewInspectionReviewPage() {
               </CardContent>
               <CardFooter className="border-t p-6">
                  <Button size="lg" className="w-full sm:w-auto ml-auto" asChild>
-                    <Link href="/dashboard">Confirm & Start Inspection</Link>
+                    <Link href="/clients">Confirm & Start</Link>
                 </Button>
               </CardFooter>
             </Card>
