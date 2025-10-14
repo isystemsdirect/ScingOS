@@ -1,4 +1,5 @@
 
+import Link from "next/link";
 import {
   MoreHorizontal,
   PlusCircle,
@@ -80,14 +81,20 @@ export default function ClientsPage() {
             <TableBody>
               {mockClients.map(client => (
                 <TableRow key={client.id}>
-                  <TableCell className="font-medium">{client.name}</TableCell>
+                  <TableCell className="font-medium">
+                    <Link href={`/clients/${client.id}`} className="hover:underline">
+                      {client.name}
+                    </Link>
+                  </TableCell>
                   <TableCell>{client.email}</TableCell>
                    <TableCell className="hidden md:table-cell">{client.phone}</TableCell>
                   <TableCell className="hidden md:table-cell">
                      {new Date(client.createdAt).toLocaleDateString()}
                   </TableCell>
                   <TableCell>
-                     <Button>Start Inspection</Button>
+                     <Button asChild variant="outline">
+                        <Link href={`/clients/${client.id}`}>View Profile</Link>
+                     </Button>
                   </TableCell>
                 </TableRow>
               ))}

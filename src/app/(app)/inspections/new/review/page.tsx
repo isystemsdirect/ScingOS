@@ -31,6 +31,7 @@ export default function NewInspectionReviewPage() {
       zip: "12345",
     },
     client: {
+      id: "CLI-001",
       name: "Stark Industries",
       email: "tony@stark.com",
       phone: "(212) 555-0100"
@@ -114,7 +115,7 @@ export default function NewInspectionReviewPage() {
               </CardContent>
               <CardFooter className="border-t p-6">
                  <Button size="lg" className="w-full sm:w-auto ml-auto" asChild>
-                    <Link href="/clients">Confirm & Start</Link>
+                    <Link href={`/clients/${inspectionDetails.client.id}`}>Confirm & Start</Link>
                 </Button>
               </CardFooter>
             </Card>
