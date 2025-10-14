@@ -45,6 +45,7 @@ import {
 import Logo from "@/components/logo";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { mockInspectors } from "@/lib/data";
+import { NavLink } from "@/components/nav-link";
 
 
 export default function AppLayout({
@@ -65,44 +66,29 @@ export default function AppLayout({
           </div>
           <div className="flex-1">
             <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
-              <Link
-                href="/dashboard"
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-sidebar-foreground transition-all hover:text-primary hover:bg-sidebar-accent"
-              >
+              <NavLink href="/dashboard">
                 <Home className="h-4 w-4" />
                 Dashboard
-              </Link>
-              <Link
-                href="/inspections"
-                className="flex items-center gap-3 rounded-lg bg-sidebar-accent px-3 py-2 text-primary transition-all hover:text-primary"
-              >
+              </NavLink>
+              <NavLink href="/inspections">
                 <ClipboardList className="h-4 w-4" />
                 Inspections
                 <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
                   3
                 </Badge>
-              </Link>
-              <Link
-                href="/marketplace"
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-sidebar-foreground transition-all hover:text-primary hover:bg-sidebar-accent"
-              >
+              </NavLink>
+              <NavLink href="/marketplace">
                 <Store className="h-4 w-4" />
                 Marketplace
-              </Link>
-              <Link
-                href="/devices"
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-sidebar-foreground transition-all hover:text-primary hover:bg-sidebar-accent"
-              >
+              </NavLink>
+              <NavLink href="/devices">
                 <Cpu className="h-4 w-4" />
                 Devices
-              </Link>
-              <Link
-                href="/billing"
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-sidebar-foreground transition-all hover:text-primary hover:bg-sidebar-accent"
-              >
+              </NavLink>
+              <NavLink href="/billing">
                 <CreditCard className="h-4 w-4" />
                 Billing
-              </Link>
+              </NavLink>
             </nav>
           </div>
           <div className="mt-auto p-4 border-t border-sidebar-border">
@@ -154,44 +140,29 @@ export default function AppLayout({
             <SheetContent side="left" className="flex flex-col bg-sidebar text-sidebar-foreground">
               <nav className="grid gap-2 text-lg font-medium">
                 <Logo />
-                <Link
-                  href="/dashboard"
-                  className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-sidebar-foreground hover:text-foreground"
-                >
+                 <NavLink href="/dashboard" isMobile>
                   <Home className="h-5 w-5" />
                   Dashboard
-                </Link>
-                <Link
-                  href="/inspections"
-                  className="mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-sidebar-accent px-3 py-2 text-primary"
-                >
+                </NavLink>
+                <NavLink href="/inspections" isMobile>
                   <ClipboardList className="h-5 w-5" />
                   Inspections
                   <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
                     3
                   </Badge>
-                </Link>
-                <Link
-                  href="/marketplace"
-                  className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-sidebar-foreground hover:text-foreground"
-                >
+                </NavLink>
+                <NavLink href="/marketplace" isMobile>
                   <Store className="h-5 w-5" />
                   Marketplace
-                </Link>
-                <Link
-                  href="/devices"
-                  className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-sidebar-foreground hover:text-foreground"
-                >
+                </NavLink>
+                <NavLink href="/devices" isMobile>
                   <Cpu className="h-5 w-5" />
                   Devices
-                </Link>
-                <Link
-                  href="/billing"
-                  className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-sidebar-foreground hover:text-foreground"
-                >
+                </NavLink>
+                <NavLink href="/billing" isMobile>
                   <CreditCard className="h-5 w-5" />
                   Billing
-                </Link>
+                </NavLink>
               </nav>
             </SheetContent>
           </Sheet>
