@@ -91,9 +91,12 @@ export default function ClientsPage() {
                   <TableCell className="hidden md:table-cell">
                      {new Date(client.createdAt).toLocaleDateString()}
                   </TableCell>
-                  <TableCell>
-                     <Button asChild variant="outline">
+                  <TableCell className="space-x-2 text-right">
+                     <Button asChild variant="outline" size="sm">
                         <Link href={`/clients/${client.id}`}>View Profile</Link>
+                     </Button>
+                     <Button asChild variant="outline" size="sm">
+                        <Link href="/finances">View Finances</Link>
                      </Button>
                   </TableCell>
                 </TableRow>
