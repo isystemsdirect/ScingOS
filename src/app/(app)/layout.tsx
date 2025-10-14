@@ -18,6 +18,7 @@ import {
   Wrench,
   ChevronDown,
   User,
+  Library,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -78,6 +79,10 @@ export default function AppLayout({
                 <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
                   3
                 </Badge>
+              </NavLink>
+              <NavLink href="/library">
+                <Library className="h-4 w-4" />
+                Standards Library
               </NavLink>
               <NavLink href="/marketplace">
                 <Store className="h-4 w-4" />
@@ -153,6 +158,10 @@ export default function AppLayout({
                   <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
                     3
                   </Badge>
+                </NavLink>
+                <NavLink href="/library" isMobile>
+                  <Library className="h-5 w-5" />
+                  Standards Library
                 </NavLink>
                 <NavLink href="/marketplace" isMobile>
                   <Store className="h-5 w-5" />
