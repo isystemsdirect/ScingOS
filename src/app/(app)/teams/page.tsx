@@ -7,6 +7,7 @@ import {
   Crown,
 } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -167,6 +168,9 @@ export default function TeamsPage() {
                             <DropdownMenuContent align="end">
                               <DropdownMenuLabel>Actions</DropdownMenuLabel>
                               <DropdownMenuItem>View Profile</DropdownMenuItem>
+                               <DropdownMenuItem asChild>
+                                <Link href={`/teams/${inspector.id}/availability`}>See Availability</Link>
+                              </DropdownMenuItem>
                               <DropdownMenuItem>
                                 Change Role
                               </DropdownMenuItem>
