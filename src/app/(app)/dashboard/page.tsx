@@ -8,6 +8,8 @@ import {
   CreditCard,
   DollarSign,
   Users,
+  PlusCircle,
+  Cpu,
 } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -37,6 +39,7 @@ import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import type { ChartConfig } from "@/components/ui/chart";
 
 import { mockInspections, mockInspectors } from "@/lib/data";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 const chartData = [
   { month: "January", inspections: 186 },
@@ -57,11 +60,25 @@ const chartConfig = {
 export default function Dashboard() {
   const user = mockInspectors[0];
   const recentInspections = mockInspections.slice(0, 5);
+  const recentInspectors = mockInspectors.slice(1, 4);
 
   return (
     <div className="flex flex-1 flex-col gap-4">
       <div className="flex items-center">
-        <h1 className="text-lg font-semibold md:text-2xl">Welcome, {user.name.split(' ')[0]}!</h1>
+        <div>
+            <h1 className="text-lg font-semibold md:text-2xl">Welcome, {user.name.split(' ')[0]}!</h1>
+            <p className="text-sm text-muted-foreground">Here's a summary of your activity.</p>
+        </div>
+        <div className="ml-auto flex items-center gap-2">
+            <Button>
+                <PlusCircle className="h-4 w-4 mr-2" />
+                Start New Inspection
+            </Button>
+             <Button variant="outline">
+                <Cpu className="h-4 w-4 mr-2" />
+                Register Device
+            </Button>
+        </div>
       </div>
       <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
         <Card>
@@ -115,11 +132,19 @@ export default function Dashboard() {
       </div>
       <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
         <Card className="xl:col-span-2">
-          <CardHeader>
-            <CardTitle>Recent Inspections</CardTitle>
-            <CardDescription>
-              You have completed 265 inspections this month.
-            </CardDescription>
+          <CardHeader className="flex flex-row items-center">
+            <div className="grid gap-2">
+              <CardTitle>Recent Inspections</CardTitle>
+              <CardDescription>
+                You have completed 265 inspections this month.
+              </CardDescription>
+            </div>
+            <Button asChild size="sm" className="ml-auto gap-1">
+              <Link href="/inspections">
+                View All
+                <ArrowUpRight className="h-4 w-4" />
+              </Link>
+            </Button>
           </CardHeader>
           <CardContent>
             <Table>
@@ -131,6 +156,7 @@ export default function Dashboard() {
                   </TableHead>
                   <TableHead className="hidden md:table-cell">Date</TableHead>
                   <TableHead className="text-right">Findings</TableHead>
+                   <TableHead><span className="sr-only">Actions</span></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -152,6 +178,11 @@ export default function Dashboard() {
                     </TableCell>
                     <TableCell className="text-right">
                       {inspection.findingsCount}
+                    </TableCell>
+                    <TableCell className="text-right">
+                       <Button asChild variant="outline" size="sm">
+                          <Link href={`/inspections/${inspection.id}`}>View Details</Link>
+                       </Button>
                     </TableCell>
                   </TableRow>
                 ))}
