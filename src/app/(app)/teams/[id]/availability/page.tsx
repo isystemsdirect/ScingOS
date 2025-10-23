@@ -20,6 +20,7 @@ import { mockInspectors } from '@/lib/data';
 import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import React from 'react';
 
 export default function AvailabilityPage({ params }: { params: { id: string } }) {
   const inspector = mockInspectors.find((i) => i.id === params.id);
