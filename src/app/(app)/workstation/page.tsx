@@ -31,12 +31,12 @@ export default function WorkstationPage() {
   ]
 
   return (
-    <div className="grid max-w-6xl mx-auto gap-4 px-4 lg:px-6">
+    <div className="mx-auto w-full max-w-6xl px-4 lg:px-6">
       <h1 className="text-3xl font-semibold">Workstation</h1>
 
       <Tabs defaultValue="profile" className="relative">
-        <div className="sticky top-0 z-20 pt-4 -mx-6 px-6 pb-2">
-            <TabsList className="grid w-full grid-cols-6 h-auto p-1 bg-background/95 backdrop-blur-sm border">
+        <div className="sticky top-0 z-20 bg-background/95 pt-4 pb-2 backdrop-blur-sm">
+            <TabsList className="grid h-auto w-full grid-cols-6 border p-1">
                 <TabsTrigger value="profile" className="py-2"><User className="mr-2 h-4 w-4"/>Profile</TabsTrigger>
                 <TabsTrigger value="ai" className="py-2"><Sparkles className="mr-2 h-4 w-4"/>AI & Voice</TabsTrigger>
                 <TabsTrigger value="camera" className="py-2"><Camera className="mr-2 h-4 w-4"/>Camera</TabsTrigger>
@@ -285,28 +285,59 @@ export default function WorkstationPage() {
                 </Card>
             </TabsContent>
             <TabsContent value="marketplace">
-                <Card>
-                    <CardHeader>
-                    <CardTitle>Marketplace Availability</CardTitle>
-                    <CardDescription>
-                        Control your visibility in the inspector marketplace.
-                    </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                    <div className="flex items-center justify-between rounded-lg border p-4">
-                        <div>
-                        <h4 className="font-medium">Available for Dispatch</h4>
-                        <p className="text-sm text-muted-foreground">
-                            Enable this to appear as 'On-Call' and available for immediate dispatch requests from the marketplace.
-                        </p>
-                        </div>
-                        <Switch defaultChecked={user.onCall} />
-                    </div>
-                    </CardContent>
-                    <CardFooter className="border-t px-6 py-4">
-                        <Button>Save Changes</Button>
-                    </CardFooter>
-                </Card>
+                <div className="grid gap-6">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Marketplace Preferences</CardTitle>
+                            <CardDescription>
+                                Control your visibility and the types of jobs you get from the inspector marketplace.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="grid gap-6">
+                            <div className="flex items-center justify-between rounded-lg border p-4">
+                                <div>
+                                <h4 className="font-medium">Available for Dispatch</h4>
+                                <p className="text-sm text-muted-foreground">
+                                    Enable this to appear as 'On-Call' and available for immediate dispatch requests from the marketplace.
+                                </p>
+                                </div>
+                                <Switch defaultChecked={user.onCall} />
+                            </div>
+                            <div className="grid gap-3">
+                                <Label htmlFor="service-area">Service Area</Label>
+                                <Textarea id="service-area" placeholder="e.g., Anytown, Someville County, or zip codes 90210, 10001" defaultValue="Anytown, CA; Someville, TX" />
+                                <p className="text-xs text-muted-foreground">Define your work radius by listing cities, counties, or zip codes, separated by commas.</p>
+                            </div>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Active Marketplace Dispatch Fields</CardTitle>
+                            <CardDescription>
+                                Select the types of inspections you want to be available for in the marketplace.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {user.offeredServices.map((service) => (
+                                <div key={service} className="flex items-center space-x-2">
+                                    <Checkbox id={`service-${service}`} defaultChecked />
+                                    <Label htmlFor={`service-${service}`} className="font-normal text-sm">{service}</Label>
+                                </div>
+                            ))}
+                             <div className="flex items-center space-x-2 text-muted-foreground">
+                                <Checkbox id="service-new-1" />
+                                <Label htmlFor="service-new-1" className="font-normal text-sm">Residential home inspection (seller pre-listing)</Label>
+                            </div>
+                             <div className="flex items-center space-x-2 text-muted-foreground">
+                                <Checkbox id="service-new-2" />
+                                <Label htmlFor="service-new-2" className="font-normal text-sm">ADA/Accessibility compliance survey</Label>
+                            </div>
+                        </CardContent>
+                         <CardFooter className="border-t px-6 py-4">
+                            <Button>Save Marketplace Settings</Button>
+                        </CardFooter>
+                    </Card>
+                </div>
             </TabsContent>
             <TabsContent value="devices">
                 <Card>
