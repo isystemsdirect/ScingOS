@@ -78,6 +78,8 @@ export default {
           ring: 'hsl(var(--sidebar-ring))',
         },
         "status-active": 'hsl(var(--status-active))',
+        'neon-blue': 'hsl(var(--neon-blue))',
+        'neon-green': 'hsl(var(--neon-green))',
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -101,10 +103,15 @@ export default {
             height: '0',
           },
         },
+        'border-rotate': {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        }
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'border-rotate': 'border-rotate 4s linear infinite',
       },
     },
   },

@@ -31,6 +31,8 @@
     --chart-4: 210 30% 55%;
     --chart-5: 30 40% 50%;
     --status-active: 120 70% 50%;
+    --neon-blue: 205 80% 55%;
+    --neon-green: 128 65% 52%;
 
     --sidebar-background: 205 85% 15%;
     --sidebar-foreground: 210 25% 85%;
@@ -71,6 +73,8 @@
     --chart-4: 210 40% 65%;
     --chart-5: 30 50% 60%;
     --status-active: 120 70% 50%;
+    --neon-blue: 205 80% 55%;
+    --neon-green: 128 65% 52%;
 
     --sidebar-background: 205 85% 15%;
     --sidebar-foreground: 210 25% 85%;
