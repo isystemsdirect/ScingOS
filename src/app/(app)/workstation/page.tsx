@@ -35,8 +35,8 @@ export default function WorkstationPage() {
       <h1 className="text-3xl font-semibold">Workstation</h1>
 
       <Tabs defaultValue="profile" className="relative">
-        <div className="sticky top-0 z-20 bg-background/95 backdrop-blur-sm -mx-6 px-6 pb-2">
-            <TabsList className="grid w-full grid-cols-6 h-auto p-1">
+        <div className="sticky top-0 z-20">
+            <TabsList className="grid w-full grid-cols-6 h-auto p-1 bg-background/95 backdrop-blur-sm">
                 <TabsTrigger value="profile" className="py-2"><User className="mr-2 h-4 w-4"/>Profile</TabsTrigger>
                 <TabsTrigger value="ai" className="py-2"><Sparkles className="mr-2 h-4 w-4"/>AI & Voice</TabsTrigger>
                 <TabsTrigger value="camera" className="py-2"><Camera className="mr-2 h-4 w-4"/>Camera</TabsTrigger>
