@@ -158,7 +158,7 @@ export default function AppLayout({
               </NavLink>
             </nav>
           </div>
-          <div className="mt-auto px-4 pt-4 pb-12 border-t border-sidebar-border bg-[rgba(0,0,0,0.8)]">
+          <div className="mt-auto px-4 pt-4 pb-24 border-t border-sidebar-border bg-[rgba(0,0,0,0.8)]">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="flex items-center justify-start gap-2 w-full px-2">
