@@ -113,7 +113,7 @@ export default function AppLayout({
             <Logo />
             {isProOrEnterprise && <Badge variant="pro" className="ml-2">Pro</Badge>}
           </div>
-          <div className="flex-1">
+          <div className="flex-1 overflow-auto">
             <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
               <NavLink href="/dashboard">
                 <Home className="h-4 w-4" />
@@ -235,7 +235,7 @@ export default function AppLayout({
                   <Library className="h-5 w-5" />
                   Standards Library
                 </NavLink>
-                <NavLink href="/marketplace" isMobile>
+                <NavLink href="/marketplace" is_mobile>
                   <Store className="h-5 w-5" />
                   Marketplace
                 </NavLink>
@@ -269,11 +269,9 @@ export default function AppLayout({
               <FullscreenToggle />
           </div>
         </header>
-        <div className="flex-1 overflow-auto">
-            <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 bg-transparent">
-              {children}
-            </main>
-        </div>
+        <main className="flex-1 overflow-auto bg-transparent p-4 lg:p-6">
+          {children}
+        </main>
       </div>
     </div>
   );
