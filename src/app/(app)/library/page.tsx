@@ -83,7 +83,7 @@ export default function LibraryPage() {
     <div className="flex flex-col gap-4">
       <div className="flex items-center">
         <div>
-          <h1 className="text-2xl font-bold">Standards &amp; Templates</h1>
+          <h1 className="text-2xl font-bold">Standards & Templates</h1>
           <p className="text-muted-foreground">
             Manage your saved codes, standards, and custom report templates.
           </p>
@@ -196,3 +196,5 @@ export default function LibraryPage() {
     </div>
   );
 }
+
+    

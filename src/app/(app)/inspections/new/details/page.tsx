@@ -87,11 +87,11 @@ function NewInspectionDetailsContent() {
                                     className="pl-9 pr-20 rounded-md"
                                   />
                                   <div className="absolute right-1 top-1/2 flex -translate-y-1/2">
-                                    <Button type="button" variant="ghost" size="icon" className="h-8 w-8 rounded-full">
+                                    <Button type="button" variant="ghost" size="icon" className="h-8 w-8 rounded-md">
                                       <Camera className="h-4 w-4 text-muted-foreground" />
                                       <span className="sr-only">Use visual search</span>
                                     </Button>
-                                    <Button type="button" variant="ghost" size="icon" className="h-8 w-8 rounded-full">
+                                    <Button type="button" variant="ghost" size="icon" className="h-8 w-8 rounded-md">
                                       <Mic className="h-4 w-4 text-muted-foreground" />
                                       <span className="sr-only">Use voice command</span>
                                     </Button>
@@ -165,3 +165,5 @@ export default function NewInspectionDetailsPage() {
     </Suspense>
   )
 }
+
+    

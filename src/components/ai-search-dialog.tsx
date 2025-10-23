@@ -254,11 +254,11 @@ export function AiSearchDialog() {
                             {...field}
                           />
                           <div className="absolute right-1 top-1/2 flex -translate-y-1/2">
-                             <Button type="button" variant="ghost" size="icon" className="h-8 w-8 rounded-full" onClick={() => setIsVisualSearchActive(true)}>
+                             <Button type="button" variant="ghost" size="icon" className="h-8 w-8 rounded-md" onClick={() => setIsVisualSearchActive(true)}>
                                 <Camera className="h-4 w-4 text-muted-foreground" />
                                 <span className="sr-only">Use visual search</span>
                             </Button>
-                            <Button type="button" variant="ghost" size="icon" className="h-8 w-8 rounded-full" onClick={handleMicClick} disabled={isListening}>
+                            <Button type="button" variant="ghost" size="icon" className="h-8 w-8 rounded-md" onClick={handleMicClick} disabled={isListening}>
                                 <Mic className={cn("h-4 w-4 text-muted-foreground", isListening && "text-accent animate-pulse")} />
                                 <span className="sr-only">Use voice command</span>
                             </Button>
@@ -352,3 +352,5 @@ export function AiSearchDialog() {
     </Dialog>
   );
 }
+
+    
