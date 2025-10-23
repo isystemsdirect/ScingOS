@@ -4,27 +4,27 @@
 
 @layer base {
   :root {
-    --background: 210 20% 98%;
+    --background: 50 20% 87%;
     --foreground: 210 10% 23%;
     --card: 210 20% 100%;
     --card-foreground: 210 10% 23%;
     --popover: 210 20% 100%;
     --popover-foreground: 210 10% 23%;
-    --primary: 45 93% 47%;
-    --primary-foreground: 45 93% 5%;
+    --primary: 52 80% 45%;
+    --primary-foreground: 52 80% 5%;
     --secondary: 210 15% 95%;
     --secondary-foreground: 210 10% 23%;
     --muted: 210 15% 95%;
     --muted-foreground: 210 5% 65%;
-    --accent: 45 93% 47%;
-    --accent-foreground: 45 93% 5%;
+    --accent: 22 70% 40%;
+    --accent-foreground: 22 70% 98%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --pro: 45 93% 47%;
-    --pro-foreground: 45 93% 5%;
+    --pro: 52 80% 45%;
+    --pro-foreground: 52 80% 5%;
     --border: 210 15% 88%;
     --input: 210 15% 88%;
-    --ring: 45 93% 47%;
+    --ring: 52 80% 45%;
     --radius: 0.5rem;
     --chart-1: 128 65% 42%;
     --chart-2: 28 95% 53%;
@@ -52,21 +52,21 @@
     --card-foreground: 210 20% 98%;
     --popover: 210 10% 12%;
     --popover-foreground: 210 20% 98%;
-    --primary: 45 93% 47%;
-    --primary-foreground: 45 93% 5%;
+    --primary: 52 80% 45%;
+    --primary-foreground: 52 80% 5%;
     --secondary: 210 10% 23%;
     --secondary-foreground: 210 20% 98%;
     --muted: 210 10% 23%;
     --muted-foreground: 210 5% 65%;
-    --accent: 45 93% 47%;
-    --accent-foreground: 45 93% 5%;
+    --accent: 22 70% 40%;
+    --accent-foreground: 22 70% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --pro: 45 93% 47%;
-    --pro-foreground: 45 93% 5%;
+    --pro: 52 80% 45%;
+    --pro-foreground: 52 80% 5%;
     --border: 210 10% 23%;
     --input: 210 10% 23%;
-    --ring: 45 93% 47%;
+    --ring: 52 80% 45%;
     --radius: 0.5rem;
     
     --chart-1: 128 65% 42%;
@@ -95,5 +95,9 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-alegreya);
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-headline;
   }
 }

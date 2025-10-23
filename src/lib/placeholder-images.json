@@ -3,68 +3,98 @@
     {
       "id": "hero",
       "description": "Abstract architectural lines of a modern building",
-      "imageUrl": "https://picsum.photos/seed/hero/1920/1080",
+      "imageUrl": "https://images.unsplash.com/photo-1691751509846-c51f7ffa41e0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxhcmNoaXRlY3R1cmUlMjBidWlsZGluZ3xlbnwwfHx8fDE3NjEyMzg4OTN8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "architecture building"
     },
     {
       "id": "avatar1",
       "description": "Avatar of an inspector",
-      "imageUrl": "https://picsum.photos/seed/avatar1/100/100",
+      "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwZXJzb24lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjEyMjc5NjN8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "person portrait"
     },
     {
       "id": "avatar2",
       "description": "Avatar of another inspector",
-      "imageUrl": "https://picsum.photos/seed/avatar2/100/100",
+      "imageUrl": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxwZXJzb24lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjEyMjc5NjN8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "person portrait"
     },
     {
       "id": "avatar3",
       "description": "Avatar of a third inspector",
-      "imageUrl": "https://picsum.photos/seed/avatar3/100/100",
+      "imageUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxwZXJzb24lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjEyMjc5NjN8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "person portrait"
     },
     {
       "id": "avatar4",
       "description": "Avatar of a fourth inspector",
-      "imageUrl": "https://picsum.photos/seed/avatar4/100/100",
+      "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwZXJzb24lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjEyMjc5NjN8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "person portrait"
     },
     {
       "id": "inspection-roof",
       "description": "A drone shot of a residential roof",
-      "imageUrl": "https://picsum.photos/seed/roof1/600/400",
+      "imageUrl": "https://images.unsplash.com/photo-1677618010764-4ebaac061ed0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxyb29mJTIwaG91c2V8ZW58MHx8fHwxNzYxMjM4OTc1fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "roof house"
     },
     {
       "id": "inspection-foundation",
       "description": "A crack in a concrete foundation",
-      "imageUrl": "https://picsum.photos/seed/foundation1/600/400",
+      "imageUrl": "https://images.unsplash.com/photo-1546816077-623b4eaab352?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxjb25jcmV0ZSUyMGNyYWNrfGVufDB8fHx8MTc2MTIzODk3NXww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "concrete crack"
     },
     {
       "id": "inspection-electrical",
       "description": "An open electrical panel",
-      "imageUrl": "https://picsum.photos/seed/electrical1/600/400",
+      "imageUrl": "https://images.unsplash.com/photo-1635335874521-7987db781153?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxlbGVjdHJpY2FsJTIwcGFuZWx8ZW58MHx8fHwxNzYxMjM4OTc1fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "electrical panel"
     },
     {
       "id": "inspection-plumbing",
       "description": "Pipes under a sink with a small leak",
-      "imageUrl": "https://picsum.photos/seed/plumbing1/600/400",
+      "imageUrl": "https://images.unsplash.com/photo-1738918897772-0ba101be25c8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwaXBlcyUyMHBsdW1iaW5nfGVufDB8fHx8MTc2MTIzODk3Nnww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "pipes plumbing"
     },
     {
       "id": "inspection-thermal",
       "description": "A thermal image of a wall showing heat loss",
-      "imageUrl": "https://picsum.photos/seed/thermal1/600/400",
+      "imageUrl": "https://images.unsplash.com/photo-1725118344977-79ac52071e93?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHx0aGVybWFsJTIwaW1hZ2V8ZW58MHx8fHwxNzYxMjAyMDcyfDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "thermal image"
     },
     {
       "id": "inspection-lidar",
       "description": "A 3D lidar scan of a room",
-      "imageUrl": "https://picsum.photos/seed/lidar1/600/400",
+      "imageUrl": "https://images.unsplash.com/photo-1646215279503-7dd99848a8ee?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHwzZCUyMHNjYW58ZW58MHx8fHwxNzYxMjM4OTc1fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "3d scan"
+    },
+    {
+      "id": "bg-nature-1",
+      "description": "A misty forest with tall pine trees",
+      "imageUrl": "https://images.unsplash.com/photo-1614200991676-910c80a78ed4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxmb3Jlc3QlMjB0cmVlc3xlbnwwfHx8fDE3NjEyMzg5NzZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "forest trees"
+    },
+    {
+      "id": "bg-nature-2",
+      "description": "A clear blue lake surrounded by mountains",
+      "imageUrl": "https://images.unsplash.com/photo-1725900544660-8d5901d12e4b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxsYWtlJTIwbW91bnRhaW5zfGVufDB8fHx8MTc2MTE2MDc0MXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "lake mountains"
+    },
+    {
+      "id": "bg-nature-3",
+      "description": "A desert landscape at sunset",
+      "imageUrl": "https://images.unsplash.com/photo-1528470621820-ad2177f438d6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxkZXNlcnQlMjBzdW5zZXR8ZW58MHx8fHwxNzYxMTY0NzE3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "desert sunset"
+    },
+    {
+      "id": "bg-city-1",
+      "description": "A bustling city street at night with neon lights",
+      "imageUrl": "https://images.unsplash.com/photo-1531819177115-428566ccfb50?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Y2l0eSUyMG5pZ2h0fGVufDB8fHx8MTc2MTE1OTU3Mnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "city night"
+    },
+    {
+      "id": "bg-monument-1",
+      "description": "A grand historical monument under a clear sky",
+      "imageUrl": "https://images.unsplash.com/photo-1732929747004-10e3b9889217?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxtb251bWVudCUyMGFyY2hpdGVjdHVyZXxlbnwwfHx8fDE3NjEyMzg5NzZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "monument architecture"
     }
   ]
 }

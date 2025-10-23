@@ -56,6 +56,7 @@ import { NavLink } from "@/components/nav-link";
 import { AiSearchDialog } from "@/components/ai-search-dialog";
 import { Separator } from "@/components/ui/separator";
 import { useState, useEffect } from "react";
+import { BackgroundSlideshow } from "@/components/background/background-slideshow";
 
 
 function FullscreenToggle() {
@@ -103,8 +104,9 @@ export default function AppLayout({
 
 
   return (
-    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
-      <div className="hidden border-r bg-sidebar md:block">
+    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] relative">
+      <BackgroundSlideshow />
+      <div className="hidden border-r bg-sidebar md:block z-10">
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
             <Logo />
@@ -189,8 +191,8 @@ export default function AppLayout({
           </div>
         </div>
       </div>
-      <div className="flex flex-col">
-        <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+      <div className="flex flex-col z-10">
+        <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6 backdrop-blur-sm">
           <Sheet>
             <SheetTrigger asChild>
               <Button
@@ -266,7 +268,7 @@ export default function AppLayout({
               <FullscreenToggle />
           </div>
         </header>
-        <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 bg-background">
+        <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 bg-transparent">
           {children}
         </main>
       </div>
