@@ -1,6 +1,6 @@
 
 import Link from "next/link"
-import { CircleUser, Cpu, Palette, PlusCircle, Trash2, Globe, Linkedin, Facebook, History, Mic, Camera, Sparkles, Database, KeyRound, User, Settings, Store, Bell } from "lucide-react"
+import { CircleUser, Cpu, Palette, PlusCircle, Trash2, Globe, Linkedin, Facebook, History, Mic, Camera, Sparkles, Database, KeyRound, User, Settings, Store, Bell, SlidersHorizontal, Bot } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -15,6 +15,7 @@ import { Switch } from "@/components/ui/switch"
 import { Separator } from "@/components/ui/separator"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Slider } from "@/components/ui/slider"
 
 export default function WorkstationPage() {
   const user = mockInspectors[0];
@@ -135,6 +136,48 @@ export default function WorkstationPage() {
                         </SelectContent>
                     </Select>
                   </div>
+                   <Separator />
+                  <div className="grid gap-3">
+                    <Label htmlFor="scing-voice">Scing Voice Response</Label>
+                    <Select defaultValue="algenib">
+                        <SelectTrigger id="scing-voice">
+                            <SelectValue placeholder="Select a voice" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="algenib">Algenib (Default)</SelectItem>
+                            <SelectItem value="achernar">Achernar</SelectItem>
+                            <SelectItem value="canopus">Canopus</SelectItem>
+                            <SelectItem value="rigel">Rigel</SelectItem>
+                        </SelectContent>
+                    </Select>
+                  </div>
+                   <div className="grid gap-3">
+                     <Label htmlFor="recognition-sensitivity">Voice Recognition Sensitivity</Label>
+                     <div className="flex items-center gap-4">
+                        <span className="text-xs text-muted-foreground">Less</span>
+                        <Slider id="recognition-sensitivity" defaultValue={[50]} max={100} step={1} />
+                        <span className="text-xs text-muted-foreground">More</span>
+                     </div>
+                  </div>
+                   <Separator />
+                   <div>
+                        <h4 className="text-lg font-medium">AI Learning Preferences</h4>
+                        <p className="text-sm text-muted-foreground mb-4">Allow Scing to learn from your usage to improve its performance.</p>
+                        <div className="space-y-4">
+                             <div className="flex items-center space-x-2">
+                                <Checkbox id="learn-voice" defaultChecked />
+                                <Label htmlFor="learn-voice" className="font-normal">Allow Scing to learn from my voice commands to improve accuracy.</Label>
+                             </div>
+                             <div className="flex items-center space-x-2">
+                                <Checkbox id="learn-data" defaultChecked />
+                                <Label htmlFor="learn-data" className="font-normal">Use my inspection data to personalize AI summaries and suggestions.</Label>
+                             </div>
+                        </div>
+                        <div className="mt-4">
+                            <Button variant="outline"><Bot className="mr-2 h-4 w-4"/>Retrain Voice Model</Button>
+                        </div>
+                   </div>
+
                 </CardContent>
                  <CardFooter className="border-t px-6 py-4">
                   <Button>Save AI Preferences</Button>
@@ -354,3 +397,5 @@ export default function WorkstationPage() {
     </div>
   )
 }
+
+    
