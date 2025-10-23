@@ -129,7 +129,7 @@ export default function InspectionsPage() {
               </TableHeader>
               <TableBody>
                 {mockInspections.map(inspection => (
-                  <TableRow key={inspection.id}>
+                  <TableRow key={inspection.id} className="cursor-pointer">
                     <TableCell className="font-medium">
                       <Link href={`/inspections/${inspection.id}`} className="hover:underline">
                         {inspection.title}

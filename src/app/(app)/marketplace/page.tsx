@@ -69,7 +69,7 @@ export default function MarketplacePage() {
         {mockInspectors.map((inspector) => {
           const avatar = PlaceHolderImages.find(p => p.id === inspector.imageHint);
           return (
-            <Card key={inspector.id} className="overflow-hidden transition-all hover:shadow-lg">
+            <Card key={inspector.id} className="overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1">
               <CardHeader className="flex flex-row items-start gap-4 p-4 bg-muted/20">
                 {avatar && (
                   <Image

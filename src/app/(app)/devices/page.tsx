@@ -95,7 +95,7 @@ export default function DevicesPage() {
             </TableHeader>
             <TableBody>
               {mockDevices.map(device => (
-                <TableRow key={device.id}>
+                <TableRow key={device.id} className="cursor-pointer hover:bg-muted/50 transition-colors">
                   <TableCell className="hidden sm:table-cell">
                     <div className="h-10 w-10 flex items-center justify-center bg-muted rounded-lg">
                       {getStatusIcon(device.status)}

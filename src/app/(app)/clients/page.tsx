@@ -80,7 +80,7 @@ export default function ClientsPage() {
             </TableHeader>
             <TableBody>
               {mockClients.map(client => (
-                <TableRow key={client.id}>
+                <TableRow key={client.id} className="cursor-pointer">
                   <TableCell className="font-medium">
                     <Link href={`/clients/${client.id}`} className="hover:underline">
                       {client.name}
