@@ -14,7 +14,7 @@ export function BackgroundSlideshow() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % natureImages.length);
-    }, 12000); // Change image every 12 seconds
+    }, 20000); // Change image every 20 seconds
 
     return () => clearInterval(interval);
   }, []);
@@ -29,7 +29,7 @@ export function BackgroundSlideshow() {
           fill
           priority={index === 0}
           className={cn(
-            'object-cover transition-opacity duration-[5000ms] ease-in-out',
+            'object-cover transition-opacity duration-[8000ms] ease-in-out',
             index === currentIndex ? 'opacity-40' : 'opacity-0'
           )}
           data-ai-hint={image.imageHint}
