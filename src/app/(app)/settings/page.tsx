@@ -1,5 +1,6 @@
+
 import Link from "next/link"
-import { CircleUser, Home, LineChart, Package, Package2, PanelLeft, Search, Settings, ShoppingCart, Users2, PlusCircle, Trash2, Globe, Linkedin, Facebook } from "lucide-react"
+import { CircleUser, Home, LineChart, Package, Package2, PanelLeft, Search, Settings, ShoppingCart, Users2, PlusCircle, Trash2, Globe, Linkedin, Facebook, History } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -18,6 +19,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 
 export default function SettingsPage() {
   const user = mockInspectors[0];
+
+  const searchHistory = [
+    { id: 1, query: "foundation crack requirements", date: "2023-10-28" },
+    { id: 2, query: "NFPA 70 section 240.87", date: "2023-10-27" },
+    { id: 3, query: "asbestos testing protocol", date: "2023-10-26" },
+  ]
 
   return (
     <div className="grid max-w-4xl mx-auto gap-4">
@@ -265,6 +272,38 @@ export default function SettingsPage() {
             </CardContent>
              <CardFooter className="border-t px-6 py-4">
               <Button>Save Preferences</Button>
+            </CardFooter>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Scing Search History</CardTitle>
+              <CardDescription>
+                Review or clear your past AI search queries.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Query</TableHead>
+                    <TableHead className="text-right">Date</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {searchHistory.map((item) => (
+                    <TableRow key={item.id}>
+                      <TableCell className="font-medium truncate max-w-[300px]">{item.query}</TableCell>
+                      <TableCell className="text-right text-muted-foreground">{item.date}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+            <CardFooter className="border-t px-6 py-4">
+              <Button variant="destructive">
+                <Trash2 className="mr-2 h-4 w-4" />
+                Clear History
+              </Button>
             </CardFooter>
           </Card>
         </div>
