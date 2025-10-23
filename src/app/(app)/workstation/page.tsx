@@ -1,6 +1,6 @@
 
 import Link from "next/link"
-import { CircleUser, Cpu, Palette, PlusCircle, Trash2, Globe, Linkedin, Facebook, History, Mic, Camera, Sparkles, Database, KeyRound, User, Settings, Store, Bell, SlidersHorizontal, Bot } from "lucide-react"
+import { CircleUser, Cpu, Palette, PlusCircle, Trash2, Globe, Linkedin, Facebook, History, Mic, Camera, Sparkles, Database, KeyRound, User, Settings, Store, Bell, SlidersHorizontal, Bot, Wifi, Bluetooth } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -132,10 +132,34 @@ export default function WorkstationPage() {
                         <SelectContent>
                             <SelectItem value="default">Default System Microphone</SelectItem>
                             <SelectItem value="mic-1">Built-in Microphone (MacBook Pro)</SelectItem>
-                            <SelectItem value="mic-2">U-PHORIA UMC202HD</SelectItem>
+                            <SelectItem value="mic-2">AirPods Pro</SelectItem>
+                            <SelectItem value="mic-3">WH-1000XM5 Wireless Headset</SelectItem>
+                            <SelectItem value="mic-4">U-PHORIA UMC202HD</SelectItem>
                         </SelectContent>
                     </Select>
                   </div>
+                   <Separator />
+                   <div className="grid gap-6">
+                        <h4 className="text-lg font-semibold">Connectivity</h4>
+                        <div className="flex items-center justify-between rounded-lg border p-4">
+                            <div>
+                                <h5 className="font-medium">Prioritize Stable WiFi Connection</h5>
+                                <p className="text-sm text-muted-foreground">
+                                    When enabled, Scing will prefer stable WiFi over cellular data for large uploads.
+                                </p>
+                            </div>
+                            <Switch />
+                        </div>
+                        <div className="flex items-center justify-between rounded-lg border p-4">
+                            <div>
+                                <h5 className="font-medium">Bluetooth & Wireless Devices</h5>
+                                <p className="text-sm text-muted-foreground">
+                                    Manage your connected headsets and other wireless peripherals.
+                                </p>
+                            </div>
+                            <Button variant="outline"><Bluetooth className="mr-2 h-4 w-4" /> Manage Devices</Button>
+                        </div>
+                    </div>
                    <Separator />
                   <div className="grid gap-3">
                     <Label htmlFor="scing-voice">Scing Voice Response</Label>
@@ -397,5 +421,3 @@ export default function WorkstationPage() {
     </div>
   )
 }
-
-    
