@@ -18,6 +18,7 @@ import {
   RotateCcw,
   Cpu,
   Signal,
+  BatteryCharging,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -219,6 +220,16 @@ export default function DeviceDashboardPage() {
                         <Cloud className="h-4 w-4 mr-2 text-muted-foreground" />
                         <span>Cloud Sync:</span>
                         <span className="ml-auto font-medium">Up to date</span>
+                    </div>
+                    <div className="flex items-center">
+                        <BatteryCharging className="h-4 w-4 mr-2 text-muted-foreground" />
+                        <span>Battery 1 (Active):</span>
+                        <span className="ml-auto font-medium text-green-500">88% (2h 15m)</span>
+                    </div>
+                     <div className="flex items-center">
+                        <BatteryCharging className="h-4 w-4 mr-2 text-muted-foreground" />
+                        <span>Battery 2:</span>
+                        <span className="ml-auto font-medium">95%</span>
                     </div>
                      <div className="flex items-center">
                         <Bell className="h-4 w-4 mr-2 text-muted-foreground" />
