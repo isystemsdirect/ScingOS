@@ -104,12 +104,18 @@ export default {
         'border-rotate': {
           '0%': { transform: 'rotate(0deg)' },
           '100%': { transform: 'rotate(360deg)' },
+        },
+        'background-pan': {
+          '0%': { 'background-position': '0% center' },
+          '50%': { 'background-position': '100% center' },
+          '100%': { 'background-position': '0% center' },
         }
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'border-rotate': 'border-rotate 4s linear infinite',
+        'background-pan': 'background-pan 3s linear infinite',
       },
     },
   },

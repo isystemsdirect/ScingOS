@@ -100,3 +100,11 @@
     @apply font-sans font-semibold;
   }
 }
+
+@layer components {
+    .interactive-pulse {
+        background-image: linear-gradient(to right, hsl(var(--primary)), hsl(40 80% 50%), hsl(var(--primary)));
+        background-size: 200% auto;
+        animation: background-pan 3s linear infinite;
+    }
+}
