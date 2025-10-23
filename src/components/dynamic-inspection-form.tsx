@@ -4,7 +4,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { User, Users, PlusCircle, MapPin, Search, Camera, Mic } from "lucide-react";
+import { User, Users, PlusCircle, MapPin, Search, Camera, Mic, Building } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -115,6 +115,27 @@ function DynamicInspectionFormContent({ inspectionType }: DynamicInspectionFormP
                 </div>
             </div>
         </div>
+
+        <Separator />
+
+        <div className="grid gap-4">
+            <h3 className="font-semibold text-lg">Inspection-Specific Details</h3>
+            
+            {inspectionType === "Multi-family due-diligence unit walks (sampled or 100%)" && (
+                <div className="grid gap-3">
+                    <Label htmlFor="number-of-units">Number of Units</Label>
+                    <div className="relative">
+                        <Building className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input id="number-of-units" type="number" placeholder="e.g., 50" className="pl-9" />
+                    </div>
+                </div>
+            )}
+            
+            <p className="text-sm text-muted-foreground">
+                More inspection-specific fields will appear here based on the selected template.
+            </p>
+        </div>
+
 
         <Separator />
         <div className="flex justify-end">
