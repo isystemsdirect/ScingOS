@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import {
@@ -8,6 +7,7 @@ import {
   ListFilter,
   PlusCircle,
   Search,
+  Upload,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -83,9 +83,9 @@ export default function LibraryPage() {
     <div className="flex flex-col gap-4">
       <div className="flex items-center">
         <div>
-          <h1 className="text-2xl font-bold">Standards & Templates</h1>
+          <h1 className="text-2xl font-bold">Standards Library</h1>
           <p className="text-muted-foreground">
-            Manage your saved codes, standards, and custom report templates.
+            Manage the codes and standards used to train your personal AI model.
           </p>
         </div>
         <div className="ml-auto flex items-center gap-2">
@@ -106,20 +106,10 @@ export default function LibraryPage() {
               <DropdownMenuCheckboxItem>Residential</DropdownMenuCheckboxItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          {isProOrEnterprise && (
-            <Button size="sm" className="h-8 gap-1" asChild>
-              <Link href="/templates/new">
-                <PlusCircle className="h-3.5 w-3.5" />
-                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                  Create Template
-                </span>
-              </Link>
-            </Button>
-          )}
           <Button size="sm" className="h-8 gap-1">
-            <PlusCircle className="h-3.5 w-3.5" />
+            <Upload className="h-3.5 w-3.5" />
             <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-              Add Document
+              Upload Document
             </span>
           </Button>
         </div>
@@ -136,8 +126,7 @@ export default function LibraryPage() {
         <CardHeader>
           <CardTitle>My Saved Documents</CardTitle>
           <CardDescription>
-            These documents are used to train your personal AI model for report
-            generation.
+            These documents are used by the AI for code cross-referencing and report generation.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -196,5 +185,3 @@ export default function LibraryPage() {
     </div>
   );
 }
-
-    

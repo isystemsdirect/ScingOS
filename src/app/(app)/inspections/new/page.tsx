@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import Link from "next/link";
@@ -48,19 +46,19 @@ export default function NewInspectionPage() {
             </div>
             <Card>
               <CardHeader>
-                <CardTitle>Step 1: Select Primary Inspection Type</CardTitle>
+                <CardTitle>Step 1: Select Inspection Template</CardTitle>
                 <CardDescription>
-                  Choose the main type of inspection you are performing from the list below, or create your own template.
+                  Choose from the library, a project template, or one of your saved custom templates.
                 </CardDescription>
                  <div className="pt-4">
                      <Tabs defaultValue="library">
                         <TabsList className="grid w-full grid-cols-3">
-                            <TabsTrigger value="library"><Library className="mr-2 h-4 w-4" />Library</TabsTrigger>
-                            <TabsTrigger value="projects"><FolderKanban className="mr-2 h-4 w-4"/>Projects</TabsTrigger>
-                            <TabsTrigger value="saved"><Star className="mr-2 h-4 w-4"/>Saved Templates</TabsTrigger>
+                            <TabsTrigger value="library"><Library className="mr-2 h-4 w-4" />Template Library</TabsTrigger>
+                            <TabsTrigger value="projects"><FolderKanban className="mr-2 h-4 w-4"/>Team Projects</TabsTrigger>
+                            <TabsTrigger value="saved"><Star className="mr-2 h-4 w-4"/>My Templates</TabsTrigger>
                         </TabsList>
-                        <TabsContent value="library">
-                             <div className="flex items-center gap-2 pt-4">
+                        <TabsContent value="library" className="pt-4">
+                             <div className="flex items-center gap-2">
                                 <div className="relative flex-1">
                                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                                     <Input placeholder="Search inspection types..." className="pl-9 rounded-md" />
@@ -91,9 +89,15 @@ export default function NewInspectionPage() {
                                     </Button>
                                 )}
                             </div>
+                            <div className="mt-4">
+                                <InspectionTypeList
+                                selectionMode="single"
+                                onSelectionChange={(selection) => setPrimaryType(selection as string)}
+                                />
+                            </div>
                         </TabsContent>
                          <TabsContent value="projects">
-                            <div className="flex flex-col items-center justify-center pt-8 text-center">
+                            <div className="flex flex-col items-center justify-center pt-8 text-center min-h-[200px]">
                                 <p className="text-muted-foreground mb-4">Project folders are managed in the Teams section.</p>
                                 <Button asChild>
                                     <Link href="/teams">Go to Teams & Dispatch</Link>
@@ -101,19 +105,14 @@ export default function NewInspectionPage() {
                             </div>
                         </TabsContent>
                         <TabsContent value="saved">
-                           <div className="flex flex-col items-center justify-center pt-8 text-center">
+                           <div className="flex flex-col items-center justify-center pt-8 text-center min-h-[200px]">
                                 <p className="text-muted-foreground">Your saved custom templates will appear here.</p>
+                                 <p className="text-xs text-muted-foreground mt-2">Create a new template from the Library tab.</p>
                             </div>
                         </TabsContent>
                     </Tabs>
                 </div>
               </CardHeader>
-              <CardContent>
-                <InspectionTypeList
-                  selectionMode="single"
-                  onSelectionChange={(selection) => setPrimaryType(selection as string)}
-                />
-              </CardContent>
             </Card>
 
             {primaryType && (
@@ -141,5 +140,3 @@ export default function NewInspectionPage() {
     </div>
   );
 }
-
-    
