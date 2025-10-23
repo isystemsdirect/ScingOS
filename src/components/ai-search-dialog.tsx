@@ -286,7 +286,7 @@ export function AiSearchDialog() {
                       {results.codeCitations.map((citation, index) => (
                         <li key={index} className="rounded-lg border p-4">
                           <div className="flex items-center justify-between">
-                            <h4 className="font-semibold text-primary">
+                            <h4 className="font-semibold text-accent">
                               {citation}
                             </h4>
                             <span className="text-sm font-medium text-muted-foreground">
@@ -344,3 +344,5 @@ export function AiSearchDialog() {
     </Dialog>
   );
 }
+
+    
