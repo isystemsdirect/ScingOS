@@ -91,7 +91,7 @@ export function AiSearchDialog() {
                     <div className="relative">
                       <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                       <Input
-                        placeholder="e.g. 'minimum height for guardrails' or use the mic"
+                        placeholder="Consult Scing."
                         className="pl-8 pr-10"
                         {...field}
                       />
