@@ -186,7 +186,7 @@ export function AiSearchDialog() {
       <DialogTrigger asChild>
         <Button
           variant="outline"
-          className="w-full justify-start text-sm text-muted-foreground md:w-2/3 lg:w-1/3"
+          className="w-full justify-start text-sm text-muted-foreground"
         >
           <Search className="mr-2 h-4 w-4" />
           <span>{isProOrEnterprise ? 'Consult Scing Professional' : 'Consult Scing'}</span>
