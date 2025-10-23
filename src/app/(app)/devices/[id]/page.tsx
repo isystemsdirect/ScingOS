@@ -17,6 +17,7 @@ import {
   Play,
   RotateCcw,
   Cpu,
+  Signal,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -46,6 +47,19 @@ import type { ChartConfig } from "@/components/ui/chart";
 import { useEffect, useRef, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
+
+const chartData = Array.from({ length: 10 }, (_, i) => ({
+  time: `${i * 10}s`,
+  signal: Math.floor(Math.random() * (95 - 75 + 1) + 75),
+}));
+
+const chartConfig = {
+  signal: {
+    label: "Signal",
+    color: "hsl(var(--primary))",
+  },
+} satisfies ChartConfig;
 
 
 export default function DeviceDashboardPage() {
@@ -121,25 +135,58 @@ export default function DeviceDashboardPage() {
       </div>
 
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-        <Card className="lg:col-span-2">
-            <CardHeader>
-                <CardTitle>Live Camera Feed</CardTitle>
-                <CardDescription>Simulated real-time visual from the device.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <div className="relative aspect-video w-full bg-muted rounded-md overflow-hidden flex items-center justify-center">
-                    <video ref={videoRef} className="w-full h-full object-cover" autoPlay muted playsInline />
-                     {hasCameraPermission === false && (
-                        <Alert variant="destructive" className="w-auto">
-                            <AlertTitle>Camera Access Required</AlertTitle>
-                            <AlertDescription>
-                                Please allow camera access to use this feature.
-                            </AlertDescription>
-                        </Alert>
-                    )}
-                </div>
-            </CardContent>
-        </Card>
+        <div className="grid auto-rows-max items-start gap-8 lg:col-span-2">
+            <Card>
+                <CardHeader>
+                    <CardTitle>Live HUD</CardTitle>
+                    <CardDescription>Real-time telemetry and signal strength.</CardDescription>
+                </CardHeader>
+                <CardContent className="grid gap-6">
+                    <div className="relative aspect-video w-full bg-muted rounded-md overflow-hidden flex items-center justify-center">
+                        <video ref={videoRef} className="w-full h-full object-cover" autoPlay muted playsInline />
+                         {hasCameraPermission === false && (
+                            <Alert variant="destructive" className="w-auto">
+                                <AlertTitle>Camera Access Required</AlertTitle>
+                                <AlertDescription>
+                                    Please allow camera access to use this feature.
+                                </AlertDescription>
+                            </Alert>
+                        )}
+                    </div>
+                </CardContent>
+            </Card>
+            <Card>
+                <CardHeader>
+                    <CardTitle>Telemetry Readings</CardTitle>
+                    <CardDescription>Historical signal strength over the last 100 seconds.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                     <ChartContainer config={chartConfig} className="h-[200px] w-full">
+                        <AreaChart accessibilityLayer data={chartData}>
+                            <CartesianGrid vertical={false} />
+                            <XAxis
+                                dataKey="time"
+                                tickLine={false}
+                                tickMargin={10}
+                                axisLine={false}
+                            />
+                            <ChartTooltip
+                                cursor={false}
+                                content={<ChartTooltipContent indicator="line" />}
+                            />
+                            <Area
+                            dataKey="signal"
+                            type="natural"
+                            fill="var(--color-signal)"
+                            fillOpacity={0.4}
+                            stroke="var(--color-signal)"
+                            stackId="a"
+                            />
+                        </AreaChart>
+                    </ChartContainer>
+                </CardContent>
+            </Card>
+        </div>
         
         <div className="space-y-8">
             <Card>
