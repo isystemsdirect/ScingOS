@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Search, Loader2, FileText, ExternalLink, Mic } from 'lucide-react';
+import { Search, Loader2, FileText, ExternalLink, Mic, Camera } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -92,13 +92,19 @@ export function AiSearchDialog() {
                       <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                       <Input
                         placeholder="Consult Scing."
-                        className="pl-8 pr-10"
+                        className="pl-8 pr-20"
                         {...field}
                       />
-                      <Button variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full">
-                          <Mic className="h-4 w-4 text-muted-foreground" />
-                          <span className="sr-only">Use voice command</span>
-                      </Button>
+                      <div className="absolute right-1 top-1/2 flex -translate-y-1/2">
+                        <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
+                            <Camera className="h-4 w-4 text-muted-foreground" />
+                            <span className="sr-only">Use visual search</span>
+                        </Button>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
+                            <Mic className="h-4 w-4 text-muted-foreground" />
+                            <span className="sr-only">Use voice command</span>
+                        </Button>
+                      </div>
                     </div>
                   </FormControl>
                   <FormMessage />
