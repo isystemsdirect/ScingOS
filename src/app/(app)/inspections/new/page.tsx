@@ -13,12 +13,12 @@ import {
 } from "@/components/ui/card";
 import { InspectionTypeList } from "@/components/inspection-type-list";
 import { useState } from "react";
-import { Separator } from "@/components/ui/separator";
 import { useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuCheckboxItem } from "@/components/ui/dropdown-menu";
 import { mockSubscriptionPlans } from "@/lib/data";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { slugify } from "@/lib/utils";
 
 export default function NewInspectionPage() {
   const [primaryType, setPrimaryType] = useState<string | null>(null);
@@ -28,11 +28,12 @@ export default function NewInspectionPage() {
   const currentPlan = mockSubscriptionPlans.find(plan => plan.isCurrent);
   const isProOrEnterprise = currentPlan && (currentPlan.name === 'Pro' || currentPlan.name === 'Enterprise');
 
+  const inspectionSlug = primaryType ? slugify(primaryType.split('-').slice(1).join('-')) : '';
 
   return (
-    <div className="flex min-h-screen w-full flex-col">
-      <div className="flex flex-col sm:gap-4 sm:py-4">
-        <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 max-w-4xl mx-auto w-full">
+    <div className="mx-auto w-full max-w-4xl px-4 lg:px-6">
+      <div className="flex flex-col sm:gap-4">
+        <main className="grid flex-1 items-start gap-4 md:gap-8">
           <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
             <div className="flex items-center gap-4">
               <Link href={clientId ? `/clients/${clientId}` : "/inspections"}>
@@ -47,7 +48,7 @@ export default function NewInspectionPage() {
             </div>
             <Card>
               <CardHeader>
-                <CardTitle>Step 1: Select Inspection Template</CardTitle>
+                <CardTitle>Select Inspection Template</CardTitle>
                 <CardDescription>
                   Choose from the library, a project template, or one of your saved custom templates.
                 </CardDescription>
@@ -114,27 +115,16 @@ export default function NewInspectionPage() {
                     </Tabs>
                 </div>
               </CardHeader>
-            </Card>
-
-            {primaryType && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Step 2: Add-on Inspections (Optional)</CardTitle>
-                  <CardDescription>
-                    You can add multiple secondary inspections to this project.
-                  </CardDescription>
-                </CardHeader>
+               {primaryType && (
                 <CardContent>
-                   <InspectionTypeList selectionMode="multiple" />
-                   <Separator className="my-6" />
                    <Button className="w-full sm:w-auto" asChild>
-                     <Link href={{ pathname: "/inspections/new/details", query: { clientId: clientId ?? undefined }}}>
-                        Next: Add Property Details
+                     <Link href={{ pathname: `/inspections/new/${inspectionSlug}`, query: { clientId: clientId ?? undefined }}}>
+                        Next: Fill Details
                      </Link>
                   </Button>
                 </CardContent>
-              </Card>
-            )}
+              )}
+            </Card>
           </div>
         </main>
       </div>
