@@ -151,6 +151,33 @@ export default function DeviceDashboardPage() {
                     <Button variant="destructive"><Power className="mr-2"/>Reboot</Button>
                 </CardContent>
             </Card>
+             <Card>
+                <CardHeader>
+                    <CardTitle>Device Readings</CardTitle>
+                </CardHeader>
+                <CardContent className="grid gap-4 text-sm">
+                    <div className="flex items-center">
+                        <Thermometer className="h-4 w-4 mr-2 text-muted-foreground" />
+                        <span>Core Temp:</span>
+                        <span className="ml-auto font-medium">45°C</span>
+                    </div>
+                    <div className="flex items-center">
+                        <HardDrive className="h-4 w-4 mr-2 text-muted-foreground" />
+                        <span>Storage:</span>
+                        <span className="ml-auto font-medium">12.5 / 64 GB</span>
+                    </div>
+                     <div className="flex items-center">
+                        <Cloud className="h-4 w-4 mr-2 text-muted-foreground" />
+                        <span>Cloud Sync:</span>
+                        <span className="ml-auto font-medium">Up to date</span>
+                    </div>
+                     <div className="flex items-center">
+                        <Bell className="h-4 w-4 mr-2 text-muted-foreground" />
+                        <span>Alerts:</span>
+                         <span className="ml-auto font-medium text-green-500">Nominal</span>
+                    </div>
+                </CardContent>
+            </Card>
             <Card>
                 <CardHeader>
                     <CardTitle>Device Info</CardTitle>
