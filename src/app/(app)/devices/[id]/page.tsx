@@ -43,23 +43,49 @@ import {
 } from "@/components/ui/chart";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 import type { ChartConfig } from "@/components/ui/chart";
+import { useEffect, useRef, useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
-const chartData = Array.from({ length: 20 }, (_, i) => ({
-  time: `${i * 5}s`,
-  signal: Math.floor(Math.random() * 20 + 80),
-}));
-
-
-const chartConfig = {
-  signal: {
-    label: "Signal",
-    color: "hsl(var(--primary))",
-  },
-} satisfies ChartConfig;
 
 export default function DeviceDashboardPage() {
   const params = useParams<{ id: string }>();
   const device = mockDevices.find(d => d.id === params.id);
+  
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    let stream: MediaStream | null = null;
+    const getCameraPermission = async () => {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        setHasCameraPermission(true);
+
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+        }
+      } catch (error) {
+        console.error('Error accessing camera:', error);
+        setHasCameraPermission(false);
+        toast({
+          variant: 'destructive',
+          title: 'Camera Access Denied',
+          description: 'Please enable camera permissions in your browser settings to see the live feed.',
+        });
+      }
+    };
+
+    getCameraPermission();
+
+    return () => {
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+        }
+    }
+  }, [toast]);
+
 
   if (!device) {
     notFound();
@@ -97,45 +123,21 @@ export default function DeviceDashboardPage() {
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
         <Card className="lg:col-span-2">
             <CardHeader>
-                <CardTitle>Live HUD</CardTitle>
-                <CardDescription>Real-time telemetry and signal strength.</CardDescription>
+                <CardTitle>Live Camera Feed</CardTitle>
+                <CardDescription>Simulated real-time visual from the device.</CardDescription>
             </CardHeader>
             <CardContent>
-                <ChartContainer config={chartConfig} className="h-[300px] w-full">
-                <AreaChart
-                    accessibilityLayer
-                    data={chartData}
-                    margin={{
-                    left: 12,
-                    right: 12,
-                    }}
-                >
-                    <CartesianGrid vertical={false} />
-                    <XAxis
-                    dataKey="time"
-                    tickLine={false}
-                    axisLine={false}
-                    tickMargin={8}
-                    tickFormatter={(value) => value.slice(0, 3)}
-                    />
-                    <ChartTooltip
-                    cursor={false}
-                    content={<ChartTooltipContent 
-                        indicator="dot"
-                        labelFormatter={(value, payload) => `Time: ${payload[0]?.payload.time}`} 
-                        formatter={(value) => [`${value}%`, 'Signal Strength']}
-                    />}
-                    />
-                    <Area
-                    dataKey="signal"
-                    type="natural"
-                    fill="var(--color-signal)"
-                    fillOpacity={0.4}
-                    stroke="var(--color-signal)"
-                    stackId="a"
-                    />
-                </AreaChart>
-                </ChartContainer>
+                <div className="relative aspect-video w-full bg-muted rounded-md overflow-hidden flex items-center justify-center">
+                    <video ref={videoRef} className="w-full h-full object-cover" autoPlay muted playsInline />
+                     {hasCameraPermission === false && (
+                        <Alert variant="destructive" className="w-auto">
+                            <AlertTitle>Camera Access Required</AlertTitle>
+                            <AlertDescription>
+                                Please allow camera access to use this feature.
+                            </AlertDescription>
+                        </Alert>
+                    )}
+                </div>
             </CardContent>
         </Card>
         
