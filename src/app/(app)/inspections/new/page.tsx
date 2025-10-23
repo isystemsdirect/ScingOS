@@ -18,7 +18,6 @@ import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuCheckboxItem } from "@/components/ui/dropdown-menu";
 import { mockSubscriptionPlans } from "@/lib/data";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { slugify } from "@/lib/utils";
 
 export default function NewInspectionPage() {
   const [primaryType, setPrimaryType] = useState<string | null>(null);
@@ -27,8 +26,6 @@ export default function NewInspectionPage() {
   
   const currentPlan = mockSubscriptionPlans.find(plan => plan.isCurrent);
   const isProOrEnterprise = currentPlan && (currentPlan.name === 'Pro' || currentPlan.name === 'Enterprise');
-
-  const inspectionSlug = primaryType ? slugify(primaryType.split('-').slice(1).join('-')) : '';
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 lg:px-6">
@@ -43,7 +40,7 @@ export default function NewInspectionPage() {
                 </Button>
               </Link>
               <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
-                Start a New Inspection
+                New Inspection: Step 1 of 3
               </h1>
             </div>
             <Card>
@@ -118,8 +115,8 @@ export default function NewInspectionPage() {
                {primaryType && (
                 <CardContent>
                    <Button className="w-full sm:w-auto" asChild>
-                     <Link href={{ pathname: `/inspections/new/${inspectionSlug}`, query: { clientId: clientId ?? undefined }}}>
-                        Next: Fill Details
+                     <Link href={{ pathname: "/inspections/new/details", query: { clientId: clientId ?? undefined }}}>
+                        Next: Client & Property Details
                      </Link>
                   </Button>
                 </CardContent>

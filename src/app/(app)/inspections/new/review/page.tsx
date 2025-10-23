@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import Link from "next/link";
@@ -25,15 +24,12 @@ import { slugify } from "@/lib/utils";
 function NewInspectionReviewContent() {
   const searchParams = useSearchParams();
   const clientId = searchParams.get('clientId');
-  const inspectionTypeSlug = searchParams.get('inspectionType');
-
-  if(!inspectionTypeSlug) {
-      notFound();
-  }
+  // For the wizard, we'll assume the type is passed as a query param from step 1
+  const inspectionTypeParam = "General property condition assessment (PCA)";
 
   const inspectionType = inspectionData.inspectionTypeCategories
     .flatMap(category => category.types)
-    .find(type => slugify(type) === inspectionTypeSlug);
+    .find(type => type === inspectionTypeParam);
 
 
   // Find the selected client from mock data, or use the first one as a fallback for the demo
@@ -61,19 +57,19 @@ function NewInspectionReviewContent() {
         <main className="grid flex-1 items-start gap-4 md:gap-8">
           <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
             <div className="flex items-center gap-4">
-              <Link href={{pathname: `/inspections/new/${inspectionTypeSlug}`, query: { clientId: clientId ?? undefined }}}>
+              <Link href={{pathname: `/inspections/new/details`, query: { clientId: clientId ?? undefined }}}>
                 <Button variant="outline" size="icon" className="h-7 w-7">
                   <ChevronLeft className="h-4 w-4" />
                   <span className="sr-only">Back</span>
                 </Button>
               </Link>
               <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
-                New Inspection: Review
+                New Inspection: Step 3 of 3
               </h1>
             </div>
             <Card>
               <CardHeader>
-                <CardTitle>Step 3: Review & Confirm</CardTitle>
+                <CardTitle>Review & Confirm</CardTitle>
                 <CardDescription>
                   Please review the details below before starting the inspection.
                 </CardDescription>
@@ -99,7 +95,7 @@ function NewInspectionReviewContent() {
                     <div className="flex items-center justify-between">
                         <h3 className="font-semibold text-lg">Property & Client</h3>
                          <Button variant="ghost" size="sm" asChild>
-                            <Link href={{pathname: `/inspections/new/${inspectionTypeSlug}`, query: {clientId: clientId ?? undefined}}}><Edit className="mr-2 h-4 w-4" />Edit</Link>
+                            <Link href={{pathname: `/inspections/new/details`, query: {clientId: clientId ?? undefined}}}><Edit className="mr-2 h-4 w-4" />Edit</Link>
                         </Button>
                     </div>
                     <div className="grid md:grid-cols-2 gap-6">
@@ -124,7 +120,7 @@ function NewInspectionReviewContent() {
               </CardContent>
               <CardFooter className="border-t p-6">
                  <Button size="lg" className="w-full sm:w-auto ml-auto" asChild>
-                    <Link href={`/clients/${inspectionDetails.client.id}`}>Confirm & Start</Link>
+                    <Link href={`/clients/${inspectionDetails.client.id}`}>Confirm & Start Inspection</Link>
                 </Button>
               </CardFooter>
             </Card>

@@ -43,12 +43,12 @@ function NewInspectionDetailsContent() {
                 </Button>
               </Link>
               <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
-                New Inspection: Details
+                New Inspection: Step 2 of 3
               </h1>
             </div>
             <Card>
               <CardHeader>
-                <CardTitle>Step 2: Client & Property Information</CardTitle>
+                <CardTitle>Client & Property Information</CardTitle>
                 <CardDescription>
                   Select the client for this inspection and enter the property address.
                 </CardDescription>
@@ -143,7 +143,7 @@ function NewInspectionDetailsContent() {
 
                 <Separator />
                  <Button asChild className="w-full sm:w-auto">
-                    <Link href={{pathname: "/inspections/new/review", query: {clientId: clientId ?? undefined}}}>Review & Confirm</Link>
+                    <Link href={{pathname: "/inspections/new/review", query: {clientId: clientId ?? undefined}}}>Next: Review & Confirm</Link>
                 </Button>
 
               </CardContent>
