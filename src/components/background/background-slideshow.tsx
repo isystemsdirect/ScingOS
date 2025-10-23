@@ -29,13 +29,12 @@ export function BackgroundSlideshow() {
           fill
           priority={index === 0}
           className={cn(
-            'object-cover transition-opacity duration-[3000ms] ease-in-out',
-            index === currentIndex ? 'opacity-30' : 'opacity-0'
+            'object-cover transition-opacity duration-[5000ms] ease-in-out',
+            index === currentIndex ? 'opacity-40' : 'opacity-0'
           )}
           data-ai-hint={image.imageHint}
         />
       ))}
-       <div className="absolute inset-0 bg-black/50"></div>
     </div>
   );
 }
