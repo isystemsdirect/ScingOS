@@ -211,13 +211,22 @@ export default function AppLayout({
               </nav>
             </SheetContent>
           </Sheet>
-          <div className="w-full flex-1">
+          <div className="flex-1">
              <AiSearchDialog />
           </div>
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <Bell className="h-5 w-5" />
-            <span className="sr-only">Toggle notifications</span>
-          </Button>
+
+          <div className="flex items-center gap-4">
+              {user.onCall && (
+                <div className="hidden md:flex items-center gap-2 text-sm font-semibold text-status-active animate-pulse">
+                  <div className="w-2 h-2 rounded-full bg-status-active" />
+                  Marketplace Status: Active
+                </div>
+              )}
+              <Button variant="ghost" size="icon" className="rounded-full">
+                <Bell className="h-5 w-5" />
+                <span className="sr-only">Toggle notifications</span>
+              </Button>
+          </div>
         </header>
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 bg-background">
           {children}

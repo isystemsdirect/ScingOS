@@ -31,6 +31,7 @@
     --chart-4: 210 30% 55%;
     --chart-5: 30 40% 50%;
     --radius: 0.5rem;
+    --status-active: 120 70% 50%;
 
     --sidebar-background: 205 85% 15%;
     --sidebar-foreground: 210 25% 85%;
@@ -70,6 +71,7 @@
     --chart-3: 205 80% 40%;
     --chart-4: 210 40% 65%;
     --chart-5: 30 50% 60%;
+    --status-active: 120 70% 50%;
 
     --sidebar-background: 205 85% 15%;
     --sidebar-foreground: 210 25% 85%;

@@ -77,6 +77,7 @@ export default {
           border: 'hsl(var(--sidebar-border))',
           ring: 'hsl(var(--sidebar-ring))',
         },
+        "status-active": 'hsl(var(--status-active))',
       },
       borderRadius: {
         lg: 'var(--radius)',
