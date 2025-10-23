@@ -3,7 +3,7 @@
 'use client';
 
 import Link from "next/link";
-import { ChevronLeft, PlusCircle, User, Users, MapPin } from "lucide-react";
+import { ChevronLeft, PlusCircle, User, Users, MapPin, Search, Camera, Mic } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -25,6 +25,7 @@ import { mockClients } from "@/lib/data";
 import { ClientForm } from "@/components/client-form";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
+import { cn } from "@/lib/utils";
 
 function NewInspectionDetailsContent() {
   const searchParams = useSearchParams();
@@ -79,6 +80,23 @@ function NewInspectionDetailsContent() {
                           </TabsContent>
                           <TabsContent value="existing-client">
                               <div className="grid gap-4 pt-4">
+                                <div className="relative">
+                                  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                  <Input
+                                    placeholder="Search clients by name, email..."
+                                    className="pl-9 pr-20"
+                                  />
+                                  <div className="absolute right-1 top-1/2 flex -translate-y-1/2">
+                                    <Button type="button" variant="ghost" size="icon" className="h-8 w-8 rounded-full">
+                                      <Camera className="h-4 w-4 text-muted-foreground" />
+                                      <span className="sr-only">Use visual search</span>
+                                    </Button>
+                                    <Button type="button" variant="ghost" size="icon" className="h-8 w-8 rounded-full">
+                                      <Mic className="h-4 w-4 text-muted-foreground" />
+                                      <span className="sr-only">Use voice command</span>
+                                    </Button>
+                                  </div>
+                                </div>
                                 <div className="space-y-4">
                                   {mockClients.map(client => (
                                       <Link key={client.id} href={{pathname: "/inspections/new/details", query: {clientId: client.id}}} className="w-full text-left p-4 rounded-lg border flex items-center gap-4 hover:bg-muted/50 transition-colors">
