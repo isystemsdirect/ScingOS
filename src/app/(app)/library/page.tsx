@@ -80,108 +80,110 @@ export default function LibraryPage() {
     const isProOrEnterprise = currentPlan && (currentPlan.name === 'Pro' || currentPlan.name === 'Enterprise');
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-center">
-        <div>
-          <h1 className="text-2xl font-bold">Standards Library</h1>
-          <p className="text-muted-foreground">
-            Manage the codes and standards used to train your personal AI model.
-          </p>
+    <div className="mx-auto w-full max-w-6xl px-4 lg:px-6">
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center">
+          <div>
+            <h1 className="text-2xl font-bold">Standards Library</h1>
+            <p className="text-muted-foreground">
+              Manage the codes and standards used to train your personal AI model.
+            </p>
+          </div>
+          <div className="ml-auto flex items-center gap-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="h-8 gap-1">
+                  <ListFilter className="h-3.5 w-3.5" />
+                  <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                    Filter
+                  </span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Filter by Tag</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuCheckboxItem checked>Concrete</DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem>Electrical</DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem>Residential</DropdownMenuCheckboxItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Button size="sm" className="h-8 gap-1">
+              <Upload className="h-3.5 w-3.5" />
+              <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                Upload Document
+              </span>
+            </Button>
+          </div>
         </div>
-        <div className="ml-auto flex items-center gap-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="h-8 gap-1">
-                <ListFilter className="h-3.5 w-3.5" />
-                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                  Filter
-                </span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Filter by Tag</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuCheckboxItem checked>Concrete</DropdownMenuCheckboxItem>
-              <DropdownMenuCheckboxItem>Electrical</DropdownMenuCheckboxItem>
-              <DropdownMenuCheckboxItem>Residential</DropdownMenuCheckboxItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <Button size="sm" className="h-8 gap-1">
-            <Upload className="h-3.5 w-3.5" />
-            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-              Upload Document
-            </span>
-          </Button>
+        <div className="relative">
+          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+          <Input
+            type="search"
+            placeholder="Search library by title, jurisdiction, or tag..."
+            className="w-full rounded-md bg-card pl-9"
+          />
         </div>
-      </div>
-       <div className="relative">
-        <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-        <Input
-          type="search"
-          placeholder="Search library by title, jurisdiction, or tag..."
-          className="w-full rounded-md bg-card pl-9"
-        />
-      </div>
-      <Card>
-        <CardHeader>
-          <CardTitle>My Saved Documents</CardTitle>
-          <CardDescription>
-            These documents are used by the AI for code cross-referencing and report generation.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Title</TableHead>
-                <TableHead className="hidden sm:table-cell">Ref. ID</TableHead>
-                <TableHead className="hidden md:table-cell">
-                  Jurisdiction
-                </TableHead>
-                <TableHead className="hidden lg:table-cell">Tags</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {mockStandards.map((standard) => (
-                <TableRow key={standard.id}>
-                  <TableCell className="font-medium">
-                    {standard.title}
-                    <div className="text-sm text-muted-foreground">
-                      {standard.docType}
-                    </div>
-                  </TableCell>
-                  <TableCell className="hidden sm:table-cell font-mono text-xs">{standard.id}</TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    {standard.jurisdiction}
-                  </TableCell>
-                  <TableCell className="hidden lg:table-cell">
-                    <div className="flex gap-1">
-                      {standard.tags.map((tag) => (
-                        <Badge key={tag} variant="secondary">
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm">
-                        <FileText className="mr-2 h-4 w-4" />
-                        View
-                      </Button>
-                       <Button variant="ghost" size="sm">
-                        <BookMarked className="mr-2 h-4 w-4" />
-                        Unsave
-                      </Button>
-                    </div>
-                  </TableCell>
+        <Card>
+          <CardHeader>
+            <CardTitle>My Saved Documents</CardTitle>
+            <CardDescription>
+              These documents are used by the AI for code cross-referencing and report generation.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Title</TableHead>
+                  <TableHead className="hidden sm:table-cell">Ref. ID</TableHead>
+                  <TableHead className="hidden md:table-cell">
+                    Jurisdiction
+                  </TableHead>
+                  <TableHead className="hidden lg:table-cell">Tags</TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+              </TableHeader>
+              <TableBody>
+                {mockStandards.map((standard) => (
+                  <TableRow key={standard.id}>
+                    <TableCell className="font-medium">
+                      {standard.title}
+                      <div className="text-sm text-muted-foreground">
+                        {standard.docType}
+                      </div>
+                    </TableCell>
+                    <TableCell className="hidden sm:table-cell font-mono text-xs">{standard.id}</TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      {standard.jurisdiction}
+                    </TableCell>
+                    <TableCell className="hidden lg:table-cell">
+                      <div className="flex gap-1">
+                        {standard.tags.map((tag) => (
+                          <Badge key={tag} variant="secondary">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-2">
+                        <Button variant="outline" size="sm">
+                          <FileText className="mr-2 h-4 w-4" />
+                          View
+                        </Button>
+                        <Button variant="ghost" size="sm">
+                          <BookMarked className="mr-2 h-4 w-4" />
+                          Unsave
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

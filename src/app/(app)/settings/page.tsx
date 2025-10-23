@@ -21,86 +21,88 @@ export default function SettingsPage() {
   const user = mockInspectors[0];
   
   return (
-    <div className="grid max-w-4xl mx-auto gap-4">
-      <h1 className="text-3xl font-semibold">Account Settings</h1>
+    <div className="mx-auto w-full max-w-4xl px-4 lg:px-6">
+      <div className="grid gap-4">
+        <h1 className="text-3xl font-semibold">Account Settings</h1>
 
-      <main className="grid flex-1 items-start gap-4 md:gap-8">
-        <Card>
-            <CardHeader>
-                <CardTitle>Credentials & Licenses</CardTitle>
+        <main className="grid flex-1 items-start gap-4 md:gap-8">
+          <Card>
+              <CardHeader>
+                  <CardTitle>Credentials & Licenses</CardTitle>
+                  <CardDescription>
+                      Manage your professional credentials. This information will be displayed on your public profile and is required for certain marketplace activities.
+                  </CardDescription>
+              </CardHeader>
+              <CardContent>
+                  <Table>
+                      <TableHeader>
+                          <TableRow>
+                              <TableHead>Field of Inspection</TableHead>
+                              <TableHead>License / ID</TableHead>
+                              <TableHead>Status</TableHead>
+                              <TableHead><span className="sr-only">Actions</span></TableHead>
+                          </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                          {user.certifications.map(cert => (
+                              <TableRow key={cert.id}>
+                                  <TableCell className="font-medium">{cert.name}</TableCell>
+                                  <TableCell>{cert.id}</TableCell>
+                                  <TableCell>
+                                      <Badge variant={cert.verified ? "default" : "secondary"}>
+                                          {cert.verified ? "Verified" : "Pending"}
+                                      </Badge>
+                                  </TableCell>
+                                  <TableCell className="text-right">
+                                      <Button size="icon" variant="ghost">
+                                          <Trash2 className="h-4 w-4" />
+                                      </Button>
+                                  </TableCell>
+                              </TableRow>
+                          ))}
+                      </TableBody>
+                  </Table>
+              </CardContent>
+              <CardFooter className="border-t p-6">
+                  <Button asChild>
+                      <Link href="/settings/certifications/add">
+                          <PlusCircle className="mr-2 h-4 w-4" />Add Credential
+                      </Link>
+                  </Button>
+                  <p className="text-xs text-muted-foreground ml-auto">*Verification may take 24-48 hours.</p>
+              </CardFooter>
+            </Card>
+          
+          <Card>
+              <CardHeader>
+                <CardTitle>Login & Security</CardTitle>
                 <CardDescription>
-                    Manage your professional credentials. This information will be displayed on your public profile and is required for certain marketplace activities.
+                  Manage your password and two-factor authentication.
                 </CardDescription>
-            </CardHeader>
-            <CardContent>
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Field of Inspection</TableHead>
-                            <TableHead>License / ID</TableHead>
-                            <TableHead>Status</TableHead>
-                            <TableHead><span className="sr-only">Actions</span></TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {user.certifications.map(cert => (
-                            <TableRow key={cert.id}>
-                                <TableCell className="font-medium">{cert.name}</TableCell>
-                                <TableCell>{cert.id}</TableCell>
-                                <TableCell>
-                                    <Badge variant={cert.verified ? "default" : "secondary"}>
-                                        {cert.verified ? "Verified" : "Pending"}
-                                    </Badge>
-                                </TableCell>
-                                <TableCell className="text-right">
-                                    <Button size="icon" variant="ghost">
-                                        <Trash2 className="h-4 w-4" />
-                                    </Button>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </CardContent>
-            <CardFooter className="border-t p-6">
-                <Button asChild>
-                    <Link href="/settings/certifications/add">
-                        <PlusCircle className="mr-2 h-4 w-4" />Add Credential
-                    </Link>
-                </Button>
-                <p className="text-xs text-muted-foreground ml-auto">*Verification may take 24-48 hours.</p>
-            </CardFooter>
-          </Card>
-        
-        <Card>
-            <CardHeader>
-              <CardTitle>Login & Security</CardTitle>
-              <CardDescription>
-                Manage your password and two-factor authentication.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="grid gap-6">
-                <div className="grid gap-3">
-                    <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" className="w-full" defaultValue="john.doe@scingular.com" disabled />
-                </div>
-                 <div className="flex items-center justify-between">
-                    <p className="text-sm font-medium">Password</p>
-                    <Button variant="outline">Change Password</Button>
-                </div>
-                <Separator />
-                <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="font-medium">Two-Factor Authentication</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Add an extra layer of security to your account.
-                      </p>
-                    </div>
-                    <Button variant="outline">Enable</Button>
-                </div>
-            </CardContent>
-          </Card>
-      </main>
+              </CardHeader>
+              <CardContent className="grid gap-6">
+                  <div className="grid gap-3">
+                      <Label htmlFor="email">Email</Label>
+                      <Input id="email" type="email" className="w-full" defaultValue="john.doe@scingular.com" disabled />
+                  </div>
+                  <div className="flex items-center justify-between">
+                      <p className="text-sm font-medium">Password</p>
+                      <Button variant="outline">Change Password</Button>
+                  </div>
+                  <Separator />
+                  <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="font-medium">Two-Factor Authentication</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Add an extra layer of security to your account.
+                        </p>
+                      </div>
+                      <Button variant="outline">Enable</Button>
+                  </div>
+              </CardContent>
+            </Card>
+        </main>
+      </div>
     </div>
   )
 }

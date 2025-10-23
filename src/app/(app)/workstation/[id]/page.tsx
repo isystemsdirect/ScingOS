@@ -123,167 +123,169 @@ export default function DeviceDashboardPage() {
   }
 
   return (
-    <div className="grid max-w-6xl mx-auto gap-8">
-      <div className="flex items-center gap-4">
-        <Link href="/workstation">
-          <Button variant="outline" size="icon" className="h-7 w-7">
-            <ChevronLeft className="h-4 w-4" />
-            <span className="sr-only">Back to Workstation</span>
-          </Button>
-        </Link>
-        <div className="h-10 w-10 flex items-center justify-center bg-muted rounded-lg">
-            <Cpu className="h-6 w-6 text-primary" />
+    <div className="mx-auto w-full max-w-6xl px-4 lg:px-6">
+      <div className="grid gap-8">
+        <div className="flex items-center gap-4">
+          <Link href="/workstation">
+            <Button variant="outline" size="icon" className="h-7 w-7">
+              <ChevronLeft className="h-4 w-4" />
+              <span className="sr-only">Back to Workstation</span>
+            </Button>
+          </Link>
+          <div className="h-10 w-10 flex items-center justify-center bg-muted rounded-lg">
+              <Cpu className="h-6 w-6 text-primary" />
+          </div>
+          <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
+            {device.name}
+          </h1>
+          <Badge variant={device.status === 'Connected' ? 'default' : 'secondary'}>{device.status}</Badge>
         </div>
-        <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
-          {device.name}
-        </h1>
-        <Badge variant={device.status === 'Connected' ? 'default' : 'secondary'}>{device.status}</Badge>
-      </div>
 
-      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-        <div className="grid auto-rows-max items-start gap-8 lg:col-span-2">
-            <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <CardTitle>Live HUD</CardTitle>
-                      <CardDescription>Real-time telemetry and signal strength.</CardDescription>
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid auto-rows-max items-start gap-8 lg:col-span-2">
+              <Card>
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <CardTitle>Live HUD</CardTitle>
+                        <CardDescription>Real-time telemetry and signal strength.</CardDescription>
+                      </div>
+                      <Switch checked={showLiveHud} onCheckedChange={setShowLiveHud} />
                     </div>
-                    <Switch checked={showLiveHud} onCheckedChange={setShowLiveHud} />
-                  </div>
-                </CardHeader>
-                {showLiveHud && (
-                  <CardContent className="grid gap-6">
-                      <div className="relative aspect-video w-full bg-muted rounded-md overflow-hidden flex items-center justify-center">
-                          <video ref={videoRef} className="w-full h-full object-cover" autoPlay muted playsInline />
-                          {hasCameraPermission === false && (
-                              <Alert variant="destructive" className="w-auto">
-                                  <AlertTitle>Camera Access Required</AlertTitle>
-                                  <AlertDescription>
-                                      Please allow camera access to use this feature.
-                                  </AlertDescription>
-                              </Alert>
-                          )}
+                  </CardHeader>
+                  {showLiveHud && (
+                    <CardContent className="grid gap-6">
+                        <div className="relative aspect-video w-full bg-muted rounded-md overflow-hidden flex items-center justify-center">
+                            <video ref={videoRef} className="w-full h-full object-cover" autoPlay muted playsInline />
+                            {hasCameraPermission === false && (
+                                <Alert variant="destructive" className="w-auto">
+                                    <AlertTitle>Camera Access Required</AlertTitle>
+                                    <AlertDescription>
+                                        Please allow camera access to use this feature.
+                                    </AlertDescription>
+                                </Alert>
+                            )}
+                        </div>
+                    </CardContent>
+                  )}
+              </Card>
+              <Card>
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <CardTitle>Telemetry Readings</CardTitle>
+                        <CardDescription>Historical signal strength over the last 100 seconds.</CardDescription>
+                      </div>
+                      <Switch checked={showTelemetry} onCheckedChange={setShowTelemetry} />
+                    </div>
+                  </CardHeader>
+                  {showTelemetry && (
+                    <CardContent>
+                        <ChartContainer config={chartConfig} className="h-[200px] w-full">
+                            <AreaChart accessibilityLayer data={chartData}>
+                                <CartesianGrid vertical={false} />
+                                <XAxis
+                                    dataKey="time"
+                                    tickLine={false}
+                                    tickMargin={10}
+                                    axisLine={false}
+                                />
+                                <ChartTooltip
+                                    cursor={false}
+                                    content={<ChartTooltipContent indicator="line" />}
+                                />
+                                <Area
+                                dataKey="signal"
+                                type="natural"
+                                fill="var(--color-signal)"
+                                fillOpacity={0.4}
+                                stroke="var(--color-signal)"
+                                stackId="a"
+                                />
+                            </AreaChart>
+                        </ChartContainer>
+                    </CardContent>
+                  )}
+              </Card>
+          </div>
+          
+          <div className="space-y-8">
+              <Card>
+                  <CardHeader>
+                      <CardTitle>Device Controls</CardTitle>
+                  </CardHeader>
+                  <CardContent className="grid grid-cols-2 gap-4">
+                      <Button variant="outline"><Play className="mr-2"/>Diagnostics</Button>
+                      <Button variant="outline"><RotateCcw className="mr-2"/>Calibrate</Button>
+                      <Button variant="secondary" className="bg-blue-600/20 text-blue-400 border-blue-500/50 hover:bg-blue-600/30"><Settings className="mr-2"/>Update Firmware</Button>
+                      <Button variant="destructive"><Power className="mr-2"/>Reboot</Button>
+                  </CardContent>
+              </Card>
+              <Card>
+                  <CardHeader>
+                      <CardTitle>Device Readings</CardTitle>
+                  </CardHeader>
+                  <CardContent className="grid gap-4 text-sm">
+                      <div className="flex items-center">
+                          <Thermometer className="h-4 w-4 mr-2 text-muted-foreground" />
+                          <span>Core Temp:</span>
+                          <span className="ml-auto font-medium">45°C</span>
+                      </div>
+                      <div className="flex items-center">
+                          <HardDrive className="h-4 w-4 mr-2 text-muted-foreground" />
+                          <span>Storage:</span>
+                          <span className="ml-auto font-medium">12.5 / 64 GB</span>
+                      </div>
+                      <div className="flex items-center">
+                          <Cloud className="h-4 w-4 mr-2 text-muted-foreground" />
+                          <span>Cloud Sync:</span>
+                          <span className="ml-auto font-medium">Up to date</span>
+                      </div>
+                      <div className="flex items-center">
+                          <BatteryCharging className="h-4 w-4 mr-2 text-muted-foreground" />
+                          <span>Battery 1 (Active):</span>
+                          <span className="ml-auto font-medium text-green-500">88% (2h 15m)</span>
+                      </div>
+                      <div className="flex items-center">
+                          <BatteryCharging className="h-4 w-4 mr-2 text-muted-foreground" />
+                          <span>Battery 2:</span>
+                          <span className="ml-auto font-medium">95%</span>
+                      </div>
+                      <div className="flex items-center">
+                          <Bell className="h-4 w-4 mr-2 text-muted-foreground" />
+                          <span>Alerts:</span>
+                          <span className="ml-auto font-medium text-green-500">Nominal</span>
                       </div>
                   </CardContent>
-                )}
-            </Card>
-            <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <CardTitle>Telemetry Readings</CardTitle>
-                      <CardDescription>Historical signal strength over the last 100 seconds.</CardDescription>
-                    </div>
-                     <Switch checked={showTelemetry} onCheckedChange={setShowTelemetry} />
-                  </div>
-                </CardHeader>
-                 {showTelemetry && (
+              </Card>
+              <Card>
+                  <CardHeader>
+                      <CardTitle>Device Info</CardTitle>
+                  </CardHeader>
                   <CardContent>
-                      <ChartContainer config={chartConfig} className="h-[200px] w-full">
-                          <AreaChart accessibilityLayer data={chartData}>
-                              <CartesianGrid vertical={false} />
-                              <XAxis
-                                  dataKey="time"
-                                  tickLine={false}
-                                  tickMargin={10}
-                                  axisLine={false}
-                              />
-                              <ChartTooltip
-                                  cursor={false}
-                                  content={<ChartTooltipContent indicator="line" />}
-                              />
-                              <Area
-                              dataKey="signal"
-                              type="natural"
-                              fill="var(--color-signal)"
-                              fillOpacity={0.4}
-                              stroke="var(--color-signal)"
-                              stackId="a"
-                              />
-                          </AreaChart>
-                      </ChartContainer>
+                      <Table>
+                          <TableBody>
+                              <TableRow>
+                                  <TableCell className="font-medium">Status</TableCell>
+                                  <TableCell>{getStatusIndicator(device.status)}</TableCell>
+                              </TableRow>
+                              <TableRow>
+                                  <TableCell className="font-medium">Type</TableCell>
+                                  <TableCell>{device.type.replace('Key-', '')}</TableCell>
+                              </TableRow>
+                              <TableRow>
+                                  <TableCell className="font-medium">Firmware</TableCell>
+                                  <TableCell>{device.firmwareVersion}</TableCell>
+                              </TableRow>
+                              <TableRow>
+                                  <TableCell className="font-medium">Last Seen</TableCell>
+                                  <TableCell>{device.lastSeen}</TableCell>
+                              </TableRow>
+                          </TableBody>
+                      </Table>
                   </CardContent>
-                )}
-            </Card>
-        </div>
-        
-        <div className="space-y-8">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Device Controls</CardTitle>
-                </CardHeader>
-                <CardContent className="grid grid-cols-2 gap-4">
-                    <Button variant="outline"><Play className="mr-2"/>Diagnostics</Button>
-                    <Button variant="outline"><RotateCcw className="mr-2"/>Calibrate</Button>
-                    <Button variant="secondary" className="bg-blue-600/20 text-blue-400 border-blue-500/50 hover:bg-blue-600/30"><Settings className="mr-2"/>Update Firmware</Button>
-                    <Button variant="destructive"><Power className="mr-2"/>Reboot</Button>
-                </CardContent>
-            </Card>
-             <Card>
-                <CardHeader>
-                    <CardTitle>Device Readings</CardTitle>
-                </CardHeader>
-                <CardContent className="grid gap-4 text-sm">
-                    <div className="flex items-center">
-                        <Thermometer className="h-4 w-4 mr-2 text-muted-foreground" />
-                        <span>Core Temp:</span>
-                        <span className="ml-auto font-medium">45°C</span>
-                    </div>
-                    <div className="flex items-center">
-                        <HardDrive className="h-4 w-4 mr-2 text-muted-foreground" />
-                        <span>Storage:</span>
-                        <span className="ml-auto font-medium">12.5 / 64 GB</span>
-                    </div>
-                     <div className="flex items-center">
-                        <Cloud className="h-4 w-4 mr-2 text-muted-foreground" />
-                        <span>Cloud Sync:</span>
-                        <span className="ml-auto font-medium">Up to date</span>
-                    </div>
-                    <div className="flex items-center">
-                        <BatteryCharging className="h-4 w-4 mr-2 text-muted-foreground" />
-                        <span>Battery 1 (Active):</span>
-                        <span className="ml-auto font-medium text-green-500">88% (2h 15m)</span>
-                    </div>
-                     <div className="flex items-center">
-                        <BatteryCharging className="h-4 w-4 mr-2 text-muted-foreground" />
-                        <span>Battery 2:</span>
-                        <span className="ml-auto font-medium">95%</span>
-                    </div>
-                     <div className="flex items-center">
-                        <Bell className="h-4 w-4 mr-2 text-muted-foreground" />
-                        <span>Alerts:</span>
-                         <span className="ml-auto font-medium text-green-500">Nominal</span>
-                    </div>
-                </CardContent>
-            </Card>
-            <Card>
-                <CardHeader>
-                    <CardTitle>Device Info</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <Table>
-                        <TableBody>
-                             <TableRow>
-                                <TableCell className="font-medium">Status</TableCell>
-                                <TableCell>{getStatusIndicator(device.status)}</TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell className="font-medium">Type</TableCell>
-                                <TableCell>{device.type.replace('Key-', '')}</TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell className="font-medium">Firmware</TableCell>
-                                <TableCell>{device.firmwareVersion}</TableCell>
-                            </TableRow>
-                             <TableRow>
-                                <TableCell className="font-medium">Last Seen</TableCell>
-                                <TableCell>{device.lastSeen}</TableCell>
-                            </TableRow>
-                        </TableBody>
-                    </Table>
-                </CardContent>
-            </Card>
+              </Card>
+          </div>
         </div>
       </div>
     </div>
