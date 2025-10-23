@@ -71,7 +71,7 @@ export default function AppLayout({
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
             <Logo />
-            {isProOrEnterprise && <Badge variant="secondary" className="ml-2">Pro</Badge>}
+            {isProOrEnterprise && <Badge variant="pro" className="ml-2">Pro</Badge>}
           </div>
           <div className="flex-1">
             <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
@@ -169,7 +169,7 @@ export default function AppLayout({
               <nav className="grid gap-2 text-lg font-medium">
                 <div className="flex items-center">
                   <Logo />
-                  {isProOrEnterprise && <Badge variant="secondary" className="ml-2">Pro</Badge>}
+                  {isProOrEnterprise && <Badge variant="pro" className="ml-2">Pro</Badge>}
                 </div>
                  <NavLink href="/dashboard" isMobile>
                   <Home className="h-5 w-5" />
