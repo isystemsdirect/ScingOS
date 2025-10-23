@@ -195,9 +195,7 @@ export function AiSearchDialog() {
       <DialogContent className="sm:max-w-[625px]">
         <DialogHeader>
           <DialogTitle className="flex items-center">
-            Scingular AI
-            {isProOrEnterprise && <Badge variant="pro" className="ml-2">Pro</Badge>}
-            <span className="ml-2">Search</span>
+            {isProOrEnterprise ? 'Scing Pro' : 'Scingular AI'}<span className='ml-2'>Search</span>
           </DialogTitle>
           <DialogDescription>
             {isVisualSearchActive ? "Position the subject in the frame and capture." : "Cross-reference your query against a vast library of codes and standards."}
