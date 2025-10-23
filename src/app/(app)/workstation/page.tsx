@@ -1,7 +1,7 @@
 
 
 import Link from "next/link"
-import { CircleUser, Cpu, Palette, PlusCircle, Trash2, Globe, Linkedin, Facebook, History, Mic, Camera, Sparkles, Database, KeyRound, User, Settings, Store, Bell, SlidersHorizontal, Bot, Wifi, Bluetooth } from "lucide-react"
+import { CircleUser, Cpu, Palette, PlusCircle, Trash2, Globe, Linkedin, Facebook, History, Mic, Camera, Sparkles, Database, KeyRound, User, Settings, Store, Bell, SlidersHorizontal, Bot, Wifi, Bluetooth, MapPin, Search } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -18,6 +18,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Slider } from "@/components/ui/slider"
 import { cn } from "@/lib/utils"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import inspectionData from '@/lib/inspection-types.json';
 
 export default function WorkstationPage() {
   const user = mockInspectors[0];
@@ -31,12 +33,12 @@ export default function WorkstationPage() {
   ]
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 lg:px-6">
-      <h1 className="text-3xl font-semibold">Workstation</h1>
+    <div className="mx-auto w-full max-w-6xl">
+      <h1 className="px-4 lg:px-6 text-3xl font-semibold">Workstation</h1>
 
       <Tabs defaultValue="profile" className="relative">
-        <div className="sticky top-0 z-20 bg-background/95 pt-4 pb-2 backdrop-blur-sm">
-            <TabsList className="grid h-auto w-full grid-cols-6 border p-1">
+        <div className="sticky top-0 z-20 pt-4 -mx-6 px-6 pb-2">
+            <TabsList className="grid h-auto w-full grid-cols-6 border p-1 bg-background/95 backdrop-blur-sm">
                 <TabsTrigger value="profile" className="py-2"><User className="mr-2 h-4 w-4"/>Profile</TabsTrigger>
                 <TabsTrigger value="ai" className="py-2"><Sparkles className="mr-2 h-4 w-4"/>AI & Voice</TabsTrigger>
                 <TabsTrigger value="camera" className="py-2"><Camera className="mr-2 h-4 w-4"/>Camera</TabsTrigger>
@@ -45,8 +47,7 @@ export default function WorkstationPage() {
                 <TabsTrigger value="data" className="py-2"><Database className="mr-2 h-4 w-4"/>Data & Privacy</TabsTrigger>
             </TabsList>
         </div>
-        <div className={cn("space-y-4 pt-4", 
-            // This is a CSS mask to create the fade-out effect at the top
+        <div className={cn("space-y-4 pt-4 px-4 lg:px-6", 
             "[mask-image:linear-gradient(to_bottom,transparent_0,black_2rem,black_100%)]"
         )}>
             <TabsContent value="profile">
@@ -285,59 +286,113 @@ export default function WorkstationPage() {
                 </Card>
             </TabsContent>
             <TabsContent value="marketplace">
-                <div className="grid gap-6">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Marketplace Preferences</CardTitle>
-                            <CardDescription>
-                                Control your visibility and the types of jobs you get from the inspector marketplace.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="grid gap-6">
-                            <div className="flex items-center justify-between rounded-lg border p-4">
-                                <div>
-                                <h4 className="font-medium">Available for Dispatch</h4>
-                                <p className="text-sm text-muted-foreground">
-                                    Enable this to appear as 'On-Call' and available for immediate dispatch requests from the marketplace.
-                                </p>
-                                </div>
-                                <Switch defaultChecked={user.onCall} />
+            <div className="grid gap-6">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Live Status & Updates</CardTitle>
+                        <CardDescription>Control your real-time visibility and job alert preferences.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="grid gap-6">
+                        <div className="flex items-center justify-between rounded-lg border p-4">
+                            <div>
+                            <h4 className="font-medium">Available for Dispatch</h4>
+                            <p className="text-sm text-muted-foreground">
+                                Enable this to appear as 'On-Call' and available for immediate dispatch requests.
+                            </p>
                             </div>
-                            <div className="grid gap-3">
-                                <Label htmlFor="service-area">Service Area</Label>
-                                <Textarea id="service-area" placeholder="e.g., Anytown, Someville County, or zip codes 90210, 10001" defaultValue="Anytown, CA; Someville, TX" />
-                                <p className="text-xs text-muted-foreground">Define your work radius by listing cities, counties, or zip codes, separated by commas.</p>
+                            <Switch defaultChecked={user.onCall} />
+                        </div>
+                         <div className="flex items-center justify-between rounded-lg border p-4">
+                            <div>
+                            <h4 className="font-medium">Enable real-time location updates</h4>
+                            <p className="text-sm text-muted-foreground">
+                                Allow Scing to periodically update your location for more accurate local job matching.
+                            </p>
                             </div>
-                        </CardContent>
-                    </Card>
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Active Marketplace Dispatch Fields</CardTitle>
-                            <CardDescription>
-                                Select the types of inspections you want to be available for in the marketplace.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {user.offeredServices.map((service) => (
-                                <div key={service} className="flex items-center space-x-2">
-                                    <Checkbox id={`service-${service}`} defaultChecked />
-                                    <Label htmlFor={`service-${service}`} className="font-normal text-sm">{service}</Label>
-                                </div>
+                            <Switch />
+                        </div>
+                        <div className="grid gap-3">
+                            <Label htmlFor="marketplace-notifications">Marketplace Notification Urgency</Label>
+                            <Select defaultValue="instant">
+                                <SelectTrigger id="marketplace-notifications">
+                                    <SelectValue placeholder="Select notification preference" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="instant">Instant: For all jobs in my area</SelectItem>
+                                    <SelectItem value="relevant">Relevant: Only for jobs matching my skills</SelectItem>
+                                    <SelectItem value="digest">Daily Digest: A summary of available jobs</SelectItem>
+                                    <SelectItem value="none">None: I will check the marketplace manually</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    </CardContent>
+                </Card>
+                 <Card>
+                    <CardHeader>
+                        <CardTitle>Service Area & Zones</CardTitle>
+                        <CardDescription>Define your geographical work zones to get relevant job requests.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="grid gap-6">
+                        <div className="grid gap-4">
+                            <Label htmlFor="primary-location">Primary Location / Home Base</Label>
+                            <div className="relative">
+                                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                <Input id="primary-location" defaultValue="Anytown, CA" className="pl-9" />
+                            </div>
+                        </div>
+                        <div className="grid gap-3">
+                            <Label htmlFor="service-radius">Service Radius: 50 miles</Label>
+                             <Slider id="service-radius" defaultValue={[50]} max={100} step={5} />
+                              <div className="flex justify-between text-xs text-muted-foreground">
+                                <span>5 mi</span>
+                                <span>100 mi</span>
+                            </div>
+                        </div>
+                         <div className="grid gap-3">
+                            <Label>Custom Zones</Label>
+                            <div className="flex flex-wrap gap-2">
+                               <Badge variant="secondary">Someville County</Badge>
+                               <Badge variant="secondary">Zip: 90210-90214</Badge>
+                            </div>
+                            <Button variant="outline" size="sm" className="w-fit"><PlusCircle className="mr-2 h-4 w-4" /> Add Custom Zone</Button>
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Service Offerings</CardTitle>
+                        <CardDescription>
+                            Select the specific inspection types you are certified and willing to perform from the marketplace.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="grid gap-2">
+                        <div className="relative">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Input placeholder="Search inspection types..." className="pl-9" />
+                        </div>
+                        <Accordion type="multiple" className="w-full">
+                            {inspectionData.inspectionTypeCategories.map(category => (
+                                <AccordionItem value={category.id} key={category.id}>
+                                    <AccordionTrigger>{category.name}</AccordionTrigger>
+                                    <AccordionContent>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 p-2">
+                                            {category.types.map(type => (
+                                                 <div key={type} className="flex items-center space-x-2">
+                                                    <Checkbox id={`service-${type}`} defaultChecked={user.offeredServices.includes(type)} />
+                                                    <Label htmlFor={`service-${type}`} className="font-normal text-sm leading-snug">{type}</Label>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </AccordionContent>
+                                </AccordionItem>
                             ))}
-                             <div className="flex items-center space-x-2 text-muted-foreground">
-                                <Checkbox id="service-new-1" />
-                                <Label htmlFor="service-new-1" className="font-normal text-sm">Residential home inspection (seller pre-listing)</Label>
-                            </div>
-                             <div className="flex items-center space-x-2 text-muted-foreground">
-                                <Checkbox id="service-new-2" />
-                                <Label htmlFor="service-new-2" className="font-normal text-sm">ADA/Accessibility compliance survey</Label>
-                            </div>
-                        </CardContent>
-                         <CardFooter className="border-t px-6 py-4">
-                            <Button>Save Marketplace Settings</Button>
-                        </CardFooter>
-                    </Card>
-                </div>
+                        </Accordion>
+                    </CardContent>
+                     <CardFooter className="border-t px-6 py-4">
+                        <Button>Save Marketplace Settings</Button>
+                    </CardFooter>
+                </Card>
+            </div>
             </TabsContent>
             <TabsContent value="devices">
                 <Card>
