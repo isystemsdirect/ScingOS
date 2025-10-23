@@ -32,6 +32,8 @@ import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
+import { Badge } from './ui/badge';
+import { mockSubscriptionPlans } from '@/lib/data';
 
 const searchSchema = z.object({
   query: z.string().min(3, 'Search query must be at least 3 characters.'),
@@ -59,6 +61,9 @@ export function AiSearchDialog() {
       query: '',
     },
   });
+
+  const currentPlan = mockSubscriptionPlans.find(plan => plan.isCurrent);
+  const isProOrEnterprise = currentPlan && (currentPlan.name === 'Pro' || currentPlan.name === 'Enterprise');
 
   useEffect(() => {
     let stream: MediaStream | null = null;
@@ -189,7 +194,11 @@ export function AiSearchDialog() {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[625px]">
         <DialogHeader>
-          <DialogTitle>Scingular AI Search</DialogTitle>
+          <DialogTitle className="flex items-center">
+            Scingular AI
+            {isProOrEnterprise && <Badge variant="pro" className="ml-2">Pro</Badge>}
+            <span className="ml-2">Search</span>
+          </DialogTitle>
           <DialogDescription>
             {isVisualSearchActive ? "Position the subject in the frame and capture." : "Cross-reference your query against a vast library of codes and standards."}
           </DialogDescription>
@@ -344,5 +353,3 @@ export function AiSearchDialog() {
     </Dialog>
   );
 }
-
-    
