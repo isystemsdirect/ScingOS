@@ -1,6 +1,6 @@
 
 import Link from "next/link"
-import { CircleUser, Home, LineChart, Package, Package2, PanelLeft, Search, Settings, ShoppingCart, Users2, PlusCircle, Trash2, Globe, Linkedin, Facebook, History, Mic, Camera } from "lucide-react"
+import { CircleUser, Home, LineChart, Package, Package2, PanelLeft, Search, Settings, ShoppingCart, Users2, PlusCircle, Trash2, Globe, Linkedin, Facebook, History, Mic, Camera, Sparkles } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -9,7 +9,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Textarea } from "@/components/ui/textarea"
-import { mockInspectors } from "@/lib/data"
+import { mockInspectors, mockSubscriptionPlans } from "@/lib/data"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Label } from "@/components/ui/label"
@@ -19,6 +19,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 
 export default function SettingsPage() {
   const user = mockInspectors[0];
+  const currentPlan = mockSubscriptionPlans.find(plan => plan.isCurrent);
+  const isProOrEnterprise = currentPlan && (currentPlan.name === 'Pro' || currentPlan.name === 'Enterprise');
 
   const searchHistory = [
     { id: 1, query: "foundation crack requirements", date: "2023-10-28" },
@@ -138,13 +140,18 @@ export default function SettingsPage() {
             </CardHeader>
             <CardContent className="grid gap-6">
                <div className="flex items-center justify-between rounded-lg border p-4">
-                <div>
+                <div className="flex-1">
                   <h4 className="font-medium">Enable Pro Mode</h4>
                   <p className="text-sm text-muted-foreground">
                     Unlock advanced controls for exposure, focus, and white balance.
                   </p>
+                  {!isProOrEnterprise && (
+                    <Button variant="link" size="sm" asChild className="p-0 h-auto text-primary">
+                      <Link href="/finances"><Sparkles className="mr-2 h-4 w-4" />Upgrade to Pro to enable this feature</Link>
+                    </Button>
+                  )}
                 </div>
-                <Switch />
+                <Switch disabled={!isProOrEnterprise} />
               </div>
               <div className="grid md:grid-cols-3 gap-4">
                 <div className="grid gap-3">
@@ -407,5 +414,3 @@ export default function SettingsPage() {
     </div>
   )
 }
-
-    
