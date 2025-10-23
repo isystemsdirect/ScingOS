@@ -11,21 +11,21 @@
     --card-foreground: 210 10% 23%;
     --popover: 210 20% 100%;
     --popover-foreground: 210 10% 23%;
-    --primary: 52 80% 45%;
-    --primary-foreground: 52 80% 5%;
+    --primary: 45 90% 55%;
+    --primary-foreground: 45 90% 5%;
     --secondary: 210 15% 95%;
     --secondary-foreground: 210 10% 23%;
     --muted: 210 15% 95%;
     --muted-foreground: 210 5% 65%;
-    --accent: 22 70% 40%;
-    --accent-foreground: 22 70% 98%;
+    --accent: 40 80% 50%;
+    --accent-foreground: 40 80% 98%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --pro: 52 80% 45%;
     --pro-foreground: 52 80% 5%;
     --border: 210 15% 88%;
     --input: 210 15% 88%;
-    --ring: 52 80% 45%;
+    --ring: 45 90% 55%;
     --radius: 0.5rem;
     --chart-1: 128 65% 42%;
     --chart-2: 28 95% 53%;
@@ -38,12 +38,12 @@
 
     --sidebar-background: 220 40% 15% / 0.9;
     --sidebar-foreground: 210 25% 85%;
-    --sidebar-primary: 52 80% 45%;
-    --sidebar-primary-foreground: 52 80% 95%;
-    --sidebar-accent: 52 80% 22%;
-    --sidebar-accent-foreground: 52 80% 98%;
+    --sidebar-primary: 45 90% 55%;
+    --sidebar-primary-foreground: 45 90% 95%;
+    --sidebar-accent: 45 90% 22%;
+    --sidebar-accent-foreground: 45 90% 98%;
     --sidebar-border: 220 40% 25%;
-    --sidebar-ring: 52 80% 45%;
+    --sidebar-ring: 45 90% 55%;
   }
 
   .dark {
@@ -53,21 +53,21 @@
     --card-foreground: 210 20% 98%;
     --popover: 210 10% 12%;
     --popover-foreground: 210 20% 98%;
-    --primary: 52 80% 45%;
-    --primary-foreground: 52 80% 5%;
+    --primary: 45 90% 55%;
+    --primary-foreground: 45 90% 5%;
     --secondary: 210 10% 23%;
     --secondary-foreground: 210 20% 98%;
     --muted: 210 10% 23%;
     --muted-foreground: 210 5% 65%;
-    --accent: 22 70% 40%;
-    --accent-foreground: 22 70% 98%;
+    --accent: 40 80% 50%;
+    --accent-foreground: 40 80% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
     --pro: 52 80% 45%;
     --pro-foreground: 52 80% 5%;
     --border: 210 10% 23%;
     --input: 210 10% 23%;
-    --ring: 52 80% 45%;
+    --ring: 45 90% 55%;
     --radius: 0.5rem;
     
     --chart-1: 128 65% 42%;
@@ -81,12 +81,12 @@
 
     --sidebar-background: 220 40% 15% / 0.9;
     --sidebar-foreground: 210 25% 85%;
-    --sidebar-primary: 52 80% 45%;
-    --sidebar-primary-foreground: 52 80% 95%;
-    --sidebar-accent: 52 80% 22%;
-    --sidebar-accent-foreground: 52 80% 98%;
+    --sidebar-primary: 45 90% 55%;
+    --sidebar-primary-foreground: 45 90% 95%;
+    --sidebar-accent: 45 90% 22%;
+    --sidebar-accent-foreground: 45 90% 98%;
     --sidebar-border: 220 40% 25%;
-    --sidebar-ring: 52 80% 45%;
+    --sidebar-ring: 45 90% 55%;
   }
 }
 
@@ -104,7 +104,7 @@
 
 @layer components {
     .interactive-pulse {
-        background-image: linear-gradient(to right, hsl(var(--primary)), hsl(40 80% 50%), hsl(var(--primary)));
+        background-image: linear-gradient(to right, hsl(var(--primary)), hsl(var(--accent)), hsl(var(--primary)));
         background-size: 200% auto;
         animation: background-pan 3s linear infinite;
     }
