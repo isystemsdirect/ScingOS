@@ -211,7 +211,7 @@ export function AiSearchDialog() {
                 )}
                 {hasCameraPermission === null && !capturedImage && (
                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-4">
-                       <Loader2 className="h-8 w-8 animate-spin text-primary"/>
+                       <Loader2 className="h-8 w-8 animate-spin text-accent"/>
                        <p className="mt-2 text-sm text-muted-foreground">Starting camera...</p>
                    </div>
                 )}
@@ -242,7 +242,7 @@ export function AiSearchDialog() {
                           )}
                           <Input
                             placeholder="Consult Scing."
-                            className={cn("pl-8 pr-20", capturedImage && "pl-12")}
+                            className={cn("pr-20", capturedImage ? "pl-12" : "pl-9")}
                             {...field}
                           />
                           <div className="absolute right-1 top-1/2 flex -translate-y-1/2">
@@ -251,7 +251,7 @@ export function AiSearchDialog() {
                                 <span className="sr-only">Use visual search</span>
                             </Button>
                             <Button type="button" variant="ghost" size="icon" className="h-8 w-8 rounded-full" onClick={handleMicClick} disabled={isListening}>
-                                <Mic className={cn("h-4 w-4 text-muted-foreground", isListening && "text-primary animate-pulse")} />
+                                <Mic className={cn("h-4 w-4 text-muted-foreground", isListening && "text-accent animate-pulse")} />
                                 <span className="sr-only">Use voice command</span>
                             </Button>
                           </div>
@@ -276,7 +276,7 @@ export function AiSearchDialog() {
             <div className="mt-4 space-y-4">
               {isLoading && (
                 <div className="flex items-center justify-center p-8">
-                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                  <Loader2 className="h-8 w-8 animate-spin text-accent" />
                 </div>
               )}
               {results && (
@@ -306,7 +306,7 @@ export function AiSearchDialog() {
                               </div>
                               <Progress
                                 value={(results.relevanceScores?.[index] ?? 0) * 100}
-                                className="h-2"
+                                className="h-2 [&>div]:bg-accent"
                               />
                             </div>
 
@@ -344,5 +344,3 @@ export function AiSearchDialog() {
     </Dialog>
   );
 }
-
-    
