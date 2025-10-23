@@ -208,10 +208,6 @@ export default function AppLayout({
              <AiSearchDialog />
           </div>
           <Button variant="ghost" size="icon" className="rounded-full">
-            <Mic className="h-5 w-5" />
-            <span className="sr-only">Voice Commands</span>
-          </Button>
-          <Button variant="ghost" size="icon" className="rounded-full">
             <Bell className="h-5 w-5" />
             <span className="sr-only">Toggle notifications</span>
           </Button>

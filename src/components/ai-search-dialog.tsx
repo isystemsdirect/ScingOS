@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Search, Loader2, FileText, ExternalLink } from 'lucide-react';
+import { Search, Loader2, FileText, ExternalLink, Mic } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -91,10 +91,14 @@ export function AiSearchDialog() {
                     <div className="relative">
                       <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                       <Input
-                        placeholder="e.g. 'minimum height for guardrails'"
-                        className="pl-8"
+                        placeholder="e.g. 'minimum height for guardrails' or use the mic"
+                        className="pl-8 pr-10"
                         {...field}
                       />
+                      <Button variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full">
+                          <Mic className="h-4 w-4 text-muted-foreground" />
+                          <span className="sr-only">Use voice command</span>
+                      </Button>
                     </div>
                   </FormControl>
                   <FormMessage />
