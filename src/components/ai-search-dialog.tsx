@@ -31,6 +31,7 @@ import { Progress } from './ui/progress';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import Image from 'next/image';
+import { cn } from '@/lib/utils';
 
 const searchSchema = z.object({
   query: z.string().min(3, 'Search query must be at least 3 characters.'),
@@ -45,6 +46,8 @@ export function AiSearchDialog() {
   const [isVisualSearchActive, setIsVisualSearchActive] = useState(false);
   const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
+  const [isListening, setIsListening] = useState(false);
+
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -58,10 +61,11 @@ export function AiSearchDialog() {
   });
 
   useEffect(() => {
-    async function getCameraPermission() {
+    let stream: MediaStream | null = null;
+    const getCameraPermission = async () => {
       if (isVisualSearchActive && hasCameraPermission === null) {
         try {
-          const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+          stream = await navigator.mediaDevices.getUserMedia({ video: true });
           if (videoRef.current) {
             videoRef.current.srcObject = stream;
           }
@@ -75,15 +79,43 @@ export function AiSearchDialog() {
             description: 'Please enable camera permissions in your browser settings.',
           });
         }
-      } else if (!isVisualSearchActive && videoRef.current?.srcObject) {
-        const stream = videoRef.current.srcObject as MediaStream;
-        stream.getTracks().forEach(track => track.stop());
-        videoRef.current.srcObject = null;
-        setHasCameraPermission(null);
       }
     }
     getCameraPermission();
+
+    return () => {
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+      }
+      if(videoRef.current) {
+        videoRef.current.srcObject = null;
+      }
+    }
   }, [isVisualSearchActive, hasCameraPermission, toast]);
+
+  const handleMicClick = async () => {
+    setIsListening(true);
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        // Speech recognition logic would go here
+        console.log("Microphone access granted");
+        toast({
+            title: "Microphone Enabled",
+            description: "Voice command functionality is ready."
+        });
+        // For demonstration, stop listening after a few seconds
+        setTimeout(() => setIsListening(false), 3000);
+    } catch (error) {
+        console.error("Error accessing microphone:", error);
+        toast({
+            variant: "destructive",
+            title: "Microphone Access Denied",
+            description: "Please enable microphone permissions in your browser settings."
+        });
+        setIsListening(false);
+    }
+  };
+
 
   async function onSubmit(values: z.infer<typeof searchSchema>) {
     setIsLoading(true);
@@ -129,6 +161,12 @@ export function AiSearchDialog() {
     setResults(null);
     form.reset();
     setIsVisualSearchActive(false);
+    setHasCameraPermission(null);
+    if (videoRef.current && videoRef.current.srcObject) {
+        const stream = videoRef.current.srcObject as MediaStream;
+        stream.getTracks().forEach(track => track.stop());
+        videoRef.current.srcObject = null;
+    }
   }
   
   const handleOpenChange = (open: boolean) => {
@@ -180,7 +218,7 @@ export function AiSearchDialog() {
              </div>
              <canvas ref={canvasRef} className="hidden" />
             <div className="flex justify-between gap-2">
-              <Button variant="outline" onClick={() => setIsVisualSearchActive(false)}>Cancel</Button>
+              <Button variant="outline" onClick={() => { setIsVisualSearchActive(false); resetSearch(); }}>Cancel</Button>
               <Button onClick={handleCapture} disabled={!hasCameraPermission}>Capture Image</Button>
             </div>
           </div>
@@ -204,7 +242,7 @@ export function AiSearchDialog() {
                           )}
                           <Input
                             placeholder="Consult Scing."
-                            className={cn("pl-8", capturedImage && "pl-12")}
+                            className={cn("pl-8 pr-20", capturedImage && "pl-12")}
                             {...field}
                           />
                           <div className="absolute right-1 top-1/2 flex -translate-y-1/2">
@@ -212,8 +250,8 @@ export function AiSearchDialog() {
                                 <Camera className="h-4 w-4 text-muted-foreground" />
                                 <span className="sr-only">Use visual search</span>
                             </Button>
-                            <Button type="button" variant="ghost" size="icon" className="h-8 w-8 rounded-full">
-                                <Mic className="h-4 w-4 text-muted-foreground" />
+                            <Button type="button" variant="ghost" size="icon" className="h-8 w-8 rounded-full" onClick={handleMicClick} disabled={isListening}>
+                                <Mic className={cn("h-4 w-4 text-muted-foreground", isListening && "text-primary animate-pulse")} />
                                 <span className="sr-only">Use voice command</span>
                             </Button>
                           </div>
@@ -306,5 +344,3 @@ export function AiSearchDialog() {
     </Dialog>
   );
 }
-
-    

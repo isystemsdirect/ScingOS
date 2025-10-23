@@ -1,6 +1,6 @@
 
 import Link from "next/link"
-import { CircleUser, Home, LineChart, Package, Package2, PanelLeft, Search, Settings, ShoppingCart, Users2, PlusCircle, Trash2, Globe, Linkedin, Facebook, History } from "lucide-react"
+import { CircleUser, Home, LineChart, Package, Package2, PanelLeft, Search, Settings, ShoppingCart, Users2, PlusCircle, Trash2, Globe, Linkedin, Facebook, History, Mic } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -92,6 +92,41 @@ export default function SettingsPage() {
             </CardContent>
             <CardFooter className="border-t px-6 py-4">
               <Button>Save Profile</Button>
+            </CardFooter>
+          </Card>
+           <Card>
+            <CardHeader>
+              <CardTitle>Voice & AI Settings</CardTitle>
+              <CardDescription>
+                Customize your interaction with Scingular's AI features.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="grid gap-6">
+               <div className="flex items-center justify-between rounded-lg border p-4">
+                <div>
+                  <h4 className="font-medium">"Hey, Scing!" Wake Phrase</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Enable hands-free voice commands by listening for the wake phrase.
+                  </p>
+                </div>
+                <Switch />
+              </div>
+              <div className="grid gap-3">
+                <Label htmlFor="mic-device">Microphone Input</Label>
+                <Select>
+                    <SelectTrigger id="mic-device">
+                        <SelectValue placeholder="Select a microphone" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="default">Default System Microphone</SelectItem>
+                        <SelectItem value="mic-1">Built-in Microphone (MacBook Pro)</SelectItem>
+                        <SelectItem value="mic-2">U-PHORIA UMC202HD</SelectItem>
+                    </SelectContent>
+                </Select>
+              </div>
+            </CardContent>
+             <CardFooter className="border-t px-6 py-4">
+              <Button>Save AI Preferences</Button>
             </CardFooter>
           </Card>
           <Card>
