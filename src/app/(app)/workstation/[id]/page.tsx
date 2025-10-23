@@ -125,10 +125,10 @@ export default function DeviceDashboardPage() {
   return (
     <div className="grid max-w-6xl mx-auto gap-8">
       <div className="flex items-center gap-4">
-        <Link href="/devices">
+        <Link href="/workstation">
           <Button variant="outline" size="icon" className="h-7 w-7">
             <ChevronLeft className="h-4 w-4" />
-            <span className="sr-only">Back to Devices</span>
+            <span className="sr-only">Back to Workstation</span>
           </Button>
         </Link>
         <div className="h-10 w-10 flex items-center justify-center bg-muted rounded-lg">

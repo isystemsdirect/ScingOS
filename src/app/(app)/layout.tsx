@@ -107,7 +107,7 @@ export default function AppLayout({
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] relative">
       <BackgroundSlideshow />
-      <div className="hidden border-r bg-sidebar/80 md:block z-10">
+      <div className="hidden border-r bg-sidebar md:block z-10">
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
             <Logo />
@@ -148,9 +148,9 @@ export default function AppLayout({
 
               <Separator className="my-2 bg-sidebar-border" />
 
-              <NavLink href="/devices">
+              <NavLink href="/workstation">
                 <Cpu className="h-4 w-4" />
-                Workstation Max
+                Workstation
               </NavLink>
               <NavLink href="/finances">
                 <DollarSign className="h-4 w-4" />
@@ -240,9 +240,9 @@ export default function AppLayout({
                   Marketplace
                 </NavLink>
                  <Separator className="my-2 bg-sidebar-border" />
-                <NavLink href="/devices" isMobile>
+                <NavLink href="/workstation" isMobile>
                   <Cpu className="h-5 w-5" />
-                  Workstation Max
+                  Workstation
                 </NavLink>
                 <NavLink href="/finances" isMobile>
                   <DollarSign className="h-5 w-5" />
