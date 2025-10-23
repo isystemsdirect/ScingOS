@@ -142,7 +142,7 @@ function NewInspectionDetailsContent() {
                 </div>
 
                 <Separator />
-                 <Button asChild className="w-full sm:w-auto">
+                 <Button asChild className="w-full sm:w-auto ml-auto" disabled={!clientId}>
                     <Link href={{pathname: "/inspections/new/review", query: {clientId: clientId ?? undefined}}}>Next: Review & Confirm</Link>
                 </Button>
 
