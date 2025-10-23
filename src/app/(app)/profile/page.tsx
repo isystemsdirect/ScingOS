@@ -1,3 +1,4 @@
+
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -105,9 +106,9 @@ export default function ProfilePage() {
                         </div>
                         <div className="flex-1">
                             <p className="font-semibold">{cert.name}</p>
-                            <p className="text-sm text-muted-foreground">
+                            <div className="text-sm text-muted-foreground">
                                 ID: {cert.id} {cert.verified && <Badge variant="secondary" className="ml-2">Verified</Badge>}
-                            </p>
+                            </div>
                             <p className="text-xs text-muted-foreground">Expires: {cert.expiresAt}</p>
                         </div>
                     </div>
