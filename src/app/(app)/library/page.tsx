@@ -1,4 +1,6 @@
 
+'use client';
+
 import {
   BookMarked,
   FileText,
@@ -6,6 +8,7 @@ import {
   PlusCircle,
   Search,
 } from 'lucide-react';
+import Link from 'next/link';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -33,6 +36,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { mockInspectors, mockSubscriptionPlans } from '@/lib/data';
 
 const mockStandards = [
   {
@@ -70,13 +74,17 @@ const mockStandards = [
 ];
 
 export default function LibraryPage() {
+
+    const currentPlan = mockSubscriptionPlans.find(plan => plan.isCurrent);
+    const isProOrEnterprise = currentPlan && (currentPlan.name === 'Pro' || currentPlan.name === 'Enterprise');
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center">
         <div>
-          <h1 className="text-2xl font-bold">Standards Library</h1>
+          <h1 className="text-2xl font-bold">Standards &amp; Templates</h1>
           <p className="text-muted-foreground">
-            Manage your saved codes, standards, and reference documents.
+            Manage your saved codes, standards, and custom report templates.
           </p>
         </div>
         <div className="ml-auto flex items-center gap-2">
@@ -97,6 +105,16 @@ export default function LibraryPage() {
               <DropdownMenuCheckboxItem>Residential</DropdownMenuCheckboxItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          {isProOrEnterprise && (
+            <Button size="sm" className="h-8 gap-1" asChild>
+              <Link href="/templates/new">
+                <PlusCircle className="h-3.5 w-3.5" />
+                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                  Create Template
+                </span>
+              </Link>
+            </Button>
+          )}
           <Button size="sm" className="h-8 gap-1">
             <PlusCircle className="h-3.5 w-3.5" />
             <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
