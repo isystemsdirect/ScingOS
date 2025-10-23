@@ -5,7 +5,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Search, Loader2, FileText, ExternalLink, Mic, Camera, X, CircleUserRound } from 'lucide-react';
+import { Search, Loader2, FileText, ExternalLink, Mic, Camera, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -344,3 +344,5 @@ export function AiSearchDialog() {
     </Dialog>
   );
 }
+
+    

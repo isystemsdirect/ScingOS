@@ -1,6 +1,6 @@
 
 import Link from "next/link"
-import { CircleUser, Home, LineChart, Package, Package2, PanelLeft, Search, Settings, ShoppingCart, Users2, PlusCircle, Trash2, Globe, Linkedin, Facebook, History, Mic } from "lucide-react"
+import { CircleUser, Home, LineChart, Package, Package2, PanelLeft, Search, Settings, ShoppingCart, Users2, PlusCircle, Trash2, Globe, Linkedin, Facebook, History, Mic, Camera } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -127,6 +127,67 @@ export default function SettingsPage() {
             </CardContent>
              <CardFooter className="border-t px-6 py-4">
               <Button>Save AI Preferences</Button>
+            </CardFooter>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Camera & Vision Settings</CardTitle>
+              <CardDescription>
+                Configure camera settings for high-quality visual data capture.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="grid gap-6">
+               <div className="flex items-center justify-between rounded-lg border p-4">
+                <div>
+                  <h4 className="font-medium">Enable Pro Mode</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Unlock advanced controls for exposure, focus, and white balance.
+                  </p>
+                </div>
+                <Switch />
+              </div>
+              <div className="grid md:grid-cols-3 gap-4">
+                <div className="grid gap-3">
+                  <Label htmlFor="cam-resolution">Resolution</Label>
+                  <Select defaultValue="1080">
+                      <SelectTrigger id="cam-resolution">
+                          <SelectValue placeholder="Select resolution" />
+                      </SelectTrigger>
+                      <SelectContent>
+                          <SelectItem value="720">1280x720 (720p)</SelectItem>
+                          <SelectItem value="1080">1920x1080 (1080p)</SelectItem>
+                          <SelectItem value="4k">3840x2160 (4K UHD)</SelectItem>
+                      </SelectContent>
+                  </Select>
+                </div>
+                 <div className="grid gap-3">
+                  <Label htmlFor="cam-fps">Frame Rate</Label>
+                  <Select defaultValue="30">
+                      <SelectTrigger id="cam-fps">
+                          <SelectValue placeholder="Select frame rate" />
+                      </SelectTrigger>
+                      <SelectContent>
+                          <SelectItem value="30">30 FPS</SelectItem>
+                          <SelectItem value="60">60 FPS</SelectItem>
+                      </SelectContent>
+                  </Select>
+                </div>
+                 <div className="grid gap-3">
+                  <Label htmlFor="cam-facing">Preferred Camera</Label>
+                  <Select defaultValue="environment">
+                      <SelectTrigger id="cam-facing">
+                          <SelectValue placeholder="Select camera" />
+                      </SelectTrigger>
+                      <SelectContent>
+                          <SelectItem value="user">Front (Selfie)</SelectItem>
+                          <SelectItem value="environment">Back (Environment)</SelectItem>
+                      </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </CardContent>
+             <CardFooter className="border-t px-6 py-4">
+              <Button>Save Camera Preferences</Button>
             </CardFooter>
           </Card>
           <Card>
@@ -346,3 +407,5 @@ export default function SettingsPage() {
     </div>
   )
 }
+
+    
