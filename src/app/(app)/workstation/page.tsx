@@ -31,7 +31,7 @@ export default function WorkstationPage() {
   ]
 
   return (
-    <div className="grid max-w-6xl mx-auto gap-4">
+    <div className="grid max-w-6xl mx-auto gap-4 px-4 lg:px-6">
       <h1 className="text-3xl font-semibold">Workstation</h1>
 
       <Tabs defaultValue="profile" className="relative">

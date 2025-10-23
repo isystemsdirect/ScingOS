@@ -269,7 +269,7 @@ export default function AppLayout({
               <FullscreenToggle />
           </div>
         </header>
-        <main className="flex-1 overflow-y-auto bg-transparent p-4 lg:p-6">
+        <main className="flex-1 overflow-y-auto bg-transparent py-4 lg:py-6">
           {children}
         </main>
       </div>
