@@ -73,7 +73,7 @@ const Logo = ({ className }: { className?: string }) => {
           </text>
         </g>
       </svg>
-      <span className="font-headline uppercase">Scingular</span>
+      <span className="font-sans uppercase font-bold">SCINGULAR</span>
     </Link>
   );
 };

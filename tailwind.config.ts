@@ -18,8 +18,6 @@ export default {
     extend: {
       fontFamily: {
         sans: ["var(--font-inter)", "sans-serif"],
-        body: ["var(--font-inter)", 'sans-serif'],
-        headline: ["Alegreya", 'serif'],
         code: ['monospace'],
       },
       colors: {
