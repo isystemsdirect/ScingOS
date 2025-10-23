@@ -3,7 +3,7 @@
 'use client';
 
 import Link from "next/link";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, ListFilter, PlusCircle, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,11 +16,18 @@ import { InspectionTypeList } from "@/components/inspection-type-list";
 import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { useSearchParams } from "next/navigation";
+import { Input } from "@/components/ui/input";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuCheckboxItem } from "@/components/ui/dropdown-menu";
+import { mockSubscriptionPlans } from "@/lib/data";
 
 export default function NewInspectionPage() {
   const [primaryType, setPrimaryType] = useState<string | null>(null);
   const searchParams = useSearchParams();
   const clientId = searchParams.get('clientId');
+  
+  const currentPlan = mockSubscriptionPlans.find(plan => plan.isCurrent);
+  const isProOrEnterprise = currentPlan && (currentPlan.name === 'Pro' || currentPlan.name === 'Enterprise');
+
 
   return (
     <div className="flex min-h-screen w-full flex-col">
@@ -42,8 +49,39 @@ export default function NewInspectionPage() {
               <CardHeader>
                 <CardTitle>Step 1: Select Primary Inspection Type</CardTitle>
                 <CardDescription>
-                  Choose the main type of inspection you are performing from the list below.
+                  Choose the main type of inspection you are performing from the list below, or create your own template.
                 </CardDescription>
+                <div className="flex items-center gap-2 pt-4">
+                    <div className="relative flex-1">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input placeholder="Search inspection types..." className="pl-9" />
+                    </div>
+                     <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                        <Button variant="outline" size="sm" className="h-10 gap-1">
+                            <ListFilter className="h-3.5 w-3.5" />
+                            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                            Filter
+                            </span>
+                        </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Filter by Category</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuCheckboxItem checked>Real-estate</DropdownMenuCheckboxItem>
+                        <DropdownMenuCheckboxItem>Construction</DropdownMenuCheckboxItem>
+                        <DropdownMenuCheckboxItem>Environmental</DropdownMenuCheckboxItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                    {isProOrEnterprise && (
+                        <Button size="sm" className="h-10 gap-1">
+                            <PlusCircle className="h-3.5 w-3.5" />
+                            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                            Create Template
+                            </span>
+                        </Button>
+                    )}
+                </div>
               </CardHeader>
               <CardContent>
                 <InspectionTypeList
