@@ -47,7 +47,7 @@ import {
 } from "@/components/ui/sheet";
 import Logo from "@/components/logo";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { mockInspectors } from "@/lib/data";
+import { mockInspectors, mockSubscriptionPlans } from "@/lib/data";
 import { NavLink } from "@/components/nav-link";
 import { AiSearchDialog } from "@/components/ai-search-dialog";
 import { Separator } from "@/components/ui/separator";
@@ -61,6 +61,9 @@ export default function AppLayout({
 
   const user = mockInspectors[0];
   const avatarImage = PlaceHolderImages.find(p => p.id === 'avatar1');
+  const currentPlan = mockSubscriptionPlans.find(plan => plan.isCurrent);
+  const isProOrEnterprise = currentPlan && (currentPlan.name === 'Pro' || currentPlan.name === 'Enterprise');
+
 
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
@@ -68,6 +71,7 @@ export default function AppLayout({
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
             <Logo />
+            {isProOrEnterprise && <Badge variant="secondary" className="ml-2">Pro</Badge>}
           </div>
           <div className="flex-1">
             <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
@@ -163,7 +167,10 @@ export default function AppLayout({
             </SheetTrigger>
             <SheetContent side="left" className="flex flex-col bg-sidebar text-sidebar-foreground">
               <nav className="grid gap-2 text-lg font-medium">
-                <Logo />
+                <div className="flex items-center">
+                  <Logo />
+                  {isProOrEnterprise && <Badge variant="secondary" className="ml-2">Pro</Badge>}
+                </div>
                  <NavLink href="/dashboard" isMobile>
                   <Home className="h-5 w-5" />
                   Dashboard
