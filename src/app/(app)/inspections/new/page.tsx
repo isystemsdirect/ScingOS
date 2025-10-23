@@ -63,7 +63,7 @@ export default function NewInspectionPage() {
                              <div className="flex items-center gap-2 pt-4">
                                 <div className="relative flex-1">
                                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                    <Input placeholder="Search inspection types..." className="pl-9" />
+                                    <Input placeholder="Search inspection types..." className="pl-9 rounded-full" />
                                 </div>
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>

@@ -1,3 +1,4 @@
+
 import Image from "next/image"
 import { ListFilter, MapPin, Search, Star, ShieldCheck } from "lucide-react"
 
@@ -62,7 +63,7 @@ export default function MarketplacePage() {
         <Input
           type="search"
           placeholder="Search by name, location, or certification..."
-          className="w-full rounded-lg bg-card pl-9"
+          className="w-full rounded-full bg-card pl-9"
         />
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

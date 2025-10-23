@@ -84,7 +84,7 @@ function NewInspectionDetailsContent() {
                                   <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                                   <Input
                                     placeholder="Search clients by name, email..."
-                                    className="pl-9 pr-20"
+                                    className="pl-9 pr-20 rounded-full"
                                   />
                                   <div className="absolute right-1 top-1/2 flex -translate-y-1/2">
                                     <Button type="button" variant="ghost" size="icon" className="h-8 w-8 rounded-full">

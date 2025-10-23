@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import {
@@ -128,7 +129,7 @@ export default function LibraryPage() {
         <Input
           type="search"
           placeholder="Search library by title, jurisdiction, or tag..."
-          className="w-full rounded-lg bg-card pl-9"
+          className="w-full rounded-full bg-card pl-9"
         />
       </div>
       <Card>
