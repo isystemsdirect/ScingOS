@@ -49,40 +49,13 @@ function NewInspectionDetailsContent() {
             </div>
             <Card>
               <CardHeader>
-                <CardTitle>Step 3: Property & Client Information</CardTitle>
+                <CardTitle>Step 2: Client & Property Information</CardTitle>
                 <CardDescription>
-                  Enter the address of the property to be inspected and the client's details.
+                  Select the client for this inspection and enter the property address.
                 </CardDescription>
               </CardHeader>
               <CardContent className="grid gap-8">
-                <div className="grid gap-4">
-                    <h3 className="font-semibold text-lg">Property Address</h3>
-                    <div className="grid gap-3">
-                        <Label htmlFor="street-address">Street Address</Label>
-                        <div className="relative">
-                          <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                          <Input id="street-address" placeholder="Search for an address..." className="pl-9" />
-                        </div>
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div className="grid gap-3">
-                            <Label htmlFor="city">City</Label>
-                            <Input id="city" placeholder="Anytown" />
-                        </div>
-                        <div className="grid gap-3">
-                            <Label htmlFor="state">State / Province</Label>
-                            <Input id="state" placeholder="CA" />
-                        </div>
-                        <div className="grid gap-3">
-                            <Label htmlFor="zip">ZIP / Postal Code</Label>
-                            <Input id="zip" placeholder="12345" />
-                        </div>
-                    </div>
-                </div>
-
-                <Separator />
-
-                <div className="grid gap-4">
+                 <div className="grid gap-4">
                      <h3 className="font-semibold text-lg">Client Information</h3>
                      {selectedClient ? (
                        <div className="p-4 rounded-lg border bg-muted/50 flex items-center gap-4">
@@ -123,6 +96,33 @@ function NewInspectionDetailsContent() {
                           </TabsContent>
                       </Tabs>
                      )}
+                </div>
+                
+                <Separator />
+                
+                <div className="grid gap-4">
+                    <h3 className="font-semibold text-lg">Property Address</h3>
+                    <div className="grid gap-3">
+                        <Label htmlFor="street-address">Street Address</Label>
+                        <div className="relative">
+                          <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                          <Input id="street-address" placeholder="Search for an address..." className="pl-9" />
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div className="grid gap-3">
+                            <Label htmlFor="city">City</Label>
+                            <Input id="city" placeholder="Anytown" />
+                        </div>
+                        <div className="grid gap-3">
+                            <Label htmlFor="state">State / Province</Label>
+                            <Input id="state" placeholder="CA" />
+                        </div>
+                        <div className="grid gap-3">
+                            <Label htmlFor="zip">ZIP / Postal Code</Label>
+                            <Input id="zip" placeholder="12345" />
+                        </div>
+                    </div>
                 </div>
 
                 <Separator />
