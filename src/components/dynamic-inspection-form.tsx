@@ -4,7 +4,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { User, Users, PlusCircle, MapPin, Search, Camera, Mic, Edit } from "lucide-react";
+import { User, Users, PlusCircle, MapPin, Search, Camera, Mic } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -12,7 +12,7 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { mockClients } from "@/lib/data";
 import { ClientForm } from "@/components/client-form";
-import { Card, CardFooter } from "./ui/card";
+import { slugify } from "@/lib/utils";
 
 type DynamicInspectionFormProps = {
     inspectionType: string;
@@ -22,6 +22,7 @@ function DynamicInspectionFormContent({ inspectionType }: DynamicInspectionFormP
   const searchParams = useSearchParams();
   const clientId = searchParams.get('clientId');
   const selectedClient = mockClients.find(c => c.id === clientId);
+  const inspectionSlug = slugify(inspectionType);
 
   // In a real app, you would generate form fields based on inspectionType
   // For this example, we'll use a standard set of fields.
@@ -39,7 +40,7 @@ function DynamicInspectionFormContent({ inspectionType }: DynamicInspectionFormP
                     <p className="font-semibold">{selectedClient.name}</p>
                     <p className="text-sm text-muted-foreground">{selectedClient.email}</p>
                 </div>
-                <Link href={`/inspections/new/${inspectionType}`} className="ml-auto text-sm underline">Change client</Link>
+                <Link href={`/inspections/new/${inspectionSlug}`} className="ml-auto text-sm underline">Change client</Link>
             </div>
             ) : (
             <Tabs defaultValue="new-client">
@@ -71,7 +72,7 @@ function DynamicInspectionFormContent({ inspectionType }: DynamicInspectionFormP
                         </div>
                         <div className="space-y-4">
                             {mockClients.map(client => (
-                                <Link key={client.id} href={{pathname: `/inspections/new/${inspectionType}`, query: {clientId: client.id}}} className="w-full text-left p-4 rounded-lg border flex items-center gap-4 hover:bg-muted/50 transition-colors">
+                                <Link key={client.id} href={{pathname: `/inspections/new/${inspectionSlug}`, query: {clientId: client.id}}} className="w-full text-left p-4 rounded-lg border flex items-center gap-4 hover:bg-muted/50 transition-colors">
                                     <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center">
                                         <User className="h-5 w-5 text-muted-foreground" />
                                     </div>
@@ -117,8 +118,8 @@ function DynamicInspectionFormContent({ inspectionType }: DynamicInspectionFormP
 
         <Separator />
         <div className="flex justify-end">
-            <Button asChild>
-                <Link href={`/clients/${clientId || mockClients[0].id}`}>Start Inspection</Link>
+            <Button asChild disabled={!clientId}>
+                <Link href={`/inspections/new/review?clientId=${clientId}&inspectionType=${inspectionSlug}`}>Review & Confirm</Link>
             </Button>
         </div>
     </div>

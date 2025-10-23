@@ -15,14 +15,26 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, notFound } from "next/navigation";
 import { mockClients } from "@/lib/data";
+import inspectionData from '@/lib/inspection-types.json';
 import { Suspense } from "react";
+import { slugify } from "@/lib/utils";
 
 
 function NewInspectionReviewContent() {
   const searchParams = useSearchParams();
   const clientId = searchParams.get('clientId');
+  const inspectionTypeSlug = searchParams.get('inspectionType');
+
+  if(!inspectionTypeSlug) {
+      notFound();
+  }
+
+  const inspectionType = inspectionData.inspectionTypeCategories
+    .flatMap(category => category.types)
+    .find(type => slugify(type) === inspectionTypeSlug);
+
 
   // Find the selected client from mock data, or use the first one as a fallback for the demo
   const selectedClient = mockClients.find(c => c.id === clientId) || mockClients[0];
@@ -30,11 +42,7 @@ function NewInspectionReviewContent() {
 
   // This data would be passed from previous steps in a real app
   const inspectionDetails = {
-    primaryType: "General property condition assessment (PCA)",
-    addOnTypes: [
-      "Roof condition survey (low-slope/steep)",
-      "Moisture intrusion/basement foundation survey",
-    ],
+    primaryType: inspectionType,
     property: {
       street: "123 Main St",
       city: "Anytown",
@@ -44,13 +52,16 @@ function NewInspectionReviewContent() {
     client: selectedClient
   };
 
+  if(!inspectionType) {
+      notFound();
+  }
+
   return (
-    <div className="flex min-h-screen w-full flex-col">
-      <div className="flex flex-col sm:gap-4 sm:py-4">
-        <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 max-w-4xl mx-auto w-full">
+    <div className="mx-auto w-full max-w-4xl px-4 lg:px-6">
+        <main className="grid flex-1 items-start gap-4 md:gap-8">
           <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
             <div className="flex items-center gap-4">
-              <Link href={{pathname: "/inspections/new/details", query: { clientId: clientId ?? undefined }}}>
+              <Link href={{pathname: `/inspections/new/${inspectionTypeSlug}`, query: { clientId: clientId ?? undefined }}}>
                 <Button variant="outline" size="icon" className="h-7 w-7">
                   <ChevronLeft className="h-4 w-4" />
                   <span className="sr-only">Back</span>
@@ -62,7 +73,7 @@ function NewInspectionReviewContent() {
             </div>
             <Card>
               <CardHeader>
-                <CardTitle>Step 4: Review & Confirm</CardTitle>
+                <CardTitle>Step 3: Review & Confirm</CardTitle>
                 <CardDescription>
                   Please review the details below before starting the inspection.
                 </CardDescription>
@@ -77,16 +88,8 @@ function NewInspectionReviewContent() {
                         </Button>
                     </div>
                     <div className="grid gap-2">
-                        <p className="font-medium">Primary Inspection Type</p>
+                        <p className="font-medium">Inspection Type</p>
                         <p className="text-muted-foreground">{inspectionDetails.primaryType}</p>
-                    </div>
-                     <div className="grid gap-2">
-                        <p className="font-medium">Add-on Inspections</p>
-                        <div className="flex flex-wrap gap-2">
-                            {inspectionDetails.addOnTypes.map(type => (
-                                <Badge key={type} variant="secondary">{type}</Badge>
-                            ))}
-                        </div>
                     </div>
                 </div>
 
@@ -96,7 +99,7 @@ function NewInspectionReviewContent() {
                     <div className="flex items-center justify-between">
                         <h3 className="font-semibold text-lg">Property & Client</h3>
                          <Button variant="ghost" size="sm" asChild>
-                            <Link href={{pathname: "/inspections/new/details", query: {clientId: clientId ?? undefined}}}><Edit className="mr-2 h-4 w-4" />Edit</Link>
+                            <Link href={{pathname: `/inspections/new/${inspectionTypeSlug}`, query: {clientId: clientId ?? undefined}}}><Edit className="mr-2 h-4 w-4" />Edit</Link>
                         </Button>
                     </div>
                     <div className="grid md:grid-cols-2 gap-6">
@@ -127,7 +130,6 @@ function NewInspectionReviewContent() {
             </Card>
           </div>
         </main>
-      </div>
     </div>
   );
 }
