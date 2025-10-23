@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -35,13 +36,13 @@
     --neon-blue: 205 80% 55%;
     --neon-green: 128 65% 52%;
 
-    --sidebar-background: 205 85% 15%;
+    --sidebar-background: 220 40% 15% / 0.9;
     --sidebar-foreground: 210 25% 85%;
     --sidebar-primary: 52 80% 45%;
     --sidebar-primary-foreground: 52 80% 95%;
     --sidebar-accent: 52 80% 22%;
     --sidebar-accent-foreground: 52 80% 98%;
-    --sidebar-border: 205 80% 20%;
+    --sidebar-border: 220 40% 25%;
     --sidebar-ring: 52 80% 45%;
   }
 
@@ -78,13 +79,13 @@
     --neon-blue: 205 80% 55%;
     --neon-green: 128 65% 52%;
 
-    --sidebar-background: 205 85% 15%;
+    --sidebar-background: 220 40% 15% / 0.9;
     --sidebar-foreground: 210 25% 85%;
     --sidebar-primary: 52 80% 45%;
     --sidebar-primary-foreground: 52 80% 95%;
     --sidebar-accent: 52 80% 22%;
     --sidebar-accent-foreground: 52 80% 98%;
-    --sidebar-border: 205 80% 20%;
+    --sidebar-border: 220 40% 25%;
     --sidebar-ring: 52 80% 45%;
   }
 }
