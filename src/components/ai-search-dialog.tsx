@@ -187,7 +187,7 @@ export function AiSearchDialog() {
       <DialogTrigger asChild>
         <Button
           variant="outline"
-          className="w-full justify-start text-sm text-muted-foreground rounded-full"
+          className="w-full justify-start text-sm text-muted-foreground rounded-md"
         >
           <Search className="mr-2 h-4 w-4" />
           <span>{isProOrEnterprise ? 'Consult Scing Professional' : 'Consult Scing'}</span>
@@ -196,7 +196,7 @@ export function AiSearchDialog() {
       <DialogContent className="sm:max-w-[625px]">
         <DialogHeader>
           <DialogTitle className="flex items-center">
-            {isProOrEnterprise ? 'Scing Pro Search' : 'Scingular AI Search'}
+            {isProOrEnterprise ? 'Scing Pro Search' : 'SCINGULAR AI Search'}
           </DialogTitle>
           <DialogDescription>
             {isVisualSearchActive ? "Position the subject in the frame and capture." : "Cross-reference your query against a vast library of codes and standards."}
@@ -250,7 +250,7 @@ export function AiSearchDialog() {
                           )}
                           <Input
                             placeholder={isProOrEnterprise ? "Consult Scing Professional" : "Consult Scing."}
-                            className={cn("pr-20 rounded-full", capturedImage ? "pl-12" : "pl-9")}
+                            className={cn("pr-20 rounded-md", capturedImage ? "pl-12" : "pl-9")}
                             {...field}
                           />
                           <div className="absolute right-1 top-1/2 flex -translate-y-1/2">
