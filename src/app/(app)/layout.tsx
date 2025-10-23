@@ -1,3 +1,6 @@
+
+'use client';
+
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -20,6 +23,8 @@ import {
   User,
   Library,
   DollarSign,
+  Expand,
+  Shrink
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -51,6 +56,39 @@ import { mockInspectors, mockSubscriptionPlans } from "@/lib/data";
 import { NavLink } from "@/components/nav-link";
 import { AiSearchDialog } from "@/components/ai-search-dialog";
 import { Separator } from "@/components/ui/separator";
+import { useState, useEffect } from "react";
+
+
+function FullscreenToggle() {
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    function onFullscreenChange() {
+      setIsFullscreen(Boolean(document.fullscreenElement));
+    }
+
+    document.addEventListener('fullscreenchange', onFullscreenChange);
+
+    return () => document.removeEventListener('fullscreenchange', onFullscreenChange);
+  }, []);
+
+  const handleFullscreenToggle = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  };
+
+  return (
+    <Button variant="ghost" size="icon" className="rounded-full" onClick={handleFullscreenToggle}>
+      {isFullscreen ? <Shrink className="h-5 w-5" /> : <Expand className="h-5 w-5" />}
+      <span className="sr-only">{isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}</span>
+    </Button>
+  );
+}
 
 
 export default function AppLayout({
@@ -226,6 +264,7 @@ export default function AppLayout({
                 <Bell className="h-5 w-5" />
                 <span className="sr-only">Toggle notifications</span>
               </Button>
+              <FullscreenToggle />
           </div>
         </header>
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 bg-background">
