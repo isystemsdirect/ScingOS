@@ -192,8 +192,8 @@ export default function AppLayout({
           </div>
         </div>
       </div>
-      <div className="flex flex-col z-10">
-        <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+      <div className="flex flex-col z-10 max-h-screen">
+        <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6 shrink-0">
           <Sheet>
             <SheetTrigger asChild>
               <Button
@@ -269,10 +269,12 @@ export default function AppLayout({
               <FullscreenToggle />
           </div>
         </header>
-        <main className="flex-1 overflow-auto bg-transparent p-4 lg:p-6">
+        <main className="flex-1 overflow-y-auto bg-transparent p-4 lg:p-6">
           {children}
         </main>
       </div>
     </div>
   );
 }
+
+    
