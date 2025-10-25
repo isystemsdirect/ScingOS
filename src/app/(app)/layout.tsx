@@ -199,7 +199,7 @@ export default function AppLayout({
                   <Library className="h-5 w-5" />
                   Standards Library
                 </NavLink>
-                <NavLink href="/marketplace" is_mobile>
+                <NavLink href="/marketplace" isMobile>
                   <Store className="h-5 w-5" />
                   Marketplace
                 </NavLink>
