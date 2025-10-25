@@ -232,7 +232,7 @@ export default function AppLayout({
               </Button>
           </div>
         </header>
-        <main className="flex-1 overflow-y-auto bg-muted/40 p-4 sm:px-6 sm:py-6">
+        <main className="flex-1 overflow-y-auto bg-background/80 p-4 sm:px-6 sm:py-6">
           {children}
         </main>
       </div>

@@ -100,6 +100,9 @@
   }
   body {
     @apply bg-background text-foreground;
+    background: linear-gradient(-45deg, hsl(var(--background)), hsl(var(--sidebar-background)), hsl(var(--background)), hsl(var(--sidebar-background)));
+    background-size: 400% 400%;
+    animation: background-pan 15s ease infinite;
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-sans font-semibold;
