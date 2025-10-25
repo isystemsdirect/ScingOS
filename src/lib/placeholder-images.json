@@ -3,7 +3,7 @@
     {
       "id": "hero",
       "description": "Abstract architectural lines of a modern building",
-      "imageUrl": "https://images.unsplash.com/photo-1691751509846-c51f7ffa41e0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxhcmNoaXRlY3R1cmUlMjBidWlsZGluZ3xlbnwwfHx8fDE3NjEyMzg4OTN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/background_photos/bg-city-1.jpg",
       "imageHint": "architecture building"
     },
     {
@@ -69,31 +69,31 @@
     {
       "id": "bg-nature-1",
       "description": "A misty forest with tall pine trees",
-      "imageUrl": "https://images.unsplash.com/photo-1614200991676-910c80a78ed4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxmb3Jlc3QlMjB0cmVlc3xlbnwwfHx8fDE3NjEyMzg5NzZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/background_photos/bg-nature-1.jpg",
       "imageHint": "forest trees"
     },
     {
       "id": "bg-nature-2",
       "description": "A clear blue lake surrounded by mountains",
-      "imageUrl": "https://images.unsplash.com/photo-1725900544660-8d5901d12e4b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxsYWtlJTIwbW91bnRhaW5zfGVufDB8fHx8MTc2MTE2MDc0MXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/background_photos/bg-nature-2.jpg",
       "imageHint": "lake mountains"
     },
     {
       "id": "bg-nature-3",
       "description": "A desert landscape at sunset",
-      "imageUrl": "https://images.unsplash.com/photo-1528470621820-ad2177f438d6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxkZXNlcnQlMjBzdW5zZXR8ZW58MHx8fHwxNzYxMTY0NzE3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/background_photos/bg-nature-3.jpg",
       "imageHint": "desert sunset"
     },
     {
       "id": "bg-city-1",
       "description": "A bustling city street at night with neon lights",
-      "imageUrl": "https://images.unsplash.com/photo-1531819177115-428566ccfb50?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Y2l0eSUyMG5pZ2h0fGVufDB8fHx8MTc2MTE1OTU3Mnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/background_photos/bg-city-1.jpg",
       "imageHint": "city night"
     },
     {
       "id": "bg-monument-1",
       "description": "A grand historical monument under a clear sky",
-      "imageUrl": "https://images.unsplash.com/photo-1732929747004-10e3b9889217?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxtb251bWVudCUyMGFyY2hpdGVjdHVyZXxlbnwwfHx8fDE3NjEyMzg5NzZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/background_photos/bg-monument-1.jpg",
       "imageHint": "monument architecture"
     }
   ]
