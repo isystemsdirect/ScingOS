@@ -56,41 +56,6 @@ import { mockInspectors, mockSubscriptionPlans } from "@/lib/data";
 import { NavLink } from "@/components/nav-link";
 import { AiSearchDialog } from "@/components/ai-search-dialog";
 import { Separator } from "@/components/ui/separator";
-import { useState, useEffect } from "react";
-import { BackgroundSlideshow } from "@/components/background/background-slideshow";
-
-
-function FullscreenToggle() {
-  const [isFullscreen, setIsFullscreen] = useState(false);
-
-  useEffect(() => {
-    function onFullscreenChange() {
-      setIsFullscreen(Boolean(document.fullscreenElement));
-    }
-
-    document.addEventListener('fullscreenchange', onFullscreenChange);
-
-    return () => document.removeEventListener('fullscreenchange', onFullscreenChange);
-  }, []);
-
-  const handleFullscreenToggle = () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen();
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      }
-    }
-  };
-
-  return (
-    <Button variant="ghost" size="icon" className="rounded-full" onClick={handleFullscreenToggle}>
-      {isFullscreen ? <Shrink className="h-5 w-5" /> : <Expand className="h-5 w-5" />}
-      <span className="sr-only">{isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}</span>
-    </Button>
-  );
-}
-
 
 export default function AppLayout({
   children,
@@ -105,9 +70,8 @@ export default function AppLayout({
 
 
   return (
-    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] relative">
-      <BackgroundSlideshow />
-      <div className="hidden border-r bg-sidebar md:block z-10">
+    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+      <div className="hidden border-r bg-sidebar md:block">
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
             <Logo />
@@ -158,7 +122,7 @@ export default function AppLayout({
               </NavLink>
             </nav>
           </div>
-          <div className="mt-auto px-4 pt-4 pb-24 border-t border-sidebar-border bg-[rgba(0,0,0,0.8)]">
+          <div className="mt-auto p-4 border-t border-sidebar-border">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="flex items-center justify-start gap-2 w-full px-2">
@@ -192,8 +156,8 @@ export default function AppLayout({
           </div>
         </div>
       </div>
-      <div className="flex flex-col z-10 max-h-screen">
-        <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6 shrink-0">
+      <div className="flex flex-col">
+        <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
           <Sheet>
             <SheetTrigger asChild>
               <Button
@@ -266,15 +230,12 @@ export default function AppLayout({
                 <Bell className="h-5 w-5" />
                 <span className="sr-only">Toggle notifications</span>
               </Button>
-              <FullscreenToggle />
           </div>
         </header>
-        <main className="flex-1 overflow-y-auto bg-transparent py-4 lg:py-6">
+        <main className="flex-1 overflow-y-auto bg-muted/40 p-4 sm:px-6 sm:py-6">
           {children}
         </main>
       </div>
     </div>
   );
 }
-
-    
