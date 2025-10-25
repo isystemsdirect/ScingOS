@@ -36,13 +36,13 @@
     --neon-blue: 205 80% 55%;
     --neon-green: 128 65% 52%;
 
-    --sidebar-background: 220 40% 12% / 0.8;
-    --sidebar-foreground: 210 25% 85%;
+    --sidebar-background: 210 20% 100%;
+    --sidebar-foreground: 210 10% 23%;
     --sidebar-primary: 45 90% 55%;
-    --sidebar-primary-foreground: 45 90% 95%;
-    --sidebar-accent: 45 90% 22%;
-    --sidebar-accent-foreground: 45 90% 98%;
-    --sidebar-border: 220 40% 25%;
+    --sidebar-primary-foreground: 45 90% 5%;
+    --sidebar-accent: 210 15% 95%;
+    --sidebar-accent-foreground: 210 10% 23%;
+    --sidebar-border: 210 15% 88%;
     --sidebar-ring: 45 90% 55%;
   }
 
@@ -79,13 +79,13 @@
     --neon-blue: 205 80% 55%;
     --neon-green: 128 65% 52%;
 
-    --sidebar-background: 220 40% 12% / 0.8;
-    --sidebar-foreground: 210 25% 85%;
+    --sidebar-background: 210 10% 16%;
+    --sidebar-foreground: 210 20% 98%;
     --sidebar-primary: 45 90% 55%;
-    --sidebar-primary-foreground: 45 90% 95%;
-    --sidebar-accent: 45 90% 22%;
-    --sidebar-accent-foreground: 45 90% 98%;
-    --sidebar-border: 220 40% 25%;
+    --sidebar-primary-foreground: 45 90% 5%;
+    --sidebar-accent: 210 10% 23%;
+    --sidebar-accent-foreground: 210 20% 98%;
+    --sidebar-border: 210 10% 23%;
     --sidebar-ring: 45 90% 55%;
   }
 
@@ -100,9 +100,6 @@
   }
   body {
     @apply bg-background text-foreground;
-    background: linear-gradient(-45deg, hsl(var(--background)), hsl(var(--sidebar-background)), hsl(var(--background)), hsl(var(--sidebar-background)));
-    background-size: 400% 400%;
-    animation: background-pan 15s ease infinite;
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-sans font-semibold;

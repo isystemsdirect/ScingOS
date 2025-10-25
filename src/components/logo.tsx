@@ -12,7 +12,7 @@ const Logo = ({ className }: { className?: string }) => {
       )}
     >
       <Image src="/logo.png" alt="Scingular Logo" width={32} height={32} />
-      <span className="font-sans uppercase font-bold">SCINGULAR</span>
+      <span className="font-sans uppercase font-bold">SCINGULAR AI</span>
     </Link>
   );
 };
