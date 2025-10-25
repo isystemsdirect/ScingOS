@@ -65,36 +65,13 @@
       "description": "A 3D lidar scan of a room",
       "imageUrl": "https://images.unsplash.com/photo-1646215279503-7dd99848a8ee?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHwzZCUyMHNjYW58ZW58MHx8fHwxNzYxMjM4OTc1fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "3d scan"
-    },
-    {
-      "id": "bg-nature-1",
-      "description": "A misty forest with tall pine trees",
-      "imageUrl": "/background_photos/bg-nature-1.jpg",
-      "imageHint": "forest trees"
-    },
-    {
-      "id": "bg-nature-2",
-      "description": "A clear blue lake surrounded by mountains",
-      "imageUrl": "/background_photos/bg-nature-2.jpg",
-      "imageHint": "lake mountains"
-    },
-    {
-      "id": "bg-nature-3",
-      "description": "A desert landscape at sunset",
-      "imageUrl": "/background_photos/bg-nature-3.jpg",
-      "imageHint": "desert sunset"
-    },
-    {
-      "id": "bg-city-1",
-      "description": "A bustling city street at night with neon lights",
-      "imageUrl": "/background_photos/bg-city-1.jpg",
-      "imageHint": "city night"
-    },
-    {
-      "id": "bg-monument-1",
-      "description": "A grand historical monument under a clear sky",
-      "imageUrl": "/background_photos/bg-monument-1.jpg",
-      "imageHint": "monument architecture"
     }
+  ],
+  "background_photos": [
+    "/background_photos/bg-city-1.jpg",
+    "/background_photos/bg-monument-1.jpg",
+    "/background_photos/bg-nature-1.jpg",
+    "/background_photos/bg-nature-2.jpg",
+    "/background_photos/bg-nature-3.jpg"
   ]
 }

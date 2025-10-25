@@ -1,18 +1,32 @@
 'use client';
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
+import placeholderImages from '@/lib/placeholder-images.json';
 
-import { PlaceHolderImages } from '@/lib/placeholder-images';
+export default function BackgroundSlideshow() {
+  const [index, setIndex] = useState(0);
+  const images = placeholderImages.background_photos; // Array of file paths in /public/background_photos
 
-const backgroundImages = PlaceHolderImages.filter(p => p.id.startsWith('bg-'));
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % images.length);
+    }, 8000);
+    return () => clearInterval(interval);
+  }, [images.length]);
 
-export function BackgroundSlideshow() {
   return (
-    <ul className="slideshow">
-      {backgroundImages.map(image => (
-        <li
-          key={image.id}
-          style={{ backgroundImage: `url(${image.imageUrl})` }}
+    <div className="background-slideshow">
+      {images.map((src, i) => (
+        <Image
+          key={i}
+          src={src}
+          alt={`slideshow-${i}`}
+          fill
+          priority={i === index}
+          className={`slide ${i === index ? 'active' : ''}`}
+          sizes="100vw"
         />
       ))}
-    </ul>
+    </div>
   );
 }
