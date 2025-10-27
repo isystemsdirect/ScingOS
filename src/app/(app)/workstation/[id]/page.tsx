@@ -114,7 +114,7 @@ export default function DeviceDashboardPage() {
   const getStatusIndicator = (status: 'Connected' | 'Disconnected' | 'Error') => {
     switch (status) {
       case 'Connected':
-        return <div className="flex items-center gap-2 text-green-500"><Wifi size={16} /><span>Connected</span></div>;
+        return <div className="flex items-center gap-2 text-foreground"><Wifi size={16} /><span>Connected</span></div>;
       case 'Disconnected':
         return <div className="flex items-center gap-2 text-muted-foreground"><PowerOff size={16} /><span>Disconnected</span></div>;
       case 'Error':
@@ -217,7 +217,7 @@ export default function DeviceDashboardPage() {
                   <CardContent className="grid grid-cols-2 gap-4">
                       <Button variant="outline"><Play className="mr-2"/>Diagnostics</Button>
                       <Button variant="outline"><RotateCcw className="mr-2"/>Calibrate</Button>
-                      <Button variant="secondary" className="bg-blue-600/20 text-blue-400 border-blue-500/50 hover:bg-blue-600/30"><Settings className="mr-2"/>Update Firmware</Button>
+                      <Button variant="secondary"><Settings className="mr-2"/>Update Firmware</Button>
                       <Button variant="destructive"><Power className="mr-2"/>Reboot</Button>
                   </CardContent>
               </Card>
@@ -244,7 +244,7 @@ export default function DeviceDashboardPage() {
                       <div className="flex items-center">
                           <BatteryCharging className="h-4 w-4 mr-2 text-muted-foreground" />
                           <span>Battery 1 (Active):</span>
-                          <span className="ml-auto font-medium text-green-500">88% (2h 15m)</span>
+                          <span className="ml-auto font-medium">88% (2h 15m)</span>
                       </div>
                       <div className="flex items-center">
                           <BatteryCharging className="h-4 w-4 mr-2 text-muted-foreground" />
@@ -254,7 +254,7 @@ export default function DeviceDashboardPage() {
                       <div className="flex items-center">
                           <Bell className="h-4 w-4 mr-2 text-muted-foreground" />
                           <span>Alerts:</span>
-                          <span className="ml-auto font-medium text-green-500">Nominal</span>
+                          <span className="ml-auto font-medium">Nominal</span>
                       </div>
                   </CardContent>
               </Card>

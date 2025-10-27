@@ -221,8 +221,8 @@ export default function AppLayout({
           
           <div className="flex items-center gap-4 ml-auto">
               {user.onCall && (
-                <div className="hidden md:flex items-center gap-2 text-sm font-semibold text-status-active animate-pulse">
-                  <div className="w-2 h-2 rounded-full bg-status-active" />
+                <div className="hidden md:flex items-center gap-2 text-sm font-semibold text-foreground">
+                  <div className="w-2 h-2 rounded-full bg-primary" />
                   Marketplace Status: Active
                 </div>
               )}
