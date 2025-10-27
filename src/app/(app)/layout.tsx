@@ -220,12 +220,6 @@ export default function AppLayout({
           </div>
           
           <div className="flex items-center gap-4 ml-auto">
-              {user.onCall && (
-                <div className="hidden md:flex items-center gap-2 text-sm font-semibold text-foreground">
-                  <div className="w-2 h-2 rounded-full bg-primary" />
-                  Marketplace Status: Active
-                </div>
-              )}
               <Button variant="ghost" size="icon" className="rounded-full">
                 <Bell className="h-5 w-5" />
                 <span className="sr-only">Toggle notifications</span>

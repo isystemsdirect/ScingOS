@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={cn("font-sans antialiased", inter.variable)}>
+      <body>
         <BackgroundSlideshow />
         <div className="relative z-10">
           {children}
