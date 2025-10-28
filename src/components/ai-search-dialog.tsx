@@ -1,12 +1,11 @@
 
-
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Search, Loader2, FileText, ExternalLink, Mic, Camera, X } from 'lucide-react';
+import { Search, Loader2, FileText, Bot, Mic, Camera, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -25,15 +24,13 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import {
-  crossCheckStandards,
-  type CrossCheckStandardsOutput,
-} from '@/ai/flows/cross-check-standards';
-import { Progress } from './ui/progress';
+  queryPerplexity,
+  type PerplexityOutput,
+} from '@/ai/flows/query-perplexity';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
-import { Badge } from './ui/badge';
 import { mockSubscriptionPlans } from '@/lib/data';
 
 const searchSchema = z.object({
@@ -43,7 +40,7 @@ const searchSchema = z.object({
 export function AiSearchDialog() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [results, setResults] = useState<CrossCheckStandardsOutput | null>(
+  const [results, setResults] = useState<PerplexityOutput | null>(
     null
   );
   const [isVisualSearchActive, setIsVisualSearchActive] = useState(false);
@@ -128,8 +125,8 @@ export function AiSearchDialog() {
     setResults(null);
     try {
       // Here you would also pass the capturedImage if it exists
-      const searchResults = await crossCheckStandards({
-        searchText: values.query,
+      const searchResults = await queryPerplexity({
+        query: values.query,
       });
       setResults(searchResults);
     } catch (error) {
@@ -196,10 +193,10 @@ export function AiSearchDialog() {
       <DialogContent className="sm:max-w-[625px]">
         <DialogHeader>
           <DialogTitle className="flex items-center">
-            {isProOrEnterprise ? 'Scing Pro Search' : 'SCINGULAR AI Search'}
+            {isProOrEnterprise ? 'Scing Pro Search (Perplexity AI)' : 'SCINGULAR AI Search (Perplexity AI)'}
           </DialogTitle>
           <DialogDescription>
-            {isVisualSearchActive ? "Position the subject in the frame and capture." : "Cross-reference your query against a vast library of codes and standards."}
+            {isVisualSearchActive ? "Position the subject in the frame and capture." : "Ask a question to the Perplexity AI."}
           </DialogDescription>
         </DialogHeader>
 
@@ -273,7 +270,7 @@ export function AiSearchDialog() {
                   {isLoading ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
                   ) : (
-                    'Search'
+                    'Ask'
                   )}
                 </Button>
                  {capturedImage && (
@@ -288,58 +285,22 @@ export function AiSearchDialog() {
                 </div>
               )}
               {results && (
-                <div className="max-h-[50vh] overflow-y-auto pr-4">
-                  {results.codeCitations?.length > 0 ? (
-                    <ul className="space-y-4">
-                      {results.codeCitations.map((citation, index) => (
-                        <li key={index} className="rounded-lg border p-4">
-                          <div className="flex items-center justify-between">
-                            <h4 className="font-semibold text-accent">
-                              {citation}
-                            </h4>
-                            <span className="text-sm font-medium text-muted-foreground">
-                              {results.jurisdictions?.[index]}
-                            </span>
+                 <div className="max-h-[50vh] overflow-y-auto pr-4 space-y-4">
+                  {results.answer ? (
+                      <div className="rounded-lg border p-4">
+                        <div className="flex items-start gap-3">
+                          <Bot className="h-6 w-6 text-accent flex-shrink-0" />
+                          <div className="prose prose-sm dark:prose-invert max-w-none">
+                            <p>{results.answer}</p>
                           </div>
-                          <p className="mt-2 text-sm text-muted-foreground italic">
-                            "{results.excerpts?.[index]}"
-                          </p>
-                          <div className="mt-3 flex items-center justify-between gap-4">
-                            <div className="flex-1">
-                              <div className="flex justify-between text-xs text-muted-foreground">
-                                <span>Relevance</span>
-                                <span>
-                                  {((results.relevanceScores?.[index] ?? 0) * 100).toFixed(0)}%
-                                </span>
-                              </div>
-                              <Progress
-                                value={(results.relevanceScores?.[index] ?? 0) * 100}
-                                className="h-2 [&>div]:bg-accent"
-                              />
-                            </div>
-
-                            {results.fullDocLinks?.[index] && (
-                              <Button asChild size="sm" variant="outline">
-                                <a
-                                  href={results.fullDocLinks[index]}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  <ExternalLink className="mr-2 h-4 w-4" />
-                                  View Document
-                                </a>
-                              </Button>
-                            )}
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
+                        </div>
+                      </div>
                   ) : (
                     <div className="text-center p-8 border rounded-lg">
                         <FileText className="mx-auto h-12 w-12 text-muted-foreground" />
                         <h3 className="mt-4 text-lg font-semibold">No Results Found</h3>
                         <p className="mt-2 text-sm text-muted-foreground">
-                          The AI couldn't find any matching standards for your query. Try rephrasing your search.
+                          The AI couldn't find an answer for your query. Try rephrasing your search.
                         </p>
                     </div>
                   )}
@@ -352,5 +313,3 @@ export function AiSearchDialog() {
     </Dialog>
   );
 }
-
-    
