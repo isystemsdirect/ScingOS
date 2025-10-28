@@ -157,7 +157,7 @@ export default function AppLayout({
         </div>
       </div>
       <div className="flex flex-col relative h-screen overflow-hidden">
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-muted/40 px-4 backdrop-blur-sm lg:h-[60px] lg:px-6">
           <Sheet>
             <SheetTrigger asChild>
               <Button
@@ -226,7 +226,7 @@ export default function AppLayout({
               </Button>
           </div>
         </header>
-        <main className="flex-1 overflow-y-auto p-4 sm:px-6 sm:py-6">
+        <main className="flex-1 overflow-y-auto p-4 sm:px-6 sm:py-6 bg-black/20 backdrop-blur-sm">
           {children}
         </main>
       </div>

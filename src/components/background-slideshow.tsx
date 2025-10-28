@@ -2,13 +2,14 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import placeholderImages from '@/lib/placeholder-images.json';
+import data from '@/lib/placeholder-images.json';
 
 export default function BackgroundSlideshow() {
   const [index, setIndex] = useState(0);
-  const images = placeholderImages.background_photos; // Array of file paths in /public/background_photos
+  const images = data.background_photos; 
 
   useEffect(() => {
+    if (images.length === 0) return;
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % images.length);
     }, 8000);
