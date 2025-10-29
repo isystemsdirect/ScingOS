@@ -71,28 +71,6 @@ export function AiSearchDialog() {
   const currentPlan = mockSubscriptionPlans.find(plan => plan.isCurrent);
   const isProOrEnterprise = currentPlan && (currentPlan.name === 'Pro' || currentPlan.name === 'Enterprise');
 
-  // Function to speak text using the browser's built-in synthesis
-  const speak = useCallback((text: string) => {
-    // Cancel any ongoing speech
-    speechSynthesis.cancel();
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    const voices = speechSynthesis.getVoices();
-    // Prefer a Google voice if available, otherwise default
-    const googleVoice = voices.find(voice => voice.name.includes('Google'));
-    if (googleVoice) {
-      utterance.voice = googleVoice;
-    }
-    
-    utterance.onstart = () => setDialogState('speaking');
-    utterance.onend = () => setDialogState('idle');
-    utterance.onerror = (e) => {
-      console.error("SpeechSynthesis Error:", e);
-      setDialogState('idle');
-    };
-    speechSynthesis.speak(utterance);
-  }, []);
-
   const processAndRespond = useCallback(async (text: string) => {
     setDialogState('processing');
     try {
@@ -112,15 +90,25 @@ export function AiSearchDialog() {
       audioEl.onerror = (e) => {
         console.error("Audio playback error:", e);
         // Fallback to browser speech if audio fails
-        speak("I encountered an issue with my voice response, but I understood your command.");
+        toast({
+            variant: "destructive",
+            title: "Audio Error",
+            description: "Could not play the audio response."
+        })
+        setDialogState('idle');
       }
       audioEl.play();
 
     } catch (error) {
       console.error("Error processing command or generating speech:", error);
-      speak("I'm sorry, I had trouble processing that command.");
+       toast({
+        variant: "destructive",
+        title: "Processing Error",
+        description: "I'm sorry, I had trouble processing that command."
+      });
+      setDialogState('idle');
     }
-  }, [speak]);
+  }, [toast]);
 
 
   // Initialize SpeechRecognition
@@ -438,3 +426,5 @@ export function AiSearchDialog() {
     </Dialog>
   );
 }
+
+    
