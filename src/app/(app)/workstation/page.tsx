@@ -33,10 +33,10 @@ export default function WorkstationPage() {
   ];
 
   const mockKeys = [
-    { id: "key_vision_std_abc123", name: "Standard Vision Key", lariEngine: "LARI-VISION", entitlement: "Core" },
-    { id: "key_dose_pro_def456", name: "Professional Drone Key", lariEngine: "LARI-DOSE", entitlement: "Pro" },
-    { id: "key_mapper_ent_ghi789", name: "Enterprise LiDAR Key", lariEngine: "LARI-MAPPER", entitlement: "Enterprise" },
-    { id: "key_prism_max_jkl012", name: "Max Spectrometer Key", lariEngine: "LARI-PRISM", entitlement: "MAX" },
+    { id: "key_vision_std_abc123", name: "Standard Vision Key", lariEngine: "LARI-VISION", entitlement: "Core", status: "Active" },
+    { id: "key_dose_pro_def456", name: "Professional Drone Key", lariEngine: "LARI-DOSE", entitlement: "Pro", status: "Active" },
+    { id: "key_mapper_ent_ghi789", name: "Enterprise LiDAR Key", lariEngine: "LARI-MAPPER", entitlement: "Enterprise", status: "Inactive" },
+    { id: "key_prism_max_jkl012", name: "Max Spectrometer Key", lariEngine: "LARI-PRISM", entitlement: "MAX", status: "Active" },
   ];
 
   return (
@@ -469,6 +469,7 @@ export default function WorkstationPage() {
                                     <TableHead>Key Name</TableHead>
                                     <TableHead>LARI Sub-Engine</TableHead>
                                     <TableHead>Entitlement</TableHead>
+                                    <TableHead>Status</TableHead>
                                     <TableHead className="text-right">Actions</TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -484,6 +485,9 @@ export default function WorkstationPage() {
                                         </TableCell>
                                         <TableCell>
                                             <Badge variant={key.entitlement === 'Pro' || key.entitlement === 'Enterprise' ? 'pro' : 'secondary'}>{key.entitlement}</Badge>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Badge variant={key.status === 'Active' ? 'default' : 'secondary'}>{key.status}</Badge>
                                         </TableCell>
                                         <TableCell className="text-right">
                                             <Button variant="ghost" size="icon"><Trash2 className="h-4 w-4"/></Button>
