@@ -54,6 +54,8 @@ import {
 import { mockInspections, mockInspectors } from "@/lib/data";
 import { notFound } from "next/navigation";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { textToSpeech } from "@/ai/flows/lari-text-to-speech";
+import { useState } from "react";
 
 
 export default function InspectionDetailPage({ params }: { params: { id: string } }) {
@@ -149,7 +151,7 @@ export default function InspectionDetailPage({ params }: { params: { id: string 
                     {inspectorAvatar && <Image src={inspectorAvatar.imageUrl} alt={inspector.name} width={64} height={64} className="rounded-full" data-ai-hint={inspectorAvatar.imageHint} />}
                     <div className="grid gap-1">
                       <div className="font-semibold">{inspector.name}</div>
-                      <div className="text-sm text-muted-foreground">{inspector.certifications[0]}</div>
+                      <div className="text-sm text-muted-foreground">{inspector.certifications[0].name}</div>
                        <div className="text-sm text-muted-foreground">Rating: {inspector.rating} ({inspector.reviews} reviews)</div>
                     </div>
                   </CardContent>

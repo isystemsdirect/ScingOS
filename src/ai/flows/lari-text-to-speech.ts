@@ -25,7 +25,7 @@ export type TextToSpeechOutput = z.infer<typeof TextToSpeechOutputSchema>;
 export async function textToSpeech(
   input: TextToSpeechInput
 ): Promise<TextToSpeechOutput> {
-  return lariNarratorFlow(input);
+  return lariTextToSpeechFlow(input);
 }
 
 async function toWav(
@@ -56,9 +56,9 @@ async function toWav(
 }
 
 
-const lariNarratorFlow = ai.defineFlow(
+const lariTextToSpeechFlow = ai.defineFlow(
   {
-    name: 'lariNarratorFlow',
+    name: 'lariTextToSpeechFlow',
     inputSchema: TextToSpeechInputSchema,
     outputSchema: TextToSpeechOutputSchema,
   },

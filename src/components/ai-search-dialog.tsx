@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -27,6 +27,8 @@ import {
   crossCheckStandards,
   type CrossCheckStandardsOutput,
 } from '@/ai/flows/lari-compliance';
+import { processVoiceCommand } from '@/ai/flows/lari-scing-bridge';
+import { textToSpeech } from '@/ai/flows/lari-narrator';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import Image from 'next/image';
@@ -38,6 +40,8 @@ const searchSchema = z.object({
   query: z.string().min(3, 'Search query must be at least 3 characters.'),
 });
 
+type DialogState = 'idle' | 'listening' | 'processing' | 'speaking';
+
 export function AiSearchDialog() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -47,7 +51,10 @@ export function AiSearchDialog() {
   const [isVisualSearchActive, setIsVisualSearchActive] = useState(false);
   const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
-  const [isListening, setIsListening] = useState(false);
+  
+  const [dialogState, setDialogState] = useState<DialogState>('idle');
+  const [transcript, setTranscript] = useState('');
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
 
 
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -60,9 +67,130 @@ export function AiSearchDialog() {
       query: '',
     },
   });
-
+  
   const currentPlan = mockSubscriptionPlans.find(plan => plan.isCurrent);
   const isProOrEnterprise = currentPlan && (currentPlan.name === 'Pro' || currentPlan.name === 'Enterprise');
+
+  // Function to speak text using the browser's built-in synthesis
+  const speak = useCallback((text: string) => {
+    // Cancel any ongoing speech
+    speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    const voices = speechSynthesis.getVoices();
+    // Prefer a Google voice if available, otherwise default
+    const googleVoice = voices.find(voice => voice.name.includes('Google'));
+    if (googleVoice) {
+      utterance.voice = googleVoice;
+    }
+    
+    utterance.onstart = () => setDialogState('speaking');
+    utterance.onend = () => setDialogState('idle');
+    utterance.onerror = (e) => {
+      console.error("SpeechSynthesis Error:", e);
+      setDialogState('idle');
+    };
+    speechSynthesis.speak(utterance);
+  }, []);
+
+  const processAndRespond = useCallback(async (text: string) => {
+    setDialogState('processing');
+    try {
+      // 1. Send transcribed text to LARI to understand intent
+      const commandResult = await processVoiceCommand({ command: text });
+      
+      // 2. Formulate a simple text response based on the action
+      const responseText = `Understood. Executing action: ${commandResult.action.replace(/_/g, ' ')}.`;
+      
+      // 3. Send the text response to LARI to generate speech
+      const { audio } = await textToSpeech(responseText);
+      
+      // 4. SCING plays the audio response
+      const audioEl = new Audio(audio);
+      audioEl.onplay = () => setDialogState('speaking');
+      audioEl.onended = () => setDialogState('idle');
+      audioEl.onerror = (e) => {
+        console.error("Audio playback error:", e);
+        // Fallback to browser speech if audio fails
+        speak("I encountered an issue with my voice response, but I understood your command.");
+      }
+      audioEl.play();
+
+    } catch (error) {
+      console.error("Error processing command or generating speech:", error);
+      speak("I'm sorry, I had trouble processing that command.");
+    }
+  }, [speak]);
+
+
+  // Initialize SpeechRecognition
+  useEffect(() => {
+    // Ensure this runs only in the browser
+    if (typeof window === 'undefined') return;
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      recognitionRef.current = new SpeechRecognition();
+      const recognition = recognitionRef.current;
+      recognition.continuous = false; // Stop after first result
+      recognition.interimResults = false;
+
+      recognition.onresult = (event) => {
+        const currentTranscript = event.results[event.results.length - 1][0].transcript.trim();
+        setTranscript(currentTranscript);
+        form.setValue('query', currentTranscript);
+        processAndRespond(currentTranscript);
+      };
+
+      recognition.onerror = (event) => {
+        console.error('Speech recognition error:', event.error);
+        toast({
+          variant: 'destructive',
+          title: 'Speech Recognition Error',
+          description: event.error === 'not-allowed' ? 'Microphone access denied.' : `An error occurred: ${event.error}`,
+        });
+        setDialogState('idle');
+      };
+
+      recognition.onend = () => {
+         // Only reset state if it was 'listening', to avoid race conditions
+         if (dialogState === 'listening') {
+          setDialogState('idle');
+        }
+      };
+
+    }
+  }, [toast, form, processAndRespond, dialogState]);
+  
+  const handleMicClick = () => {
+    if (!recognitionRef.current) {
+      toast({
+        variant: 'destructive',
+        title: 'Speech Recognition Not Supported',
+        description: 'Your browser does not support this feature.',
+      });
+      return;
+    }
+
+    if (dialogState === 'listening') {
+      recognitionRef.current.stop();
+      setDialogState('idle');
+    } else if (dialogState === 'idle') {
+      try {
+        recognitionRef.current.start();
+        setDialogState('listening');
+      } catch (error) {
+         console.error("Could not start recognition:", error);
+         toast({
+          variant: "destructive",
+          title: "Could not start listening",
+          description: "Microphone might already be in use or is unavailable."
+        })
+        setDialogState('idle');
+      }
+    }
+  };
+
 
   useEffect(() => {
     let stream: MediaStream | null = null;
@@ -96,30 +224,6 @@ export function AiSearchDialog() {
       }
     }
   }, [isVisualSearchActive, hasCameraPermission, toast]);
-
-  const handleMicClick = async () => {
-    setIsListening(true);
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        // Speech recognition logic would go here
-        console.log("Microphone access granted");
-        toast({
-            title: "Microphone Enabled",
-            description: "Voice command functionality is ready."
-        });
-        // For demonstration, stop listening after a few seconds
-        setTimeout(() => setIsListening(false), 3000);
-    } catch (error) {
-        console.error("Error accessing microphone:", error);
-        toast({
-            variant: "destructive",
-            title: "Microphone Access Denied",
-            description: "Please enable microphone permissions in your browser settings."
-        });
-        setIsListening(false);
-    }
-  };
-
 
   async function onSubmit(values: z.infer<typeof searchSchema>) {
     setIsLoading(true);
@@ -164,6 +268,9 @@ export function AiSearchDialog() {
     setCapturedImage(null);
     setResults(null);
     form.reset();
+    setDialogState('idle');
+    recognitionRef.current?.stop();
+    speechSynthesis.cancel();
     setIsVisualSearchActive(false);
     setHasCameraPermission(null);
     if (videoRef.current && videoRef.current.srcObject) {
@@ -178,6 +285,15 @@ export function AiSearchDialog() {
       resetSearch();
     }
     setIsOpen(open);
+  }
+  
+  const getMicButtonClass = () => {
+    switch (dialogState) {
+      case 'listening': return 'text-destructive animate-pulse';
+      case 'speaking':
+      case 'processing': return 'text-accent animate-pulse';
+      default: return 'text-muted-foreground';
+    }
   }
 
   return (
@@ -197,7 +313,7 @@ export function AiSearchDialog() {
             {isProOrEnterprise ? 'Scing Pro Search' : 'SCINGULAR AI Search'}
           </DialogTitle>
           <DialogDescription>
-            {isVisualSearchActive ? "Position the subject in the frame and capture." : "Cross-check standards and ask questions to your AI model."}
+            {isVisualSearchActive ? "Position the subject in the frame and capture." : "Cross-check standards, ask questions, or issue voice commands to your AI model."}
           </DialogDescription>
         </DialogHeader>
 
@@ -256,8 +372,8 @@ export function AiSearchDialog() {
                                 <Camera className="h-4 w-4 text-muted-foreground" />
                                 <span className="sr-only">Use visual search</span>
                             </Button>
-                            <Button type="button" variant="ghost" size="icon" className="h-8 w-8 rounded-md" onClick={handleMicClick} disabled={isListening}>
-                                <Mic className={cn("h-4 w-4 text-muted-foreground", isListening && "text-accent animate-pulse")} />
+                            <Button type="button" variant="ghost" size="icon" className="h-8 w-8 rounded-md" onClick={handleMicClick} disabled={dialogState === 'processing' || dialogState === 'speaking'}>
+                                <Mic className={cn("h-4 w-4 transition-colors", getMicButtonClass())} />
                                 <span className="sr-only">Use voice command</span>
                             </Button>
                           </div>
@@ -267,7 +383,7 @@ export function AiSearchDialog() {
                     </FormItem>
                   )}
                 />
-                <Button type="submit" disabled={isLoading}>
+                <Button type="submit" disabled={isLoading || dialogState !== 'idle'}>
                   {isLoading ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
                   ) : (
