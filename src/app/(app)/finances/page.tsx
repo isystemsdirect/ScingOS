@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils"
 import { Separator } from "@/components/ui/separator"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { SiPaypal, SiGooglewallet } from "@icons-pack/react-simple-icons";
+import { SiPaypal, SiGooglepay } from "@icons-pack/react-simple-icons";
 
 
 const mockInvoices = [
@@ -111,10 +111,10 @@ export default function FinancesPage() {
                       <Button variant="secondary" size="sm">Enable</Button>
                   </div>
                   <div className="border rounded-lg p-4 flex items-center bg-muted/50">
-                      <SiGooglewallet className="mr-4 h-6 w-6 text-muted-foreground" />
+                      <SiGooglepay className="mr-4 h-6 w-6 text-muted-foreground" />
                       <div className="flex-1">
-                          <p className="font-medium">Google Wallet</p>
-                          <p className="text-sm text-muted-foreground">Accept payments through Google Wallet.</p>
+                          <p className="font-medium">Google Pay</p>
+                          <p className="text-sm text-muted-foreground">Accept payments through Google Pay.</p>
                       </div>
                       <Button variant="secondary" size="sm">Enable</Button>
                   </div>
