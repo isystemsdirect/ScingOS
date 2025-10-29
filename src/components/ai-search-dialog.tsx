@@ -26,7 +26,7 @@ import { Input } from '@/components/ui/input';
 import {
   crossCheckStandards,
   type CrossCheckStandardsOutput,
-} from '@/ai/flows/cross-check-standards';
+} from '@/ai/flows/lari-compliance';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import Image from 'next/image';

@@ -1,8 +1,8 @@
 import { config } from 'dotenv';
 config();
 
-import '@/ai/flows/enable-voice-commands.ts';
-import '@/ai/flows/cross-check-standards.ts';
-import '@/ai/flows/generate-audio-presentations.ts';
-import '@/ai/flows/generate-executive-summary.ts';
-import '@/ai/flows/ingest-telemetry.ts';
+import '@/ai/flows/lari-scing-bridge.ts';
+import '@/ai/flows/lari-compliance.ts';
+import '@/ai/flows/lari-narrator.ts';
+import '@/ai/flows/lari-synthesizer.ts';
+import '@/ai/flows/lari-ingestor.ts';
