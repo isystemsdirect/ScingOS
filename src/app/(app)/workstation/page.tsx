@@ -34,8 +34,8 @@ export default function WorkstationPage() {
 
   const mockKeys = [
     { id: "key_vision_std_abc123", name: "Standard Vision Key", lariEngine: "LARI-VISION", entitlement: "Core" },
-    { id: "key_drone_pro_def456", name: "Professional Drone Key", lariEngine: "LARI-DOSE", entitlement: "Pro" },
-    { id: "key_lidar_ent_ghi789", name: "Enterprise LiDAR Key", lariEngine: "LARI-MAPPER", entitlement: "Enterprise" },
+    { id: "key_dose_pro_def456", name: "Professional Drone Key", lariEngine: "LARI-DOSE", entitlement: "Pro" },
+    { id: "key_mapper_ent_ghi789", name: "Enterprise LiDAR Key", lariEngine: "LARI-MAPPER", entitlement: "Enterprise" },
     { id: "key_prism_max_jkl012", name: "Max Spectrometer Key", lariEngine: "LARI-PRISM", entitlement: "MAX" },
   ];
 
@@ -329,7 +329,7 @@ export default function WorkstationPage() {
                                     <SelectItem value="instant">Instant: For all jobs in my area</SelectItem>
                                     <SelectItem value="relevant">Relevant: Only for jobs matching my skills</SelectItem>
                                     <SelectItem value="digest">Daily Digest: A summary of available jobs</SelectItem>
-                                    <SelectItem value="none">None: I will check the marketplace manually</SelectItem>
+                                    <SelectItem value="none">I will check the marketplace manually</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
@@ -413,36 +413,35 @@ export default function WorkstationPage() {
                             Manage, calibrate, and fine-tune your connected hardware outside of active inspections.
                         </CardDescription>
                     </CardHeader>
-                    <CardContent>
-                    <Table>
-                        <TableHeader>
-                        <TableRow>
-                            <TableHead>Device</TableHead>
-                            <TableHead>Status</TableHead>
-                            <TableHead className="text-right">Actions</TableHead>
-                        </TableRow>
-                        </TableHeader>
-                        <TableBody>
+                    <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {mockDevices.map(device => (
-                            <TableRow key={device.id} className="hover:bg-muted/50 transition-colors">
-                            <TableCell className="font-medium">
-                                <div className="font-medium">{device.name}</div>
-                                <div className="text-sm text-muted-foreground">{device.type.replace('Key-','')}</div>
-                            </TableCell>
-                            <TableCell>
-                                <Badge variant={device.status === 'Connected' ? 'default' : 'secondary'}>{device.status}</Badge>
-                            </TableCell>
-                            <TableCell className="text-right">
-                                <Button asChild size="sm">
-                                    <Link href={`/workstation/${device.id}`}>Tune & Calibrate</Link>
-                                </Button>
-                            </TableCell>
-                            </TableRow>
+                            <Card key={device.id} className="flex flex-col">
+                                <CardHeader className="flex flex-row items-center gap-4 pb-4">
+                                    <div className="flex items-center justify-center h-12 w-12 rounded-lg bg-muted text-primary">
+                                        <Cpu className="h-6 w-6" />
+                                    </div>
+                                    <div>
+                                        <CardTitle className="text-base">{device.name}</CardTitle>
+                                        <CardDescription>{device.type.replace('Key-','')}</CardDescription>
+                                    </div>
+                                </CardHeader>
+                                <CardContent className="flex-grow space-y-2">
+                                    <div className="flex items-center text-sm">
+                                        <Badge variant={device.status === 'Connected' ? 'default' : 'secondary'}>{device.status}</Badge>
+                                        <p className="ml-auto text-xs text-muted-foreground">FW: {device.firmwareVersion}</p>
+                                    </div>
+                                    <p className="text-xs text-muted-foreground">Last seen: {device.lastSeen}</p>
+
+                                </CardContent>
+                                <CardFooter>
+                                    <Button asChild className="w-full">
+                                        <Link href={`/workstation/${device.id}`}>Tune & Calibrate</Link>
+                                    </Button>
+                                </CardFooter>
+                            </Card>
                         ))}
-                        </TableBody>
-                    </Table>
                     </CardContent>
-                    <CardFooter>
+                    <CardFooter className="border-t pt-6">
                         <Button size="sm" variant="outline" className="h-8 gap-1">
                             <PlusCircle className="h-3.5 w-3.5" />
                             <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
