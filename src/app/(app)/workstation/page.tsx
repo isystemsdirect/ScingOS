@@ -497,12 +497,14 @@ export default function WorkstationPage() {
                             </TableBody>
                         </Table>
                     </CardContent>
-                    <CardFooter>
-                        <Button size="sm" variant="outline" className="h-8 gap-1">
-                            <PlusCircle className="h-3.5 w-3.5" />
-                            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                            Generate New Key
-                            </span>
+                    <CardFooter className="border-t pt-6">
+                       <Button asChild size="sm" variant="outline" className="h-8 gap-1">
+                           <Link href="/finances">
+                                <PlusCircle className="h-3.5 w-3.5" />
+                                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                                Purchase New Key
+                                </span>
+                           </Link>
                         </Button>
                     </CardFooter>
                 </Card>
