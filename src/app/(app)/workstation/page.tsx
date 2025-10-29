@@ -30,7 +30,14 @@ export default function WorkstationPage() {
     { id: 1, query: "foundation crack requirements", date: "2023-10-28" },
     { id: 2, query: "NFPA 70 section 240.87", date: "2023-10-27" },
     { id: 3, query: "asbestos testing protocol", date: "2023-10-26" },
-  ]
+  ];
+
+  const mockKeys = [
+    { id: "key_vision_std_abc123", name: "Standard Vision Key", lariEngine: "LARI-VISION", entitlement: "Core" },
+    { id: "key_drone_pro_def456", name: "Professional Drone Key", lariEngine: "LARI-DOSE", entitlement: "Pro" },
+    { id: "key_lidar_ent_ghi789", name: "Enterprise LiDAR Key", lariEngine: "LARI-MAPPER", entitlement: "Enterprise" },
+    { id: "key_prism_max_jkl012", name: "Max Spectrometer Key", lariEngine: "LARI-PRISM", entitlement: "MAX" },
+  ];
 
   return (
     <div className="mx-auto w-full max-w-6xl">
@@ -38,12 +45,13 @@ export default function WorkstationPage() {
 
       <Tabs defaultValue="profile" className="relative">
         <div className="sticky top-0 z-20 pt-4 -mx-6 px-6 pb-2">
-            <TabsList className="grid h-auto w-full grid-cols-6 border p-1 bg-background/95 backdrop-blur-sm">
+            <TabsList className="grid h-auto w-full grid-cols-7 border p-1 bg-background/95 backdrop-blur-sm">
                 <TabsTrigger value="profile" className="py-2"><User className="mr-2 h-4 w-4"/>Profile</TabsTrigger>
                 <TabsTrigger value="ai" className="py-2"><Sparkles className="mr-2 h-4 w-4"/>AI & Voice</TabsTrigger>
                 <TabsTrigger value="camera" className="py-2"><Camera className="mr-2 h-4 w-4"/>Camera</TabsTrigger>
                 <TabsTrigger value="marketplace" className="py-2"><Store className="mr-2 h-4 w-4"/>Marketplace</TabsTrigger>
                 <TabsTrigger value="devices" className="py-2"><Cpu className="mr-2 h-4 w-4"/>Device Lab</TabsTrigger>
+                <TabsTrigger value="keys" className="py-2"><KeyRound className="mr-2 h-4 w-4"/>API & Device Keys</TabsTrigger>
                 <TabsTrigger value="data" className="py-2"><Database className="mr-2 h-4 w-4"/>Data & Privacy</TabsTrigger>
             </TabsList>
         </div>
@@ -439,6 +447,58 @@ export default function WorkstationPage() {
                             <PlusCircle className="h-3.5 w-3.5" />
                             <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
                             Register New Device
+                            </span>
+                        </Button>
+                    </CardFooter>
+                </Card>
+            </TabsContent>
+            <TabsContent value="keys">
+                <Card>
+                    <CardHeader>
+                        <div className="flex items-center gap-3">
+                            <KeyRound className="h-6 w-6 text-primary" />
+                            <CardTitle>API & Device Keys</CardTitle>
+                        </div>
+                        <CardDescription>
+                            Manage the keys used by devices and services to interact with the LARI engine.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>Key Name</TableHead>
+                                    <TableHead>LARI Sub-Engine</TableHead>
+                                    <TableHead>Entitlement</TableHead>
+                                    <TableHead className="text-right">Actions</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {mockKeys.map(key => (
+                                    <TableRow key={key.id}>
+                                        <TableCell className="font-medium">
+                                            {key.name}
+                                            <div className="text-xs text-muted-foreground font-mono">{key.id}</div>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Badge variant="outline">{key.lariEngine}</Badge>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Badge variant={key.entitlement === 'Pro' || key.entitlement === 'Enterprise' ? 'pro' : 'secondary'}>{key.entitlement}</Badge>
+                                        </TableCell>
+                                        <TableCell className="text-right">
+                                            <Button variant="ghost" size="icon"><Trash2 className="h-4 w-4"/></Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </CardContent>
+                    <CardFooter>
+                        <Button size="sm" variant="outline" className="h-8 gap-1">
+                            <PlusCircle className="h-3.5 w-3.5" />
+                            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                            Generate New Key
                             </span>
                         </Button>
                     </CardFooter>
