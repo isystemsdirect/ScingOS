@@ -1,4 +1,6 @@
 
+'use client';
+
 import {
   MoreHorizontal,
   PlusCircle,
@@ -8,6 +10,7 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState } from 'react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -37,7 +40,6 @@ import {
 } from '@/components/ui/table';
 import { mockInspectors } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { Separator } from '@/components/ui/separator';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -48,9 +50,31 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useToast } from '@/hooks/use-toast';
 
 export default function TeamsPage() {
+  const { toast } = useToast();
   const teamMembers = mockInspectors.slice(0, 4);
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [inviteRole, setInviteRole] = useState('inspector');
+
+  const handleInvite = () => {
+    if (!inviteEmail) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Please enter an email address to send an invitation.',
+      });
+      return;
+    }
+    console.log(`Inviting ${inviteEmail} as a ${inviteRole}`);
+    toast({
+      title: 'Invitation Sent!',
+      description: `${inviteEmail} has been invited to join your team.`,
+    });
+    setInviteEmail('');
+    setInviteRole('inspector');
+  };
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 lg:px-6">
@@ -227,11 +251,13 @@ export default function TeamsPage() {
                       id="invite-email"
                       type="email"
                       placeholder="new.inspector@email.com"
+                      value={inviteEmail}
+                      onChange={(e) => setInviteEmail(e.target.value)}
                     />
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="invite-role">Role</Label>
-                    <Select defaultValue="inspector">
+                    <Select value={inviteRole} onValueChange={setInviteRole}>
                       <SelectTrigger id="invite-role">
                         <SelectValue placeholder="Select a role" />
                       </SelectTrigger>
@@ -244,7 +270,7 @@ export default function TeamsPage() {
                   </div>
                 </CardContent>
                 <CardFooter className="border-t pt-6">
-                  <Button>
+                  <Button onClick={handleInvite}>
                     <UserPlus className="mr-2 h-4 w-4" />
                     Send Invitation
                   </Button>
