@@ -1,7 +1,7 @@
 'use server';
 
 /**
- * @fileOverview An AI agent for generating audio overviews and presentations of inspection reports using AI-powered text-to-speech.
+ * @fileOverview An AI agent for generating audio overviews and presentations of inspection reports using Google Cloud Text-to-Speech.
  *
  * - generateAudioPresentations - A function that handles the generation of audio presentations.
  * - GenerateAudioPresentationsInput - The input type for the generateAudioPresentations function.
@@ -10,7 +10,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import wav from 'wav';
+import {TextToSpeechClient} from '@google-cloud/text-to-speech';
 
 const GenerateAudioPresentationsInputSchema = z.object({
   executiveSummary: z
@@ -27,11 +27,11 @@ export type GenerateAudioPresentationsInput = z.infer<
 const GenerateAudioPresentationsOutputSchema = z.object({
   audioOverview: z
     .string()
-    .describe('The audio overview of the inspection report in WAV format.'),
+    .describe('The audio overview of the inspection report in WAV format as a data URI.'),
   audioPresentation: z
     .string()
     .describe(
-      'The longer audio presentation of the inspection report in WAV format.'
+      'The longer audio presentation of the inspection report in WAV format as a data URI.'
     ),
 });
 export type GenerateAudioPresentationsOutput = z.infer<
@@ -44,32 +44,6 @@ export async function generateAudioPresentations(
   return generateAudioPresentationsFlow(input);
 }
 
-async function toWav(
-  pcmData: Buffer,
-  channels = 1,
-  rate = 24000,
-  sampleWidth = 2
-): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const writer = new wav.Writer({
-      channels,
-      sampleRate: rate,
-      bitDepth: sampleWidth * 8,
-    });
-
-    let bufs = [] as any[];
-    writer.on('error', reject);
-    writer.on('data', function (d) {
-      bufs.push(d);
-    });
-    writer.on('end', function () {
-      resolve(Buffer.concat(bufs).toString('base64'));
-    });
-
-    writer.write(pcmData);
-    writer.end();
-  });
-}
 
 const generateAudioPresentationsFlow = ai.defineFlow(
   {
@@ -78,62 +52,31 @@ const generateAudioPresentationsFlow = ai.defineFlow(
     outputSchema: GenerateAudioPresentationsOutputSchema,
   },
   async input => {
-    // Generate the short audio overview
-    const overviewResult = await ai.generate({
-      model: 'googleai/gemini-2.5-flash-preview-tts',
-      config: {
-        responseModalities: ['AUDIO'],
-        speechConfig: {
-          voiceConfig: {
-            prebuiltVoiceConfig: {voiceName: 'Algenib'},
-          },
-        },
-      },
-      prompt: `Create a short audio overview of the following report summary:\n\n${input.executiveSummary}`,
-    });
+    const ttsClient = new TextToSpeechClient();
 
-    if (!overviewResult.media) {
-      throw new Error('No media returned for audio overview.');
-    }
+    const synthesizeSpeech = async (text: string) => {
+        const request = {
+            input: { text },
+            voice: { languageCode: 'en-US', ssmlGender: 'NEUTRAL' as const, name: 'en-US-Studio-O' },
+            audioConfig: { audioEncoding: 'LINEAR16' as const, sampleRateHertz: 24000 },
+        };
+        const [response] = await ttsClient.synthesizeSpeech(request);
+        if (!response.audioContent) {
+            throw new Error('Failed to synthesize speech.');
+        }
+        const audioBase64 = (response.audioContent as Buffer).toString('base64');
+        return `data:audio/wav;base64,${audioBase64}`;
+    };
 
-    const overviewAudioBuffer = Buffer.from(
-      overviewResult.media.url.substring(
-        overviewResult.media.url.indexOf(',') + 1
-      ),
-      'base64'
-    );
+    const [audioOverview, audioPresentation] = await Promise.all([
+        synthesizeSpeech(`Create a short audio overview of the following report summary:\n\n${input.executiveSummary}`),
+        synthesizeSpeech(`Create a detailed audio presentation based on the following inspection report:\n\n${input.reportDetails}`)
+    ]);
 
-    const audioOverviewWav = 'data:audio/wav;base64,' + (await toWav(overviewAudioBuffer));
-
-    // Generate the longer audio presentation
-    const presentationResult = await ai.generate({
-      model: 'googleai/gemini-2.5-flash-preview-tts',
-      config: {
-        responseModalities: ['AUDIO'],
-        speechConfig: {
-          voiceConfig: {
-            prebuiltVoiceConfig: {voiceName: 'Algenib'},
-          },
-        },
-      },
-      prompt: `Create a detailed audio presentation based on the following inspection report:\n\n${input.reportDetails}`,
-    });
-
-    if (!presentationResult.media) {
-      throw new Error('No media returned for audio presentation.');
-    }
-
-    const presentationAudioBuffer = Buffer.from(
-      presentationResult.media.url.substring(
-        presentationResult.media.url.indexOf(',') + 1
-      ),
-      'base64'
-    );
-    const audioPresentationWav = 'data:audio/wav;base64,' + (await toWav(presentationAudioBuffer));
 
     return {
-      audioOverview: audioOverviewWav,
-      audioPresentation: audioPresentationWav,
+      audioOverview,
+      audioPresentation,
     };
   }
 );
