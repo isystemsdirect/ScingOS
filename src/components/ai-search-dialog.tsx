@@ -24,14 +24,15 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import {
-  queryPerplexity,
-  type PerplexityOutput,
-} from '@/ai/flows/query-perplexity';
+  crossCheckStandards,
+  type CrossCheckStandardsOutput,
+} from '@/ai/flows/cross-check-standards';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { mockSubscriptionPlans } from '@/lib/data';
+import Link from 'next/link';
 
 const searchSchema = z.object({
   query: z.string().min(3, 'Search query must be at least 3 characters.'),
@@ -40,7 +41,7 @@ const searchSchema = z.object({
 export function AiSearchDialog() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [results, setResults] = useState<PerplexityOutput | null>(
+  const [results, setResults] = useState<CrossCheckStandardsOutput | null>(
     null
   );
   const [isVisualSearchActive, setIsVisualSearchActive] = useState(false);
@@ -125,8 +126,8 @@ export function AiSearchDialog() {
     setResults(null);
     try {
       // Here you would also pass the capturedImage if it exists
-      const searchResults = await queryPerplexity({
-        query: values.query,
+      const searchResults = await crossCheckStandards({
+        searchText: values.query,
       });
       setResults(searchResults);
     } catch (error) {
@@ -193,10 +194,10 @@ export function AiSearchDialog() {
       <DialogContent className="sm:max-w-[625px]">
         <DialogHeader>
           <DialogTitle className="flex items-center">
-            {isProOrEnterprise ? 'Scing Pro Search (Perplexity AI)' : 'SCINGULAR AI Search (Perplexity AI)'}
+            {isProOrEnterprise ? 'Scing Pro Search' : 'SCINGULAR AI Search'}
           </DialogTitle>
           <DialogDescription>
-            {isVisualSearchActive ? "Position the subject in the frame and capture." : "Ask a question to the Perplexity AI."}
+            {isVisualSearchActive ? "Position the subject in the frame and capture." : "Cross-check standards and ask questions to your AI model."}
           </DialogDescription>
         </DialogHeader>
 
@@ -286,21 +287,29 @@ export function AiSearchDialog() {
               )}
               {results && (
                  <div className="max-h-[50vh] overflow-y-auto pr-4 space-y-4">
-                  {results.answer ? (
-                      <div className="rounded-lg border p-4">
+                  {results.codeCitations && results.codeCitations.length > 0 ? (
+                    results.codeCitations.map((citation, index) => (
+                      <div key={index} className="rounded-lg border p-4">
                         <div className="flex items-start gap-3">
                           <Bot className="h-6 w-6 text-accent flex-shrink-0" />
-                          <div className="prose prose-sm dark:prose-invert max-w-none">
-                            <p>{results.answer}</p>
+                          <div>
+                            <p className="font-semibold">{citation}</p>
+                            <p className="text-sm text-muted-foreground mt-1">
+                              {results.excerpts[index]}
+                            </p>
+                            <Link href={results.fullDocLinks[index] || '#'} target="_blank" className="text-xs text-accent hover:underline mt-2 inline-block">
+                              View Full Document ({results.jurisdictions[index]})
+                            </Link>
                           </div>
                         </div>
                       </div>
+                    ))
                   ) : (
                     <div className="text-center p-8 border rounded-lg">
                         <FileText className="mx-auto h-12 w-12 text-muted-foreground" />
                         <h3 className="mt-4 text-lg font-semibold">No Results Found</h3>
                         <p className="mt-2 text-sm text-muted-foreground">
-                          The AI couldn't find an answer for your query. Try rephrasing your search.
+                          The AI couldn't find any matching standards for your query. Try rephrasing your search or uploading more documents to your library.
                         </p>
                     </div>
                   )}
