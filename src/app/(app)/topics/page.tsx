@@ -4,6 +4,7 @@
 import {
   Hash,
   ListFilter,
+  PlusCircle,
   Rss,
   Search,
   Star,
@@ -47,7 +48,7 @@ export default function TopicsPage() {
           <div>
             <h1 className="text-2xl font-bold">Explore Topics</h1>
             <p className="text-muted-foreground">
-              Browse and follow topics to discover focused discussions.
+              Browse, follow, and create topics to drive focused discussions.
             </p>
           </div>
           <div className="ml-auto flex items-center gap-2">
@@ -59,9 +60,26 @@ export default function TopicsPage() {
                     </span>
                 </Link>
             </Button>
+             <Button size="sm" className="h-8 gap-1">
+              <PlusCircle className="h-3.5 w-3.5" />
+              <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                Create Topic
+              </span>
+            </Button>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+            <div className="relative flex-1">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                    type="search"
+                    placeholder="Search for topics..."
+                    className="w-full rounded-md bg-card pl-9"
+                />
+            </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="h-8 gap-1">
+                <Button variant="outline" size="sm" className="h-10 gap-1">
                   <ListFilter className="h-3.5 w-3.5" />
                   <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
                     Filter
@@ -76,15 +94,6 @@ export default function TopicsPage() {
                 <DropdownMenuCheckboxItem>New</DropdownMenuCheckboxItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          </div>
-        </div>
-        <div className="relative">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-          <Input
-            type="search"
-            placeholder="Search for topics..."
-            className="w-full rounded-md bg-card pl-9"
-          />
         </div>
         
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
