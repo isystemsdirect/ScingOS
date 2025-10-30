@@ -34,9 +34,12 @@ export default function WorkstationPage() {
 
   const mockKeys = [
     { id: "key_vision_std_abc123", name: "Standard Vision Key", lariEngine: "LARI-VISION", entitlement: "Core", status: "Active" },
+    { id: "key_thermal_std_ghi789", name: "Standard Thermal Key", lariEngine: "LARI-THERMAL", entitlement: "Core", status: "Active" },
+    { id: "key_audio_std_jkl012", name: "Standard Audio Key", lariEngine: "LARI-AUDIO", entitlement: "Core", status: "Active" },
     { id: "key_dose_pro_def456", name: "Professional Drone Key", lariEngine: "LARI-DOSE", entitlement: "Pro", status: "Active" },
     { id: "key_mapper_ent_ghi789", name: "Enterprise LiDAR Key", lariEngine: "LARI-MAPPER", entitlement: "Enterprise", status: "Inactive" },
     { id: "key_prism_max_jkl012", name: "Max Spectrometer Key", lariEngine: "LARI-PRISM", entitlement: "MAX", status: "Active" },
+    { id: "key_sonar_max_mno345", name: "Max Sonar Key", lariEngine: "LARI-SONAR", entitlement: "MAX", status: "Inactive" },
   ];
 
   return (
