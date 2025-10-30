@@ -35,7 +35,7 @@ export default function AvailabilityPage({ params }: { params: { id: string } })
   const times = Array.from({ length: 13 }, (_, i) => `${i + 7}:00`); // 7am to 7pm
 
   return (
-    <div className="grid max-w-6xl mx-auto gap-8">
+    <div className="grid max-w-6xl mx-auto gap-8 px-4 lg:px-6">
       <div className="flex items-center gap-4">
         <Link href="/teams">
           <Button variant="outline" size="icon" className="h-7 w-7">

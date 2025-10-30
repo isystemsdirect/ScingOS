@@ -141,7 +141,7 @@ export default function TeamsPage() {
                         index % 2 === 0 ? 'Active' : 'Awaiting Response';
 
                       return (
-                        <TableRow key={inspector.id} className="cursor-pointer">
+                        <TableRow key={inspector.id}>
                           <TableCell className="font-medium flex items-center gap-3">
                             {avatar && (
                               <Image
