@@ -13,8 +13,13 @@ import {
   ListFilter,
   User,
   Bot,
-  ExternalLink
+  ExternalLink,
+  Image as ImageIcon,
+  Video,
+  Paperclip
 } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -35,11 +40,11 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
-import { mockInspectors } from '@/lib/data';
-import Image from 'next/image';
+import { mockInspectors, mockSubscriptionPlans } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
 
 const mockPosts = [
   {
@@ -120,8 +125,11 @@ const mockNews = [
 ]
 
 export default function CommunityPage() {
+  const user = mockInspectors[0];
+  const avatar = PlaceHolderImages.find(p => p.id === user.imageHint);
+
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 lg:px-6">
+    <div className="mx-auto w-full max-w-7xl px-4 lg:px-6">
       <div className="grid gap-8">
         <div className="flex items-center">
           <div>
@@ -130,16 +138,27 @@ export default function CommunityPage() {
               Share knowledge, ask questions, and learn from fellow inspectors and the Scingular AI.
             </p>
           </div>
-          <div className="ml-auto flex items-center gap-2">
-            <Button size="lg">
-              <PlusCircle className="h-4 w-4 mr-2" />
-              New Post
-            </Button>
-          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-[1fr_300px] gap-8 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_320px] gap-8 items-start">
             <div className="space-y-6">
+                 <Card>
+                    <CardHeader className="flex-row items-center gap-4">
+                        {avatar && <Image src={avatar.imageUrl} alt={user.name} width={40} height={40} className="rounded-full" data-ai-hint={user.imageHint} />}
+                        <div className="flex-1">
+                            <Input placeholder="Share your thoughts or ask a question..." className="bg-muted border-none" />
+                        </div>
+                    </CardHeader>
+                    <CardFooter className="flex justify-between items-center pb-4 px-4">
+                        <div className="flex items-center gap-2">
+                            <Button variant="ghost" size="sm"><ImageIcon className="h-4 w-4 mr-2" /> Image</Button>
+                            <Button variant="ghost" size="sm"><Video className="h-4 w-4 mr-2" /> Video</Button>
+                            <Button variant="ghost" size="sm"><Paperclip className="h-4 w-4 mr-2" /> Attachment</Button>
+                        </div>
+                        <Button>Post</Button>
+                    </CardFooter>
+                </Card>
+
                 <div className="flex items-center gap-2">
                     <div className="relative flex-1">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -167,14 +186,14 @@ export default function CommunityPage() {
 
                 {mockPosts.map((post) => {
                     const author = post.isAiResponse ? { name: 'Scingular AI', avatarUrl: '/logo.png', imageHint: '' } : mockInspectors.find(i => i.id === post.authorId);
-                    const avatar = post.isAiResponse ? { imageUrl: '/logo.png' } : PlaceHolderImages.find(p => p.id === author?.imageHint);
+                    const postAvatar = post.isAiResponse ? { imageUrl: '/logo.png' } : PlaceHolderImages.find(p => p.id === author?.imageHint);
                     
                     return (
                     <Card key={post.id} className="transition-shadow hover:shadow-lg">
                         <CardHeader>
                             <div className="flex items-start gap-4">
-                                {avatar && (
-                                    <Image src={avatar.imageUrl} alt={author?.name || 'AI'} width={40} height={40} className="rounded-full" data-ai-hint={author?.imageHint} />
+                                {postAvatar && (
+                                    <Image src={postAvatar.imageUrl} alt={author?.name || 'AI'} width={40} height={40} className="rounded-full" data-ai-hint={author?.imageHint} />
                                 )}
                                 <div className="flex-1">
                                     <div className="flex items-center gap-2">
@@ -224,6 +243,16 @@ export default function CommunityPage() {
             </div>
 
              <div className="sticky top-20 space-y-6">
+                 <Card>
+                    <CardContent className="p-4 flex items-center gap-4">
+                        {avatar && <Image src={avatar.imageUrl} alt={user.name} width={56} height={56} className="rounded-full border-2 border-primary" data-ai-hint={user.imageHint} />}
+                        <div>
+                            <p className="font-semibold text-lg">{user.name}</p>
+                            <p className="text-sm text-muted-foreground">{user.certifications[0].name.substring(0, 25)}...</p>
+                            <Link href="/profile" className="text-xs text-primary hover:underline">View Profile</Link>
+                        </div>
+                    </CardContent>
+                </Card>
                 <Card>
                     <CardHeader>
                         <CardTitle>Industry News</CardTitle>
@@ -252,11 +281,11 @@ export default function CommunityPage() {
                         <CardTitle>Top Contributors</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        {mockInspectors.slice(0,3).map(inspector => {
-                            const avatar = PlaceHolderImages.find(p => p.id === inspector.imageHint);
+                        {mockInspectors.slice(1,4).map(inspector => {
+                            const contributorAvatar = PlaceHolderImages.find(p => p.id === inspector.imageHint);
                             return (
                                 <div key={inspector.id} className="flex items-center gap-3">
-                                    {avatar && <Image src={avatar.imageUrl} alt={inspector.name} width={32} height={32} className="rounded-full" />}
+                                    {contributorAvatar && <Image src={contributorAvatar.imageUrl} alt={inspector.name} width={32} height={32} className="rounded-full" />}
                                     <div>
                                         <p className="font-semibold text-sm">{inspector.name}</p>
                                         <p className="text-xs text-muted-foreground">{inspector.certifications[0].name.substring(0, 25)}...</p>
@@ -272,3 +301,5 @@ export default function CommunityPage() {
     </div>
   );
 }
+
+    
