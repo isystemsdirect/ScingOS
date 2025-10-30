@@ -25,7 +25,7 @@ export default function RootLayout({
     <html lang="en" className={cn("dark", inter.variable)}>
       <body>
         <BackgroundSlideshow />
-        <div className="relative z-10">
+        <div className="relative z-10 bg-background/0">
           {children}
         </div>
         <Toaster />

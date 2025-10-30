@@ -1,7 +1,6 @@
 
 'use client';
 import { useEffect, useState } from 'react';
-import Image from 'next/image';
 import data from '@/lib/placeholder-images.json';
 
 export default function BackgroundSlideshow() {
@@ -19,12 +18,10 @@ export default function BackgroundSlideshow() {
   return (
     <div className="background-slideshow">
       {images.map((src, i) => (
-        <Image
+        <img
           key={i}
           src={src}
-          alt={`slideshow-${i}`}
-          fill
-          priority={i === index}
+          alt=""
           className={`slide ${i === index ? 'active' : ''}`}
         />
       ))}
