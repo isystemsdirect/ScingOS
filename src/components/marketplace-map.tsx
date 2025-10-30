@@ -3,10 +3,11 @@
 import React, { useCallback, useState } from 'react'
 import { GoogleMap, useJsApiLoader, MarkerF, InfoWindow } from '@react-google-maps/api';
 import type { Inspector, Client } from '@/lib/types';
-import { Loader2, Briefcase, Building } from 'lucide-react';
+import { Loader2, Briefcase, Building, AlertTriangle } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import Link from 'next/link';
+import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 
 const containerStyle = {
   width: '100%',
@@ -262,12 +263,27 @@ interface MarketplaceMapProps {
 }
 
 export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
+  const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""
-  })
+    googleMapsApiKey: googleMapsApiKey
+  });
 
   const [selected, setSelected] = useState<Inspector | Client | null>(null);
+
+  if (!googleMapsApiKey) {
+    return (
+        <div className="flex items-center justify-center h-full w-full bg-muted p-4">
+            <Alert variant="destructive">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertTitle>Google Maps API Key Missing</AlertTitle>
+                <AlertDescription>
+                    To display the map, you need to provide a Google Maps API key. Please add your key to the `.env` file as `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`.
+                </AlertDescription>
+            </Alert>
+        </div>
+    )
+  }
 
   if (!isLoaded) return <div className="flex items-center justify-center h-full w-full bg-muted"><Loader2 className="h-8 w-8 animate-spin"/></div>
 
