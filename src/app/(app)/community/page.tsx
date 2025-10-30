@@ -86,28 +86,36 @@ const mockNews = [
         title: "T2D2, an AI-powered building inspection platform, launches enhanced version",
         source: "BuiltWorlds",
         time: "2h ago",
-        url: "#"
+        url: "#",
+        imageUrl: "https://picsum.photos/seed/news1/150/150",
+        imageHint: "technology abstract"
     },
     {
         id: 2,
         title: "New Drone Regulations Impacting Roof Inspections in 2024",
         source: "The Inspector",
         time: "8h ago",
-        url: "#"
+        url: "#",
+        imageUrl: "https://picsum.photos/seed/news2/150/150",
+        imageHint: "drone sky"
     },
     {
         id: 3,
         title: "AI in Construction: Thornton Tomasetti’s T2D2 gets an upgrade",
         source: "AEC Magazine",
         time: "1d ago",
-        url: "#"
+        url: "#",
+        imageUrl: "https://picsum.photos/seed/news3/150/150",
+        imageHint: "construction site"
     },
      {
         id: 4,
         title: "The Best Home Inspection Software of 2024",
         source: "The Close",
         time: "2d ago",
-        url: "#"
+        url: "#",
+        imageUrl: "https://picsum.photos/seed/news4/150/150",
+        imageHint: "software code"
     }
 ]
 
@@ -224,11 +232,14 @@ export default function CommunityPage() {
                         <ul className="space-y-4">
                             {mockNews.map(item => (
                                 <li key={item.id}>
-                                    <a href={item.url} target="_blank" rel="noopener noreferrer" className="group">
-                                        <p className="font-semibold text-sm leading-snug group-hover:text-primary transition-colors">{item.title}</p>
-                                        <div className="flex items-center justify-between text-xs text-muted-foreground mt-1">
-                                            <span>{item.source}</span>
-                                            <span>{item.time}</span>
+                                    <a href={item.url} target="_blank" rel="noopener noreferrer" className="group flex items-start gap-4">
+                                        <Image src={item.imageUrl} alt={item.title} width={60} height={60} className="rounded-md object-cover" data-ai-hint={item.imageHint} />
+                                        <div className="flex-1">
+                                            <p className="font-semibold text-sm leading-snug group-hover:text-primary transition-colors">{item.title}</p>
+                                            <div className="flex items-center justify-between text-xs text-muted-foreground mt-1">
+                                                <span>{item.source}</span>
+                                                <span>{item.time}</span>
+                                            </div>
                                         </div>
                                     </a>
                                 </li>
