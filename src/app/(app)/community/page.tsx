@@ -130,13 +130,13 @@ export default function CommunityPage() {
                     const avatar = post.isAiResponse ? { imageUrl: '/logo.png' } : PlaceHolderImages.find(p => p.id === author?.imageHint);
                     
                     return (
-                    <Card key={post.id}>
+                    <Card key={post.id} className="transition-shadow hover:shadow-lg">
                         <CardHeader>
                             <div className="flex items-start gap-4">
                                 {avatar && (
                                     <Image src={avatar.imageUrl} alt={author?.name || 'AI'} width={40} height={40} className="rounded-full" data-ai-hint={author?.imageHint} />
                                 )}
-                                <div>
+                                <div className="flex-1">
                                     <div className="flex items-center gap-2">
                                         {post.isAiResponse ? <Bot className="h-5 w-5 text-primary" /> : <User className="h-5 w-5 text-muted-foreground" />}
                                         <CardTitle className="text-lg">{post.title}</CardTitle>
@@ -166,14 +166,15 @@ export default function CommunityPage() {
                                 {post.tags.map(tag => <Badge key={tag} variant="secondary">#{tag}</Badge>)}
                             </div>
                         </CardContent>
-                        <CardFooter className="flex items-center gap-4 text-muted-foreground border-t pt-4">
-                            <Button variant="ghost" size="sm" className="flex items-center gap-2">
-                                <ThumbsUp className="h-4 w-4" /> {post.likes}
+                        <CardFooter className="flex items-center gap-2 text-muted-foreground border-t pt-2 pb-2">
+                            <Button variant="ghost" size="sm" className="flex items-center gap-2 text-sm hover:text-primary">
+                                <ThumbsUp className="h-4 w-4" /> {post.likes} Likes
                             </Button>
-                            <Button variant="ghost" size="sm" className="flex items-center gap-2">
-                                <MessageCircle className="h-4 w-4" /> {post.comments}
+                            <Separator orientation="vertical" className="h-4"/>
+                            <Button variant="ghost" size="sm" className="flex items-center gap-2 text-sm hover:text-primary">
+                                <MessageCircle className="h-4 w-4" /> {post.comments} Comments
                             </Button>
-                             <Button variant="ghost" size="sm" className="flex items-center gap-2 ml-auto">
+                             <Button variant="ghost" size="sm" className="flex items-center gap-2 text-sm ml-auto hover:text-primary">
                                 <Bookmark className="h-4 w-4" /> Bookmark
                             </Button>
                         </CardFooter>
