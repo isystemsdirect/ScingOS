@@ -2,6 +2,7 @@
 
 
 
+
 export type InspectionStatus = "Draft" | "In Progress" | "Inspector Approved" | "Client Approved" | "Final";
 export type DeviceKey = "Key-Drone" | "Key-LiDAR" | "Key-Thermal" | "Key-Spectrometer" | "Key-Sonar" | "Key-VideoHD" | "Key-Audio" | "Key-GPS";
 
@@ -109,4 +110,20 @@ export type Client = {
         zip: string;
     };
     createdAt: string;
+};
+
+export type MarketplaceService = {
+  id: string;
+  name: string;
+  description: string;
+  price: string;
+  provider: string;
+};
+
+export type MarketplaceIntegration = {
+  id: string;
+  name: string;
+  description: string;
+  price: string;
+  vendor: string;
 };

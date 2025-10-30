@@ -1,4 +1,5 @@
-import type { Inspection, Inspector, Device, SubscriptionPlan, Client } from './types';
+
+import type { Inspection, Inspector, Device, SubscriptionPlan, Client, MarketplaceService, MarketplaceIntegration } from './types';
 import { PlaceHolderImages } from './placeholder-images';
 
 const getImageUrl = (id: string) => PlaceHolderImages.find(p => p.id === id)?.imageUrl || '';
@@ -281,4 +282,52 @@ export const mockClients: Client[] = [
         },
         createdAt: "2023-05-10T00:00:00Z"
     }
+];
+
+export const mockMarketplaceServices: MarketplaceService[] = [
+    {
+        id: "SERV-001",
+        name: "Phase I Environmental Site Assessment (ESA)",
+        description: "A comprehensive report to identify potential or existing environmental contamination liabilities.",
+        price: "$1,500 - $3,000",
+        provider: "EcoAssess Inc."
+    },
+    {
+        id: "SERV-002",
+        name: "Forensic Leak & Moisture Mapping",
+        description: "Advanced diagnostics to find the origin of water intrusion using thermal and acoustic methods.",
+        price: "$750",
+        provider: "Dry-Tec Diagnostics"
+    },
+    {
+        id: "SERV-003",
+        name: "Structural Engineer Review & Stamp",
+        description: "Have a licensed Structural Engineer review your findings and provide a stamped letter.",
+        price: "Starts at $500",
+        provider: "Structural Integrity Group"
+    },
+];
+
+export const mockMarketplaceIntegrations: MarketplaceIntegration[] = [
+    {
+        id: "INT-001",
+        name: "Matterport 3D Tour Key",
+        description: "Integrate Matterport's 3D scanning capabilities directly into your inspection workflow.",
+        price: "$49/month",
+        vendor: "Matterport"
+    },
+    {
+        id: "INT-002",
+        name: "Bluebeam Project Sync Key",
+        description: "Automatically sync your findings and reports with Bluebeam Projects for seamless collaboration.",
+        price: "$29/month",
+        vendor: "Bluebeam"
+    },
+    {
+        id: "INT-003",
+        name: "AutoCAD Floorplan Generation Key",
+        description: "Use your LARI-MAPPER LiDAR scans to automatically generate AutoCAD-compatible floorplans.",
+        price: "$99/month",
+        vendor: "CADify"
+    },
 ];
