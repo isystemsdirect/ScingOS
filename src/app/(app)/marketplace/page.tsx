@@ -34,6 +34,7 @@ import { Label } from "@/components/ui/label";
 export default function MarketplacePage() {
   const [showInspectors, setShowInspectors] = useState(true);
   const [showClients, setShowClients] = useState(true);
+  const [showMap, setShowMap] = useState(true);
 
   return (
     <div className="mx-auto w-full max-w-7xl px-4 lg:px-6">
@@ -49,27 +50,37 @@ export default function MarketplacePage() {
 
         <Card>
           <CardHeader>
-              <CardTitle>Marketplace Map</CardTitle>
-              <CardDescription>Live map of available inspectors and active client needs.</CardDescription>
+              <div className="flex items-center justify-between">
+                <div>
+                    <CardTitle>Marketplace Map</CardTitle>
+                    <CardDescription>Live map of available inspectors and active client needs.</CardDescription>
+                </div>
+                <div className="flex items-center space-x-2">
+                    <Switch id="show-map" checked={showMap} onCheckedChange={setShowMap} />
+                    <Label htmlFor="show-map">Show Map</Label>
+                </div>
+              </div>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="h-[400px] w-full rounded-lg overflow-hidden border">
-                <MarketplaceMap 
-                  inspectors={showInspectors ? mockInspectors : []}
-                  clients={showClients ? mockClients : []}
-                />
-            </div>
-            <div className="flex items-center space-x-6">
-              <div className="flex items-center space-x-2">
-                <Switch id="show-inspectors" checked={showInspectors} onCheckedChange={setShowInspectors} />
-                <Label htmlFor="show-inspectors" className="flex items-center gap-2"><Briefcase className="h-4 w-4"/>Show Inspectors</Label>
+          {showMap && (
+            <CardContent className="space-y-4">
+              <div className="h-[400px] w-full rounded-lg overflow-hidden border">
+                  <MarketplaceMap 
+                    inspectors={showInspectors ? mockInspectors : []}
+                    clients={showClients ? mockClients : []}
+                  />
               </div>
-              <div className="flex items-center space-x-2">
-                <Switch id="show-clients" checked={showClients} onCheckedChange={setShowClients} />
-                <Label htmlFor="show-clients" className="flex items-center gap-2"><Building className="h-4 w-4"/>Show Clients</Label>
+              <div className="flex items-center space-x-6">
+                <div className="flex items-center space-x-2">
+                  <Switch id="show-inspectors" checked={showInspectors} onCheckedChange={setShowInspectors} />
+                  <Label htmlFor="show-inspectors" className="flex items-center gap-2"><Briefcase className="h-4 w-4"/>Show Inspectors</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Switch id="show-clients" checked={showClients} onCheckedChange={setShowClients} />
+                  <Label htmlFor="show-clients" className="flex items-center gap-2"><Building className="h-4 w-4"/>Show Clients</Label>
+                </div>
               </div>
-            </div>
-          </CardContent>
+            </CardContent>
+          )}
         </Card>
 
 
