@@ -1,8 +1,3 @@
-
-
-
-
-
 export type InspectionStatus = "Draft" | "In Progress" | "Inspector Approved" | "Client Approved" | "Final";
 export type DeviceKey = "Key-Drone" | "Key-LiDAR" | "Key-Thermal" | "Key-Spectrometer" | "Key-Sonar" | "Key-VideoHD" | "Key-Audio" | "Key-GPS";
 
@@ -44,6 +39,12 @@ export type Certification = {
   verified: boolean;
 };
 
+export type Location = {
+    name: string;
+    lat: number;
+    lng: number;
+}
+
 export type Inspector = {
   id: string;
   name: string;
@@ -54,7 +55,7 @@ export type Inspector = {
   reviews: number;
   certifications: Certification[];
   offeredServices: string[];
-  location: string;
+  location: Location;
   onCall: boolean;
 };
 
@@ -109,6 +110,10 @@ export type Client = {
         state: string;
         zip: string;
     };
+    location: {
+        lat: number;
+        lng: number;
+    }
     createdAt: string;
 };
 

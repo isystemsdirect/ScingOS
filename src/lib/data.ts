@@ -1,4 +1,3 @@
-
 import type { Inspection, Inspector, Device, SubscriptionPlan, Client, MarketplaceService, MarketplaceIntegration } from './types';
 import { PlaceHolderImages } from './placeholder-images';
 
@@ -112,7 +111,7 @@ export const mockInspectors: Inspector[] = [
         "HVAC functional performance testing",
         "Envelope thermal imaging survey"
     ],
-    location: 'Anytown, CA', 
+    location: { name: 'Anytown, CA', lat: 34.0522, lng: -118.2437 }, 
     onCall: true 
   },
   { 
@@ -132,7 +131,7 @@ export const mockInspectors: Inspector[] = [
         "Boundary & topographic survey (with utility locates)",
         "Phase I environmental site assessment (ESA)"
     ],
-    location: 'Anytown, CA', 
+    location: { name: 'Anytown, CA', lat: 34.055, lng: -118.25 },
     onCall: false 
   },
   { 
@@ -152,7 +151,7 @@ export const mockInspectors: Inspector[] = [
         "Storm/hail/wind damage assessment",
         "Settlement/structural movement monitoring"
     ],
-    location: 'Someville, TX', 
+    location: { name: 'Someville, TX', lat: 30.2672, lng: -97.7431 },
     onCall: true 
   },
   { 
@@ -171,7 +170,7 @@ export const mockInspectors: Inspector[] = [
         "Lead-based paint (LBP) inspection/risk assessment",
         "Indoor air quality (IAQ) testing"
     ],
-    location: 'Anytown, CA', 
+    location: { name: 'Anytown, CA', lat: 34.05, lng: -118.24 }, 
     onCall: true 
   },
 ];
@@ -254,6 +253,7 @@ export const mockClients: Client[] = [
             state: "CA",
             zip: "90265"
         },
+        location: { lat: 34.033, lng: -118.805 },
         createdAt: "2023-01-15T00:00:00Z"
     },
     {
@@ -267,6 +267,7 @@ export const mockClients: Client[] = [
             state: "NJ",
             zip: "07001"
         },
+        location: { lat: 40.7128, lng: -74.0060 },
         createdAt: "2023-02-20T00:00:00Z"
     },
     {
@@ -280,6 +281,7 @@ export const mockClients: Client[] = [
             state: "CA",
             zip: "94087"
         },
+        location: { lat: 37.3688, lng: -122.0363 },
         createdAt: "2023-05-10T00:00:00Z"
     }
 ];

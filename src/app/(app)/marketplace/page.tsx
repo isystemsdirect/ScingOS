@@ -2,7 +2,7 @@
 'use client';
 
 import Image from "next/image"
-import { ListFilter, MapPin, Search, Star, ShieldCheck, Briefcase, KeyRound, Construction } from "lucide-react"
+import { ListFilter, MapPin, Search, Star, ShieldCheck, Briefcase, KeyRound, Construction, Users, Building } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -23,13 +23,20 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
-import { mockInspectors, mockMarketplaceServices, mockMarketplaceIntegrations } from "@/lib/data"
+import { mockInspectors, mockMarketplaceServices, mockMarketplaceIntegrations, mockClients } from "@/lib/data"
 import { PlaceHolderImages } from "@/lib/placeholder-images"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { MarketplaceMap } from "@/components/marketplace-map";
+import { useState } from "react";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 export default function MarketplacePage() {
+  const [showInspectors, setShowInspectors] = useState(true);
+  const [showClients, setShowClients] = useState(true);
+
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 lg:px-6">
+    <div className="mx-auto w-full max-w-7xl px-4 lg:px-6">
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <div>
@@ -39,6 +46,32 @@ export default function MarketplacePage() {
             </p>
           </div>
         </div>
+
+        <Card>
+          <CardHeader>
+              <CardTitle>Marketplace Map</CardTitle>
+              <CardDescription>Live map of available inspectors and active client needs.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="h-[400px] w-full rounded-lg overflow-hidden border">
+                <MarketplaceMap 
+                  inspectors={showInspectors ? mockInspectors : []}
+                  clients={showClients ? mockClients : []}
+                />
+            </div>
+            <div className="flex items-center space-x-6">
+              <div className="flex items-center space-x-2">
+                <Switch id="show-inspectors" checked={showInspectors} onCheckedChange={setShowInspectors} />
+                <Label htmlFor="show-inspectors" className="flex items-center gap-2"><Briefcase className="h-4 w-4"/>Show Inspectors</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Switch id="show-clients" checked={showClients} onCheckedChange={setShowClients} />
+                <Label htmlFor="show-clients" className="flex items-center gap-2"><Building className="h-4 w-4"/>Show Clients</Label>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
 
         <Tabs defaultValue="inspectors" className="w-full">
             <TabsList className="grid w-full grid-cols-3">
@@ -106,7 +139,7 @@ export default function MarketplacePage() {
                                     </div>
                                     <div className="flex items-center gap-1 text-sm text-muted-foreground mt-1">
                                     <MapPin className="h-4 w-4" />
-                                    <span>{inspector.location}</span>
+                                    <span>{inspector.location.name}</span>
                                     </div>
                                 </div>
                                 </CardHeader>
