@@ -15,7 +15,7 @@ const WeatherDataSchema = z.object({
   temperature: z.number().describe('The current temperature in Fahrenheit.'),
   description: z.string().describe('A brief summary of current weather conditions (e.g., "Partly Cloudy").'),
   windSpeed: z.number().describe('The wind speed in miles per hour.'),
-  uvIndex: z.number().describe('The UV index, from 0 to 11+.'),
+  uvIndex: z.number().describe('The UV index, from 0 to 11+ (OpenWeatherMap does not provide this in the free tier, so it will be 0).'),
   alerts: z.array(z.string()).describe('A list of active severe weather alerts (e.g., "Thunderstorm Watch", "High Wind Warning").'),
 });
 
@@ -29,7 +29,7 @@ export type WeatherOutput = z.infer<typeof WeatherOutputSchema>;
 const getCurrentWeather = ai.defineTool(
   {
     name: 'getCurrentWeather',
-    description: 'Returns the current and forecasted weather for a given location, including any safety alerts.',
+    description: 'Returns the current weather for a given location using OpenWeatherMap, including any safety alerts.',
     inputSchema: z.object({
       lat: z.number().describe("Latitude"),
       lng: z.number().describe("Longitude"),
@@ -37,31 +37,32 @@ const getCurrentWeather = ai.defineTool(
     outputSchema: WeatherDataSchema,
   },
   async ({ lat, lng }) => {
-     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+     const apiKey = process.env.OPENWEATHER_API_KEY;
      if (!apiKey) {
-        throw new Error("Google Weather API key (Google Maps API Key) is not configured.");
+        throw new Error("OpenWeatherMap API key is not configured.");
      }
       
-     const url = `https://weather.googleapis.com/v1/currentConditions:lookup?location.latitude=${lat}&location.longitude=${lng}&units=IMPERIAL&key=${apiKey}`;
-
-     const response = await fetch(url);
+     const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${apiKey}&units=imperial`;
+     const response = await fetch(weatherUrl);
 
      if (!response.ok) {
         const errorText = await response.text();
-        console.error(`Weather API failed with status ${response.status}: ${errorText}`);
-        throw new Error(`Failed to fetch weather data. Status: ${response.status}. Please check your API key and permissions.`);
+        console.error(`OpenWeatherMap API failed with status ${response.status}: ${errorText}`);
+        throw new Error(`Failed to fetch weather data. Status: ${response.status}.`);
      }
 
      const data = await response.json();
-
-     // Google Weather API does not provide alerts directly in currentConditions.
+     
+     // The free tier of OpenWeatherMap does not provide UV Index or alerts directly.
+     // These would require separate API calls or a higher-tier plan.
      const alerts: string[] = [];
+     const uvIndex = 0; // Placeholder as it's not in the standard response
 
      return {
-        temperature: Math.round(data.currentConditions.temperature),
-        description: data.currentConditions.shortText,
-        windSpeed: Math.round(data.currentConditions.windSpeed),
-        uvIndex: data.currentConditions.uvIndex,
+        temperature: Math.round(data.main.temp),
+        description: data.weather[0]?.description || 'Not available',
+        windSpeed: Math.round(data.wind.speed),
+        uvIndex: uvIndex,
         alerts: alerts,
      };
   }
@@ -97,11 +98,11 @@ export const lariWeatherFlow = ai.defineFlow(
   },
   async (location) => {
     // 1. Get coordinates for the location
-    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-    if (!apiKey) {
-        throw new Error("Google Maps API key is not configured.");
+    const googleApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+    if (!googleApiKey) {
+        throw new Error("Google Maps API key is not configured for geocoding.");
     }
-    const geocodeResponse = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(location)}&key=${apiKey}`);
+    const geocodeResponse = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(location)}&key=${googleApiKey}`);
     const geocodeData = await geocodeResponse.json();
     if (geocodeData.status !== 'OK' || !geocodeData.results?.[0]?.geometry?.location) {
         throw new Error(`Could not geocode location: ${location}. Status: ${geocodeData.status}, Message: ${geocodeData.error_message || 'No results found.'}`);
