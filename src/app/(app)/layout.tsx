@@ -56,6 +56,7 @@ import { mockInspectors, mockSubscriptionPlans } from "@/lib/data";
 import { NavLink } from "@/components/nav-link";
 import { AiSearchDialog } from "@/components/ai-search-dialog";
 import { Separator } from "@/components/ui/separator";
+import { WeatherWidget } from "@/components/weather-widget";
 
 export default function AppLayout({
   children,
@@ -122,7 +123,8 @@ export default function AppLayout({
               </NavLink>
             </nav>
           </div>
-          <div className="mt-auto p-4 border-t border-sidebar-border">
+          <div className="mt-auto p-4 border-t border-sidebar-border space-y-4">
+            <WeatherWidget />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="flex items-center justify-start gap-2 w-full px-2">
