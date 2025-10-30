@@ -29,6 +29,7 @@ import {
 } from '@/ai/flows/lari-compliance';
 import { processVoiceCommand } from '@/ai/flows/lari-scing-bridge';
 import { textToSpeech } from '@/ai/flows/lari-narrator';
+import { getWeatherForecast } from '@/ai/flows/get-weather-forecast';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import Image from 'next/image';
@@ -77,8 +78,12 @@ export function AiSearchDialog() {
       // 1. Send transcribed text to LARI to understand intent
       const commandResult = await processVoiceCommand({ command: text });
       
-      // 2. Formulate a simple text response based on the action
-      const responseText = `Understood. Executing action: ${commandResult.action.replace(/_/g, ' ')}.`;
+      let responseText = `Understood. Executing action: ${commandResult.action.replace(/_/g, ' ')}.`;
+
+      if (commandResult.action === 'get_weather') {
+        const weatherResult = await getWeatherForecast(commandResult.parameters?.location || 'San Francisco, CA');
+        responseText = weatherResult;
+      }
       
       // 3. Send the text response to LARI to generate speech
       const { audio } = await textToSpeech(responseText);
@@ -258,7 +263,9 @@ export function AiSearchDialog() {
     form.reset();
     setDialogState('idle');
     recognitionRef.current?.stop();
-    speechSynthesis.cancel();
+    if(window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+    }
     setIsVisualSearchActive(false);
     setHasCameraPermission(null);
     if (videoRef.current && videoRef.current.srcObject) {
@@ -426,5 +433,3 @@ export function AiSearchDialog() {
     </Dialog>
   );
 }
-
-    
