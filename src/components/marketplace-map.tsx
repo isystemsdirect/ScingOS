@@ -1,13 +1,11 @@
 
 'use client'
 
-import React, { useCallback, useState } from 'react'
-import { GoogleMap, useJsApiLoader, MarkerF, InfoWindow } from '@react-google-maps/api';
+import React from 'react'
+import { useRouter } from 'next/navigation';
+import { GoogleMap, useJsApiLoader, MarkerF } from '@react-google-maps/api';
 import type { Inspector, Client } from '@/lib/types';
 import { Loader2, Briefcase, Building, AlertTriangle } from 'lucide-react';
-import { Badge } from './ui/badge';
-import { Button } from './ui/button';
-import Link from 'next/link';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 
 const containerStyle = {
@@ -264,13 +262,12 @@ interface MarketplaceMapProps {
 }
 
 export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
+  const router = useRouter();
   const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: googleMapsApiKey
   });
-
-  const [selected, setSelected] = useState<Inspector | Client | null>(null);
 
   if (loadError) {
     return (
@@ -307,56 +304,24 @@ export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
                     scale: 1,
                     anchor: new window.google.maps.Point(12, 12),
                 }}
-                onClick={() => setSelected(inspector)}
+                onClick={() => router.push(`/teams/${inspector.id}/availability`)}
             />
         ))}
         {clients.map(client => (
              <MarkerF 
-                key={`client-${client.id}`} 
+                key={`client-${client.id}`}
                 position={client.location}
                 icon={{
-                    path: 'M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z',
+                    path: 'M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8h5z',
                     fillColor: '#33FFDD',
                     fillOpacity: 1,
                     strokeWeight: 0,
                     scale: 1,
                     anchor: new window.google.maps.Point(12, 12),
                 }}
-                onClick={() => setSelected(client)}
+                onClick={() => router.push(`/clients/${client.id}`)}
             />
         ))}
-        {selected && (
-            <InfoWindow
-                position={'location' in selected ? selected.location : {lat: 0, lng: 0}}
-                onCloseClick={() => setSelected(null)}
-            >
-                <div className="p-2 max-w-xs">
-                    {'rating' in selected ? ( // It's an Inspector
-                        <>
-                           <h3 className="font-bold text-lg flex items-center gap-2"><Briefcase className="h-4 w-4 text-primary" />{selected.name}</h3>
-                           <div className="text-sm my-2">
-                               <Badge variant={selected.onCall ? 'default' : 'secondary'}>{selected.onCall ? 'On-Call' : 'Unavailable'}</Badge>
-                                <p className="mt-1">Rating: {selected.rating} ({selected.reviews} reviews)</p>
-                           </div>
-                           <Button asChild size="sm">
-                               <Link href={`/teams/${selected.id}/availability`}>View Profile</Link>
-                           </Button>
-                        </>
-                    ) : ( // It's a Client
-                        <>
-                            <h3 className="font-bold text-lg flex items-center gap-2"><Building className="h-4 w-4 text-primary" />{selected.name}</h3>
-                            <div className="text-sm my-2 text-muted-foreground">
-                                <p>{selected.address.street}</p>
-                                <p>{selected.address.city}, {selected.address.state}</p>
-                            </div>
-                            <Button asChild size="sm">
-                               <Link href={`/clients/${selected.id}`}>View Details</Link>
-                           </Button>
-                        </>
-                    )}
-                </div>
-            </InfoWindow>
-        )}
       </GoogleMap>
   )
 }
