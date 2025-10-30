@@ -12,6 +12,14 @@
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
 
+const WeatherDataSchema = z.object({
+  temperature: z.number().describe('The current temperature in Fahrenheit.'),
+  description: z.string().describe('A brief summary of current weather conditions (e.g., "Partly Cloudy").'),
+  windSpeed: z.number().describe('The wind speed in miles per hour.'),
+  precipitationChance: z.number().describe('The percentage chance of precipitation in the next hour.'),
+  uvIndex: z.number().describe('The UV index, from 0 to 11+.'),
+  alerts: z.array(z.string()).describe('A list of active severe weather alerts (e.g., "Thunderstorm Watch", "High Wind Warning").'),
+});
 
 const getLocationCoordinates = ai.defineTool(
     {
@@ -40,22 +48,15 @@ const getLocationCoordinates = ai.defineTool(
 );
 
 
-const getWeather = ai.defineTool(
+const getCurrentWeather = ai.defineTool(
   {
-    name: 'getWeather',
+    name: 'getCurrentWeather',
     description: 'Returns the current and forecasted weather for a given location, including any safety alerts.',
     inputSchema: z.object({
       lat: z.number().describe("Latitude"),
       lng: z.number().describe("Longitude"),
     }),
-    outputSchema: z.object({
-      temperature: z.number().describe('The current temperature in Fahrenheit.'),
-      description: z.string().describe('A brief summary of current weather conditions (e.g., "Partly Cloudy").'),
-      windSpeed: z.number().describe('The wind speed in miles per hour.'),
-      precipitationChance: z.number().describe('The percentage chance of precipitation in the next hour.'),
-      uvIndex: z.number().describe('The UV index, from 0 to 11+.'),
-      alerts: z.array(z.string()).describe('A list of active severe weather alerts (e.g., "Thunderstorm Watch", "High Wind Warning").'),
-    }),
+    outputSchema: WeatherDataSchema,
   },
   async ({ lat, lng }) => {
      const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
@@ -100,10 +101,12 @@ const weatherAgentSystemPrompt = `You are LARI-Weather_AI, an expert safety comp
 
 When a user asks for the weather for a location, you MUST use your tools in a specific order:
 1. First, you MUST use the \`getLocationCoordinates\` tool to get the latitude and longitude for the location provided by the user.
-2. Second, you MUST use the latitude and longitude from the previous step to call the \`getWeather\` tool to get the current conditions.
-3. Finally, you MUST analyze the weather data from a safety perspective and provide a clear, conversational, and actionable response. Your response should consist of two parts:
-    - **Forecast Summary:** Briefly describe the current and upcoming weather conditions.
-    - **Safety Recommendation:** Based on the data, provide a clear safety recommendation. State whether conditions are "safe for inspection," "require caution," or are "unsafe." Mention specific hazards like high winds, lightning risk (based on alerts), high UV index, or chance of rain.
+2. Second, you MUST use the latitude and longitude from the previous step to call the \`getCurrentWeather\` tool to get the current conditions.
+3. Finally, you MUST analyze the weather data from a safety perspective and provide a clear, conversational, and actionable response. 
+
+Your final response MUST be a JSON object with two keys: "weatherData" and "recommendation".
+- The "weatherData" key must contain the full, unmodified JSON object returned by the \`getCurrentWeather\` tool.
+- The "recommendation" key must contain your conversational safety analysis as a string.
 
 Example for hazardous weather: "The forecast shows high winds at 25 mph and a severe thunderstorm watch is in effect. It is unsafe to conduct exterior inspections, especially with a drone. I recommend postponing the inspection until the storm system passes."
 
@@ -112,22 +115,34 @@ Example for safe weather: "It's currently 72 degrees and sunny. Conditions are s
 
 const weatherAgent = ai.definePrompt({
   name: 'weatherAgent',
-  tools: [getWeather, getLocationCoordinates],
+  tools: [getCurrentWeather, getLocationCoordinates],
   system: weatherAgentSystemPrompt,
+  output: {
+    schema: z.object({
+        weatherData: WeatherDataSchema,
+        recommendation: z.string(),
+    })
+  }
 });
 
 export const weatherAgentFlow = ai.defineFlow(
   {
     name: 'weatherAgentFlow',
     inputSchema: z.string(),
-    outputSchema: z.string(),
+    outputSchema: z.object({
+        weatherData: WeatherDataSchema,
+        recommendation: z.string(),
+    }),
   },
   async (prompt) => {
-    const response = await weatherAgent(prompt);
-    return response.text;
+    const { output } = await weatherAgent(prompt);
+    if (!output) {
+        throw new Error("Failed to get weather analysis from the agent.");
+    }
+    return output;
   }
 );
 
-export async function getWeatherForecast(location: string): Promise<string> {
+export async function getWeatherForecast(location: string): Promise<any> {
   return weatherAgentFlow(`What is the weather in ${location}?`);
 }
