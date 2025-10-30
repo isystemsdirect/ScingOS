@@ -20,19 +20,18 @@ const typeInfo = {
 
 export function FlashNotificationBar() {
   const [index, setIndex] = useState(0);
-  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
     if (mockNotifications.length === 0) return;
     
     const interval = setInterval(() => {
       setIndex((prevIndex) => (prevIndex + 1) % mockNotifications.length);
-    }, 5000); // Change notification every 5 seconds
+    }, 10000); // Change notification every 10 seconds
 
     return () => clearInterval(interval);
   }, []);
 
-  if (!isVisible || mockNotifications.length === 0) {
+  if (mockNotifications.length === 0) {
     return null;
   }
 
@@ -67,13 +66,6 @@ export function FlashNotificationBar() {
           </Link>
         </motion.div>
       </AnimatePresence>
-      <button 
-        onClick={() => setIsVisible(false)} 
-        className="absolute right-4 top-1/2 -translate-y-1/2 p-1 rounded-full text-muted-foreground hover:bg-muted"
-      >
-        <X className="h-4 w-4" />
-        <span className="sr-only">Dismiss notifications</span>
-      </button>
     </div>
   );
 }
