@@ -25,7 +25,8 @@ import {
   Library,
   DollarSign,
   Expand,
-  Shrink
+  Shrink,
+  Hash
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -113,7 +114,11 @@ export default function AppLayout({
               </NavLink>
               <NavLink href="/community">
                 <MessageSquare className="h-4 w-4" />
-                SAI Community
+                Community
+              </NavLink>
+              <NavLink href="/topics">
+                <Hash className="h-4 w-4" />
+                Topics
               </NavLink>
 
               <Separator className="my-2 bg-sidebar-border" />
@@ -212,7 +217,11 @@ export default function AppLayout({
                 </NavLink>
                 <NavLink href="/community" isMobile>
                     <MessageSquare className="h-5 w-5" />
-                    SAI Community
+                    Community
+                </NavLink>
+                 <NavLink href="/topics" isMobile>
+                    <Hash className="h-5 w-5" />
+                    Topics
                 </NavLink>
                  <Separator className="my-2 bg-sidebar-border" />
                 <NavLink href="/workstation" isMobile>

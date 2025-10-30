@@ -134,17 +134,17 @@ export default function CommunityPage() {
       <div className="grid gap-8">
         <div className="flex items-center">
           <div>
-            <h1 className="text-3xl font-bold">SAI Community</h1>
+            <h1 className="text-3xl font-bold">Community Timeline</h1>
             <p className="text-muted-foreground">
-              Share knowledge, ask questions, and learn from fellow inspectors and the Scingular AI.
+              A real-time feed of questions, knowledge, and activity from the Scingular community.
             </p>
           </div>
            <div className="ml-auto flex items-center gap-2">
             <Button variant="outline" asChild>
-                <Link href="/community"><Rss className="mr-2 h-4 w-4" /> View Timeline</Link>
+                <Link href="/topics"><Rss className="mr-2 h-4 w-4" /> Browse Topics</Link>
             </Button>
-            <Button>
-              <PlusCircle className="mr-2 h-4 w-4" /> New Topic
+            <Button asChild>
+              <Link href="/topics/new"><PlusCircle className="mr-2 h-4 w-4" /> New Topic</Link>
             </Button>
           </div>
         </div>
