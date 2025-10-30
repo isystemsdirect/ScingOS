@@ -12,7 +12,8 @@ import {
   Bookmark,
   ListFilter,
   User,
-  Bot
+  Bot,
+  ExternalLink
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -78,6 +79,37 @@ const mockPosts = [
     isAiResponse: false,
   },
 ];
+
+const mockNews = [
+    {
+        id: 1,
+        title: "T2D2, an AI-powered building inspection platform, launches enhanced version",
+        source: "BuiltWorlds",
+        time: "2h ago",
+        url: "#"
+    },
+    {
+        id: 2,
+        title: "New Drone Regulations Impacting Roof Inspections in 2024",
+        source: "The Inspector",
+        time: "8h ago",
+        url: "#"
+    },
+    {
+        id: 3,
+        title: "AI in Construction: Thornton Tomasetti’s T2D2 gets an upgrade",
+        source: "AEC Magazine",
+        time: "1d ago",
+        url: "#"
+    },
+     {
+        id: 4,
+        title: "The Best Home Inspection Software of 2024",
+        source: "The Close",
+        time: "2d ago",
+        url: "#"
+    }
+]
 
 export default function CommunityPage() {
   return (
@@ -186,15 +218,21 @@ export default function CommunityPage() {
              <div className="sticky top-20 space-y-6">
                 <Card>
                     <CardHeader>
-                        <CardTitle>Trending Topics</CardTitle>
+                        <CardTitle>Industry News</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <ul className="space-y-2 text-sm text-muted-foreground">
-                            <li className="hover:text-primary cursor-pointer">#structural-integrity</li>
-                            <li className="hover:text-primary cursor-pointer">#drone-inspections</li>
-                            <li className="hover:text-primary cursor-pointer">#thermal-imaging</li>
-                            <li className="hover:text-primary cursor-pointer">#nec2023-updates</li>
-                            <li className="hover:text-primary cursor-pointer">#client-communication</li>
+                        <ul className="space-y-4">
+                            {mockNews.map(item => (
+                                <li key={item.id}>
+                                    <a href={item.url} target="_blank" rel="noopener noreferrer" className="group">
+                                        <p className="font-semibold text-sm leading-snug group-hover:text-primary transition-colors">{item.title}</p>
+                                        <div className="flex items-center justify-between text-xs text-muted-foreground mt-1">
+                                            <span>{item.source}</span>
+                                            <span>{item.time}</span>
+                                        </div>
+                                    </a>
+                                </li>
+                            ))}
                         </ul>
                     </CardContent>
                 </Card>
