@@ -16,10 +16,16 @@ const WeatherDataSchema = z.object({
   temperature: z.number().describe('The current temperature in Fahrenheit.'),
   description: z.string().describe('A brief summary of current weather conditions (e.g., "Partly Cloudy").'),
   windSpeed: z.number().describe('The wind speed in miles per hour.'),
-  precipitationChance: z.number().describe('The percentage chance of precipitation in the next hour.'),
   uvIndex: z.number().describe('The UV index, from 0 to 11+.'),
   alerts: z.array(z.string()).describe('A list of active severe weather alerts (e.g., "Thunderstorm Watch", "High Wind Warning").'),
 });
+
+export const WeatherOutputSchema = z.object({
+    weatherData: WeatherDataSchema,
+    recommendation: z.string(),
+});
+
+export type WeatherOutput = z.infer<typeof WeatherOutputSchema>;
 
 const getLocationCoordinates = ai.defineTool(
     {
@@ -41,7 +47,7 @@ const getLocationCoordinates = ai.defineTool(
         const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(location)}&key=${apiKey}`);
         const data = await response.json();
         if (data.status !== 'OK' || !data.results?.[0]?.geometry?.location) {
-            throw new Error(`Could not geocode location: ${location}. Status: ${data.status}`);
+            throw new Error(`Could not geocode location: ${location}. Status: ${data.status}, Message: ${data.error_message}`);
         }
         return data.results[0].geometry.location;
     }
@@ -61,36 +67,28 @@ const getCurrentWeather = ai.defineTool(
   async ({ lat, lng }) => {
      const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
      if (!apiKey) {
-        throw new Error("Google Maps API key is not configured.");
+        throw new Error("Google Weather API key (Google Maps API Key) is not configured.");
      }
+      
+     const url = `https://weather.googleapis.com/v1/currentConditions:lookup?location.latitude=${lat}&location.longitude=${lng}&units=IMPERIAL&key=${apiKey}`;
 
-     const response = await fetch(`https://weather.googleapis.com/v1/currentConditions:lookup?key=${apiKey}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            location: { latitude: lat, longitude: lng },
-            languageCode: "en-US",
-            units: "IMPERIAL",
-        })
-     });
-    
+     const response = await fetch(url);
+
      if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(`Failed to fetch weather data: ${response.status} ${errorText}`);
+        console.error(`Weather API failed with status ${response.status}: ${errorText}`);
+        throw new Error(`Failed to fetch weather data. Status: ${response.status}. Please check your API key and permissions.`);
      }
 
      const data = await response.json();
 
      // Google Weather API does not provide alerts directly in currentConditions.
-     // This would require a separate call to a service like weather.gov or another provider.
-     // We will return an empty array for now.
      const alerts: string[] = [];
 
      return {
         temperature: Math.round(data.currentConditions.temperature),
         description: data.currentConditions.shortText,
         windSpeed: Math.round(data.currentConditions.windSpeed),
-        precipitationChance: (data.currentConditions.precipitation.probability || 0) * 100,
         uvIndex: data.currentConditions.uvIndex,
         alerts: alerts,
      };
@@ -104,13 +102,13 @@ When a user asks for the weather for a location, you MUST use your tools in a sp
 2. Second, you MUST use the latitude and longitude from the previous step to call the \`getCurrentWeather\` tool to get the current conditions.
 3. Finally, you MUST analyze the weather data from a safety perspective and provide a clear, conversational, and actionable response. 
 
-Your final response MUST be a JSON object with two keys: "weatherData" and "recommendation".
-- The "weatherData" key must contain the full, unmodified JSON object returned by the \`getCurrentWeather\` tool.
-- The "recommendation" key must contain your conversational safety analysis as a string.
+Your final response MUST be a JSON object conforming to the output schema.
+- The "weatherData" field must contain the full, unmodified JSON object returned by the \`getCurrentWeather\` tool.
+- The "recommendation" field must contain your conversational safety analysis as a string.
 
 Example for hazardous weather: "The forecast shows high winds at 25 mph and a severe thunderstorm watch is in effect. It is unsafe to conduct exterior inspections, especially with a drone. I recommend postponing the inspection until the storm system passes."
 
-Example for safe weather: "It's currently 72 degrees and sunny. Conditions are safe for all inspection activities. The UV index is high, so be sure to use sun protection."
+Example for safe weather: "It's currently 72 degrees and sunny with light winds. Conditions are safe for all inspection activities. The UV index is high, so be sure to use sun protection."
 `;
 
 const weatherAgent = ai.definePrompt({
@@ -118,10 +116,7 @@ const weatherAgent = ai.definePrompt({
   tools: [getCurrentWeather, getLocationCoordinates],
   system: weatherAgentSystemPrompt,
   output: {
-    schema: z.object({
-        weatherData: WeatherDataSchema,
-        recommendation: z.string(),
-    })
+    schema: WeatherOutputSchema
   }
 });
 
@@ -129,10 +124,7 @@ export const weatherAgentFlow = ai.defineFlow(
   {
     name: 'weatherAgentFlow',
     inputSchema: z.string(),
-    outputSchema: z.object({
-        weatherData: WeatherDataSchema,
-        recommendation: z.string(),
-    }),
+    outputSchema: WeatherOutputSchema,
   },
   async (prompt) => {
     const { output } = await weatherAgent(prompt);
@@ -143,6 +135,6 @@ export const weatherAgentFlow = ai.defineFlow(
   }
 );
 
-export async function getWeatherForecast(location: string): Promise<any> {
+export async function getWeatherForecast(location: string): Promise<WeatherOutput> {
   return weatherAgentFlow(`What is the weather in ${location}?`);
 }
