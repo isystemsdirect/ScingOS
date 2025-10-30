@@ -1,3 +1,4 @@
+
 import type { Inspection, Inspector, Device, SubscriptionPlan, Client, MarketplaceService, MarketplaceIntegration } from './types';
 import { PlaceHolderImages } from './placeholder-images';
 
@@ -332,4 +333,11 @@ export const mockMarketplaceIntegrations: MarketplaceIntegration[] = [
         price: "$99/month",
         vendor: "CADify"
     },
+];
+
+export const mockNotifications = [
+    { id: 1, type: 'post' as const, title: "Jane Smith posted in #foundation-cracks", description: "Unusual Efflorescence Pattern on a Poured Concrete Wall?" },
+    { id: 2, type: 'topic' as const, title: "#thermal-imaging is trending", description: "Join the conversation on interpreting thermal data." },
+    { id: 3, type: 'weather' as const, title: "Weather Update: Anytown, CA", description: "Sunny, 72°F. Clear conditions for inspections." },
+    { id: 4, type: 'safety' as const, title: "High Wind Warning", description: "Winds gusting up to 45 mph. Use caution with drones." },
 ];

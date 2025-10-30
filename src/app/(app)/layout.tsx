@@ -60,6 +60,7 @@ import { NavLink } from "@/components/nav-link";
 import { AiSearchDialog } from "@/components/ai-search-dialog";
 import { Separator } from "@/components/ui/separator";
 import { WeatherWidget } from "@/components/weather-widget";
+import { FlashNotificationBar } from "@/components/flash-notification-bar";
 
 export default function AppLayout({
   children,
@@ -255,6 +256,7 @@ export default function AppLayout({
               </Button>
           </div>
         </header>
+        <FlashNotificationBar />
         <main className="flex-1 overflow-y-auto p-4 sm:px-6 sm:py-6 bg-black/20 backdrop-blur-sm">
           {children}
         </main>
