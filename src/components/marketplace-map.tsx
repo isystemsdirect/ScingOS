@@ -300,11 +300,11 @@ export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
                 key={`inspector-${inspector.id}`} 
                 position={inspector.location}
                 icon={{
-                    path: 'M14 6V4H10V6H14ZM10 16.5V14.5H14V16.5H10ZM18 10C18 8.9 17.1 8 16 8H8C6.9 8 6 8.9 6 10V18C6 19.1 6.9 20 8 20H16C17.1 20 18 19.1 18 18V10ZM16 22H8C5.79 22 4 20.21 4 18V10C4 7.79 5.79 6 8 6H9V4C9 2.9 9.9 2 11 2H13C14.1 2 15 2.9 15 4V6H16C18.21 6 20 7.79 20 10V18C20 20.21 18.21 22 16 22Z',
+                    path: 'M20 6h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zM10 4h4v2h-4V4z',
                     fillColor: '#00A9FF',
                     fillOpacity: 1,
                     strokeWeight: 0,
-                    scale: 1.25,
+                    scale: 1,
                     anchor: new window.google.maps.Point(12, 12),
                 }}
                 onClick={() => setSelected(inspector)}
@@ -315,12 +315,11 @@ export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
                 key={`client-${client.id}`} 
                 position={client.location}
                 icon={{
-                    path: 'M10 20V14H14V20H19V12H22L12 3L2 12H5V20H10Z',
+                    path: 'M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z',
                     fillColor: '#33FFDD',
                     fillOpacity: 1,
-                    strokeWeight: 1,
-                    strokeColor: '#0e1626',
-                    scale: 1.25,
+                    strokeWeight: 0,
+                    scale: 1,
                     anchor: new window.google.maps.Point(12, 12),
                 }}
                 onClick={() => setSelected(client)}
