@@ -140,11 +140,8 @@ export default function SocialTimelinePage() {
             </p>
           </div>
            <div className="ml-auto flex items-center gap-2">
-            <Button variant="outline" asChild>
-                <Link href="/topics"><Hash className="mr-2 h-4 w-4" /> Browse Topics</Link>
-            </Button>
             <Button asChild>
-              <Link href="/topics/new"><PlusCircle className="mr-2 h-4 w-4" /> New Topic</Link>
+              <Link href="/social/new"><PlusCircle className="mr-2 h-4 w-4" /> New Post</Link>
             </Button>
           </div>
         </div>
@@ -310,3 +307,5 @@ export default function SocialTimelinePage() {
     </div>
   );
 }
+
+    
