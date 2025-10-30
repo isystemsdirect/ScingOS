@@ -138,6 +138,11 @@ export default function CommunityPage() {
               Share knowledge, ask questions, and learn from fellow inspectors and the Scingular AI.
             </p>
           </div>
+           <div className="ml-auto flex items-center gap-2">
+            <Button>
+              <PlusCircle className="mr-2 h-4 w-4" /> New Topic
+            </Button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-[1fr_320px] gap-8 items-start">
@@ -301,7 +306,3 @@ export default function CommunityPage() {
     </div>
   );
 }
-
-    
-
-    
