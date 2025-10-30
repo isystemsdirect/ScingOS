@@ -5,24 +5,19 @@
  * @fileOverview An AI agent for generating audio from text using Google Cloud Text-to-Speech.
  *
  * - textToSpeech - A function that handles the generation of audio.
- * - TextToSpeechInput - The input type for the textToSpeech function.
- * - TextToSpeechOutput - The return type for the textToSpeech function.
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
 import {googleAI} from '@genkit-ai/google-genai';
 // @ts-ignore
 import wav from 'wav';
+import { 
+    TextToSpeechInputSchema, 
+    type TextToSpeechInput, 
+    TextToSpeechOutputSchema,
+    type TextToSpeechOutput
+} from './lari-narrator-types';
 
-
-export const TextToSpeechInputSchema = z.string();
-export type TextToSpeechInput = z.infer<typeof TextToSpeechInputSchema>;
-
-export const TextToSpeechOutputSchema = z.object({
-  audio: z.string().describe('The generated audio in WAV format as a data URI.'),
-});
-export type TextToSpeechOutput = z.infer<typeof TextToSpeechOutputSchema>;
 
 export async function textToSpeech(
   input: TextToSpeechInput
@@ -91,5 +86,3 @@ const lariNarratorFlow = ai.defineFlow(
     };
   }
 );
-
-    
