@@ -26,7 +26,6 @@ export default function BackgroundSlideshow() {
           fill
           priority={i === index}
           className={`slide ${i === index ? 'active' : ''}`}
-          sizes="100vw"
         />
       ))}
     </div>

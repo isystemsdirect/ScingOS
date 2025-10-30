@@ -120,7 +120,6 @@
     .interactive-pulse {
         background-image: linear-gradient(to right, hsl(var(--primary)), hsl(var(--accent)), hsl(var(--primary)));
         background-size: 200% auto;
-        animation: background-pan 3s linear infinite;
     }
 
     .background-slideshow {
@@ -141,4 +140,16 @@
     .background-slideshow .slide.active {
       opacity: 1;
     }
+}
+
+@keyframes background-pan {
+  0% {
+    background-position: 0% center;
+  }
+  50% {
+    background-position: 100% center;
+  }
+  100% {
+    background-position: 0% center;
+  }
 }
