@@ -264,21 +264,21 @@ interface MarketplaceMapProps {
 
 export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
   const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
-  const { isLoaded } = useJsApiLoader({
+  const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: googleMapsApiKey
   });
 
   const [selected, setSelected] = useState<Inspector | Client | null>(null);
 
-  if (!googleMapsApiKey) {
+  if (loadError) {
     return (
         <div className="flex items-center justify-center h-full w-full bg-muted p-4">
             <Alert variant="destructive">
                 <AlertTriangle className="h-4 w-4" />
-                <AlertTitle>Google Maps API Key Missing</AlertTitle>
+                <AlertTitle>Could Not Load Map</AlertTitle>
                 <AlertDescription>
-                    To display the map, you need to provide a Google Maps API key. Please add your key to the `.env` file as `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`.
+                    There was an error loading the Google Maps script. This may be due to an invalid API key or network issue.
                 </AlertDescription>
             </Alert>
         </div>

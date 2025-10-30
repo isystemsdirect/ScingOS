@@ -12,12 +12,41 @@
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
 
+
+const getLocationCoordinates = ai.defineTool(
+    {
+        name: 'getLocationCoordinates',
+        description: 'Gets the latitude and longitude for a given location string.',
+        inputSchema: z.object({
+            location: z.string().describe('The city and state, e.g., "Houston, TX".'),
+        }),
+        outputSchema: z.object({
+            lat: z.number(),
+            lng: z.number(),
+        }),
+    },
+    async ({ location }) => {
+        const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+        if (!apiKey) {
+            throw new Error("Google Maps API key is not configured.");
+        }
+        const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(location)}&key=${apiKey}`);
+        const data = await response.json();
+        if (data.status !== 'OK' || !data.results?.[0]?.geometry?.location) {
+            throw new Error(`Could not geocode location: ${location}. Status: ${data.status}`);
+        }
+        return data.results[0].geometry.location;
+    }
+);
+
+
 const getWeather = ai.defineTool(
   {
     name: 'getWeather',
     description: 'Returns the current and forecasted weather for a given location, including any safety alerts.',
     inputSchema: z.object({
-      location: z.string().describe('The city and state to get the weather for, e.g., "Houston, TX".'),
+      lat: z.number().describe("Latitude"),
+      lng: z.number().describe("Longitude"),
     }),
     outputSchema: z.object({
       temperature: z.number().describe('The current temperature in Fahrenheit.'),
@@ -28,41 +57,53 @@ const getWeather = ai.defineTool(
       alerts: z.array(z.string()).describe('A list of active severe weather alerts (e.g., "Thunderstorm Watch", "High Wind Warning").'),
     }),
   },
-  async (input) => {
-    // In a real application, this would call a weather API (e.g., Tomorrow.io, OpenWeather).
-    // For now, we'll return detailed mock data to simulate LARI-Weather_AI's capabilities.
-    console.log(`Fetching weather for ${input.location}`);
-    
-    // Let's simulate a more hazardous condition for demonstration
-    if (input.location.toLowerCase().includes('houston')) {
-        return {
-            temperature: 88,
-            description: 'Overcast with distant thunder.',
-            windSpeed: 25,
-            precipitationChance: 75,
-            uvIndex: 2,
-            alerts: ["Severe Thunderstorm Watch", "High Wind Advisory"],
-        };
-    }
+  async ({ lat, lng }) => {
+     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+     if (!apiKey) {
+        throw new Error("Google Maps API key is not configured.");
+     }
 
-    return {
-      temperature: 72,
-      description: 'Sunny with a light breeze.',
-      windSpeed: 5,
-      precipitationChance: 10,
-      uvIndex: 8,
-      alerts: [],
-    };
+     const response = await fetch(`https://weather.googleapis.com/v1/currentConditions:lookup?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            location: { latitude: lat, longitude: lng },
+            languageCode: "en-US",
+            units: "IMPERIAL",
+        })
+     });
+    
+     if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Failed to fetch weather data: ${response.status} ${errorText}`);
+     }
+
+     const data = await response.json();
+
+     // Google Weather API does not provide alerts directly in currentConditions.
+     // This would require a separate call to a service like weather.gov or another provider.
+     // We will return an empty array for now.
+     const alerts: string[] = [];
+
+     return {
+        temperature: Math.round(data.currentConditions.temperature),
+        description: data.currentConditions.shortText,
+        windSpeed: Math.round(data.currentConditions.windSpeed),
+        precipitationChance: (data.currentConditions.precipitation.probability || 0) * 100,
+        uvIndex: data.currentConditions.uvIndex,
+        alerts: alerts,
+     };
   }
 );
 
 const weatherAgentSystemPrompt = `You are LARI-Weather_AI, an expert safety companion for field inspectors. Your primary goal is to keep them safe.
 
-When a user asks for the weather, use the getWeather tool to get the current conditions.
-
-Then, you MUST analyze this data from a safety perspective and provide a clear, conversational, and actionable response. Your response should consist of two parts:
-1.  **Forecast Summary:** Briefly describe the current and upcoming weather conditions.
-2.  **Safety Recommendation:** Based on the data, provide a clear safety recommendation. State whether conditions are "safe for inspection," "require caution," or are "unsafe." Mention specific hazards like high winds, lightning risk (based on alerts), high UV index, or chance of rain.
+When a user asks for the weather for a location, you MUST use your tools in a specific order:
+1. First, you MUST use the \`getLocationCoordinates\` tool to get the latitude and longitude for the location provided by the user.
+2. Second, you MUST use the latitude and longitude from the previous step to call the \`getWeather\` tool to get the current conditions.
+3. Finally, you MUST analyze the weather data from a safety perspective and provide a clear, conversational, and actionable response. Your response should consist of two parts:
+    - **Forecast Summary:** Briefly describe the current and upcoming weather conditions.
+    - **Safety Recommendation:** Based on the data, provide a clear safety recommendation. State whether conditions are "safe for inspection," "require caution," or are "unsafe." Mention specific hazards like high winds, lightning risk (based on alerts), high UV index, or chance of rain.
 
 Example for hazardous weather: "The forecast shows high winds at 25 mph and a severe thunderstorm watch is in effect. It is unsafe to conduct exterior inspections, especially with a drone. I recommend postponing the inspection until the storm system passes."
 
@@ -71,7 +112,7 @@ Example for safe weather: "It's currently 72 degrees and sunny. Conditions are s
 
 const weatherAgent = ai.definePrompt({
   name: 'weatherAgent',
-  tools: [getWeather],
+  tools: [getWeather, getLocationCoordinates],
   system: weatherAgentSystemPrompt,
 });
 
