@@ -12,6 +12,7 @@ import {
   Home,
   LineChart,
   LogOut,
+  MessageSquare,
   Mic,
   Package2,
   Search,
@@ -110,6 +111,10 @@ export default function AppLayout({
                 <Store className="h-4 w-4" />
                 Marketplace
               </NavLink>
+              <NavLink href="/community">
+                <MessageSquare className="h-4 w-4" />
+                SAI Community
+              </NavLink>
 
               <Separator className="my-2 bg-sidebar-border" />
 
@@ -204,6 +209,10 @@ export default function AppLayout({
                 <NavLink href="/marketplace" isMobile>
                   <Store className="h-5 w-5" />
                   Marketplace
+                </NavLink>
+                <NavLink href="/community" isMobile>
+                    <MessageSquare className="h-5 w-5" />
+                    SAI Community
                 </NavLink>
                  <Separator className="my-2 bg-sidebar-border" />
                 <NavLink href="/workstation" isMobile>
