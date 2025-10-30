@@ -2,12 +2,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Rss, Hash, CloudSun, AlertTriangle, X } from 'lucide-react';
+import { Rss, Hash, CloudSun, AlertTriangle, X, Clock, Calendar } from 'lucide-react';
 import { mockNotifications } from '@/lib/data';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Badge } from './ui/badge';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
 
 type Notification = typeof mockNotifications[0];
 
@@ -20,13 +21,36 @@ const typeInfo = {
 
 export function FlashNotificationBar() {
   const [index, setIndex] = useState(0);
+  const [now, setNow] = useState<Date | null>(null);
+  const [showTime, setShowTime] = useState(true);
+
+  useEffect(() => {
+    // Set initial time on client mount to avoid hydration errors
+    setNow(new Date());
+
+    // Update time every second
+    const timeInterval = setInterval(() => {
+      setNow(new Date());
+    }, 1000);
+    
+    // Toggle between time and date every 4 seconds
+    const toggleInterval = setInterval(() => {
+        setShowTime(prev => !prev);
+    }, 4000);
+
+    return () => {
+        clearInterval(timeInterval);
+        clearInterval(toggleInterval);
+    }
+  }, []);
+
 
   useEffect(() => {
     if (mockNotifications.length === 0) return;
     
     const interval = setInterval(() => {
       setIndex((prevIndex) => (prevIndex + 1) % mockNotifications.length);
-    }, 10000); // Change notification every 10 seconds
+    }, 10000);
 
     return () => clearInterval(interval);
   }, []);
@@ -41,31 +65,58 @@ export function FlashNotificationBar() {
 
   return (
     <div className="relative z-20 w-full bg-background/50 backdrop-blur-lg border-b border-border">
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={notification.id}
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 20 }}
-          transition={{ duration: 0.5 }}
-          className="w-full"
-        >
-          <Link href={href}>
-            <div className="mx-auto flex h-12 max-w-7xl items-center justify-between px-4 lg:px-6 cursor-pointer">
-                <div className="flex items-center gap-3">
-                     <Badge variant="outline" className={cn("gap-2", typeInfo[notification.type].className)}>
-                        <Icon className="h-4 w-4" />
-                        <span className="hidden sm:inline">{typeInfo[notification.type].label}</span>
-                    </Badge>
-                    <p className="text-sm text-muted-foreground truncate">
-                        <span className="font-semibold text-foreground">{notification.title}:</span>
-                        <span className="ml-2 hidden md:inline">{notification.description}</span>
-                    </p>
-                </div>
+        <div className="mx-auto flex h-12 max-w-7xl items-center justify-between px-4 lg:px-6">
+            <AnimatePresence mode="wait">
+                <motion.div
+                    key={notification.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    transition={{ duration: 0.5 }}
+                    className="w-full flex-1 min-w-0"
+                >
+                <Link href={href} className="flex items-center gap-3 w-full">
+                        <Badge variant="outline" className={cn("gap-2", typeInfo[notification.type].className)}>
+                            <Icon className="h-4 w-4" />
+                            <span className="hidden sm:inline">{typeInfo[notification.type].label}</span>
+                        </Badge>
+                        <p className="text-sm text-muted-foreground truncate">
+                            <span className="font-semibold text-foreground">{notification.title}:</span>
+                            <span className="ml-2 hidden md:inline">{notification.description}</span>
+                        </p>
+                </Link>
+                </motion.div>
+            </AnimatePresence>
+            
+            <div className="ml-4 pl-4 border-l border-border/50">
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={showTime ? 'time' : 'date'}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.3 }}
+                        className="flex items-center gap-2 text-sm font-mono"
+                    >
+                        {now ? (
+                            showTime ? (
+                                <>
+                                    <Clock className="h-4 w-4 text-muted-foreground" />
+                                    <span className="text-foreground">{format(now, 'HH:mm:ss')}</span>
+                                </>
+                            ) : (
+                                <>
+                                    <Calendar className="h-4 w-4 text-muted-foreground" />
+                                    <span className="text-foreground">{format(now, 'MM/dd/yyyy')}</span>
+                                </>
+                            )
+                        ) : (
+                           <div className="h-5 w-24 bg-muted/50 rounded-md animate-pulse" />
+                        )}
+                    </motion.div>
+                </AnimatePresence>
             </div>
-          </Link>
-        </motion.div>
-      </AnimatePresence>
+        </div>
     </div>
   );
 }
