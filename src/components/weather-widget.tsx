@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { Sun, Cloud, CloudRain, CloudLightning, Wind, Snowflake, Loader2, AlertTriangle } from 'lucide-react';
-import { getWeatherForecast, type WeatherOutput } from '@/ai/flows/get-weather-forecast';
+import { lariWeather, type WeatherOutput } from '@/ai/flows/get-weather-forecast';
 import { mockInspectors } from '@/lib/data';
 
 
@@ -19,7 +19,7 @@ export function WeatherWidget() {
       try {
         setIsLoading(true);
         setError(null);
-        const forecast = await getWeatherForecast(userLocation);
+        const forecast = await lariWeather(userLocation);
         
         if (forecast?.weatherData && forecast?.recommendation) {
             setWeather(forecast);

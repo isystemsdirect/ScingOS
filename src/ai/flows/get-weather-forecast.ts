@@ -2,11 +2,10 @@
 'use server';
 
 /**
- * @fileOverview This file defines a Genkit flow for providing weather forecasts.
- * It simulates LARI-Weather_AI by providing detailed, safety-conscious weather analysis
- * for field inspectors.
+ * @fileOverview This file defines a Genkit flow for LARI-Weather_AI, an expert safety 
+ * companion for field inspectors.
  *
- * - getWeatherForecast - A function that returns a conversational weather forecast and safety recommendation.
+ * - lariWeather - A function that returns a detailed, safety-conscious weather analysis.
  */
 
 import { ai } from '@/ai/genkit';
@@ -26,33 +25,6 @@ export const WeatherOutputSchema = z.object({
 });
 
 export type WeatherOutput = z.infer<typeof WeatherOutputSchema>;
-
-const getLocationCoordinates = ai.defineTool(
-    {
-        name: 'getLocationCoordinates',
-        description: 'Gets the latitude and longitude for a given location string.',
-        inputSchema: z.object({
-            location: z.string().describe('The city and state, e.g., "Houston, TX".'),
-        }),
-        outputSchema: z.object({
-            lat: z.number(),
-            lng: z.number(),
-        }),
-    },
-    async ({ location }) => {
-        const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-        if (!apiKey) {
-            throw new Error("Google Maps API key is not configured.");
-        }
-        const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(location)}&key=${apiKey}`);
-        const data = await response.json();
-        if (data.status !== 'OK' || !data.results?.[0]?.geometry?.location) {
-            throw new Error(`Could not geocode location: ${location}. Status: ${data.status}, Message: ${data.error_message}`);
-        }
-        return data.results[0].geometry.location;
-    }
-);
-
 
 const getCurrentWeather = ai.defineTool(
   {
@@ -97,13 +69,10 @@ const getCurrentWeather = ai.defineTool(
 
 const weatherAgentSystemPrompt = `You are LARI-Weather_AI, an expert safety companion for field inspectors. Your primary goal is to keep them safe.
 
-When a user asks for the weather for a location, you MUST use your tools in a specific order:
-1. First, you MUST use the \`getLocationCoordinates\` tool to get the latitude and longitude for the location provided by the user.
-2. Second, you MUST use the latitude and longitude from the previous step to call the \`getCurrentWeather\` tool to get the current conditions.
-3. Finally, you MUST analyze the weather data from a safety perspective and provide a clear, conversational, and actionable response. 
+When you receive weather data, you MUST analyze it from a safety perspective and provide a clear, conversational, and actionable recommendation. 
 
 Your final response MUST be a JSON object conforming to the output schema.
-- The "weatherData" field must contain the full, unmodified JSON object returned by the \`getCurrentWeather\` tool.
+- The "weatherData" field must contain the full, unmodified JSON object from the tool.
 - The "recommendation" field must contain your conversational safety analysis as a string.
 
 Example for hazardous weather: "The forecast shows high winds at 25 mph and a severe thunderstorm watch is in effect. It is unsafe to conduct exterior inspections, especially with a drone. I recommend postponing the inspection until the storm system passes."
@@ -113,21 +82,34 @@ Example for safe weather: "It's currently 72 degrees and sunny with light winds.
 
 const weatherAgent = ai.definePrompt({
   name: 'weatherAgent',
-  tools: [getCurrentWeather, getLocationCoordinates],
+  tools: [getCurrentWeather],
   system: weatherAgentSystemPrompt,
   output: {
     schema: WeatherOutputSchema
   }
 });
 
-export const weatherAgentFlow = ai.defineFlow(
+export const lariWeatherFlow = ai.defineFlow(
   {
-    name: 'weatherAgentFlow',
-    inputSchema: z.string(),
+    name: 'lariWeatherFlow',
+    inputSchema: z.string().describe("A location, such as 'Houston, TX'"),
     outputSchema: WeatherOutputSchema,
   },
-  async (prompt) => {
-    const { output } = await weatherAgent(prompt);
+  async (location) => {
+    // 1. Get coordinates for the location
+    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+    if (!apiKey) {
+        throw new Error("Google Maps API key is not configured.");
+    }
+    const geocodeResponse = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(location)}&key=${apiKey}`);
+    const geocodeData = await geocodeResponse.json();
+    if (geocodeData.status !== 'OK' || !geocodeData.results?.[0]?.geometry?.location) {
+        throw new Error(`Could not geocode location: ${location}. Status: ${geocodeData.status}, Message: ${geocodeData.error_message || 'No results found.'}`);
+    }
+    const { lat, lng } = geocodeData.results[0].geometry.location;
+
+    // 2. Pass coordinates to the weather agent
+    const { output } = await weatherAgent({lat, lng});
     if (!output) {
         throw new Error("Failed to get weather analysis from the agent.");
     }
@@ -135,6 +117,6 @@ export const weatherAgentFlow = ai.defineFlow(
   }
 );
 
-export async function getWeatherForecast(location: string): Promise<WeatherOutput> {
-  return weatherAgentFlow(`What is the weather in ${location}?`);
+export async function lariWeather(location: string): Promise<WeatherOutput> {
+  return lariWeatherFlow(location);
 }

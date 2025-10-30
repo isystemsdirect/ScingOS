@@ -29,7 +29,7 @@ import {
 } from '@/ai/flows/lari-compliance';
 import { processVoiceCommand } from '@/ai/flows/lari-scing-bridge';
 import { textToSpeech } from '@/ai/flows/lari-narrator';
-import { getWeatherForecast } from '@/ai/flows/get-weather-forecast';
+import { lariWeather } from '@/ai/flows/get-weather-forecast';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import Image from 'next/image';
@@ -81,8 +81,10 @@ export function AiSearchDialog() {
       let responseText = `Understood. Executing action: ${commandResult.action.replace(/_/g, ' ')}.`;
 
       if (commandResult.action === 'get_weather') {
-        const weatherResult = await getWeatherForecast(commandResult.parameters?.location || 'San Francisco, CA');
-        responseText = weatherResult;
+        // @ts-ignore
+        const weatherResult = await lariWeather(commandResult.parameters?.location || 'San Francisco, CA');
+        // @ts-ignore
+        responseText = weatherResult.recommendation;
       }
       
       // 3. Send the text response to LARI to generate speech
