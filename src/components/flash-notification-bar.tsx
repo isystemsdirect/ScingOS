@@ -11,6 +11,7 @@ import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 
 type Notification = typeof mockNotifications[0];
+type TimeFormat = '12h' | '24h';
 
 const typeInfo = {
     post: { icon: Rss, label: 'New Post', href: '/social', className: 'bg-blue-500/20 text-blue-300 border-blue-500/50' },
@@ -23,10 +24,27 @@ export function FlashNotificationBar() {
   const [index, setIndex] = useState(0);
   const [now, setNow] = useState<Date | null>(null);
   const [showTime, setShowTime] = useState(true);
+  const [timeFormat, setTimeFormat] = useState<TimeFormat>('12h');
 
   useEffect(() => {
     // Set initial time on client mount to avoid hydration errors
     setNow(new Date());
+
+    // Check localStorage for saved time format preference
+    const savedFormat = localStorage.getItem('time-format') as TimeFormat | null;
+    if (savedFormat) {
+        setTimeFormat(savedFormat);
+    }
+
+    const handleStorageChange = () => {
+        const newFormat = localStorage.getItem('time-format') as TimeFormat | null;
+        if (newFormat) {
+            setTimeFormat(newFormat);
+        }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+
 
     // Update time every second
     const timeInterval = setInterval(() => {
@@ -41,6 +59,7 @@ export function FlashNotificationBar() {
     return () => {
         clearInterval(timeInterval);
         clearInterval(toggleInterval);
+        window.removeEventListener('storage', handleStorageChange);
     }
   }, []);
 
@@ -62,6 +81,13 @@ export function FlashNotificationBar() {
   const notification = mockNotifications[index];
   const Icon = typeInfo[notification.type].icon;
   const href = typeInfo[notification.type].href;
+
+  const formatTime = (date: Date) => {
+    if (timeFormat === '24h') {
+        return format(date, 'HH:mm:ss');
+    }
+    return format(date, 'hh:mm:ss a');
+  };
 
   return (
     <div className="relative z-20 w-full bg-background/50 backdrop-blur-lg border-b border-border">
@@ -96,13 +122,13 @@ export function FlashNotificationBar() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
                         transition={{ duration: 0.3 }}
-                        className="flex items-center gap-2 text-sm font-mono"
+                        className="flex items-center gap-2 text-sm font-mono w-[110px] justify-end"
                     >
                         {now ? (
                             showTime ? (
                                 <>
                                     <Clock className="h-4 w-4 text-muted-foreground" />
-                                    <span className="text-foreground">{format(now, 'HH:mm:ss')}</span>
+                                    <span className="text-foreground">{formatTime(now)}</span>
                                 </>
                             ) : (
                                 <>
@@ -120,3 +146,5 @@ export function FlashNotificationBar() {
     </div>
   );
 }
+
+    

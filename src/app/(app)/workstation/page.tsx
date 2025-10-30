@@ -516,6 +516,25 @@ export default function WorkstationPage() {
                 <div className="grid gap-6">
                     <Card>
                         <CardHeader>
+                        <CardTitle>General Settings</CardTitle>
+                        <CardDescription>
+                            Manage general application preferences.
+                        </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="flex items-center justify-between rounded-lg border p-4">
+                                <div>
+                                <h4 className="font-medium">Time Format</h4>
+                                <p className="text-sm text-muted-foreground">
+                                    Choose between standard (12-hour) and military (24-hour) time.
+                                </p>
+                                </div>
+                                <Switch id="time-format-switch" />
+                            </div>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader>
                         <CardTitle>Notifications</CardTitle>
                         <CardDescription>
                             Manage how you receive notifications from Scingular.
@@ -584,3 +603,5 @@ export default function WorkstationPage() {
     </div>
   )
 }
+
+    
