@@ -16,7 +16,8 @@ import {
   ExternalLink,
   Image as ImageIcon,
   Video,
-  Paperclip
+  Paperclip,
+  Rss
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -139,6 +140,9 @@ export default function CommunityPage() {
             </p>
           </div>
            <div className="ml-auto flex items-center gap-2">
+            <Button variant="outline" asChild>
+                <Link href="/community"><Rss className="mr-2 h-4 w-4" /> View Timeline</Link>
+            </Button>
             <Button>
               <PlusCircle className="mr-2 h-4 w-4" /> New Topic
             </Button>
