@@ -1,7 +1,9 @@
 
 
 import Link from "next/link"
-import { CircleUser, Cpu, Palette, PlusCircle, Trash2, Globe, Linkedin, Facebook, History, Mic, Camera, Sparkles, Database, KeyRound, User, Settings, Store, Bell, SlidersHorizontal, Bot, Wifi, Bluetooth, MapPin, Search } from "lucide-react"
+import { CircleUser, Cpu, Palette, PlusCircle, Trash2, Globe, Linkedin, Facebook, History, Mic, Camera, Sparkles, Database, KeyRound, User, Settings, Store, Bell, SlidersHorizontal, Bot, Wifi, Bluetooth, MapPin, Search, Link2, Calendar } from "lucide-react"
+import { SiGooglecalendar, SiMicrosoftoutlook, SiApple } from "@icons-pack/react-simple-icons";
+
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -49,9 +51,10 @@ export default function WorkstationPage() {
 
       <Tabs defaultValue="profile" className="relative">
         <div className="sticky top-0 z-20 pt-4 -mx-6 px-6 pb-2">
-            <TabsList className="grid h-auto w-full grid-cols-1 md:grid-cols-4 lg:grid-cols-8 border p-1 bg-background/95 backdrop-blur-sm">
+            <TabsList className="grid h-auto w-full grid-cols-1 md:grid-cols-3 lg:grid-cols-9 border p-1 bg-background/95 backdrop-blur-sm">
                 <TabsTrigger value="profile" className="py-2"><User className="mr-2 h-4 w-4"/>Profile</TabsTrigger>
                 <TabsTrigger value="credentials" className="py-2"><KeyRound className="mr-2 h-4 w-4"/>Credentials</TabsTrigger>
+                <TabsTrigger value="integrations" className="py-2"><Link2 className="mr-2 h-4 w-4"/>Integrations</TabsTrigger>
                 <TabsTrigger value="security" className="py-2"><User className="mr-2 h-4 w-4"/>Security</TabsTrigger>
                 <TabsTrigger value="ai" className="py-2"><Sparkles className="mr-2 h-4 w-4"/>AI & Voice</TabsTrigger>
                 <TabsTrigger value="camera" className="py-2"><Camera className="mr-2 h-4 w-4"/>Camera</TabsTrigger>
@@ -173,6 +176,60 @@ export default function WorkstationPage() {
                         </Button>
                         <p className="text-xs text-muted-foreground ml-auto">*Verification may take 24-48 hours.</p>
                     </CardFooter>
+                </Card>
+            </TabsContent>
+            <TabsContent value="integrations">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>App Integrations</CardTitle>
+                        <CardDescription>Connect your external accounts to sync data with Scingular.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="grid gap-6">
+                        <div>
+                            <h4 className="text-lg font-semibold">Calendar Sync</h4>
+                            <p className="text-sm text-muted-foreground">Sync your inspection schedule with your preferred calendar.</p>
+                            <div className="grid gap-4 mt-4">
+                                <div className="border rounded-lg p-4 flex items-center">
+                                    <SiGooglecalendar className="h-6 w-6 mr-4 text-[#4285F4]" />
+                                    <div className="flex-1">
+                                        <p className="font-medium">Google Calendar</p>
+                                        <p className="text-sm text-muted-foreground">Connected as john.doe@gmail.com</p>
+                                    </div>
+                                    <Button variant="destructive" size="sm">Disconnect</Button>
+                                </div>
+                                 <div className="border rounded-lg p-4 flex items-center">
+                                    <SiMicrosoftoutlook className="h-6 w-6 mr-4 text-[#0078D4]" />
+                                    <div className="flex-1">
+                                        <p className="font-medium">Microsoft Outlook</p>
+                                        <p className="text-sm text-muted-foreground">Sync your events and availability.</p>
+                                    </div>
+                                    <Button variant="outline" size="sm">Connect</Button>
+                                </div>
+                                <div className="border rounded-lg p-4 flex items-center">
+                                    <SiApple className="h-6 w-6 mr-4" />
+                                    <div className="flex-1">
+                                        <p className="font-medium">Apple Calendar</p>
+                                        <p className="text-sm text-muted-foreground">Sync via a secure iCal link.</p>
+                                    </div>
+                                    <Button variant="outline" size="sm">Connect</Button>
+                                </div>
+                            </div>
+                        </div>
+                         <Separator />
+                         <div>
+                            <h4 className="text-lg font-semibold">Other Connections</h4>
+                             <div className="grid gap-4 mt-4">
+                                <div className="border rounded-lg p-4 flex items-center">
+                                    <Calendar className="h-6 w-6 mr-4 text-muted-foreground" />
+                                    <div className="flex-1">
+                                        <p className="font-medium">Import via ICS Link</p>
+                                        <p className="text-sm text-muted-foreground">Connect any calendar that provides a public or private .ics URL.</p>
+                                    </div>
+                                    <Button variant="outline" size="sm">Connect</Button>
+                                </div>
+                            </div>
+                        </div>
+                    </CardContent>
                 </Card>
             </TabsContent>
             <TabsContent value="security">
@@ -675,3 +732,5 @@ export default function WorkstationPage() {
     </div>
   )
 }
+
+    
