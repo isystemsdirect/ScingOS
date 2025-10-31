@@ -63,7 +63,7 @@ export default function Dashboard() {
           </div>
         </div>
         <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
-          <Card>
+          <Card className="bg-card/60 backdrop-blur-sm">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
               <DollarSign className="h-4 w-4 text-muted-foreground" />
@@ -75,7 +75,7 @@ export default function Dashboard() {
               </p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="bg-card/60 backdrop-blur-sm">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
                 Completed Inspections
@@ -89,7 +89,7 @@ export default function Dashboard() {
               </p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="bg-card/60 backdrop-blur-sm">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Upcoming Jobs</CardTitle>
               <Users className="h-4 w-4 text-muted-foreground" />
@@ -99,7 +99,7 @@ export default function Dashboard() {
               <p className="text-xs text-muted-foreground">in the next 7 days</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="bg-card/60 backdrop-blur-sm">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Active Now</CardTitle>
               <Activity className="h-4 w-4 text-muted-foreground" />
