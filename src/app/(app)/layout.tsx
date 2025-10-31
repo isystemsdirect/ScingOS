@@ -27,8 +27,10 @@ import {
   Expand,
   Shrink,
   Hash,
-  Rss
+  Rss,
+  RefreshCw
 } from "lucide-react";
+import { useRouter } from 'next/navigation';
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -71,7 +73,11 @@ export default function AppLayout({
   const avatarImage = PlaceHolderImages.find(p => p.id === 'avatar1');
   const currentPlan = mockSubscriptionPlans.find(plan => plan.isCurrent);
   const isProOrEnterprise = currentPlan && (currentPlan.name === 'Pro' || currentPlan.name === 'Enterprise');
+  const router = useRouter();
 
+  const handleRefresh = () => {
+    router.refresh();
+  };
 
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
@@ -247,7 +253,11 @@ export default function AppLayout({
              <AiSearchDialog />
           </div>
           
-          <div className="flex items-center gap-4 ml-auto">
+          <div className="flex items-center gap-2 ml-auto">
+              <Button variant="ghost" size="icon" className="rounded-full" onClick={handleRefresh}>
+                <RefreshCw className="h-5 w-5" />
+                <span className="sr-only">Refresh Page</span>
+              </Button>
               <Button variant="ghost" size="icon" className="rounded-full">
                 <Bell className="h-5 w-5" />
                 <span className="sr-only">Toggle notifications</span>
