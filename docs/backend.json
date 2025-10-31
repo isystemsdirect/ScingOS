@@ -209,7 +209,7 @@
     },
     "client": {
       "title": "Client",
-      "description": "A client for whom an inspection is performed.",
+      "description": "A client or contact for whom an inspection is performed.",
       "type": "object",
       "properties": {
         "name": {
@@ -309,7 +309,7 @@
     },
     "/clients/{clientId}": {
         "schema": { "$ref": "#/entities/client"},
-        "description": "Inspection clients"
+        "description": "Client and contact information"
     },
     "/resources/{resourceId}": {
         "schema": { "$ref": "#/entities/resource"},

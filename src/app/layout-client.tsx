@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from "next/link";
@@ -115,7 +116,7 @@ export default function AppLayout({
               </NavLink>
               <NavLink href="/clients">
                 <Users className="h-4 w-4" />
-                Clients
+                Clients & Contacts
               </NavLink>
                <NavLink href="/teams">
                 <Users className="h-4 w-4" />
@@ -229,7 +230,7 @@ export default function AppLayout({
                 </NavLink>
                 <NavLink href="/clients" isMobile>
                   <Users className="h-5 w-5" />
-                  Clients
+                  Clients & Contacts
                 </NavLink>
                  <NavLink href="/teams" isMobile>
                   <Users className="h-5 w-5" />

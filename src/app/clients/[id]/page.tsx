@@ -37,11 +37,11 @@ export default function ClientProfilePage({ params }: { params: { id: string } }
             <Link href="/clients">
               <Button variant="outline" size="icon" className="h-7 w-7">
                 <ChevronLeft className="h-4 w-4" />
-                <span className="sr-only">Back to Clients</span>
+                <span className="sr-only">Back to Clients & Contacts</span>
               </Button>
             </Link>
             <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
-              Client Profile
+              Client & Contact Profile
             </h1>
           </div>
 

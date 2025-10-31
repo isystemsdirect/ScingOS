@@ -37,9 +37,9 @@ export default function ClientsPage() {
       <div className="flex flex-col gap-4">
         <div className="flex items-center">
           <div>
-            <h1 className="text-2xl font-bold">Clients</h1>
+            <h1 className="text-2xl font-bold">Clients & Contacts</h1>
             <p className="text-muted-foreground">
-              Manage your clients and their inspection history.
+              Manage your clients, contacts, and their inspection history.
             </p>
           </div>
           <div className="ml-auto flex items-center gap-2">
@@ -59,9 +59,9 @@ export default function ClientsPage() {
         </div>
         <Card className="bg-card/60 backdrop-blur-sm">
           <CardHeader>
-            <CardTitle>Client Database</CardTitle>
+            <CardTitle>Client & Contact Database</CardTitle>
             <CardDescription>
-              A list of all your clients.
+              A list of all your clients and contacts.
             </CardDescription>
           </CardHeader>
           <CardContent>
