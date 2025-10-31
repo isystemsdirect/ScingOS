@@ -16,11 +16,11 @@ const Logo = ({ className, isLoginPage = false }: { className?: string, isLoginP
         <div className="relative logo-gradient-light p-4">
             <Image src="/logo.png" alt="Scingular Logo" width={192} height={192} className="size-48 relative" />
         </div>
-        <div className="relative">
+        <div className="flex items-start">
           <span className="font-sans uppercase font-bold italic text-3xl sm:text-4xl whitespace-nowrap">
             SCINGULAR <span className="text-primary">AI</span>
           </span>
-          <sup className="text-white text-[0.1em] font-light absolute top-[0.5em] -right-[0.8em]">TM</sup>
+          <sup className="text-white text-[0.2em] font-light -translate-y-[-0.2em] ml-1">TM</sup>
         </div>
       </Link>
     );
