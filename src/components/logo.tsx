@@ -17,9 +17,9 @@ const Logo = ({ className, isLoginPage = false }: { className?: string, isLoginP
         </div>
         <div className="relative">
           <span className="font-sans uppercase font-bold italic text-3xl sm:text-4xl whitespace-nowrap">
-            SCINGULAR AI
+            SCINGULAR <span className="text-primary">AI</span>
           </span>
-          <sup className="text-white text-[0.15em] font-light absolute top-0 -right-5">TM</sup>
+          <sup className="text-white text-[0.1em] font-light absolute top-[0.1em] -right-6">TM</sup>
         </div>
       </Link>
     );
