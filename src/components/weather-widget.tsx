@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -85,10 +86,6 @@ export function WeatherWidget() {
       }
     );
   }, []);
-
-  const WeatherIcon = weather.current?.condition
-    ? weatherIcons[weather.current.condition.toLowerCase()] || weatherIcons.default
-    : weatherIcons.default;
     
   if (loading) {
     return (
@@ -98,29 +95,40 @@ export function WeatherWidget() {
         </div>
     )
   }
-
-  return (
-    <div className="p-2 group-data-[collapsed=true]:hidden">
-        {error && !weather && (
+  
+  if (error && !weather) {
+    return (
+        <div className="p-2 group-data-[collapsed=true]:hidden">
             <div className="p-2 rounded-md bg-destructive/20 border border-destructive/50 text-xs text-destructive-foreground flex items-center gap-2">
                 <AlertTriangle className="h-4 w-4" />
                 <div className="flex-1">{error}</div>
             </div>
-        )}
-        {weather && (
-            <div className="flex items-center gap-3">
-                <WeatherIcon className="h-8 w-8 text-primary" />
-                <div className="flex-1">
-                    <p className="font-bold text-lg text-sidebar-foreground">
-                        {Math.round(weather.current.temperature)}°C
-                    </p>
-                    <p className="text-xs text-muted-foreground -mt-1 flex items-center gap-1">
-                        <MapPin className="h-3 w-3" />
-                        {locationName || 'Loading...'}
-                    </p>
-                </div>
+        </div>
+    );
+  }
+
+  if (!weather) {
+    return null;
+  }
+
+  const WeatherIcon = weather.current?.condition
+    ? weatherIcons[weather.current.condition.toLowerCase()] || weatherIcons.default
+    : weatherIcons.default;
+
+  return (
+    <div className="p-2 group-data-[collapsed=true]:hidden">
+        <div className="flex items-center gap-3">
+            <WeatherIcon className="h-8 w-8 text-primary" />
+            <div className="flex-1">
+                <p className="font-bold text-lg text-sidebar-foreground">
+                    {Math.round(weather.current.temperature)}°C
+                </p>
+                <p className="text-xs text-muted-foreground -mt-1 flex items-center gap-1">
+                    <MapPin className="h-3 w-3" />
+                    {locationName || 'Loading...'}
+                </p>
             </div>
-        )}
+        </div>
     </div>
   );
 }
