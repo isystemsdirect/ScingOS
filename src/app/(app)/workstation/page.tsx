@@ -21,7 +21,7 @@ import { cn } from "@/lib/utils"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import inspectionData from '@/lib/inspection-types.json';
 
-export default function SettingsPage() {
+export default function WorkstationPage() {
   const user = mockInspectors[0];
   const currentPlan = mockSubscriptionPlans.find(plan => plan.isCurrent);
   const isProOrEnterprise = currentPlan && (currentPlan.name === 'Pro' || currentPlan.name === 'Enterprise');
@@ -44,7 +44,7 @@ export default function SettingsPage() {
 
   return (
     <div className="mx-auto w-full max-w-6xl">
-      <h1 className="px-4 lg:px-6 text-3xl font-semibold">Settings</h1>
+      <h1 className="px-4 lg:px-6 text-3xl font-semibold">Workstation</h1>
 
       <Tabs defaultValue="profile" className="relative">
         <div className="sticky top-0 z-20 pt-4 -mx-6 px-6 pb-2">
@@ -166,7 +166,7 @@ export default function SettingsPage() {
                     </CardContent>
                     <CardFooter className="border-t p-6">
                         <Button asChild>
-                            <Link href="/settings/certifications/add">
+                            <Link href="/workstation/certifications/add">
                                 <PlusCircle className="mr-2 h-4 w-4" />Add Credential
                             </Link>
                         </Button>
@@ -517,7 +517,7 @@ export default function SettingsPage() {
                                 </CardContent>
                                 <CardFooter>
                                     <Button asChild className="w-full">
-                                        <Link href={`/settings/devices/${device.id}`}>Tune & Calibrate</Link>
+                                        <Link href={`/workstation/devices/${device.id}`}>Tune & Calibrate</Link>
                                     </Button>
                                 </CardFooter>
                             </Card>

@@ -49,7 +49,7 @@ export default function ProfilePage() {
                   <CardDescription className="text-lg">Inspector</CardDescription>
                 </div>
                 <Button asChild>
-                  <a href="/settings">Edit Profile</a>
+                  <a href="/workstation">Edit Profile</a>
                 </Button>
               </div>
             </CardHeader>

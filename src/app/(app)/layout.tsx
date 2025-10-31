@@ -129,9 +129,9 @@ export default function AppLayout({
 
               <Separator className="my-2 bg-sidebar-border" />
 
-              <NavLink href="/settings">
+              <NavLink href="/workstation">
                 <Cpu className="h-4 w-4" />
-                Settings
+                Workstation
               </NavLink>
               <NavLink href="/finances">
                 <DollarSign className="h-4 w-4" />
@@ -165,7 +165,7 @@ export default function AppLayout({
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild><Link href="/profile"><User className="mr-2 h-4 w-4" />Profile</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild><Link href="/settings"><Settings className="mr-2 h-4 w-4" />Account</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild><Link href="/workstation"><Settings className="mr-2 h-4 w-4" />Account</Link></DropdownMenuItem>
                 <DropdownMenuItem>Support</DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild><Link href="/"><LogOut className="mr-2 h-4 w-4" />Logout</Link></DropdownMenuItem>
@@ -234,9 +234,9 @@ export default function AppLayout({
                     Topics
                 </NavLink>
                  <Separator className="my-2 bg-sidebar-border" />
-                <NavLink href="/settings" isMobile>
+                <NavLink href="/workstation" isMobile>
                   <Cpu className="h-5 w-5" />
-                  Settings
+                  Workstation
                 </NavLink>
                 <NavLink href="/finances" isMobile>
                   <DollarSign className="h-5 w-5" />
