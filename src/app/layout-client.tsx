@@ -1,4 +1,3 @@
-
 'use client';
 
 import Link from "next/link";
@@ -29,7 +28,8 @@ import {
   Hash,
   Rss,
   RefreshCw,
-  Calendar
+  Calendar,
+  Map
 } from "lucide-react";
 import { useRouter, usePathname } from 'next/navigation';
 
