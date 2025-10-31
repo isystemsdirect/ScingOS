@@ -7,12 +7,14 @@ const Logo = ({ className }: { className?: string }) => {
     <Link
       href="/dashboard"
       className={cn(
-        "flex items-center gap-2 text-lg font-bold text-foreground",
+        "flex items-center gap-2 text-xl font-bold text-foreground",
         className
       )}
     >
-      <Image src="/logo.png" alt="Scingular Logo" width={32} height={32} />
-      <span className="font-sans uppercase font-bold">SCINGULAR AI</span>
+      <Image src="/logo.png" alt="Scingular Logo" width={40} height={40} />
+      <span className="font-sans uppercase font-bold italic">
+        SCINGULAR <span className="text-primary">AI</span>
+      </span>
     </Link>
   );
 };
