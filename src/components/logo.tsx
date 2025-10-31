@@ -13,7 +13,9 @@ const Logo = ({ className, isLoginPage = false }: { className?: string, isLoginP
           className
         )}
       >
-        <Image src="/logo.png" alt="Scingular Logo" width={192} height={192} className="size-48" />
+        <div className="relative logo-gradient-light p-4">
+            <Image src="/logo.png" alt="Scingular Logo" width={192} height={192} className="size-48 relative" />
+        </div>
         <span className="font-sans uppercase font-bold italic text-3xl">
           SCINGULAR <span className="text-primary">AI</span>
         </span>
@@ -29,7 +31,9 @@ const Logo = ({ className, isLoginPage = false }: { className?: string, isLoginP
         className
       )}
     >
-      <Image src="/logo.png" alt="Scingular Logo" width={32} height={32} className="transition-all size-8 group-data-[collapsed=true]:size-9" />
+      <div className="relative logo-gradient-light">
+          <Image src="/logo.png" alt="Scingular Logo" width={32} height={32} className="transition-all size-8 group-data-[collapsed=true]:size-9" />
+      </div>
       <span className="font-sans uppercase font-bold italic text-xl group-data-[collapsed=true]:hidden">
         SCINGULAR <span className="text-primary">AI</span>
       </span>
