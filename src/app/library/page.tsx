@@ -84,7 +84,7 @@ export default function LibraryPage() {
       <div className="flex flex-col gap-4">
         <div className="flex items-center">
           <div>
-            <h1 className="text-2xl font-bold">Standards Library</h1>
+            <h1 className="text-2xl font-bold">Standards and Code Vault</h1>
             <p className="text-muted-foreground">
               Manage the codes and standards used to train your personal AI model.
             </p>
