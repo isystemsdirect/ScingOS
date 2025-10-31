@@ -17,7 +17,7 @@ const Logo = ({ className, isLoginPage = false }: { className?: string, isLoginP
             <Image src="/logo.png" alt="Scingular Logo" width={192} height={192} className="size-48 relative" />
         </div>
         <span className="font-sans uppercase font-bold italic text-4xl sm:text-5xl whitespace-nowrap">
-          SCINGULAR <span className="text-primary">AI<sup className="text-white text-lg font-light ml-1">TM</sup></span>
+          SCINGULAR <span className="text-primary">AI<sup className="text-white text-base font-light ml-1 align-top">TM</sup></span>
         </span>
       </Link>
     );
