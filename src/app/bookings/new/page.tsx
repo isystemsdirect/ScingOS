@@ -53,7 +53,7 @@ export default function NewBookingPage() {
                 New Booking: Step 1 of 3
               </h1>
             </div>
-            <Card>
+            <Card className="bg-card/60 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle>Select Resource</CardTitle>
                 <CardDescription>
@@ -66,7 +66,7 @@ export default function NewBookingPage() {
                         <button
                             key={resource.id}
                             onClick={() => setSelectedResource(resource.id)}
-                            className={`w-full text-left p-4 rounded-lg border flex items-center gap-4 hover:bg-muted/50 transition-colors ${selectedResource === resource.id ? 'ring-2 ring-primary bg-muted/50' : ''}`}
+                            className={`w-full text-left p-4 rounded-lg border flex items-center gap-4 bg-background/40 hover:bg-muted/50 transition-colors ${selectedResource === resource.id ? 'ring-2 ring-primary bg-muted/50' : 'border-border/50'}`}
                         >
                              <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center">
                                 {getIcon(resource.type)}
