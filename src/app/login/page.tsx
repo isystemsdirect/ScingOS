@@ -12,8 +12,8 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-background/40 p-4">
       <Card className="mx-auto w-full max-w-sm shadow-2xl bg-card/60 backdrop-blur-sm overflow-hidden">
         <CardHeader className="text-center pt-8">
+          <CardTitle className="text-2xl font-bold">Welcome to</CardTitle>
           <Logo isLoginPage={true} />
-          <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
           <CardDescription>
             Enter your email below to login to your account
           </CardDescription>
