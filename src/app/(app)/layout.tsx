@@ -129,9 +129,9 @@ export default function AppLayout({
 
               <Separator className="my-2 bg-sidebar-border" />
 
-              <NavLink href="/workstation">
+              <NavLink href="/settings">
                 <Cpu className="h-4 w-4" />
-                Workstation
+                Settings
               </NavLink>
               <NavLink href="/finances">
                 <DollarSign className="h-4 w-4" />
@@ -234,9 +234,9 @@ export default function AppLayout({
                     Topics
                 </NavLink>
                  <Separator className="my-2 bg-sidebar-border" />
-                <NavLink href="/workstation" isMobile>
+                <NavLink href="/settings" isMobile>
                   <Cpu className="h-5 w-5" />
-                  Workstation
+                  Settings
                 </NavLink>
                 <NavLink href="/finances" isMobile>
                   <DollarSign className="h-5 w-5" />
