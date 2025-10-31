@@ -51,7 +51,7 @@ export function NewsWidget() {
             Industry News
         </h4>
         <Carousel setApi={setApi} className="w-full" orientation="vertical">
-            <CarouselContent className="h-[60px]">
+            <CarouselContent className="h-[100px]">
                 {mockNews.map((item) => (
                     <CarouselItem key={item.id}>
                         <Link href={item.url} target="_blank" rel="noopener noreferrer" className="group/news-item flex items-start gap-3 h-full">
