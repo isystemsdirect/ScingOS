@@ -4,7 +4,8 @@ import { Inter } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import BackgroundSlideshow from '@/components/background-slideshow';
+import AppLayout from "@/app/(app)/layout";
+
 
 const inter = Inter({
   subsets: ["latin"],
@@ -24,10 +25,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn("dark", inter.variable)}>
       <body>
-        <BackgroundSlideshow />
-        <div className="relative z-10 bg-background/0">
+        <AppLayout>
           {children}
-        </div>
+        </AppLayout>
         <Toaster />
       </body>
     </html>
