@@ -177,7 +177,8 @@ export const mockInspectors: Inspector[] = [
 ];
 
 export const mockDevices: Device[] = [
-  { id: 'DEV-001', name: 'DJI Mavic 3 Enterprise', type: 'Key-Drone', status: 'Connected', lastSeen: '2023-10-27 10:00 AM', firmwareVersion: 'v2.1.3' },
+  { id: 'DEV-001', name: 'Skydio X2', type: 'Key-Drone', status: 'Connected', lastSeen: '2023-10-27 10:00 AM', firmwareVersion: 'v2.1.3' },
+  { id: 'DEV-005', name: 'Red Cat Teal 2', type: 'Key-Drone', status: 'Connected', lastSeen: '2023-10-27 10:05 AM', firmwareVersion: 'v1.9.8' },
   { id: 'DEV-002', name: 'FLIR E8-XT', type: 'Key-Thermal', status: 'Connected', lastSeen: '2023-10-27 09:30 AM', firmwareVersion: 'v1.8.0' },
   { id: 'DEV-003', name: 'Ouster OS1', type: 'Key-LiDAR', status: 'Disconnected', lastSeen: '2023-10-25 02:00 PM', firmwareVersion: 'v3.0.1' },
   { id: 'DEV-004', name: 'U-PHORIA UMC202HD', type: 'Key-Audio', status: 'Error', lastSeen: '2023-10-27 11:00 AM', firmwareVersion: 'v1.12' },
