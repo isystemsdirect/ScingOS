@@ -268,7 +268,7 @@ export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: googleMapsApiKey,
-    libraries: ['weather', 'places'],
+    libraries: ['places'],
   });
 
   const [center, setCenter] = useState(initialCenter);
@@ -338,9 +338,12 @@ export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
             <InfoWindowF
                 position={activeInspector.location}
                 onCloseClick={() => setActiveInspector(null)}
+                options={{
+                    pixelOffset: new window.google.maps.Size(0, -30)
+                }}
             >
-                <div className="p-1 bg-background text-foreground">
-                    <h4 className="font-bold">{activeInspector.name}</h4>
+                <div className="p-1 bg-card text-card-foreground rounded-lg shadow-lg">
+                    <h4 className="font-bold text-sm">{activeInspector.name}</h4>
                     <p className="text-xs text-muted-foreground">{activeInspector.location.name}</p>
                 </div>
             </InfoWindowF>
@@ -367,9 +370,12 @@ export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
             <InfoWindowF
                 position={activeClient.location}
                 onCloseClick={() => setActiveClient(null)}
+                 options={{
+                    pixelOffset: new window.google.maps.Size(0, -30)
+                }}
             >
-                 <div className="p-1 bg-background text-foreground">
-                    <h4 className="font-bold">{activeClient.name}</h4>
+                 <div className="p-1 bg-card text-card-foreground rounded-lg shadow-lg">
+                    <h4 className="font-bold text-sm">{activeClient.name}</h4>
                     <p className="text-xs text-muted-foreground">{activeClient.address.street}, {activeClient.address.city}</p>
                 </div>
             </InfoWindowF>
