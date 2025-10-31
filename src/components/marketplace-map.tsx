@@ -3,7 +3,7 @@
 
 import React from 'react'
 import { useRouter } from 'next/navigation';
-import { GoogleMap, useJsApiLoader, MarkerF, WeatherLayer } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, MarkerF } from '@react-google-maps/api';
 import type { Inspector, Client } from '@/lib/types';
 import { Loader2, Briefcase, Building, AlertTriangle } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
@@ -267,7 +267,6 @@ export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: googleMapsApiKey,
-    libraries: ['weather'],
   });
 
   if (loadError) {
@@ -293,7 +292,6 @@ export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
         zoom={10}
         options={mapOptions}
       >
-        <WeatherLayer />
         {inspectors.map(inspector => (
             <MarkerF 
                 key={`inspector-${inspector.id}`} 
