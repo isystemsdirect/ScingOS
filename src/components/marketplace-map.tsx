@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation';
-import { GoogleMap, useJsApiLoader, MarkerF } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, MarkerF, InfoWindowF } from '@react-google-maps/api';
 import type { Inspector, Client } from '@/lib/types';
 import { Loader2, Briefcase, Building, AlertTriangle } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
@@ -268,10 +268,14 @@ export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: googleMapsApiKey,
+    libraries: ['weather', 'places'],
   });
 
   const [center, setCenter] = useState(initialCenter);
   const [zoom, setZoom] = useState(10);
+  const [activeInspector, setActiveInspector] = useState<Inspector | null>(null);
+  const [activeClient, setActiveClient] = useState<Client | null>(null);
+
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -326,8 +330,22 @@ export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
                     anchor: new window.google.maps.Point(12, 12),
                 }}
                 onClick={() => router.push(`/teams/${inspector.id}/availability`)}
+                onMouseOver={() => setActiveInspector(inspector)}
+                onMouseOut={() => setActiveInspector(null)}
             />
         ))}
+        {activeInspector && (
+            <InfoWindowF
+                position={activeInspector.location}
+                onCloseClick={() => setActiveInspector(null)}
+            >
+                <div className="p-1 bg-background text-foreground">
+                    <h4 className="font-bold">{activeInspector.name}</h4>
+                    <p className="text-xs text-muted-foreground">{activeInspector.location.name}</p>
+                </div>
+            </InfoWindowF>
+        )}
+
         {clients.map(client => (
              <MarkerF 
                 key={`client-${client.id}`}
@@ -341,8 +359,21 @@ export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
                     anchor: new window.google.maps.Point(12, 12),
                 }}
                 onClick={() => router.push(`/clients/${client.id}`)}
+                onMouseOver={() => setActiveClient(client)}
+                onMouseOut={() => setActiveClient(null)}
             />
         ))}
+        {activeClient && (
+            <InfoWindowF
+                position={activeClient.location}
+                onCloseClick={() => setActiveClient(null)}
+            >
+                 <div className="p-1 bg-background text-foreground">
+                    <h4 className="font-bold">{activeClient.name}</h4>
+                    <p className="text-xs text-muted-foreground">{activeClient.address.street}, {activeClient.address.city}</p>
+                </div>
+            </InfoWindowF>
+        )}
       </GoogleMap>
   )
 }
