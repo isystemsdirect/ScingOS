@@ -17,13 +17,12 @@ import { Skeleton } from './ui/skeleton';
 import { Alert, AlertTitle, AlertDescription } from './ui/alert';
 
 const weatherIcons: { [key: string]: React.ElementType } = {
-  clear: Sun,
-  clouds: Cloudy,
-  'partly cloudy': Cloudy,
-  rain: CloudRain,
-  'light rain': CloudRain,
-  thunderstorm: CloudLightning,
-  snow: CloudSnow,
+  Clear: Sun,
+  Clouds: Cloudy,
+  Rain: CloudRain,
+  Drizzle: CloudRain,
+  Thunderstorm: CloudLightning,
+  Snow: CloudSnow,
   default: CloudSun,
 };
 
@@ -53,18 +52,16 @@ export function WeatherWidget() {
     }
 
     const fetchWeather = async (lat: number, lng: number) => {
-        const apiKey = process.env.NEXT_PUBLIC_OPENWEATHERMAP_API_KEY;
-        if (!apiKey) {
-            setError("OpenWeatherMap API key is not configured.");
-            setLoading(false);
-            return;
-        }
+        const apiKey = 'cf5f05aff1d3b71885fb90702f9fd4cb';
         const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&units=metric&appid=${apiKey}`;
         
         try {
+            setLoading(true);
+            setError(null);
             const response = await fetch(url);
             if (!response.ok) {
-                throw new Error(`Weather API request failed with status ${response.status}`);
+                const errorData = await response.json();
+                throw new Error(errorData.message || `Weather API request failed with status ${response.status}`);
             }
             const data: WeatherData = await response.json();
             setWeather(data);
@@ -86,7 +83,7 @@ export function WeatherWidget() {
         fetchWeather(position.coords.latitude, position.coords.longitude);
       },
       () => {
-        setError('Location access denied. Displaying default.');
+        setError('Location access denied. Showing default.');
         // Fallback to a default location like Anytown, CA
         fetchWeather(34.0522, -118.2437);
       }
@@ -95,7 +92,7 @@ export function WeatherWidget() {
     
   if (loading) {
     return (
-        <div className="p-2 space-y-2">
+        <div className="p-2 space-y-2 group-data-[collapsed=true]:hidden">
             <Skeleton className="h-8 w-full" />
             <Skeleton className="h-4 w-2/3" />
         </div>
@@ -118,7 +115,7 @@ export function WeatherWidget() {
   }
 
   const WeatherIcon = weather.weather[0]?.main
-    ? weatherIcons[weather.weather[0].main.toLowerCase()] || weatherIcons.default
+    ? weatherIcons[weather.weather[0].main] || weatherIcons.default
     : weatherIcons.default;
 
   return (
