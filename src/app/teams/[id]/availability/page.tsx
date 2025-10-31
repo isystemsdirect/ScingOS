@@ -59,7 +59,7 @@ export default function AvailabilityPage({ params }: { params: { id: string } })
           </Button>
         </div>
       </div>
-      <Card>
+      <Card className="bg-card/60 backdrop-blur-sm">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
@@ -78,9 +78,9 @@ export default function AvailabilityPage({ params }: { params: { id: string } })
         <CardContent>
           <div className="grid grid-cols-8 grid-rows-[auto,1fr] gap-px border-l border-t bg-border">
             {/* Header row */}
-            <div className="bg-card p-2"></div>
+            <div className="bg-card/80 p-2"></div>
             {days.map((day) => (
-              <div key={day} className="bg-card p-2 text-center font-semibold">
+              <div key={day} className="bg-card/80 p-2 text-center font-semibold">
                 {day}
               </div>
             ))}
@@ -88,7 +88,7 @@ export default function AvailabilityPage({ params }: { params: { id: string } })
             {/* Time slots */}
             {times.map((time) => (
               <React.Fragment key={time}>
-                <div className="row-span-1 bg-card p-2 text-right text-xs text-muted-foreground">
+                <div className="row-span-1 bg-card/80 p-2 text-right text-xs text-muted-foreground">
                   <div className="flex items-center justify-end gap-1">
                     <Clock className="h-3 w-3" />
                     {time}
@@ -98,7 +98,7 @@ export default function AvailabilityPage({ params }: { params: { id: string } })
                     const isBooked = Math.random() > 0.8 && dayIndex < 5;
                     const isAvailable = Math.random() > 0.3 && dayIndex < 5;
                     return (
-                        <div key={`${day}-${time}`} className="row-span-1 bg-card p-1 text-xs relative min-h-[50px]">
+                        <div key={`${day}-${time}`} className="row-span-1 bg-card/80 p-1 text-xs relative min-h-[50px]">
                            {isBooked ? (
                                 <div className="bg-destructive/20 border border-destructive text-destructive-foreground rounded-md p-1 h-full flex flex-col justify-center">
                                     <p className="font-bold">Booked</p>

@@ -46,7 +46,7 @@ export default function NewInspectionPage() {
                 New Inspection: Step 1 of 3
               </h1>
             </div>
-            <Card>
+            <Card className="bg-card/60 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle>Select Inspection Template</CardTitle>
                 <CardDescription>

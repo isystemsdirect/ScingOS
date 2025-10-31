@@ -102,7 +102,7 @@ export default function InspectionDetailPage({ params }: { params: { id: string 
           <TabsContent value="overview">
             <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
               <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
-                <Card>
+                <Card className="bg-card/60 backdrop-blur-sm">
                   <CardHeader>
                     <CardTitle>Inspection Details</CardTitle>
                   </CardHeader>
@@ -133,7 +133,7 @@ export default function InspectionDetailPage({ params }: { params: { id: string 
                     </div>
                   </CardContent>
                 </Card>
-                <Card>
+                <Card className="bg-card/60 backdrop-blur-sm">
                   <CardHeader className="flex flex-row items-center gap-4">
                     <Bot className="h-6 w-6 text-primary" />
                     <CardTitle>AI Executive Summary</CardTitle>
@@ -144,7 +144,7 @@ export default function InspectionDetailPage({ params }: { params: { id: string 
                 </Card>
               </div>
               <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
-                <Card>
+                <Card className="bg-card/60 backdrop-blur-sm">
                   <CardHeader>
                     <CardTitle>Inspector</CardTitle>
                   </CardHeader>
@@ -161,7 +161,7 @@ export default function InspectionDetailPage({ params }: { params: { id: string 
             </div>
           </TabsContent>
           <TabsContent value="findings">
-            <Card>
+            <Card className="bg-card/60 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle>Inspection Findings</CardTitle>
                 <CardDescription>
@@ -205,14 +205,14 @@ export default function InspectionDetailPage({ params }: { params: { id: string 
             </Card>
           </TabsContent>
           <TabsContent value="attachments">
-              <Card>
+              <Card className="bg-card/60 backdrop-blur-sm">
                 <CardHeader>
                   <CardTitle>Attachments</CardTitle>
                   <CardDescription>All media and documents related to this inspection.</CardDescription>
                 </CardHeader>
                 <CardContent className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                   {PlaceHolderImages.filter(p => p.id.startsWith('inspection-')).map(img => (
-                    <Card key={img.id}>
+                    <Card key={img.id} className="bg-card/60 backdrop-blur-sm">
                       <CardContent className="p-0">
                         <Image src={img.imageUrl} alt={img.description} width={600} height={400} className="rounded-t-lg aspect-video object-cover" data-ai-hint={img.imageHint} />
                       </CardContent>
@@ -227,7 +227,7 @@ export default function InspectionDetailPage({ params }: { params: { id: string 
           </TabsContent>
           <TabsContent value="report">
              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <Card className="lg:col-span-2">
+                <Card className="lg:col-span-2 bg-card/60 backdrop-blur-sm">
                   <CardHeader>
                     <CardTitle>Generate & Export Report</CardTitle>
                     <CardDescription>Finalize and share the inspection report.</CardDescription>
@@ -247,7 +247,7 @@ export default function InspectionDetailPage({ params }: { params: { id: string 
                     </div>
                   </CardContent>
                 </Card>
-                 <Card>
+                 <Card className="bg-card/60 backdrop-blur-sm">
                   <CardHeader>
                     <CardTitle>Audio Presentation</CardTitle>
                     <CardDescription>AI-generated audio summary of the report.</CardDescription>

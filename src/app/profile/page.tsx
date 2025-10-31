@@ -41,7 +41,7 @@ export default function ProfilePage() {
             )}
             <Button variant="outline"><Edit className="mr-2 h-4 w-4" /> Change Photo</Button>
           </div>
-          <Card>
+          <Card className="bg-card/60 backdrop-blur-sm">
             <CardHeader>
               <div className="flex items-center">
                 <div className="flex-1">

@@ -120,10 +120,10 @@ export default function LibraryPage() {
           <Input
             type="search"
             placeholder="Search library by title, jurisdiction, or tag..."
-            className="w-full rounded-full bg-card pl-9"
+            className="w-full rounded-full bg-card/60 backdrop-blur-sm pl-9"
           />
         </div>
-        <Card>
+        <Card className="bg-card/60 backdrop-blur-sm">
           <CardHeader>
             <CardTitle>My Saved Documents</CardTitle>
             <CardDescription>

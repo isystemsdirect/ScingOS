@@ -104,7 +104,7 @@ export default function TeamsPage() {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="roster">
-            <Card>
+            <Card className="bg-card/60 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle>Team Roster</CardTitle>
                 <CardDescription>
@@ -216,7 +216,7 @@ export default function TeamsPage() {
           </TabsContent>
           <TabsContent value="settings">
             <div className="grid gap-6">
-              <Card>
+              <Card className="bg-card/60 backdrop-blur-sm">
                 <CardHeader>
                   <CardTitle>Team Settings</CardTitle>
                   <CardDescription>
@@ -240,7 +240,7 @@ export default function TeamsPage() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="bg-card/60 backdrop-blur-sm">
                 <CardHeader>
                   <CardTitle>Invite New Members</CardTitle>
                 </CardHeader>

@@ -74,7 +74,7 @@ export default function TopicsPage() {
                 <Input
                     type="search"
                     placeholder="Search for topics..."
-                    className="w-full rounded-full bg-card pl-9"
+                    className="w-full rounded-full bg-card/60 backdrop-blur-sm pl-9"
                 />
             </div>
             <DropdownMenu>
@@ -98,7 +98,7 @@ export default function TopicsPage() {
         
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {mockTopics.map(topic => (
-            <Card key={topic.id} className="flex flex-col">
+            <Card key={topic.id} className="flex flex-col bg-card/60 backdrop-blur-sm">
               <CardHeader>
                   <div className='flex items-center gap-2'>
                     <Hash className="h-5 w-5 text-primary" />

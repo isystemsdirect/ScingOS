@@ -35,7 +35,7 @@ export default function FinancesPage() {
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 md:gap-8">
-          <Card>
+          <Card className="bg-card/60 backdrop-blur-sm">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
               <DollarSign className="h-4 w-4 text-muted-foreground" />
@@ -47,7 +47,7 @@ export default function FinancesPage() {
               </p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="bg-card/60 backdrop-blur-sm">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
                 Completed Inspections
@@ -64,7 +64,7 @@ export default function FinancesPage() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-8">
-          <Card>
+          <Card className="bg-card/60 backdrop-blur-sm">
               <CardHeader>
                   <CardTitle>Payment Methods</CardTitle>
                   <CardDescription>Manage your saved payment methods for invoicing.</CardDescription>
@@ -123,7 +123,7 @@ export default function FinancesPage() {
                   <Button><PlusCircle className="mr-2 h-4 w-4" /> Add Payment Method</Button>
               </CardFooter>
           </Card>
-          <Card>
+          <Card className="bg-card/60 backdrop-blur-sm">
               <CardHeader>
               <CardTitle>Transaction History</CardTitle>
               <CardDescription>View and download your past invoices.</CardDescription>
@@ -157,7 +157,7 @@ export default function FinancesPage() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="bg-card/60 backdrop-blur-sm">
           <CardHeader>
               <CardTitle>Subscription Plan</CardTitle>
               <CardDescription>You are currently on the Pro plan.</CardDescription>
@@ -165,7 +165,7 @@ export default function FinancesPage() {
           <CardContent>
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
                   {mockSubscriptionPlans.map((plan) => (
-                  <Card key={plan.name} className={cn("flex flex-col", plan.isCurrent && "border-primary ring-2 ring-primary")}>
+                  <Card key={plan.name} className={cn("flex flex-col bg-card/60 backdrop-blur-sm", plan.isCurrent && "border-primary ring-2 ring-primary")}>
                       <CardHeader>
                       <CardTitle>{plan.name}</CardTitle>
                       <CardDescription>

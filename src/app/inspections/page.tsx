@@ -104,7 +104,7 @@ export default function InspectionsPage() {
           </div>
         </div>
         <TabsContent value="all">
-          <Card>
+          <Card className="bg-card/60 backdrop-blur-sm">
             <CardHeader>
               <CardTitle>Inspections</CardTitle>
               <CardDescription>
@@ -174,7 +174,7 @@ export default function InspectionsPage() {
                   ))}
                 </TableBody>
               </Table>
-            </CardFooter>
+            </CardContent>
             <CardFooter>
               <div className="text-xs text-muted-foreground">
                 Showing <strong>1-10</strong> of <strong>32</strong>{" "}

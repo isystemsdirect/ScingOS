@@ -58,7 +58,7 @@ function NewInspectionReviewContent() {
         <main className="grid flex-1 items-start gap-4 md:gap-8">
           <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
             <div className="flex items-center gap-4">
-              <Link href={{pathname: `/inspections/new/${inspectionTypeParam}`, query: { clientId: clientId ?? undefined }}}>
+              <Link href={{pathname: `/inspections/new/${inspectionTypeParam}`, query: {clientId: clientId ?? undefined}}}>
                 <Button variant="outline" size="icon" className="h-7 w-7">
                   <ChevronLeft className="h-4 w-4" />
                   <span className="sr-only">Back</span>
@@ -68,7 +68,7 @@ function NewInspectionReviewContent() {
                 New Inspection: Step 3 of 3
               </h1>
             </div>
-            <Card>
+            <Card className="bg-card/60 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle>Review & Confirm</CardTitle>
                 <CardDescription>

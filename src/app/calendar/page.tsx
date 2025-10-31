@@ -27,7 +27,7 @@ export default function CalendarPage() {
   const [gridState, setGridState] = useState<CellState[][] | null>(null);
 
   useEffect(() => {
-    // Generate the random state only on the client, after the initial render.
+    // This effect runs only on the client, after initial hydration
     const newGridState: CellState[][] = times.map(() =>
       days.map((_, dayIndex) => {
         const isWorkday = dayIndex < 5;
@@ -40,7 +40,7 @@ export default function CalendarPage() {
       })
     );
     setGridState(newGridState);
-  }, []); // Empty dependency array ensures this runs only once on mount
+  }, []); // Empty dependency array ensures this runs once on mount
 
 
   return (
@@ -51,7 +51,7 @@ export default function CalendarPage() {
             Manage your schedule, availability, and bookings.
           </p>
         </div>
-      <Card>
+      <Card className="bg-card/60 backdrop-blur-sm">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
@@ -75,9 +75,9 @@ export default function CalendarPage() {
         <CardContent>
           <div className="grid grid-cols-8 grid-rows-[auto,1fr] gap-px border-l border-t bg-border">
             {/* Header row */}
-            <div className="bg-card p-2"></div>
+            <div className="bg-card/80 p-2"></div>
             {days.map((day) => (
-              <div key={day} className="bg-card p-2 text-center font-semibold">
+              <div key={day} className="bg-card/80 p-2 text-center font-semibold">
                 {day}
               </div>
             ))}
@@ -85,7 +85,7 @@ export default function CalendarPage() {
             {/* Time slots */}
             {times.map((time, timeIndex) => (
               <React.Fragment key={time}>
-                <div className="row-span-1 bg-card p-2 text-right text-xs text-muted-foreground">
+                <div className="row-span-1 bg-card/80 p-2 text-right text-xs text-muted-foreground">
                   <div className="flex items-center justify-end gap-1">
                     <Clock className="h-3 w-3" />
                     {time}
@@ -95,7 +95,7 @@ export default function CalendarPage() {
                     const cellState = gridState ? gridState[timeIndex][dayIndex] : 'empty';
 
                     return (
-                        <div key={`${day}-${time}`} className="row-span-1 bg-card p-1 text-xs relative min-h-[50px]">
+                        <div key={`${day}-${time}`} className="row-span-1 bg-card/80 p-1 text-xs relative min-h-[50px]">
                            {cellState === 'booked' ? (
                                 <div className="bg-destructive/20 border border-destructive text-destructive-foreground rounded-md p-1 h-full flex flex-col justify-center">
                                     <p className="font-bold">Booked</p>

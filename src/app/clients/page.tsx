@@ -57,7 +57,7 @@ export default function ClientsPage() {
             </Button>
           </div>
         </div>
-        <Card>
+        <Card className="bg-card/60 backdrop-blur-sm">
           <CardHeader>
             <CardTitle>Client Database</CardTitle>
             <CardDescription>

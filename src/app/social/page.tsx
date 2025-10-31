@@ -148,7 +148,7 @@ export default function SocialTimelinePage() {
 
         <div className="grid grid-cols-1 md:grid-cols-[1fr_320px] gap-8 items-start">
             <div className="space-y-6">
-                 <Card>
+                 <Card className="bg-card/60 backdrop-blur-sm">
                     <CardHeader className="flex-row items-center gap-4">
                         {avatar && <Image src={avatar.imageUrl} alt={user.name} width={40} height={40} className="rounded-full" data-ai-hint={user.imageHint} />}
                         <div className="flex-1">
@@ -195,7 +195,7 @@ export default function SocialTimelinePage() {
                     const postAvatar = post.isAiResponse ? { imageUrl: '/logo.png' } : PlaceHolderImages.find(p => p.id === author?.imageHint);
                     
                     return (
-                    <Card key={post.id} className="transition-shadow hover:shadow-lg">
+                    <Card key={post.id} className="transition-shadow hover:shadow-lg bg-card/60 backdrop-blur-sm">
                         <CardHeader>
                             <div className="flex items-start gap-4">
                                 {postAvatar && (
@@ -249,7 +249,7 @@ export default function SocialTimelinePage() {
             </div>
 
              <div className="sticky top-20 space-y-6">
-                 <Card>
+                 <Card className="bg-card/60 backdrop-blur-sm">
                     <CardContent className="p-4 flex items-center gap-4">
                         {avatar && <Image src={avatar.imageUrl} alt={user.name} width={56} height={56} className="rounded-full border-2 border-primary" data-ai-hint={user.imageHint} />}
                         <div>
@@ -259,7 +259,7 @@ export default function SocialTimelinePage() {
                         </div>
                     </CardContent>
                 </Card>
-                <Card>
+                <Card className="bg-card/60 backdrop-blur-sm">
                     <CardHeader>
                         <CardTitle>Industry News</CardTitle>
                     </CardHeader>
@@ -282,7 +282,7 @@ export default function SocialTimelinePage() {
                         </ul>
                     </CardContent>
                 </Card>
-                 <Card>
+                 <Card className="bg-card/60 backdrop-blur-sm">
                     <CardHeader>
                         <CardTitle>Top Contributors</CardTitle>
                     </CardHeader>

@@ -48,7 +48,7 @@ export default function MarketplacePage() {
           </div>
         </div>
 
-        <Card>
+        <Card className="bg-card/60 backdrop-blur-sm">
           <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
@@ -91,7 +91,7 @@ export default function MarketplacePage() {
                 <TabsTrigger value="integrations"><KeyRound className="mr-2 h-4 w-4" /> Integrations & Keys</TabsTrigger>
             </TabsList>
             <TabsContent value="inspectors" className="mt-6">
-                <Card>
+                <Card className="bg-card/60 backdrop-blur-sm">
                     <CardHeader>
                         <div className="flex items-center justify-between">
                             <div>
@@ -129,7 +129,7 @@ export default function MarketplacePage() {
                         {mockInspectors.map((inspector) => {
                             const avatar = PlaceHolderImages.find(p => p.id === inspector.imageHint);
                             return (
-                            <Card key={inspector.id} className="overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1">
+                            <Card key={inspector.id} className="overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1 bg-card/60 backdrop-blur-sm">
                                 <CardHeader className="flex flex-row items-start gap-4 p-4 bg-muted/20">
                                 {avatar && (
                                     <Image
@@ -177,14 +177,14 @@ export default function MarketplacePage() {
                 </Card>
             </TabsContent>
             <TabsContent value="services" className="mt-6">
-                <Card>
+                <Card className="bg-card/60 backdrop-blur-sm">
                     <CardHeader>
                         <CardTitle>Professional Services</CardTitle>
                         <CardDescription>Purchase specialized reports, consultations, and analytical services from certified providers.</CardDescription>
                     </CardHeader>
                     <CardContent className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                         {mockMarketplaceServices.map((service) => (
-                            <Card key={service.id} className="flex flex-col">
+                            <Card key={service.id} className="flex flex-col bg-card/60 backdrop-blur-sm">
                                 <CardHeader>
                                     <div className="flex items-center gap-3">
                                         <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center">
@@ -206,14 +206,14 @@ export default function MarketplacePage() {
                 </Card>
             </TabsContent>
              <TabsContent value="integrations" className="mt-6">
-                <Card>
+                <Card className="bg-card/60 backdrop-blur-sm">
                     <CardHeader>
                         <CardTitle>Partner Integrations & Keys</CardTitle>
                         <CardDescription>Expand your capabilities by purchasing new Keys from our technology partners.</CardDescription>
                     </CardHeader>
                     <CardContent className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                         {mockMarketplaceIntegrations.map((item) => (
-                             <Card key={item.id} className="flex flex-col">
+                             <Card key={item.id} className="flex flex-col bg-card/60 backdrop-blur-sm">
                                 <CardHeader>
                                     <div className="flex items-center gap-3">
                                         <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center">

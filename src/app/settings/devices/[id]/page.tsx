@@ -143,7 +143,7 @@ export default function DeviceDashboardPage() {
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           <div className="grid auto-rows-max items-start gap-8 lg:col-span-2">
-              <Card>
+              <Card className="bg-card/60 backdrop-blur-sm">
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <div>
@@ -169,7 +169,7 @@ export default function DeviceDashboardPage() {
                     </CardContent>
                   )}
               </Card>
-              <Card>
+              <Card className="bg-card/60 backdrop-blur-sm">
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <div>
@@ -210,7 +210,7 @@ export default function DeviceDashboardPage() {
           </div>
           
           <div className="space-y-8">
-              <Card>
+              <Card className="bg-card/60 backdrop-blur-sm">
                   <CardHeader>
                       <CardTitle>Device Controls</CardTitle>
                   </CardHeader>
@@ -221,7 +221,7 @@ export default function DeviceDashboardPage() {
                       <Button variant="destructive"><Power className="mr-2"/>Reboot</Button>
                   </CardContent>
               </Card>
-              <Card>
+              <Card className="bg-card/60 backdrop-blur-sm">
                   <CardHeader>
                       <CardTitle>Device Readings</CardTitle>
                   </CardHeader>
@@ -258,7 +258,7 @@ export default function DeviceDashboardPage() {
                       </div>
                   </CardContent>
               </Card>
-              <Card>
+              <Card className="bg-card/60 backdrop-blur-sm">
                   <CardHeader>
                       <CardTitle>Device Info</CardTitle>
                   </CardHeader>

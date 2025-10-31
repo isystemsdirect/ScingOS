@@ -47,12 +47,12 @@ export default function ClientProfilePage({ params }: { params: { id: string } }
 
         <div className="grid gap-8 md:grid-cols-[200px_1fr]">
           <div className="flex flex-col items-center gap-4">
-            <div className="w-40 h-40 rounded-full bg-muted flex items-center justify-center">
+            <div className="w-40 h-40 rounded-full bg-muted/40 backdrop-blur-sm flex items-center justify-center">
                 <Building className="w-20 h-20 text-muted-foreground" />
             </div>
             <Button variant="outline"><Edit className="mr-2 h-4 w-4" /> Edit Client</Button>
           </div>
-          <Card>
+          <Card className="bg-card/60 backdrop-blur-sm">
             <CardHeader>
               <CardTitle className="text-4xl">{client.name}</CardTitle>
               <CardDescription>
@@ -87,7 +87,7 @@ export default function ClientProfilePage({ params }: { params: { id: string } }
                           <Link href={{pathname: "/inspections/new", query: { clientId: client.id }}}><PlusCircle className="mr-2 h-4 w-4" />Start New Inspection</Link>
                       </Button>
                   </div>
-                  <Card>
+                  <Card className="bg-card/60 backdrop-blur-sm">
                       <CardContent className="p-0">
                       <Table>
                           <TableHeader>

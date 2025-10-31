@@ -1,3 +1,4 @@
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,8 +14,8 @@ import Logo from "@/components/logo";
 
 export default function ForgotPasswordPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background p-4">
-      <Card className="mx-auto w-full max-w-sm shadow-2xl">
+    <div className="flex min-h-screen items-center justify-center bg-background/40 p-4">
+      <Card className="mx-auto w-full max-w-sm shadow-2xl bg-card/60 backdrop-blur-sm">
         <CardHeader className="text-center">
           <div className="mb-4 flex justify-center">
             <Logo />

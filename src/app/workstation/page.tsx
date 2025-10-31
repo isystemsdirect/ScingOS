@@ -54,7 +54,7 @@ export default function WorkstationPage() {
 
       <Tabs defaultValue="profile" className="relative">
         <div className="sticky top-0 z-20 pt-4 -mx-6 px-6 pb-2">
-            <TabsList className="grid h-auto w-full grid-cols-1 md:grid-cols-5 lg:grid-cols-10 border p-1 bg-background/95 backdrop-blur-sm">
+            <TabsList className="grid h-auto w-full grid-cols-1 md:grid-cols-5 lg:grid-cols-10 border p-1 bg-background/60 backdrop-blur-sm">
                 <TabsTrigger value="profile" className="py-2"><User className="mr-2 h-4 w-4"/>Profile</TabsTrigger>
                 <TabsTrigger value="credentials" className="py-2"><KeyRound className="mr-2 h-4 w-4"/>Credentials</TabsTrigger>
                 <TabsTrigger value="templates" className="py-2"><FileText className="mr-2 h-4 w-4"/>Templates</TabsTrigger>
@@ -71,7 +71,7 @@ export default function WorkstationPage() {
             "[mask-image:linear-gradient(to_bottom,transparent_0,black_2rem,black_100%)]"
         )}>
             <TabsContent value="profile">
-            <Card>
+            <Card className="bg-card/60 backdrop-blur-sm">
                 <CardHeader>
                 <CardTitle>Inspector Profile</CardTitle>
                 <CardDescription>
@@ -135,7 +135,7 @@ export default function WorkstationPage() {
             </Card>
             </TabsContent>
             <TabsContent value="credentials">
-                <Card>
+                <Card className="bg-card/60 backdrop-blur-sm">
                     <CardHeader>
                         <CardTitle>Credentials & Licenses</CardTitle>
                         <CardDescription>
@@ -183,7 +183,7 @@ export default function WorkstationPage() {
                 </Card>
             </TabsContent>
             <TabsContent value="templates">
-                <Card>
+                <Card className="bg-card/60 backdrop-blur-sm">
                     <CardHeader>
                         <CardTitle>Template Builder</CardTitle>
                         <CardDescription>
@@ -220,7 +220,7 @@ export default function WorkstationPage() {
                 </Card>
             </TabsContent>
             <TabsContent value="integrations">
-                <Card>
+                <Card className="bg-card/60 backdrop-blur-sm">
                     <CardHeader>
                         <CardTitle>App Integrations</CardTitle>
                         <CardDescription>Connect your external accounts to sync data with Scingular.</CardDescription>
@@ -274,7 +274,7 @@ export default function WorkstationPage() {
                 </Card>
             </TabsContent>
             <TabsContent value="security">
-                <Card>
+                <Card className="bg-card/60 backdrop-blur-sm">
                     <CardHeader>
                         <CardTitle>Login & Security</CardTitle>
                         <CardDescription>
@@ -304,7 +304,7 @@ export default function WorkstationPage() {
                 </Card>
             </TabsContent>
             <TabsContent value="ai">
-                <Card>
+                <Card className="bg-card/60 backdrop-blur-sm">
                     <CardHeader>
                     <CardTitle>Voice & AI Settings</CardTitle>
                     <CardDescription>
@@ -407,7 +407,7 @@ export default function WorkstationPage() {
                 </Card>
             </TabsContent>
             <TabsContent value="camera">
-                <Card>
+                <Card className="bg-card/60 backdrop-blur-sm">
                     <CardHeader>
                     <CardTitle>Camera & Vision Settings</CardTitle>
                     <CardDescription>
@@ -476,7 +476,7 @@ export default function WorkstationPage() {
             </TabsContent>
             <TabsContent value="marketplace">
             <div className="grid gap-6">
-                <Card>
+                <Card className="bg-card/60 backdrop-blur-sm">
                     <CardHeader>
                         <CardTitle>Live Status & Updates</CardTitle>
                         <CardDescription>Control your real-time visibility and job alert preferences.</CardDescription>
@@ -516,7 +516,7 @@ export default function WorkstationPage() {
                         </div>
                     </CardContent>
                 </Card>
-                 <Card>
+                 <Card className="bg-card/60 backdrop-blur-sm">
                     <CardHeader>
                         <CardTitle>Service Area & Zones</CardTitle>
                         <CardDescription>Define your geographical work zones to get relevant job requests.</CardDescription>
@@ -547,7 +547,7 @@ export default function WorkstationPage() {
                         </div>
                     </CardContent>
                 </Card>
-                <Card>
+                <Card className="bg-card/60 backdrop-blur-sm">
                     <CardHeader>
                         <CardTitle>Service Offerings</CardTitle>
                         <CardDescription>
@@ -584,7 +584,7 @@ export default function WorkstationPage() {
             </div>
             </TabsContent>
             <TabsContent value="devices">
-                <Card>
+                <Card className="bg-card/60 backdrop-blur-sm">
                     <CardHeader>
                         <div className="flex items-center gap-3">
                             <Cpu className="h-6 w-6 text-primary" />
@@ -596,7 +596,7 @@ export default function WorkstationPage() {
                     </CardHeader>
                     <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {mockDevices.map(device => (
-                            <Card key={device.id} className="flex flex-col">
+                            <Card key={device.id} className="flex flex-col bg-card/60 backdrop-blur-sm">
                                 <CardHeader className="flex flex-row items-center gap-4 pb-4">
                                     <div className="flex items-center justify-center h-12 w-12 rounded-lg bg-muted text-primary">
                                         <Cpu className="h-6 w-6" />
@@ -633,7 +633,7 @@ export default function WorkstationPage() {
                 </Card>
             </TabsContent>
             <TabsContent value="keys">
-                <Card>
+                <Card className="bg-card/60 backdrop-blur-sm">
                     <CardHeader>
                         <div className="flex items-center gap-3">
                             <KeyRound className="h-6 w-6 text-primary" />
@@ -692,7 +692,7 @@ export default function WorkstationPage() {
             </TabsContent>
             <TabsContent value="data">
                 <div className="grid gap-6">
-                    <Card>
+                    <Card className="bg-card/60 backdrop-blur-sm">
                         <CardHeader>
                         <CardTitle>General Settings</CardTitle>
                         <CardDescription>
@@ -703,7 +703,7 @@ export default function WorkstationPage() {
                             <WorkstationTimeFormatSwitch />
                         </CardContent>
                     </Card>
-                    <Card>
+                    <Card className="bg-card/60 backdrop-blur-sm">
                         <CardHeader>
                         <CardTitle>Notifications</CardTitle>
                         <CardDescription>
@@ -734,7 +734,7 @@ export default function WorkstationPage() {
                         <Button>Save Preferences</Button>
                         </CardFooter>
                     </Card>
-                    <Card>
+                    <Card className="bg-card/60 backdrop-blur-sm">
                         <CardHeader>
                         <CardTitle>Scing Search History</CardTitle>
                         <CardDescription>

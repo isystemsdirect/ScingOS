@@ -113,7 +113,7 @@ export default function Dashboard() {
           </Card>
         </div>
         <div className="grid gap-4 md:gap-8 lg:grid-cols-2">
-          <Card>
+          <Card className="bg-card/60 backdrop-blur-sm">
             <CardHeader className="flex flex-row items-center">
               <div className="grid gap-2">
                 <CardTitle>Recent Inspections</CardTitle>
@@ -172,7 +172,7 @@ export default function Dashboard() {
               </Table>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="bg-card/60 backdrop-blur-sm">
             <CardHeader>
               <CardTitle className="flex items-center gap-2"><Map className="h-5 w-5" /> Live Operations Map</CardTitle>
               <CardDescription>
