@@ -19,7 +19,7 @@ export default function SignupPage() {
       <Card className="mx-auto w-full max-w-sm shadow-2xl bg-card/60 backdrop-blur-sm">
         <CardHeader className="text-center">
           <div className="mb-4 flex justify-center">
-            <Logo />
+            <Logo isLoginPage={true} />
           </div>
           <CardTitle className="text-2xl font-bold">Create an Account</CardTitle>
           <CardDescription>

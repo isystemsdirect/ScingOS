@@ -3,7 +3,24 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
 
-const Logo = ({ className }: { className?: string }) => {
+const Logo = ({ className, isLoginPage = false }: { className?: string, isLoginPage?: boolean }) => {
+  if (isLoginPage) {
+    return (
+      <Link
+        href="/dashboard"
+        className={cn(
+          "flex flex-col items-center justify-center gap-4 font-bold text-foreground",
+          className
+        )}
+      >
+        <Image src="/logo.png" alt="Scingular Logo" width={192} height={192} className="size-48" />
+        <span className="font-sans uppercase font-bold italic text-3xl">
+          SCINGULAR <span className="text-primary">AI</span>
+        </span>
+      </Link>
+    );
+  }
+
   return (
     <Link
       href="/dashboard"
@@ -21,5 +38,3 @@ const Logo = ({ className }: { className?: string }) => {
 };
 
 export default Logo;
-
-    
