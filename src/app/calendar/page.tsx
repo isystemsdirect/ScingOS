@@ -97,9 +97,9 @@ export default function CalendarPage() {
                     return (
                         <div key={`${day}-${time}`} className="row-span-1 bg-card/80 p-1 text-xs relative min-h-[50px]">
                            {cellState === 'booked' ? (
-                                <div className="bg-destructive/20 border border-destructive text-destructive-foreground rounded-md p-1 h-full flex flex-col justify-center">
+                                <div className="bg-primary border border-primary/80 text-primary-foreground rounded-md p-1 h-full flex flex-col justify-center">
                                     <p className="font-bold">Booked</p>
-                                    <p className="text-xs">INS-002</p>
+                                    <p className="text-xs opacity-80">INS-002</p>
                                 </div>
                            ) : cellState === 'available' ? (
                                 <div className="bg-primary/20 border border-primary/50 text-primary-foreground rounded-md p-1 h-full flex items-center justify-center opacity-50 hover:opacity-100 transition-opacity cursor-pointer">
