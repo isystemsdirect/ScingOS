@@ -21,6 +21,7 @@ const initialCenter = {
 const mapOptions = {
     disableDefaultUI: true,
     zoomControl: true,
+    scrollwheel: true,
     styles: [
         {
           "elementType": "geometry",
