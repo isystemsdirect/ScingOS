@@ -68,10 +68,10 @@
     }
   ],
   "background_photos": [
-    "/background_photos/bg-city-1.jpg",
-    "/background_photos/bg-monument-1.jpg",
-    "/background_photos/bg-nature-1.jpg",
-    "/background_photos/bg-nature-2.jpg",
-    "/background_photos/bg-nature-3.jpg"
+    "https://images.unsplash.com/photo-1541746972996-4e0b0f43e02a?q=80&w=2070&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1554240362-95f36b858f1f?q=80&w=2070&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=1974&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1680132532588-69fb64079c6d?q=80&w=1932&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1511377138545-215220662cdb?q=80&w=2070&auto=format&fit=crop"
   ]
 }

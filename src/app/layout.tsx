@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import AppLayout from "@/app/layout-client";
+import BackgroundSlideshow from "@/components/background-slideshow";
 
 
 const inter = Inter({
@@ -25,6 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn("dark", inter.variable)}>
       <body>
+        <BackgroundSlideshow />
         <AppLayout>
           {children}
         </AppLayout>
