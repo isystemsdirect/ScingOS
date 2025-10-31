@@ -240,6 +240,43 @@
         }
       },
       "required": ["name", "email"]
+    },
+    "resource": {
+        "title": "Resource",
+        "description": "A bookable resource, such as an inspector or a piece of equipment.",
+        "type": "object",
+        "properties": {
+            "name": { "type": "string" },
+            "type": { "type": "string", "enum": ["inspector", "equipment", "room"] },
+            "availability": { "type": "object" }
+        }
+    },
+    "questionnaire": {
+        "title": "Questionnaire",
+        "description": "A set of questions for a booking, either standardized or custom.",
+        "type": "object",
+        "properties": {
+            "name": { "type": "string" },
+            "industry": { "type": "string" },
+            "questions": {
+                "type": "array",
+                "items": { "type": "object" }
+            }
+        }
+    },
+    "booking": {
+        "title": "Booking",
+        "description": "A reservation for a resource.",
+        "type": "object",
+        "properties": {
+            "userId": { "type": "string" },
+            "resourceId": { "type": "string" },
+            "questionnaireId": { "type": "string" },
+            "startTime": { "type": "string", "format": "date-time" },
+            "endTime": { "type": "string", "format": "date-time" },
+            "answers": { "type": "object" },
+            "status": { "type": "string", "enum": ["pending", "confirmed", "cancelled"] }
+        }
     }
   },
   "auth": {
@@ -273,6 +310,18 @@
     "/clients/{clientId}": {
         "schema": { "$ref": "#/entities/client"},
         "description": "Inspection clients"
+    },
+    "/resources/{resourceId}": {
+        "schema": { "$ref": "#/entities/resource"},
+        "description": "Bookable resources"
+    },
+    "/questionnaires/{questionnaireId}": {
+        "schema": { "$ref": "#/entities/questionnaire"},
+        "description": "Booking questionnaires"
+    },
+    "/bookings/{bookingId}": {
+        "schema": { "$ref": "#/entities/booking"},
+        "description": "User bookings and reservations"
     }
   }
 }
