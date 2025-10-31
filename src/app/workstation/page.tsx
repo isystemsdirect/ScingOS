@@ -1,7 +1,6 @@
 
 import Link from "next/link"
 import { CircleUser, Cpu, Palette, PlusCircle, Trash2, Globe, Linkedin, Facebook, History, Mic, Camera, Sparkles, Database, KeyRound, User, Settings, Store, Bell, SlidersHorizontal, Bot, Wifi, Bluetooth, MapPin, Search, Link2, Calendar, FileText } from "lucide-react"
-import { SiGooglecalendar, SiMicrosoftoutlook, SiApple } from "@icons-pack/react-simple-icons";
 
 
 import { Button } from "@/components/ui/button"
@@ -231,7 +230,7 @@ export default function WorkstationPage() {
                             <p className="text-sm text-muted-foreground">Sync your inspection schedule with your preferred calendar.</p>
                             <div className="grid gap-4 mt-4">
                                 <div className="border rounded-lg p-4 flex items-center">
-                                    <SiGooglecalendar className="h-6 w-6 mr-4 text-[#4285F4]" />
+                                    <Calendar className="h-6 w-6 mr-4 text-[#4285F4]" />
                                     <div className="flex-1">
                                         <p className="font-medium">Google Calendar</p>
                                         <p className="text-sm text-muted-foreground">Connected as john.doe@gmail.com</p>
@@ -239,7 +238,7 @@ export default function WorkstationPage() {
                                     <Button variant="destructive" size="sm">Disconnect</Button>
                                 </div>
                                  <div className="border rounded-lg p-4 flex items-center">
-                                    <SiMicrosoftoutlook className="h-6 w-6 mr-4 text-[#0078D4]" />
+                                    <Calendar className="h-6 w-6 mr-4 text-[#0078D4]" />
                                     <div className="flex-1">
                                         <p className="font-medium">Microsoft Outlook</p>
                                         <p className="text-sm text-muted-foreground">Sync your events and availability.</p>
@@ -247,7 +246,7 @@ export default function WorkstationPage() {
                                     <Button variant="outline" size="sm">Connect</Button>
                                 </div>
                                 <div className="border rounded-lg p-4 flex items-center">
-                                    <SiApple className="h-6 w-6 mr-4" />
+                                    <Calendar className="h-6 w-6 mr-4" />
                                     <div className="flex-1">
                                         <p className="font-medium">Apple Calendar</p>
                                         <p className="text-sm text-muted-foreground">Sync via a secure iCal link.</p>

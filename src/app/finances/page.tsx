@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils"
 import { Separator } from "@/components/ui/separator"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { SiPaypal, SiGooglepay } from "@icons-pack/react-simple-icons";
+import { Globe } from "lucide-react"
 
 
 const mockInvoices = [
@@ -95,7 +95,7 @@ export default function FinancesPage() {
                       <Button variant="secondary" size="sm">Enable</Button>
                   </div>
                   <div className="border rounded-lg p-4 flex items-center bg-muted/50">
-                      <SiPaypal className="mr-4 h-6 w-6 text-muted-foreground" />
+                      <Globe className="mr-4 h-6 w-6 text-muted-foreground" />
                       <div className="flex-1">
                           <p className="font-medium">PayPal</p>
                           <p className="text-sm text-muted-foreground">Accept payments via PayPal.</p>
@@ -111,7 +111,7 @@ export default function FinancesPage() {
                       <Button variant="secondary" size="sm">Enable</Button>
                   </div>
                   <div className="border rounded-lg p-4 flex items-center bg-muted/50">
-                      <SiGooglepay className="mr-4 h-6 w-6 text-muted-foreground" />
+                      <Globe className="mr-4 h-6 w-6 text-muted-foreground" />
                       <div className="flex-1">
                           <p className="font-medium">Google Pay</p>
                           <p className="text-sm text-muted-foreground">Accept payments through Google Pay.</p>
