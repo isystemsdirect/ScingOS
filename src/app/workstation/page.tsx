@@ -1,6 +1,6 @@
 
 import Link from "next/link"
-import { CircleUser, Cpu, Palette, PlusCircle, Trash2, Globe, Linkedin, Facebook, History, Mic, Camera, Sparkles, Database, KeyRound, User, Settings, Store, Bell, SlidersHorizontal, Bot, Wifi, Bluetooth, MapPin, Search, Link2, Calendar } from "lucide-react"
+import { CircleUser, Cpu, Palette, PlusCircle, Trash2, Globe, Linkedin, Facebook, History, Mic, Camera, Sparkles, Database, KeyRound, User, Settings, Store, Bell, SlidersHorizontal, Bot, Wifi, Bluetooth, MapPin, Search, Link2, Calendar, FileText } from "lucide-react"
 import { SiGooglecalendar, SiMicrosoftoutlook, SiApple } from "@icons-pack/react-simple-icons";
 
 
@@ -43,6 +43,10 @@ export default function WorkstationPage() {
     { id: "key_prism_max_jkl012", name: "Max Spectrometer Key", lariEngine: "LARI-PRISM", entitlement: "MAX", status: "Active" },
     { id: "key_sonar_max_mno345", name: "Max Sonar Key", lariEngine: "LARI-SONAR", entitlement: "MAX", status: "Inactive" },
   ];
+  
+  const mockTemplates = [
+      { id: "TPL-001", name: "My Custom Residential Template", description: "A variation of the standard residential template with added moisture checks.", date: "2023-10-29" },
+  ];
 
   return (
     <div className="mx-auto w-full max-w-6xl">
@@ -50,9 +54,10 @@ export default function WorkstationPage() {
 
       <Tabs defaultValue="profile" className="relative">
         <div className="sticky top-0 z-20 pt-4 -mx-6 px-6 pb-2">
-            <TabsList className="grid h-auto w-full grid-cols-1 md:grid-cols-3 lg:grid-cols-9 border p-1 bg-background/95 backdrop-blur-sm">
+            <TabsList className="grid h-auto w-full grid-cols-1 md:grid-cols-5 lg:grid-cols-10 border p-1 bg-background/95 backdrop-blur-sm">
                 <TabsTrigger value="profile" className="py-2"><User className="mr-2 h-4 w-4"/>Profile</TabsTrigger>
                 <TabsTrigger value="credentials" className="py-2"><KeyRound className="mr-2 h-4 w-4"/>Credentials</TabsTrigger>
+                <TabsTrigger value="templates" className="py-2"><FileText className="mr-2 h-4 w-4"/>Templates</TabsTrigger>
                 <TabsTrigger value="integrations" className="py-2"><Link2 className="mr-2 h-4 w-4"/>Integrations</TabsTrigger>
                 <TabsTrigger value="security" className="py-2"><User className="mr-2 h-4 w-4"/>Security</TabsTrigger>
                 <TabsTrigger value="ai" className="py-2"><Sparkles className="mr-2 h-4 w-4"/>AI & Voice</TabsTrigger>
@@ -174,6 +179,43 @@ export default function WorkstationPage() {
                             </Link>
                         </Button>
                         <p className="text-xs text-muted-foreground ml-auto">*Verification may take 24-48 hours.</p>
+                    </CardFooter>
+                </Card>
+            </TabsContent>
+            <TabsContent value="templates">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Template Builder</CardTitle>
+                        <CardDescription>
+                            Create and manage your personalized inspection templates for data collection and reports.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                         <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>Template Name</TableHead>
+                                    <TableHead>Description</TableHead>
+                                    <TableHead>Last Modified</TableHead>
+                                    <TableHead><span className="sr-only">Actions</span></TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {mockTemplates.map(template => (
+                                    <TableRow key={template.id}>
+                                        <TableCell className="font-medium">{template.name}</TableCell>
+                                        <TableCell>{template.description}</TableCell>
+                                        <TableCell>{template.date}</TableCell>
+                                        <TableCell className="text-right">
+                                             <Button size="sm" variant="outline">Edit</Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </CardContent>
+                    <CardFooter className="border-t p-6">
+                        <Button><PlusCircle className="mr-2 h-4 w-4" />Create New Template</Button>
                     </CardFooter>
                 </Card>
             </TabsContent>
