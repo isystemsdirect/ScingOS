@@ -1,17 +1,28 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Rss, Hash, CloudSun, AlertTriangle, X, Clock, Calendar } from 'lucide-react';
-import { mockNotifications } from '@/lib/data';
+import { mockNotifications as staticNotifications } from '@/lib/data';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Badge } from './ui/badge';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 
-type Notification = typeof mockNotifications[0];
+type Notification = typeof staticNotifications[0];
 type TimeFormat = '12h' | '24h';
+
+interface WeatherData {
+    name: string;
+    main: {
+        temp: number;
+    };
+    weather: {
+        description: string;
+        main: string;
+    }[];
+}
 
 const typeInfo = {
     post: { icon: Rss, label: 'New Post', href: '/social', className: 'bg-blue-500/20 text-blue-300 border-blue-500/50' },
@@ -26,6 +37,9 @@ export function FlashNotificationBar() {
   const [showTime, setShowTime] = useState(true);
   const [timeFormat, setTimeFormat] = useState<TimeFormat>('12h');
 
+  const [weather, setWeather] = useState<WeatherData | null>(null);
+  const [weatherUnit, setWeatherUnit] = useState<'metric' | 'imperial'>('imperial');
+
   useEffect(() => {
     // Set initial time on client mount to avoid hydration errors
     setNow(new Date());
@@ -33,12 +47,13 @@ export function FlashNotificationBar() {
     const handleStorageChange = () => {
         const newFormat = localStorage.getItem('time-format-24h') === 'true' ? '24h' : '12h';
         setTimeFormat(newFormat);
+        const newUnit = localStorage.getItem('temperature-unit') === 'C' ? 'metric' : 'imperial';
+        setWeatherUnit(newUnit);
     };
 
     handleStorageChange(); // Check on mount
     
     window.addEventListener('storage', handleStorageChange);
-
 
     // Update time every second
     const timeInterval = setInterval(() => {
@@ -58,21 +73,65 @@ export function FlashNotificationBar() {
   }, []);
 
 
+  const fetchWeather = (lat: number, lon: number) => {
+    const apiKey = 'cf5f05aff1d3b71885fb90702f9fd4cb';
+    const unit = localStorage.getItem('temperature-unit') === 'C' ? 'metric' : 'imperial';
+    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=${unit}&appid=${apiKey}`;
+    
+    fetch(url)
+        .then(response => {
+            if (!response.ok) throw new Error('Weather data fetch failed');
+            return response.json();
+        })
+        .then(data => setWeather(data))
+        .catch(console.error);
+  };
+
   useEffect(() => {
-    if (mockNotifications.length === 0) return;
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          fetchWeather(position.coords.latitude, position.coords.longitude);
+        },
+        () => {
+          // Fallback to a default location
+          fetchWeather(34.0522, -118.2437);
+        }
+      );
+    }
+  }, []);
+
+  const notifications = useMemo(() => {
+    const weatherNotification = weather
+      ? {
+          id: 3,
+          type: 'weather' as const,
+          title: `Weather Update: ${weather.name}`,
+          description: `${weather.weather[0].main}, ${Math.round(weather.main.temp)}°${weatherUnit === 'metric' ? 'C' : 'F'}. Conditions good for inspection.`,
+        }
+      : staticNotifications.find(n => n.type === 'weather');
+
+    return staticNotifications.map(n => n.type === 'weather' && weatherNotification ? weatherNotification : n);
+  }, [weather, weatherUnit]);
+
+
+  useEffect(() => {
+    if (notifications.length === 0) return;
     
     const interval = setInterval(() => {
-      setIndex((prevIndex) => (prevIndex + 1) % mockNotifications.length);
+      setIndex((prevIndex) => (prevIndex + 1) % notifications.length);
     }, 10000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [notifications.length]);
 
-  if (mockNotifications.length === 0) {
+  if (notifications.length === 0) {
     return null;
   }
 
-  const notification = mockNotifications[index];
+  const notification = notifications[index];
+  if (!notification) return null;
+
   const Icon = typeInfo[notification.type].icon;
   const href = typeInfo[notification.type].href;
 

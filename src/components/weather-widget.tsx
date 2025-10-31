@@ -14,7 +14,6 @@ import {
   AlertTriangle,
 } from 'lucide-react';
 import { Skeleton } from './ui/skeleton';
-import { Alert, AlertTitle, AlertDescription } from './ui/alert';
 
 const weatherIcons: { [key: string]: React.ElementType } = {
   Clear: Sun,
@@ -40,56 +39,58 @@ interface WeatherData {
 
 export function WeatherWidget() {
   const [weather, setWeather] = useState<WeatherData | null>(null);
-  const [locationName, setLocationName] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [unit, setUnit] = useState<'metric' | 'imperial'>('imperial');
+
+  const fetchWeather = (lat: number, lon: number) => {
+    const currentUnit = localStorage.getItem('temperature-unit') === 'C' ? 'metric' : 'imperial';
+    setUnit(currentUnit);
+    const apiKey = 'cf5f05aff1d3b71885fb90702f9fd4cb';
+    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=${currentUnit}&appid=${apiKey}`;
+    
+    setLoading(true);
+    fetch(url)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Weather data not available');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setWeather(data);
+        setError(null);
+      })
+      .catch(err => {
+        console.error(err);
+        setError(err.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
 
   useEffect(() => {
-    if (!navigator.geolocation) {
-      setError('Geolocation is not supported by your browser.');
-      setLoading(false);
-      return;
-    }
-
-    const fetchWeather = async (lat: number, lng: number) => {
-        const apiKey = 'cf5f05aff1d3b71885fb90702f9fd4cb';
-        const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&units=metric&appid=${apiKey}`;
-        
-        try {
-            setLoading(true);
-            setError(null);
-            const response = await fetch(url);
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || `Weather API request failed with status ${response.status}`);
+    const handleStorageChange = () => {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              fetchWeather(position.coords.latitude, position.coords.longitude);
+            },
+            () => {
+              setError("Cannot access location. Showing default weather.");
+              fetchWeather(34.0522, -118.2437); // Fallback to LA
             }
-            const data: WeatherData = await response.json();
-            setWeather(data);
-            setLocationName(data.name);
-        } catch (err) {
-            console.error(err);
-            if (err instanceof Error) {
-                setError(err.message);
-            } else {
-                setError('Could not fetch weather data.');
-            }
-        } finally {
-            setLoading(false);
+          );
         }
     };
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        fetchWeather(position.coords.latitude, position.coords.longitude);
-      },
-      () => {
-        setError('Location access denied. Showing default.');
-        // Fallback to a default location like Anytown, CA
-        fetchWeather(34.0522, -118.2437);
-      }
-    );
-  }, []);
     
+    window.addEventListener('storage', handleStorageChange);
+    handleStorageChange(); // Initial fetch
+
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
   if (loading) {
     return (
         <div className="p-2 space-y-2 group-data-[collapsed=true]:hidden">
@@ -124,11 +125,11 @@ export function WeatherWidget() {
             <WeatherIcon className="h-8 w-8 text-primary" />
             <div className="flex-1">
                 <p className="font-bold text-lg text-sidebar-foreground">
-                    {Math.round(weather.main.temp)}°C
+                    {Math.round(weather.main.temp)}°{unit === 'metric' ? 'C' : 'F'}
                 </p>
                 <p className="text-xs text-muted-foreground -mt-1 flex items-center gap-1">
                     <MapPin className="h-3 w-3" />
-                    {locationName || 'Loading...'}
+                    {weather.name || 'Loading...'}
                 </p>
             </div>
         </div>
