@@ -88,11 +88,11 @@ export default function AppLayout({
 
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
-      <div className="hidden border-r bg-sidebar md:block">
+      <div className="hidden border-r bg-sidebar md:block group">
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
             <Logo />
-            {isProOrEnterprise && <Badge variant="pro" className="ml-2">Pro</Badge>}
+            {isProOrEnterprise && <Badge variant="pro" className="ml-2 text-[0.6rem] px-1.5 py-0.5 h-auto group-data-[collapsed=true]:hidden">Pro</Badge>}
           </div>
           <div className="flex-1 overflow-auto">
             <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
@@ -169,11 +169,11 @@ export default function AppLayout({
                       className="rounded-full"
                     />
                   )}
-                  <div className="text-left">
+                  <div className="text-left group-data-[collapsed=true]:hidden">
                     <div className="font-medium text-sidebar-foreground">{user.name}</div>
                     <div className="text-xs text-muted-foreground">Inspector</div>
                   </div>
-                  <ChevronDown className="ml-auto h-4 w-4 text-muted-foreground" />
+                  <ChevronDown className="ml-auto h-4 w-4 text-muted-foreground group-data-[collapsed=true]:hidden" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
@@ -206,7 +206,7 @@ export default function AppLayout({
               <nav className="grid gap-2 text-lg font-medium">
                 <div className="flex items-center">
                   <Logo />
-                  {isProOrEnterprise && <Badge variant="pro" className="ml-2">Pro</Badge>}
+                  {isProOrEnterprise && <Badge variant="pro" className="ml-2 text-[0.6rem] px-1.5 py-0.5 h-auto">Pro</Badge>}
                 </div>
                  <NavLink href="/dashboard" isMobile>
                   <Home className="h-5 w-5" />
@@ -287,3 +287,5 @@ export default function AppLayout({
     </div>
   );
 }
+
+    
