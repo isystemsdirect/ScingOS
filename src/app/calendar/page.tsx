@@ -16,11 +16,32 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+
+type CellState = 'booked' | 'available' | 'empty';
 
 export default function CalendarPage() {
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   const times = Array.from({ length: 13 }, (_, i) => `${i + 7}:00`); // 7am to 7pm
+
+  const [gridState, setGridState] = useState<CellState[][] | null>(null);
+
+  useEffect(() => {
+    // Generate the random state only on the client, after the initial render.
+    const newGridState: CellState[][] = times.map(() =>
+      days.map((_, dayIndex) => {
+        const isWorkday = dayIndex < 5;
+        if (!isWorkday) return 'empty';
+        
+        const randomValue = Math.random();
+        if (randomValue > 0.8) return 'booked';
+        if (randomValue > 0.3) return 'available';
+        return 'empty';
+      })
+    );
+    setGridState(newGridState);
+  }, [times.length, days.length]);
+
 
   return (
     <div className="grid max-w-6xl mx-auto gap-8 px-4 lg:px-6">
@@ -60,7 +81,7 @@ export default function CalendarPage() {
             ))}
 
             {/* Time slots */}
-            {times.map((time) => (
+            {times.map((time, timeIndex) => (
               <React.Fragment key={time}>
                 <div className="row-span-1 bg-card p-2 text-right text-xs text-muted-foreground">
                   <div className="flex items-center justify-end gap-1">
@@ -69,16 +90,16 @@ export default function CalendarPage() {
                   </div>
                 </div>
                 {days.map((day, dayIndex) => {
-                    const isBooked = Math.random() > 0.8 && dayIndex < 5;
-                    const isAvailable = Math.random() > 0.3 && dayIndex < 5;
+                    const cellState = gridState ? gridState[timeIndex][dayIndex] : 'empty';
+
                     return (
                         <div key={`${day}-${time}`} className="row-span-1 bg-card p-1 text-xs relative min-h-[50px]">
-                           {isBooked ? (
+                           {cellState === 'booked' ? (
                                 <div className="bg-destructive/20 border border-destructive text-destructive-foreground rounded-md p-1 h-full flex flex-col justify-center">
                                     <p className="font-bold">Booked</p>
                                     <p className="text-xs">INS-002</p>
                                 </div>
-                           ) : isAvailable ? (
+                           ) : cellState === 'available' ? (
                                 <div className="bg-primary/20 border border-primary/50 text-primary-foreground rounded-md p-1 h-full flex items-center justify-center opacity-50 hover:opacity-100 transition-opacity cursor-pointer">
                                     <p>Available</p>
                                 </div>
