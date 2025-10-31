@@ -296,7 +296,7 @@ export function AiSearchDialog() {
       <DialogTrigger asChild>
         <Button
           variant="outline"
-          className="w-full justify-start text-sm text-muted-foreground rounded-md"
+          className="w-full justify-start text-sm text-muted-foreground rounded-full"
         >
           <Search className="mr-2 h-4 w-4" />
           <span>{isProOrEnterprise ? 'Consult Scing Professional' : 'Consult Scing'}</span>
@@ -359,7 +359,7 @@ export function AiSearchDialog() {
                           )}
                           <Input
                             placeholder={isProOrEnterprise ? "Consult Scing Professional" : "Consult Scing."}
-                            className={cn("pr-20 rounded-md", capturedImage ? "pl-12" : "pl-9")}
+                            className={cn("pr-20 rounded-full", capturedImage ? "pl-12" : "pl-9")}
                             {...field}
                           />
                           <div className="absolute right-1 top-1/2 flex -translate-y-1/2">

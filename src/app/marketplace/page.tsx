@@ -121,7 +121,7 @@ export default function MarketplacePage() {
                             <Input
                                 type="search"
                                 placeholder="Search by name, location, or certification..."
-                                className="w-full rounded-md bg-background pl-9"
+                                className="w-full rounded-full bg-background pl-9"
                             />
                         </div>
                     </CardHeader>

@@ -557,7 +557,7 @@ export default function WorkstationPage() {
                     <CardContent className="grid gap-2">
                         <div className="relative">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                            <Input placeholder="Search inspection types..." className="pl-9" />
+                            <Input placeholder="Search inspection types..." className="pl-9 rounded-full" />
                         </div>
                         <Accordion type="multiple" className="w-full">
                             {inspectionData.inspectionTypeCategories.map(category => (

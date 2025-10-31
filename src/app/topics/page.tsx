@@ -74,7 +74,7 @@ export default function TopicsPage() {
                 <Input
                     type="search"
                     placeholder="Search for topics..."
-                    className="w-full rounded-md bg-card pl-9"
+                    className="w-full rounded-full bg-card pl-9"
                 />
             </div>
             <DropdownMenu>
