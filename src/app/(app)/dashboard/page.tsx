@@ -12,6 +12,7 @@ import {
   Users,
   PlusCircle,
   Cpu,
+  Map,
 } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -32,37 +33,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
-import type { ChartConfig } from "@/components/ui/chart";
 
-import { mockInspections, mockInspectors } from "@/lib/data";
+import { mockInspections, mockInspectors, mockClients } from "@/lib/data";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
-
-const chartData = [
-  { month: "January", inspections: 186 },
-  { month: "February", inspections: 305 },
-  { month: "March", inspections: 237 },
-  { month: "April", inspections: 73 },
-  { month: "May", inspections: 209 },
-  { month: "June", inspections: 214 },
-];
-
-const chartConfig = {
-  inspections: {
-    label: "Inspections",
-    color: "hsl(var(--primary))",
-  },
-} satisfies ChartConfig;
+import { MarketplaceMap } from "@/components/marketplace-map";
 
 export default function Dashboard() {
   const user = mockInspectors[0];
   const recentInspections = mockInspections.slice(0, 5);
-  const recentInspectors = mockInspectors.slice(1, 4);
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 lg:px-6">
@@ -135,8 +113,8 @@ export default function Dashboard() {
             </CardContent>
           </Card>
         </div>
-        <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
-          <Card className="xl:col-span-2">
+        <div className="grid gap-4 md:gap-8 lg:grid-cols-2">
+          <Card>
             <CardHeader className="flex flex-row items-center">
               <div className="grid gap-2">
                 <CardTitle>Recent Inspections</CardTitle>
@@ -197,33 +175,16 @@ export default function Dashboard() {
           </Card>
           <Card>
             <CardHeader>
-              <CardTitle>Monthly Performance</CardTitle>
+              <CardTitle className="flex items-center gap-2"><Map className="h-5 w-5" /> Live Operations Map</CardTitle>
               <CardDescription>
-                Your inspection volume over the last 6 months.
+                Real-time view of inspectors and client needs.
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <ChartContainer config={chartConfig} className="h-[250px] w-full">
-                <BarChart accessibilityLayer data={chartData}>
-                  <CartesianGrid vertical={false} />
-                  <XAxis
-                    dataKey="month"
-                    tickLine={false}
-                    tickMargin={10}
-                    axisLine={false}
-                    tickFormatter={(value) => value.slice(0, 3)}
-                  />
-                  <ChartTooltip
-                    cursor={false}
-                    content={<ChartTooltipContent indicator="dot" />}
-                  />
-                  <Bar
-                    dataKey="inspections"
-                    fill="var(--color-inspections)"
-                    radius={4}
-                  />
-                </BarChart>
-              </ChartContainer>
+            <CardContent className="h-[400px] p-0">
+               <MarketplaceMap 
+                inspectors={mockInspectors.filter(i => i.onCall)}
+                clients={mockClients}
+               />
             </CardContent>
           </Card>
         </div>
