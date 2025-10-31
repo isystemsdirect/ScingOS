@@ -9,15 +9,15 @@ const Logo = ({ className, isLoginPage = false }: { className?: string, isLoginP
       <Link
         href="/dashboard"
         className={cn(
-          "flex flex-col items-center justify-center gap-4 font-bold text-foreground",
+          "flex flex-col items-center justify-center gap-2 font-bold text-foreground",
           className
         )}
       >
         <div className="relative logo-gradient-light p-4">
             <Image src="/logo.png" alt="Scingular Logo" width={192} height={192} className="size-48 relative" />
         </div>
-        <span className="font-sans uppercase font-bold italic text-3xl">
-          SCINGULAR <span className="text-primary">AI</span>
+        <span className="font-sans uppercase font-bold italic text-5xl">
+          SCINGULAR <span className="text-primary">AI<sup className="text-white text-lg font-light ml-1">TM</sup></span>
         </span>
       </Link>
     );
