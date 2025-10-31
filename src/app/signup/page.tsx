@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Logo from "@/components/logo";
-import { SiMicrosoft, SiFacebook } from "@icons-pack/react-simple-icons";
+import { Chrome, Mail, MessageSquare } from "lucide-react";
 
 export default function SignupPage() {
   return (
@@ -70,11 +70,11 @@ export default function SignupPage() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <Button variant="outline">
-                <SiMicrosoft className="mr-2 h-4 w-4" />
+                <Mail className="mr-2 h-4 w-4" />
                 Microsoft
               </Button>
               <Button variant="outline">
-                <SiFacebook className="mr-2 h-4 w-4" />
+                <MessageSquare className="mr-2 h-4 w-4" />
                 Facebook
               </Button>
             </div>
