@@ -1,7 +1,7 @@
 
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation';
 import { GoogleMap, useJsApiLoader, MarkerF } from '@react-google-maps/api';
 import type { Inspector, Client } from '@/lib/types';
@@ -13,7 +13,7 @@ const containerStyle = {
   height: '100%'
 };
 
-const center = {
+const initialCenter = {
   lat: 34.0522,
   lng: -118.2437
 };
@@ -269,6 +269,26 @@ export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
     googleMapsApiKey: googleMapsApiKey,
   });
 
+  const [center, setCenter] = useState(initialCenter);
+  const [zoom, setZoom] = useState(10);
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setCenter({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+          setZoom(12);
+        },
+        () => {
+          console.log("Geolocation permission denied. Using default location.");
+        }
+      );
+    }
+  }, []);
+
   if (loadError) {
     return (
         <div className="flex items-center justify-center h-full w-full bg-muted p-4">
@@ -289,7 +309,7 @@ export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={center}
-        zoom={10}
+        zoom={zoom}
         options={mapOptions}
       >
         {inspectors.map(inspector => (
