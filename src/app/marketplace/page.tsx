@@ -59,11 +59,12 @@ export default function MarketplacePage() {
                     <Switch id="show-map" checked={showMap} onCheckedChange={setShowMap} />
                     <Label htmlFor="show-map">Show Map</Label>
                 </div>
-              </CardHeader>
+              </div>
+            </CardHeader>
           {showMap && (
             <CardContent>
               <div className="h-[60vh] w-full rounded-lg overflow-hidden border">
-                  <MarketplaceMap 
+                  <MarketplaceMap
                     inspectors={showInspectors ? mockInspectors : []}
                     clients={showClients ? mockClients : []}
                   />
