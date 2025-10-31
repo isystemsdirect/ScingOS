@@ -57,7 +57,7 @@ export function NewsWidget() {
                         <Link href={item.url} target="_blank" rel="noopener noreferrer" className="group/news-item flex items-start gap-3 h-full">
                             <Image src={item.imageUrl} alt={item.title} width={60} height={60} className="rounded-md object-cover w-[60px] h-[60px]" data-ai-hint={item.imageHint} />
                             <div className="flex-1 min-w-0">
-                                <p className="font-medium text-xs leading-snug text-sidebar-foreground group-hover/news-item:text-primary transition-colors truncate">
+                                <p className="font-medium text-xs leading-snug text-sidebar-foreground group-hover/news-item:text-primary transition-colors line-clamp-2">
                                     {item.title}
                                 </p>
                                 <div className="flex items-center justify-between text-xs text-muted-foreground mt-1">

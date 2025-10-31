@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation';
 import { GoogleMap, useJsApiLoader, MarkerF, InfoWindowF } from '@react-google-maps/api';
 import type { Inspector, Client } from '@/lib/types';
-import { Loader2, Briefcase, Building, AlertTriangle } from 'lucide-react';
+import { Loader2, AlertTriangle } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 
 const containerStyle = {
@@ -271,11 +271,15 @@ export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
     libraries: ['places'],
   });
 
+  const [map, setMap] = useState(null)
   const [center, setCenter] = useState(initialCenter);
   const [zoom, setZoom] = useState(10);
   const [activeInspector, setActiveInspector] = useState<Inspector | null>(null);
   const [activeClient, setActiveClient] = useState<Client | null>(null);
 
+  const onLoad = React.useCallback(function callback(map: any) {
+    setMap(map)
+  }, [])
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -311,75 +315,80 @@ export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
   if (!isLoaded) return <div className="flex items-center justify-center h-full w-full bg-muted"><Loader2 className="h-8 w-8 animate-spin"/></div>
 
   return (
-      <GoogleMap
-        mapContainerStyle={containerStyle}
-        center={center}
-        zoom={zoom}
-        options={mapOptions}
-      >
-        {inspectors.map(inspector => (
-            <MarkerF 
-                key={`inspector-${inspector.id}`} 
-                position={inspector.location}
-                icon={{
-                    path: 'M20 6h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zM10 4h4v2h-4V4z',
-                    fillColor: '#00A9FF',
-                    fillOpacity: 1,
-                    strokeWeight: 0,
-                    scale: 1,
-                    anchor: new window.google.maps.Point(12, 12),
-                }}
-                onClick={() => router.push(`/teams/${inspector.id}/availability`)}
-                onMouseOver={() => setActiveInspector(inspector)}
-                onMouseOut={() => setActiveInspector(null)}
-            />
-        ))}
-        {activeInspector && (
-            <InfoWindowF
-                position={activeInspector.location}
-                onCloseClick={() => setActiveInspector(null)}
-                options={{
-                    pixelOffset: new window.google.maps.Size(0, -30)
-                }}
-            >
-                <div className="p-1 bg-card text-card-foreground rounded-lg shadow-lg">
-                    <h4 className="font-bold text-sm">{activeInspector.name}</h4>
-                    <p className="text-xs text-muted-foreground">{activeInspector.location.name}</p>
-                </div>
-            </InfoWindowF>
-        )}
+      <div className="relative w-full h-full">
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          center={center}
+          zoom={zoom}
+          options={mapOptions}
+          onLoad={onLoad}
+        >
+          {inspectors.map(inspector => (
+              <MarkerF 
+                  key={`inspector-${inspector.id}`} 
+                  position={inspector.location}
+                  icon={{
+                      path: 'M20 6h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zM10 4h4v2h-4V4z',
+                      fillColor: '#00A9FF',
+                      fillOpacity: 1,
+                      strokeWeight: 0,
+                      scale: 1,
+                      anchor: new window.google.maps.Point(12, 12),
+                  }}
+                  onClick={() => router.push(`/teams/${inspector.id}/availability`)}
+                  onMouseOver={() => setActiveInspector(inspector)}
+                  onMouseOut={() => setActiveInspector(null)}
+              />
+          ))}
+          {activeInspector && (
+              <InfoWindowF
+                  position={activeInspector.location}
+                  onCloseClick={() => setActiveInspector(null)}
+                  options={{
+                      pixelOffset: new window.google.maps.Size(0, -30)
+                  }}
+              >
+                  <div className="p-1 bg-card text-card-foreground rounded-lg shadow-lg">
+                      <h4 className="font-bold text-sm">{activeInspector.name}</h4>
+                      <p className="text-xs text-muted-foreground">{activeInspector.location.name}</p>
+                  </div>
+              </InfoWindowF>
+          )}
 
-        {clients.map(client => (
-             <MarkerF 
-                key={`client-${client.id}`}
-                position={client.location}
-                icon={{
-                    path: 'M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8h5z',
-                    fillColor: '#33FFDD',
-                    fillOpacity: 1,
-                    strokeWeight: 0,
-                    scale: 1,
-                    anchor: new window.google.maps.Point(12, 12),
-                }}
-                onClick={() => router.push(`/clients/${client.id}`)}
-                onMouseOver={() => setActiveClient(client)}
-                onMouseOut={() => setActiveClient(null)}
-            />
-        ))}
-        {activeClient && (
-            <InfoWindowF
-                position={activeClient.location}
-                onCloseClick={() => setActiveClient(null)}
-                 options={{
-                    pixelOffset: new window.google.maps.Size(0, -30)
-                }}
-            >
-                 <div className="p-1 bg-card text-card-foreground rounded-lg shadow-lg">
-                    <h4 className="font-bold text-sm">{activeClient.name}</h4>
-                    <p className="text-xs text-muted-foreground">{activeClient.address.street}, {activeClient.address.city}</p>
-                </div>
-            </InfoWindowF>
-        )}
-      </GoogleMap>
+          {clients.map(client => (
+              <MarkerF 
+                  key={`client-${client.id}`}
+                  position={client.location}
+                  icon={{
+                      path: 'M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8h5z',
+                      fillColor: '#33FFDD',
+                      fillOpacity: 1,
+                      strokeWeight: 0,
+                      scale: 1,
+                      anchor: new window.google.maps.Point(12, 12),
+                  }}
+                  onClick={() => router.push(`/clients/${client.id}`)}
+                  onMouseOver={() => setActiveClient(client)}
+                  onMouseOut={() => setActiveClient(null)}
+              />
+          ))}
+          {activeClient && (
+              <InfoWindowF
+                  position={activeClient.location}
+                  onCloseClick={() => setActiveClient(null)}
+                  options={{
+                      pixelOffset: new window.google.maps.Size(0, -30)
+                  }}
+              >
+                  <div className="p-1 bg-card text-card-foreground rounded-lg shadow-lg">
+                      <h4 className="font-bold text-sm">{activeClient.name}</h4>
+                      <p className="text-xs text-muted-foreground">{activeClient.address.street}, {activeClient.address.city}</p>
+                  </div>
+              </InfoWindowF>
+          )}
+        </GoogleMap>
+      </div>
   )
 }
+
+    

@@ -59,25 +59,14 @@ export default function MarketplacePage() {
                     <Switch id="show-map" checked={showMap} onCheckedChange={setShowMap} />
                     <Label htmlFor="show-map">Show Map</Label>
                 </div>
-              </div>
-          </CardHeader>
+              </CardHeader>
           {showMap && (
-            <CardContent className="space-y-4">
-              <div className="h-[400px] w-full rounded-lg overflow-hidden border">
+            <CardContent>
+              <div className="h-[60vh] w-full rounded-lg overflow-hidden border">
                   <MarketplaceMap 
                     inspectors={showInspectors ? mockInspectors : []}
                     clients={showClients ? mockClients : []}
                   />
-              </div>
-              <div className="flex items-center space-x-6">
-                <div className="flex items-center space-x-2">
-                  <Switch id="show-inspectors" checked={showInspectors} onCheckedChange={setShowInspectors} />
-                  <Label htmlFor="show-inspectors" className="flex items-center gap-2"><Briefcase className="h-4 w-4"/>Show Inspectors</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Switch id="show-clients" checked={showClients} onCheckedChange={setShowClients} />
-                  <Label htmlFor="show-clients" className="flex items-center gap-2"><Building className="h-4 w-4"/>Show Clients</Label>
-                </div>
               </div>
             </CardContent>
           )}
