@@ -1,4 +1,3 @@
-
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
@@ -17,7 +16,7 @@ const Logo = ({ className, isLoginPage = false }: { className?: string, isLoginP
             <Image src="/logo.png" alt="Scingular Logo" width={192} height={192} className="size-48 relative" />
         </div>
         <span className="font-sans uppercase font-bold italic text-3xl sm:text-4xl whitespace-nowrap">
-          SCINGULAR <span className="text-primary">AI<sup className="text-white text-[0.4em] font-light ml-1 align-super">TM</sup></span>
+          SCINGULAR <span className="text-primary">AI<sup className="text-white text-[0.25em] font-light ml-1 align-super">TM</sup></span>
         </span>
       </Link>
     );
