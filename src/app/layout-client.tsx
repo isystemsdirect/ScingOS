@@ -63,6 +63,7 @@ import { NavLink } from "@/components/nav-link";
 import { AiSearchDialog } from "@/components/ai-search-dialog";
 import { Separator } from "@/components/ui/separator";
 import { FlashNotificationBar } from "@/components/flash-notification-bar";
+import { WeatherWidget } from "@/components/weather-widget";
 
 export default function AppLayout({
   children,
@@ -88,7 +89,7 @@ export default function AppLayout({
 
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
-      <div className="hidden border-r bg-sidebar md:block group">
+      <div className="hidden border-r bg-sidebar md:block group" data-collapsed="false">
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
             <Logo />
@@ -156,6 +157,7 @@ export default function AppLayout({
             </nav>
           </div>
           <div className="mt-auto p-4 border-t border-sidebar-border space-y-4">
+            <WeatherWidget />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="flex items-center justify-start gap-2 w-full px-2">
@@ -287,5 +289,3 @@ export default function AppLayout({
     </div>
   );
 }
-
-    
