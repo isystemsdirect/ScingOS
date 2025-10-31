@@ -64,6 +64,7 @@ import { AiSearchDialog } from "@/components/ai-search-dialog";
 import { Separator } from "@/components/ui/separator";
 import { FlashNotificationBar } from "@/components/flash-notification-bar";
 import { WeatherWidget } from "@/components/weather-widget";
+import { NewsWidget } from "@/components/news-widget";
 
 export default function AppLayout({
   children,
@@ -157,6 +158,7 @@ export default function AppLayout({
             </nav>
           </div>
           <div className="mt-auto p-4 border-t border-sidebar-border space-y-4">
+            <NewsWidget />
             <WeatherWidget />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

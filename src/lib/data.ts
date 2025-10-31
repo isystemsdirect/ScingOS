@@ -342,3 +342,42 @@ export const mockNotifications = [
     { id: 3, type: 'weather' as const, title: "Weather Update: Anytown, CA", description: "Sunny, 72°F. Clear conditions for inspections." },
     { id: 4, type: 'safety' as const, title: "High Wind Warning", description: "Winds gusting up to 45 mph. Use caution with drones." },
 ];
+
+export const mockNews = [
+    {
+        id: 1,
+        title: "US House passes bill to ban DJI drones",
+        source: "Reuters",
+        time: "4h ago",
+        url: "#",
+        imageUrl: "https://picsum.photos/seed/news-dji/150/150",
+        imageHint: "drone sky"
+    },
+    {
+        id: 2,
+        title: "New AI model can detect structural flaws from photos",
+        source: "TechCrunch",
+        time: "12h ago",
+        url: "#",
+        imageUrl: "https://picsum.photos/seed/news-ai/150/150",
+        imageHint: "AI abstract"
+    },
+    {
+        id: 3,
+        title: "Updated building codes for 2024 released",
+        source: "Construction Weekly",
+        time: "1d ago",
+        url: "#",
+        imageUrl: "https://picsum.photos/seed/news-codes/150/150",
+        imageHint: "building blueprint"
+    },
+    {
+        id: 4,
+        title: "The impact of rising material costs on inspections",
+        source: "The Inspector",
+        time: "2d ago",
+        url: "#",
+        imageUrl: "https://picsum.photos/seed/news-materials/150/150",
+        imageHint: "construction materials"
+    }
+];
