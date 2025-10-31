@@ -15,9 +15,10 @@ import Logo from "@/components/logo";
 export default function ForgotPasswordPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background/40 p-4">
-      <Card className="mx-auto w-full max-w-sm shadow-2xl bg-card/60 backdrop-blur-sm">
+      <Card className="mx-auto w-full max-w-sm shadow-2xl bg-card/60 backdrop-blur-sm overflow-hidden">
         <CardHeader className="text-center">
-          <div className="mb-4 flex justify-center">
+          <div className="relative mb-4 flex justify-center pt-8">
+             <div className="absolute inset-x-0 top-0 h-[150px] w-full bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.3)_0%,rgba(255,255,255,0)_70%)]"></div>
             <Logo isLoginPage={true} />
           </div>
           <CardTitle className="text-2xl font-bold">Forgot Password</CardTitle>
