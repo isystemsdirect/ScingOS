@@ -43,7 +43,7 @@ const getCurrentWeather = ai.defineTool(
       name: 'getCurrentWeather',
       description: 'Returns the current and forecasted weather for a given location using the Google Weather API.',
       inputSchema: WeatherInputSchema,
-      outputSchema: z.any(),
+      outputSchema: WeatherOutputSchema,
     },
     async (input) => {
         const apiKey = process.env.GOOGLE_WEATHER_API_KEY;
@@ -51,34 +51,50 @@ const getCurrentWeather = ai.defineTool(
             throw new Error("Google Weather API key is not configured.");
         }
         
-        // Note: Google Weather API is a paid service. This is a mock implementation.
-        // In a real app, you would make an HTTP request to the actual API endpoint.
-        console.log(`Fetching weather for lat: ${input.location.lat}, lng: ${input.location.lng}`);
-
-        // Mock response simulating a Google Weather API call
-        const now = new Date();
-        const hourly: WeatherOutput['hourly'] = [];
-        for(let i=0; i < input.forecastHorizonHours; i++) {
-            const forecastTime = new Date(now.getTime() + (i * 60 * 60 * 1000));
-            hourly.push({
-                time: forecastTime.toISOString(),
-                temperature: 20 + Math.sin(i / 4) * 5,
-                condition: i > 4 && i < 7 ? 'Light Rain' : 'Partly Cloudy',
-                precipitationChance: i > 4 && i < 7 ? 60 : 10,
-            })
-        }
-
-        const mockApiResponse: WeatherOutput = {
-            current: {
-                temperature: 22,
-                condition: 'Partly Cloudy',
-                windSpeedKph: 15,
-                humidity: 65,
+        const url = 'https://weather.googleapis.com/v1/forecast';
+        const headers = { 'Content-Type': 'application/json' };
+        const body = JSON.stringify({
+            location: {
+                latitude: input.location.lat,
+                longitude: input.location.lng,
             },
-            hourly,
-            summary: 'Conditions are favorable for the next 4 hours, with a chance of light rain developing this afternoon. Winds will remain moderate.'
+            // The Google Weather API doesn't support a simple hourly horizon.
+            // We request daily and hourly forecasts and the model can interpret.
+            params: ["current", "hourly", "daily"], 
+        });
+
+        const response = await fetch(`${url}?key=${apiKey}`, {
+            method: 'POST',
+            headers,
+            body
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Google Weather API request failed: ${response.status} ${errorText}`);
+        }
+        
+        const weatherData = await response.json();
+
+        // We need to transform the API response into our desired schema.
+        // The AI model will be instructed to do this, but we'll prepare the data.
+        const transformedData: WeatherOutput = {
+            current: {
+                temperature: weatherData.current?.temperature?.value || 0,
+                condition: weatherData.current?.condition?.text || 'Unknown',
+                windSpeedKph: weatherData.current?.wind?.speed?.value || 0,
+                humidity: weatherData.current?.humidity?.value || 0
+            },
+            hourly: (weatherData.hourly?.forecasts || []).slice(0, input.forecastHorizonHours).map((h: any) => ({
+                time: h.time,
+                temperature: h.temperature.value,
+                condition: h.condition.text,
+                precipitationChance: h.precipitation.probability * 100,
+            })),
+            summary: `Live forecast for ${input.location.lat}, ${input.location.lng}.`
         };
-        return mockApiResponse;
+
+        return transformedData;
     }
 );
 
@@ -96,7 +112,7 @@ const weatherPrompt = ai.definePrompt({
   Use the getCurrentWeather tool to get the weather forecast for the location: {{location.lat}}, {{location.lng}}.
   The forecast should cover the next {{forecastHorizonHours}} hours.
   
-  Summarize the data you receive from the tool and highlight any potential operational impacts (e.g., high winds, rain, extreme temperatures).
+  The tool will return the raw data. Your job is to format it correctly and provide a human-readable summary. Highlight any potential operational impacts (e.g., high winds, rain, extreme temperatures) in the summary.
   
   Return your response in the required JSON format.
   `,
@@ -109,9 +125,8 @@ const lariWeatherAiFlow = ai.defineFlow(
     outputSchema: WeatherOutputSchema,
   },
   async (input) => {
+    // The model will automatically call the `getCurrentWeather` tool because of the prompt.
     const { output } = await weatherPrompt(input);
-    // The model will call the tool and use its output to generate the final response.
-    // The final response should conform to WeatherOutputSchema.
     return output!;
   }
 );
