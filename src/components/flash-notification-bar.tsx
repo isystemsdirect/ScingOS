@@ -30,18 +30,12 @@ export function FlashNotificationBar() {
     // Set initial time on client mount to avoid hydration errors
     setNow(new Date());
 
-    // Check localStorage for saved time format preference
-    const savedFormat = localStorage.getItem('time-format') as TimeFormat | null;
-    if (savedFormat) {
-        setTimeFormat(savedFormat);
-    }
-
     const handleStorageChange = () => {
-        const newFormat = localStorage.getItem('time-format') as TimeFormat | null;
-        if (newFormat) {
-            setTimeFormat(newFormat);
-        }
+        const newFormat = localStorage.getItem('time-format-24h') === 'true' ? '24h' : '12h';
+        setTimeFormat(newFormat);
     };
+
+    handleStorageChange(); // Check on mount
     
     window.addEventListener('storage', handleStorageChange);
 
@@ -146,5 +140,3 @@ export function FlashNotificationBar() {
     </div>
   );
 }
-
-    

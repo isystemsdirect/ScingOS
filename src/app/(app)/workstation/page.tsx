@@ -20,6 +20,7 @@ import { Slider } from "@/components/ui/slider"
 import { cn } from "@/lib/utils"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import inspectionData from '@/lib/inspection-types.json';
+import { WorkstationTimeFormatSwitch } from "@/components/workstation-time-format-switch"
 
 export default function WorkstationPage() {
   const user = mockInspectors[0];
@@ -509,7 +510,7 @@ export default function WorkstationPage() {
                                 </CardHeader>
                                 <CardContent className="flex-grow space-y-2">
                                     <div className="flex items-center text-sm">
-                                        <Badge variant={device.status === 'Connected' ? 'default' : 'secondary'}>{device.status}</Badge>
+                                        <Badge variant={device.status === 'Connected' ? "default" : 'secondary'}>{device.status}</Badge>
                                         <p className="ml-auto text-xs text-muted-foreground">FW: {device.firmwareVersion}</p>
                                     </div>
                                     <p className="text-xs text-muted-foreground">Last seen: {device.lastSeen}</p>
@@ -569,7 +570,7 @@ export default function WorkstationPage() {
                                             <Badge variant={key.entitlement === 'Pro' || key.entitlement === 'Enterprise' ? 'pro' : 'secondary'}>{key.entitlement}</Badge>
                                         </TableCell>
                                         <TableCell>
-                                            <Badge variant={key.status === 'Active' ? 'default' : 'secondary'}>{key.status}</Badge>
+                                            <Badge variant={key.status === 'Active' ? "default" : 'secondary'}>{key.status}</Badge>
                                         </TableCell>
                                         <TableCell className="text-right">
                                             <Button variant="ghost" size="icon"><Trash2 className="h-4 w-4"/></Button>
@@ -601,15 +602,7 @@ export default function WorkstationPage() {
                         </CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <div className="flex items-center justify-between rounded-lg border p-4">
-                                <div>
-                                <h4 className="font-medium">Time Format</h4>
-                                <p className="text-sm text-muted-foreground">
-                                    Choose between standard (12-hour) and military (24-hour) time.
-                                </p>
-                                </div>
-                                <Switch id="time-format-switch" />
-                            </div>
+                            <WorkstationTimeFormatSwitch />
                         </CardContent>
                     </Card>
                     <Card>
