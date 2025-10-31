@@ -230,7 +230,7 @@ export default function WorkstationPage() {
                             <p className="text-sm text-muted-foreground">Sync your inspection schedule with your preferred calendar.</p>
                             <div className="grid gap-4 mt-4">
                                 <div className="border rounded-lg p-4 flex items-center">
-                                    <Calendar className="h-6 w-6 mr-4 text-[#4285F4]" />
+                                    <Calendar className="h-6 w-6 mr-4 text-muted-foreground" />
                                     <div className="flex-1">
                                         <p className="font-medium">Google Calendar</p>
                                         <p className="text-sm text-muted-foreground">Connected as john.doe@gmail.com</p>
@@ -238,7 +238,7 @@ export default function WorkstationPage() {
                                     <Button variant="destructive" size="sm">Disconnect</Button>
                                 </div>
                                  <div className="border rounded-lg p-4 flex items-center">
-                                    <Calendar className="h-6 w-6 mr-4 text-[#0078D4]" />
+                                    <Calendar className="h-6 w-6 mr-4 text-muted-foreground" />
                                     <div className="flex-1">
                                         <p className="font-medium">Microsoft Outlook</p>
                                         <p className="text-sm text-muted-foreground">Sync your events and availability.</p>
@@ -246,7 +246,7 @@ export default function WorkstationPage() {
                                     <Button variant="outline" size="sm">Connect</Button>
                                 </div>
                                 <div className="border rounded-lg p-4 flex items-center">
-                                    <Calendar className="h-6 w-6 mr-4" />
+                                    <Calendar className="h-6 w-6 mr-4 text-muted-foreground" />
                                     <div className="flex-1">
                                         <p className="font-medium">Apple Calendar</p>
                                         <p className="text-sm text-muted-foreground">Sync via a secure iCal link.</p>
