@@ -243,7 +243,7 @@
     }
   },
   "auth": {
-    "providers": ["email", "google.com", "apple.com"]
+    "providers": ["email", "google.com", "apple.com", "microsoft.com", "facebook.com"]
   },
   "firestore": {
     "/users/{userId}": {
