@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -37,6 +38,50 @@ export const WeatherOutputSchema = z.object({
 });
 export type WeatherOutput = z.infer<typeof WeatherOutputSchema>;
 
+const getCurrentWeather = ai.defineTool(
+    {
+      name: 'getCurrentWeather',
+      description: 'Returns the current and forecasted weather for a given location using the Google Weather API.',
+      inputSchema: WeatherInputSchema,
+      outputSchema: z.any(),
+    },
+    async (input) => {
+        const apiKey = process.env.GOOGLE_WEATHER_API_KEY;
+        if (!apiKey) {
+            throw new Error("Google Weather API key is not configured.");
+        }
+        
+        // Note: Google Weather API is a paid service. This is a mock implementation.
+        // In a real app, you would make an HTTP request to the actual API endpoint.
+        console.log(`Fetching weather for lat: ${input.location.lat}, lng: ${input.location.lng}`);
+
+        // Mock response simulating a Google Weather API call
+        const now = new Date();
+        const hourly: WeatherOutput['hourly'] = [];
+        for(let i=0; i < input.forecastHorizonHours; i++) {
+            const forecastTime = new Date(now.getTime() + (i * 60 * 60 * 1000));
+            hourly.push({
+                time: forecastTime.toISOString(),
+                temperature: 20 + Math.sin(i / 4) * 5,
+                condition: i > 4 && i < 7 ? 'Light Rain' : 'Partly Cloudy',
+                precipitationChance: i > 4 && i < 7 ? 60 : 10,
+            })
+        }
+
+        const mockApiResponse: WeatherOutput = {
+            current: {
+                temperature: 22,
+                condition: 'Partly Cloudy',
+                windSpeedKph: 15,
+                humidity: 65,
+            },
+            hourly,
+            summary: 'Conditions are favorable for the next 4 hours, with a chance of light rain developing this afternoon. Winds will remain moderate.'
+        };
+        return mockApiResponse;
+    }
+);
+
 export async function getWeatherForecast(input: WeatherInput): Promise<WeatherOutput> {
   return lariWeatherAiFlow(input);
 }
@@ -45,12 +90,13 @@ const weatherPrompt = ai.definePrompt({
   name: 'weatherForecastPrompt',
   input: { schema: WeatherInputSchema },
   output: { schema: WeatherOutputSchema },
+  tools: [getCurrentWeather],
   prompt: `You are LARI-Weather_AI, an AI that provides detailed weather forecasts for field operations.
   
-  Generate a weather forecast for the location: {{location.lat}}, {{location.lng}}.
+  Use the getCurrentWeather tool to get the weather forecast for the location: {{location.lat}}, {{location.lng}}.
   The forecast should cover the next {{forecastHorizonHours}} hours.
   
-  Provide the current conditions, an hourly breakdown, and a concise summary highlighting any potential operational impacts (e.g., high winds, rain, extreme temperatures).
+  Summarize the data you receive from the tool and highlight any potential operational impacts (e.g., high winds, rain, extreme temperatures).
   
   Return your response in the required JSON format.
   `,
@@ -63,35 +109,9 @@ const lariWeatherAiFlow = ai.defineFlow(
     outputSchema: WeatherOutputSchema,
   },
   async (input) => {
-    // In a real application, a tool would be used here to fetch data from a weather API.
-    // For this example, we will just return mock data.
     const { output } = await weatherPrompt(input);
-    
-    // MOCK IMPLEMENTATION:
-    const now = new Date();
-    const hourly: WeatherOutput['hourly'] = [];
-    for(let i=0; i < input.forecastHorizonHours; i++) {
-        const forecastTime = new Date(now.getTime() + (i * 60 * 60 * 1000));
-        hourly.push({
-            time: forecastTime.toISOString(),
-            temperature: 20 + Math.sin(i / 4) * 5,
-            condition: i > 4 && i < 7 ? 'Light Rain' : 'Partly Cloudy',
-            precipitationChance: i > 4 && i < 7 ? 60 : 10,
-        })
-    }
-
-    const mockOutput: WeatherOutput = {
-        current: {
-            temperature: 22,
-            condition: 'Partly Cloudy',
-            windSpeedKph: 15,
-            humidity: 65,
-        },
-        hourly,
-        summary: 'Conditions are favorable for the next 4 hours, with a chance of light rain developing this afternoon. Winds will remain moderate.'
-    };
-
-    // In a real implementation you would return `output!`. Here we return mock data.
-    return mockOutput;
+    // The model will call the tool and use its output to generate the final response.
+    // The final response should conform to WeatherOutputSchema.
+    return output!;
   }
 );
