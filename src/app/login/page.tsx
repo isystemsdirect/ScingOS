@@ -5,7 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Logo from "@/components/logo";
-import { SiMicrosoft, SiFacebook } from "@icons-pack/react-simple-icons";
+import { SiMicrosoft } from "@icons-pack/react-simple-icons/SiMicrosoft";
+import { SiFacebook } from "@icons-pack/react-simple-icons/SiFacebook";
 
 export default function LoginPage() {
   return (
