@@ -12,8 +12,11 @@ import {
   CloudSnow,
   CloudLightning,
   AlertTriangle,
+  Wind,
+  Droplets,
 } from 'lucide-react';
 import { Skeleton } from './ui/skeleton';
+import { Separator } from './ui/separator';
 
 const weatherIcons: { [key: string]: React.ElementType } = {
   Clear: Sun,
@@ -29,12 +32,16 @@ interface WeatherData {
     name: string;
     main: {
         temp: number;
+        humidity: number;
     };
     weather: {
         description: string;
         icon: string;
         main: string;
     }[];
+    wind: {
+        speed: number;
+    };
 }
 
 export function WeatherWidget() {
@@ -94,7 +101,7 @@ export function WeatherWidget() {
   if (loading) {
     return (
         <div className="p-2 space-y-2 group-data-[collapsed=true]:hidden">
-            <Skeleton className="h-8 w-full" />
+            <Skeleton className="h-24 w-full" />
             <Skeleton className="h-4 w-2/3" />
         </div>
     )
@@ -120,18 +127,37 @@ export function WeatherWidget() {
     : weatherIcons.default;
 
   return (
-    <div className="p-2 group-data-[collapsed=true]:hidden">
+    <div className="p-2 group-data-[collapsed=true]:hidden space-y-4">
         <div className="flex items-center gap-3">
-            <WeatherIcon className="h-8 w-8 text-primary" />
+            <WeatherIcon className="h-10 w-10 text-primary" />
             <div className="flex-1">
-                <p className="font-bold text-lg text-sidebar-foreground">
+                <p className="font-bold text-2xl text-sidebar-foreground">
                     {Math.round(weather.main.temp)}°{unit === 'metric' ? 'C' : 'F'}
                 </p>
-                <p className="text-xs text-muted-foreground -mt-1 flex items-center gap-1">
-                    <MapPin className="h-3 w-3" />
-                    {weather.name || 'Loading...'}
+                <p className="text-sm text-muted-foreground -mt-1 capitalize">
+                    {weather.weather[0].description}
                 </p>
             </div>
+        </div>
+        <div className="grid grid-cols-2 gap-2 text-sm">
+            <div className="flex items-center gap-2">
+                <Droplets className="h-4 w-4 text-muted-foreground" />
+                <div>
+                    <p className="text-xs text-muted-foreground">Humidity</p>
+                    <p className="font-semibold text-sidebar-foreground">{weather.main.humidity}%</p>
+                </div>
+            </div>
+             <div className="flex items-center gap-2">
+                <Wind className="h-4 w-4 text-muted-foreground" />
+                <div>
+                    <p className="text-xs text-muted-foreground">Wind</p>
+                    <p className="font-semibold text-sidebar-foreground">{Math.round(weather.wind.speed)} {unit === 'metric' ? 'm/s' : 'mph'}</p>
+                </div>
+            </div>
+        </div>
+        <div className="text-xs text-muted-foreground flex items-center gap-1">
+            <MapPin className="h-3 w-3" />
+            {weather.name || 'Loading...'}
         </div>
         {error && (
              <div className="mt-2 p-1.5 rounded-md bg-yellow-500/20 border border-yellow-500/50 text-xs text-yellow-300 flex items-center gap-2">
