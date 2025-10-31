@@ -1,0 +1,133 @@
+
+'use client';
+
+import Link from "next/link";
+import { ChevronLeft, ListFilter, PlusCircle, Search, Library, FolderKanban, Star } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { InspectionTypeList } from "@/components/inspection-type-list";
+import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { Input } from "@/components/ui/input";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuCheckboxItem } from "@/components/ui/dropdown-menu";
+import { mockSubscriptionPlans } from "@/lib/data";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { slugify } from "@/lib/utils";
+
+export default function NewInspectionPage() {
+  const [primaryType, setPrimaryType] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+  const clientId = searchParams.get('clientId');
+  
+  const currentPlan = mockSubscriptionPlans.find(plan => plan.isCurrent);
+  const isProOrEnterprise = currentPlan && (currentPlan.name === 'Pro' || currentPlan.name === 'Enterprise');
+  
+  const primaryTypeSlug = primaryType ? slugify(primaryType.split('-').slice(1).join('-')) : null;
+
+  return (
+    <div className="mx-auto w-full max-w-4xl px-4 lg:px-6">
+      <div className="flex flex-col sm:gap-4">
+        <main className="grid flex-1 items-start gap-4 md:gap-8">
+          <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
+            <div className="flex items-center gap-4">
+              <Link href={clientId ? `/clients/${clientId}` : "/inspections"}>
+                <Button variant="outline" size="icon" className="h-7 w-7">
+                  <ChevronLeft className="h-4 w-4" />
+                  <span className="sr-only">Back</span>
+                </Button>
+              </Link>
+              <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
+                New Inspection: Step 1 of 3
+              </h1>
+            </div>
+            <Card>
+              <CardHeader>
+                <CardTitle>Select Inspection Template</CardTitle>
+                <CardDescription>
+                  Choose from the library, a project template, or one of your saved custom templates.
+                </CardDescription>
+                 <div className="pt-4">
+                     <Tabs defaultValue="library">
+                        <TabsList className="grid w-full grid-cols-3">
+                            <TabsTrigger value="library"><Library className="mr-2 h-4 w-4" />Template Library</TabsTrigger>
+                            <TabsTrigger value="projects"><FolderKanban className="mr-2 h-4 w-4"/>Team Projects</TabsTrigger>
+                            <TabsTrigger value="saved"><Star className="mr-2 h-4 w-4"/>My Templates</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="library" className="pt-4">
+                             <div className="flex items-center gap-2">
+                                <div className="relative flex-1">
+                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                    <Input placeholder="Search inspection types..." className="pl-9 rounded-md" />
+                                </div>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                    <Button variant="outline" size="sm" className="h-10 gap-1">
+                                        <ListFilter className="h-3.5 w-3.5" />
+                                        <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                                        Filter
+                                        </span>
+                                    </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end">
+                                    <DropdownMenuLabel>Filter by Category</DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuCheckboxItem checked>Real-estate</DropdownMenuCheckboxItem>
+                                    <DropdownMenuCheckboxItem>Construction</DropdownMenuCheckboxItem>
+                                    <DropdownMenuCheckboxItem>Environmental</DropdownMenuCheckboxItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                                {isProOrEnterprise && (
+                                    <Button size="sm" className="h-10 gap-1">
+                                        <PlusCircle className="h-3.5 w-3.5" />
+                                        <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                                        Create Template
+                                        </span>
+                                    </Button>
+                                )}
+                            </div>
+                            <div className="mt-4">
+                                <InspectionTypeList
+                                selectionMode="single"
+                                onSelectionChange={(selection) => setPrimaryType(selection as string)}
+                                />
+                            </div>
+                        </TabsContent>
+                         <TabsContent value="projects">
+                            <div className="flex flex-col items-center justify-center pt-8 text-center min-h-[200px]">
+                                <p className="text-muted-foreground mb-4">Project folders are managed in the Teams section.</p>
+                                <Button asChild>
+                                    <Link href="/teams">Go to Teams & Dispatch</Link>
+                                </Button>
+                            </div>
+                        </TabsContent>
+                        <TabsContent value="saved">
+                           <div className="flex flex-col items-center justify-center pt-8 text-center min-h-[200px]">
+                                <p className="text-muted-foreground">Your saved custom templates will appear here.</p>
+                                 <p className="text-xs text-muted-foreground mt-2">Create a new template from the Library tab.</p>
+                            </div>
+                        </TabsContent>
+                    </Tabs>
+                </div>
+              </CardHeader>
+               {primaryType && (
+                <CardContent>
+                   <Button className="w-full sm:w-auto" asChild>
+                     <Link href={{ pathname: `/inspections/new/${primaryTypeSlug}`, query: { clientId: clientId ?? undefined }}}>
+                        Next: Client & Property Details
+                     </Link>
+                  </Button>
+                </CardContent>
+              )}
+            </Card>
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+}
