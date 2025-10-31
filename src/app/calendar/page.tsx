@@ -40,7 +40,7 @@ export default function CalendarPage() {
       })
     );
     setGridState(newGridState);
-  }, [times.length, days.length]);
+  }, []); // Empty dependency array ensures this runs only once on mount
 
 
   return (
@@ -64,8 +64,10 @@ export default function CalendarPage() {
                 <Button variant="outline" size="icon"><ChevronLeft className="h-4 w-4" /></Button>
                 <Button variant="outline" className="gap-1"><CalendarIcon className="h-4 w-4"/> Oct 28 - Nov 3, 2023</Button>
                 <Button variant="outline" size="icon"><ChevronRight className="h-4 w-4" /></Button>
-                 <Button>
-                    <PlusCircle className="mr-2 h-4 w-4" /> Create Booking
+                 <Button asChild>
+                    <Link href="/bookings/new">
+                        <PlusCircle className="mr-2 h-4 w-4" /> Create Booking
+                    </Link>
                 </Button>
             </div>
           </div>
