@@ -13,16 +13,19 @@ import {
   ShieldCheck,
   Sparkles,
   TrendingUp,
+  User,
+  Bot
 } from 'lucide-react';
+import { ScingularLogoText } from '@/components/ui/logo-text';
 
 const corePillars = [
     {
-        icon: BrainCircuit,
-        title: "LARI™ AI Core",
-        description: "The Logistical, Analytical, and Reporting Interface is the central nervous system, a suite of interoperable AI sub-engines designed for multimodal data fusion and complex analysis."
+        icon: Cpu,
+        title: "The AI Trinity: LARI, Scing & BANE",
+        description: "A synergistic trifecta. LARI analyzes, Scing interacts, and BANE strategizes, providing a complete intelligence ecosystem from the field to the boardroom."
     },
     {
-        icon: Cpu,
+        icon: BrainCircuit,
         title: "Edge-to-Cloud Continuum",
         description: "A hybrid architecture enabling real-time, on-device processing for speed and offline capability, with seamless offload to high-compute cloud infrastructure for deep analytics."
     },
@@ -48,8 +51,8 @@ export default function OverviewPage() {
                         <Sparkles className="h-10 w-10 text-primary" />
                         SCINGULAR AI
                     </h1>
-                    <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                        An Executive Summary & Strategic Overview of the World's First Vertically-Integrated, AI-Powered Inspection & Field Intelligence Ecosystem.
+                    <p className="text-xl text-muted-foreground max-w-4xl mx-auto">
+                        An Executive Summary & Strategic Overview of the World's First Vertically-Integrated, AI-Powered Inspection & Field Intelligence Ecosystem, driven by the synergistic power of the LARI, Scing, and BANE AI engines.
                     </p>
                 </header>
 
@@ -65,7 +68,7 @@ export default function OverviewPage() {
                                 The global inspection, testing, and certification market is a multi-trillion dollar industry ripe for disruption. It currently operates on fragmented, decades-old workflows, manual data entry, and subjective, error-prone analysis. SCINGULAR introduces a paradigm shift: a unified, intelligent platform that transforms raw field data into verifiable, monetizable, and actionable insights in real-time. We are not merely building a better inspection app; we are creating the definitive operating system for the entire physical world assessment value chain.
                             </p>
                             <p>
-                                By vertically integrating sensor hardware, edge AI processing, cloud analytics, and a sophisticated SaaS monetization engine, SCINGULAR creates an unparalleled moat. Our platform empowers a single inspector to perform the work of an entire team of specialists, exponentially increasing efficiency, accuracy, and profitability while simultaneously establishing a new gold standard for data integrity and scientific rigor.
+                                By vertically integrating sensor hardware, edge AI processing, cloud analytics, and a sophisticated SaaS monetization engine, SCINGULAR creates an unparalleled moat. Our platform, powered by the **LARI**, **Scing**, and **BANE** AI engines, empowers a single inspector to perform the work of an entire team of specialists, exponentially increasing efficiency, accuracy, and profitability while simultaneously establishing a new gold standard for data integrity and scientific rigor.
                             </p>
                         </CardContent>
                     </Card>
@@ -98,43 +101,62 @@ export default function OverviewPage() {
 
                 <section className="space-y-6">
                     <div className="text-center">
-                        <h2 className="text-3xl font-bold flex items-center justify-center gap-3"><Network className="h-8 w-8"/> The LARI™ Engine: A Symphony of AI</h2>
-                        <p className="text-muted-foreground mt-2">A breakdown of the specialized AI sub-engines that form our proprietary core.</p>
+                        <h2 className="text-3xl font-bold flex items-center justify-center gap-3"><Network className="h-8 w-8"/> The AI Engines: A Symphony of Intelligence</h2>
+                        <p className="text-muted-foreground mt-2">A breakdown of the specialized AI engines that form our proprietary core.</p>
                     </div>
-                    <Card className="bg-card/60 backdrop-blur-sm">
-                        <CardContent className="p-6 grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            <div className="space-y-1">
-                                <h3 className="font-semibold text-primary">LARI-VISION</h3>
-                                <p className="text-sm text-muted-foreground">Processes all visual data—from smartphone cameras to drone feeds and borescopes—to identify defects, perform OCR, and create 2D/3D asset models.</p>
-                            </div>
-                            <div className="space-y-1">
-                                <h3 className="font-semibold text-primary">LARI-MAPPER</h3>
-                                <p className="text-sm text-muted-foreground">The spatial intelligence core. Ingests LiDAR, laser, and 3D volumetric data to generate floorplans, calculate volumes, and perform advanced geometric analysis.</p>
-                            </div>
-                            <div className="space-y-1">
-                                <h3 className="font-semibold text-primary">LARI-PRISM</h3>
-                                <p className="text-sm text-muted-foreground">A groundbreaking elemental analysis engine. Simulates real-time lookups to scientific databases to determine material compositions and flag regulatory & safety issues.</p>
-                            </div>
-                            <div className="space-y-1">
-                                <h3 className="font-semibold text-primary">LARI-THERM & LARI-ECHO</h3>
-                                <p className="text-sm text-muted-foreground">These engines interpret the invisible, analyzing thermal/infrared data for heat anomalies and sonar/acoustic data for subsurface defects like voids and rebar location.</p>
-                            </div>
-                            <div className="space-y-1">
-                                <h3 className="font-semibold text-primary">LARI-COMPLIANCE & LARI-SYNTHESIZER</h3>
-                                <p className="text-sm text-muted-foreground">The reporting powerhouses. Cross-references all findings against a vast library of codes and standards, then synthesizes the data into coherent, actionable executive summaries.</p>
-                            </div>
-                             <div className="space-y-1">
-                                <h3 className="font-semibold text-primary">LARI-GUANGEL & Domain Models</h3>
-                                <p className="text-sm text-muted-foreground">A suite of specialized models for safety (Guardian Angel AI), logistics, environmental analysis, and other industry verticals, providing hyper-contextual, actionable intelligence.</p>
-                            </div>
-                        </CardContent>
-                    </Card>
+                    <div className="grid md:grid-cols-3 gap-6 items-start">
+                        <Card className="bg-card/60 backdrop-blur-sm">
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2"><Bot className="text-primary"/> LARI™ Engine</CardTitle>
+                                <CardDescription>The Analytical Powerhouse</CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <p className="text-sm text-muted-foreground">A suite of specialized AI sub-engines that form our proprietary analytical core.</p>
+                                <ul className="text-xs space-y-2 text-muted-foreground">
+                                    <li><span className="font-semibold text-foreground">LARI-VISION:</span> Processes all visual data.</li>
+                                    <li><span className="font-semibold text-foreground">LARI-MAPPER:</span> The spatial intelligence core for 3D data.</li>
+                                    <li><span className-="font-semibold text-foreground">LARI-PRISM:</span> Groundbreaking elemental analysis engine.</li>
+                                    <li><span className="font-semibold text-foreground">LARI-THERM & ECHO:</span> Interpret thermal and acoustic data.</li>
+                                    <li><span className="font-semibold text-foreground">LARI-COMPLIANCE:</span> Cross-references findings against codes.</li>
+                                    <li><span className="font-semibold text-foreground">LARI-GUANGEL:</span> Domain models for safety and logistics.</li>
+                                </ul>
+                            </CardContent>
+                        </Card>
+                         <Card className="bg-card/60 backdrop-blur-sm">
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2"><User className="text-primary"/> Scing™ AI</CardTitle>
+                                <CardDescription>The Inspector's AI Partner</CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <p className="text-sm text-muted-foreground">Scing is the voice and intelligence in the field, providing a natural language interface to the immense power of LARI.</p>
+                                <ul className="text-xs space-y-2 text-muted-foreground">
+                                    <li><span className="font-semibold text-foreground">Voice-Activated Ops:</span> "Scing, start a moisture survey."</li>
+                                    <li><span className="font-semibold text-foreground">On-Site Analysis:</span> "Scing, what's the code for this panel?"</li>
+                                    <li><span className="font-semibold text-foreground">Real-time Data Capture:</span> "Scing, document this crack."</li>
+                                </ul>
+                            </CardContent>
+                        </Card>
+                         <Card className="bg-card/60 backdrop-blur-sm">
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2"><TrendingUp className="text-primary"/> BANE™ Engine</CardTitle>
+                                <CardDescription>The Business Intelligence Engine</CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <p className="text-sm text-muted-foreground">BANE turns our network of inspections into a priceless asset by analyzing macro trends and creating new data products.</p>
+                                <ul className="text-xs space-y-2 text-muted-foreground">
+                                    <li><span className="font-semibold text-foreground">Predictive Analytics:</span> Identifies component failure patterns.</li>
+                                    <li><span className-="font-semibold text-foreground">Risk Modeling:</span> Provides risk data to insurance/finance.</li>
+                                    <li><span className="font-semibold text-foreground">Market Intelligence:</span> Reports on defect trends and compliance.</li>
+                                </ul>
+                            </CardContent>
+                        </Card>
+                    </div>
                 </section>
                 
                 <section className="space-y-6">
                     <div className="text-center">
                         <h2 className="text-3xl font-bold flex items-center justify-center gap-3"><TrendingUp className="h-8 w-8"/> Lucrative Monetization & Market Strategy</h2>
-                        <p className="text-muted-foreground mt-2">Our multi-pronged strategy for market capture and scalable, high-margin revenue generation.</p>
+                        <p className="text-muted-foreground mt-2">Our multi-pronged strategy, powered by BANE, for market capture and scalable, high-margin revenue generation.</p>
                     </div>
                      <div className="grid gap-6 md:grid-cols-2">
                          <Card className="bg-card/60 backdrop-blur-sm">
@@ -144,22 +166,22 @@ export default function OverviewPage() {
                             <CardContent className="space-y-2">
                                 <p className="text-sm text-muted-foreground">A recurring revenue model based on inspector seats and data volume, with powerful upsell paths.</p>
                                 <ul className="text-sm list-disc pl-5 space-y-1 text-muted-foreground">
-                                    <li><span className="font-semibold text-foreground">Freemium Tier:</span> Establishes market presence and a user funnel by offering core tools.</li>
-                                    <li><span className="font-semibold text-foreground">Pro Tier:</span> Unlocks external hardware integration (drones, LiDAR), creating a primary revenue driver for professional users.</li>
-                                    <li><span className="font-semibold text-foreground">Enterprise Tier:</span> High-ticket contracts for large firms, offering unlimited usage, advanced security, and dedicated support.</li>
+                                    <li><span className="font-semibold text-foreground">Freemium Tier:</span> Establishes market presence and a user funnel by offering core tools powered by Scing.</li>
+                                    <li><span className="font-semibold text-foreground">Pro Tier:</span> Unlocks external hardware integration (drones, LiDAR) and advanced LARI engines, creating a primary revenue driver for professional users.</li>
+                                    <li><span className="font-semibold text-foreground">Enterprise Tier:</span> High-ticket contracts for large firms, offering unlimited usage, advanced security, and access to BANE's powerful analytics dashboards.</li>
                                     <li><span className="font-semibold text-foreground">Key Marketplace:</span> A powerful a-la-carte system selling access to specialized LARI engines (e.g., LARI-PRISM), creating high-margin, needs-based revenue streams.</li>
                                 </ul>
                             </CardContent>
                          </Card>
                          <Card className="bg-card/60 backdrop-blur-sm">
                             <CardHeader>
-                                <CardTitle>Data & Analytics as a Service (DAaaS)</CardTitle>
+                                <CardTitle>Data & Analytics as a Service (DAaaS) via BANE</CardTitle>
                             </CardHeader>
                              <CardContent className="space-y-2">
-                                <p className="text-sm text-muted-foreground">The true long-term value lies in our unique, aggregated, and verifiable dataset of the built world.</p>
+                                <p className="text-sm text-muted-foreground">The true long-term value lies in our unique, aggregated, and verifiable dataset of the built world, packaged and sold by the BANE engine.</p>
                                 <ul className="text-sm list-disc pl-5 space-y-1 text-muted-foreground">
                                     <li><span className="font-semibold text-foreground">Insurance & Underwriting:</span> Sell anonymized, aggregated risk data (e.g., defect prevalence by region) to insurance carriers for actuarial modeling.</li>
-                                    <li><  span className="font-semibold text-foreground">Real Estate Finance:</span> Provide portfolio-level analytics to REITs, lenders, and investors for due diligence and asset lifecycle management.</li>
+                                    <li><span className="font-semibold text-foreground">Real Estate Finance:</span> Provide portfolio-level analytics to REITs, lenders, and investors for due diligence and asset lifecycle management.</li>
                                     <li><span className="font-semibold text-foreground">Predictive Maintenance:</span> Leverage historical data to create predictive models for component failure, sold as a premium analytics service to property managers.</li>
                                 </ul>
                             </CardContent>
