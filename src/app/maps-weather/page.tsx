@@ -125,7 +125,7 @@ export default function MapsWeatherPage() {
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-[1fr_320px] gap-8 items-start">
-          <div className="h-[75vh] w-full rounded-lg overflow-hidden border shadow-[0_0_15px_2px_rgba(255,255,255,0.1)]">
+          <div className="h-[75vh] w-full rounded-lg overflow-hidden border">
             <MarketplaceMap inspectors={mockInspectors} clients={mockClients} />
           </div>
 
