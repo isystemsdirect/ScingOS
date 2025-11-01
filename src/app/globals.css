@@ -155,6 +155,14 @@
     .text-glow-blue {
         text-shadow: 0 0 8px hsl(205 80% 40% / 0.9), 0 0 20px hsl(205 80% 40% / 0.7);
     }
+    .text-scingular-glow {
+      position: relative;
+      background: linear-gradient(90deg, #FDB813, #00B2A9, #003366);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      -webkit-text-stroke: 1px #002244;
+      text-shadow: 0 0 10px #FDB813, 0 0 20px #00B2A9, 0 0 30px #003366;
+    }
 }
 
 @keyframes background-pan {
