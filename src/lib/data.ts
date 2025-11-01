@@ -345,6 +345,8 @@ export const mockNotifications = [
     { id: 2, type: 'topic' as const, title: "#thermal-imaging is trending", description: "Join the conversation on interpreting thermal data." },
     { id: 3, type: 'weather' as const, title: "Weather Update: Los Angeles, CA", description: "Clear skies, 75°F. Ideal conditions for outdoor and drone inspections." },
     { id: 4, type: 'safety' as const, title: "High Wind Warning", description: "Winds gusting up to 45 mph. Use caution with drones." },
+    { id: 5, type: 'traffic' as const, title: "I-405 Closure", description: "Northbound I-405 closed at Sunset Blvd due to accident. Expect major delays." },
+    { id: 6, type: 'weather_news' as const, title: "National Weather News", description: "Tropical Storm 'Arthur' expected to make landfall in Florida late Thursday." },
 ];
 
 export const mockNews = [

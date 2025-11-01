@@ -1,6 +1,8 @@
 
 export type InspectionStatus = "Draft" | "In Progress" | "Inspector Approved" | "Client Approved" | "Final";
 export type DeviceKey = "Key-Drone" | "Key-LiDAR" | "Key-Thermal" | "Key-Spectrometer" | "Key-Sonar" | "Key-VideoHD" | "Key-Audio" | "Key-GPS";
+export type NotificationType = "post" | "topic" | "weather" | "safety" | "traffic" | "weather_news";
+
 
 export type Finding = {
   id: string;

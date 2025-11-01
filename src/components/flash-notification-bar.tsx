@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { Rss, Hash, CloudSun, AlertTriangle, X, Clock, Calendar } from 'lucide-react';
+import { Rss, Hash, CloudSun, AlertTriangle, X, Clock, Calendar, TrafficCone, Newspaper } from 'lucide-react';
 import { mockNotifications as staticNotifications } from '@/lib/data';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Badge } from './ui/badge';
@@ -27,8 +27,10 @@ interface WeatherData {
 const typeInfo = {
     post: { icon: Rss, label: 'New Post', href: '/social', className: 'bg-blue-500/20 text-blue-300 border-blue-500/50' },
     topic: { icon: Hash, label: 'Trending', href: '/topics', className: 'bg-purple-500/20 text-purple-300 border-purple-500/50' },
-    weather: { icon: CloudSun, label: 'Weather', href: '/dashboard', className: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/50' },
+    weather: { icon: CloudSun, label: 'Weather', href: '/maps-weather', className: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/50' },
     safety: { icon: AlertTriangle, label: 'Safety Alert', href: '/dashboard', className: 'bg-yellow-500/20 text-yellow-300 border-yellow-500/50' },
+    traffic: { icon: TrafficCone, label: 'Traffic Alert', href: '/maps-weather', className: 'bg-orange-500/20 text-orange-300 border-orange-500/50' },
+    weather_news: { icon: Newspaper, label: 'Weather News', href: '/maps-weather', className: 'bg-sky-500/20 text-sky-300 border-sky-500/50' },
 }
 
 export function FlashNotificationBar() {
@@ -132,8 +134,8 @@ export function FlashNotificationBar() {
   const notification = notifications[index];
   if (!notification) return null;
 
-  const Icon = typeInfo[notification.type].icon;
-  const href = typeInfo[notification.type].href;
+  const Icon = typeInfo[notification.type as keyof typeof typeInfo].icon;
+  const href = typeInfo[notification.type as keyof typeof typeInfo].href;
 
   const formatTime = (date: Date) => {
     if (timeFormat === '24h') {
@@ -155,9 +157,9 @@ export function FlashNotificationBar() {
                     className="w-full flex-1 min-w-0"
                 >
                 <Link href={href} className="flex items-center gap-3 w-full">
-                        <Badge variant="outline" className={cn("gap-2", typeInfo[notification.type].className)}>
+                        <Badge variant="outline" className={cn("gap-2", typeInfo[notification.type as keyof typeof typeInfo].className)}>
                             <Icon className="h-4 w-4" />
-                            <span className="hidden sm:inline">{typeInfo[notification.type].label}</span>
+                            <span className="hidden sm:inline">{typeInfo[notification.type as keyof typeof typeInfo].label}</span>
                         </Badge>
                         <p className="text-sm text-muted-foreground truncate">
                             <span className="font-semibold text-foreground">{notification.title}:</span>
