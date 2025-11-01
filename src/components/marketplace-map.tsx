@@ -315,5 +315,3 @@ export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
       </div>
   )
 }
-
-    
