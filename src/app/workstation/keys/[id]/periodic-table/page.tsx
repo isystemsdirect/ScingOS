@@ -108,7 +108,7 @@ export default function PeriodicTablePage() {
                                                     gridRow: element.ypos,
                                                 }}
                                             >
-                                                <div className="absolute top-1 left-1 text-xs font-semibold">{element.number}</div>
+                                                <div className="absolute top-1 left-1 text-xs font-normal">{element.number}</div>
                                                 <div className="text-xl font-bold">{element.symbol}</div>
                                                 <div className="text-[10px] leading-none text-center truncate w-full font-medium">{element.name}</div>
                                             </button>
