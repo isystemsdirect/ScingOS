@@ -14,14 +14,14 @@ const Logo = ({ className, isLoginPage = false }: { className?: string, isLoginP
           className
         )}
       >
-        <div className="relative logo-gradient-light p-2 sm:p-4">
+        <div className="relative logo-gradient-light rounded-full p-2 sm:p-4">
             <Image src="/logo.png" alt="Scingular Logo" width={192} height={192} className="size-32 sm:size-40 md:size-48 relative" />
         </div>
         <div className="relative flex items-baseline justify-center">
            <span className="font-sans uppercase font-bold italic text-xl sm:text-2xl md:text-xl whitespace-nowrap">
             <span className="text-scingular-glow">SCINGULAR</span> <span className="text-primary text-ai-glow">AI</span>
           </span>
-          <span className="font-sans font-bold text-[0.4em] absolute top-[0.6em] right-[-2.2em] sm:top-[0.8em] sm:-right-[2.2em] md:top-[0.6em] md:-right-[2.2em]">TM</span>
+          <span className="font-sans font-bold text-[0.4em] absolute top-[0.6em] right-[-4.2em] sm:top-[0.8em] sm:-right-[4.2em] md:top-[0.6em] md:-right-[4.2em]">TM</span>
         </div>
       </Link>
     );
