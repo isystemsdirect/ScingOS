@@ -80,6 +80,7 @@ export default function PeriodicTablePage() {
                         </div>
                     </CardHeader>
                     <CardContent>
+                      <div className="overflow-x-auto">
                         <TooltipProvider>
                             <div
                                 className="grid gap-1 min-w-[1200px]"
@@ -149,6 +150,7 @@ export default function PeriodicTablePage() {
                                 )})}
                             </div>
                         </TooltipProvider>
+                      </div>
 
                          <div className="mt-8 flex flex-wrap gap-4">
                             {Object.entries(elementCategories).map(([key, { label, bg }]) => (
