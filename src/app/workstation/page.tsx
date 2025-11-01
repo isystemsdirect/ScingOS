@@ -56,11 +56,11 @@ export default function WorkstationPage() {
             <TabsList className="grid h-auto w-full grid-cols-1 md:grid-cols-5 lg:grid-cols-10 border p-1 bg-background/60 backdrop-blur-sm">
                 <TabsTrigger value="profile" className="py-2"><User className="mr-2 h-4 w-4"/>Profile</TabsTrigger>
                 <TabsTrigger value="credentials" className="py-2"><KeyRound className="mr-2 h-4 w-4"/>Credentials</TabsTrigger>
+                <TabsTrigger value="keys" className="py-2"><KeyRound className="mr-2 h-4 w-4"/>Keys</TabsTrigger>
                 <TabsTrigger value="templates" className="py-2"><FileText className="mr-2 h-4 w-4"/>Templates</TabsTrigger>
                 <TabsTrigger value="integrations" className="py-2"><Link2 className="mr-2 h-4 w-4"/>Integrations</TabsTrigger>
                 <TabsTrigger value="security" className="py-2"><User className="mr-2 h-4 w-4"/>Security</TabsTrigger>
                 <TabsTrigger value="ai" className="py-2"><Sparkles className="mr-2 h-4 w-4"/>AI & Voice</TabsTrigger>
-                <TabsTrigger value="camera" className="py-2"><Camera className="mr-2 h-4 w-4"/>Camera</TabsTrigger>
                 <TabsTrigger value="marketplace" className="py-2"><Store className="mr-2 h-4 w-4"/>Marketplace</TabsTrigger>
                 <TabsTrigger value="devices" className="py-2"><Cpu className="mr-2 h-4 w-4"/>Device Lab</TabsTrigger>
                 <TabsTrigger value="data" className="py-2"><Database className="mr-2 h-4 w-4"/>Data & Privacy</TabsTrigger>
@@ -178,6 +178,64 @@ export default function WorkstationPage() {
                             </Link>
                         </Button>
                         <p className="text-xs text-muted-foreground ml-auto">*Verification may take 24-48 hours.</p>
+                    </CardFooter>
+                </Card>
+            </TabsContent>
+            <TabsContent value="keys">
+                <Card className="bg-card/60 backdrop-blur-sm">
+                    <CardHeader>
+                        <div className="flex items-center gap-3">
+                            <KeyRound className="h-6 w-6 text-primary" />
+                            <CardTitle>API &amp; Device Keys</CardTitle>
+                        </div>
+                        <CardDescription>
+                            Manage the keys used by devices and services to interact with the LARI engine.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>Key Name</TableHead>
+                                    <TableHead>LARI Sub-Engine</TableHead>
+                                    <TableHead>Entitlement</TableHead>
+                                    <TableHead>Status</TableHead>
+                                    <TableHead className="text-right">Actions</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {mockKeys.map(key => (
+                                    <TableRow key={key.id}>
+                                        <TableCell className="font-medium">
+                                            {key.name}
+                                            <div className="text-xs text-muted-foreground font-mono">{key.id}</div>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Badge variant="outline">{key.lariEngine}</Badge>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Badge variant={key.entitlement === 'Pro' || key.entitlement === 'Enterprise' || key.entitlement === 'MAX' ? 'pro' : 'secondary'}>{key.entitlement}</Badge>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Badge variant={key.status === 'Active' ? "default" : 'secondary'}>{key.status}</Badge>
+                                        </TableCell>
+                                        <TableCell className="text-right">
+                                            <Button variant="ghost" size="icon"><Trash2 className="h-4 w-4"/></Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </CardContent>
+                    <CardFooter className="border-t pt-6">
+                       <Button asChild size="sm" variant="outline" className="h-8 gap-1">
+                           <Link href="/finances">
+                                <PlusCircle className="h-3.5 w-3.5" />
+                                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                                Purchase New Key
+                                </span>
+                           </Link>
+                        </Button>
                     </CardFooter>
                 </Card>
             </TabsContent>
@@ -405,74 +463,6 @@ export default function WorkstationPage() {
                     </CardFooter>
                 </Card>
             </TabsContent>
-            <TabsContent value="camera">
-                <Card className="bg-card/60 backdrop-blur-sm">
-                    <CardHeader>
-                    <CardTitle>Camera & Vision Settings</CardTitle>
-                    <CardDescription>
-                        Configure camera settings for high-quality visual data capture.
-                    </CardDescription>
-                    </CardHeader>
-                    <CardContent className="grid gap-6">
-                    <div className="flex items-center justify-between rounded-lg border p-4">
-                        <div className="flex-1">
-                        <h4 className="font-medium">Enable Pro Mode</h4>
-                        <p className="text-sm text-muted-foreground">
-                            Unlock advanced controls for exposure, focus, and white balance.
-                        </p>
-                        {!isProOrEnterprise && (
-                            <Button variant="link" size="sm" asChild className="p-0 h-auto text-primary">
-                            <Link href="/finances"><Sparkles className="mr-2 h-4 w-4" />Upgrade to Pro to enable this feature</Link>
-                            </Button>
-                        )}
-                        </div>
-                        <Switch disabled={!isProOrEnterprise} />
-                    </div>
-                    <div className="grid md:grid-cols-3 gap-4">
-                        <div className="grid gap-3">
-                        <Label htmlFor="cam-resolution">Resolution</Label>
-                        <Select defaultValue="1080">
-                            <SelectTrigger id="cam-resolution">
-                                <SelectValue placeholder="Select resolution" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="720">1280x720 (720p)</SelectItem>
-                                <SelectItem value="1080">1920x1080 (1080p)</SelectItem>
-                                <SelectItem value="4k">3840x2160 (4K UHD)</SelectItem>
-                            </SelectContent>
-                        </Select>
-                        </div>
-                        <div className="grid gap-3">
-                        <Label htmlFor="cam-fps">Frame Rate</Label>
-                        <Select defaultValue="30">
-                            <SelectTrigger id="cam-fps">
-                                <SelectValue placeholder="Select frame rate" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="30">30 FPS</SelectItem>
-                                <SelectItem value="60">60 FPS</SelectItem>
-                            </SelectContent>
-                        </Select>
-                        </div>
-                        <div className="grid gap-3">
-                        <Label htmlFor="cam-facing">Preferred Camera</Label>
-                        <Select defaultValue="environment">
-                            <SelectTrigger id="cam-facing">
-                                <SelectValue placeholder="Select camera" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="user">Front (Selfie)</SelectItem>
-                                <SelectItem value="environment">Back (Environment)</SelectItem>
-                            </SelectContent>
-                        </Select>
-                        </div>
-                    </div>
-                    </CardContent>
-                    <CardFooter className="border-t px-6 py-4">
-                    <Button>Save Camera Preferences</Button>
-                    </CardFooter>
-                </Card>
-            </TabsContent>
             <TabsContent value="marketplace">
             <div className="grid gap-6">
                 <Card className="bg-card/60 backdrop-blur-sm">
@@ -627,64 +617,6 @@ export default function WorkstationPage() {
                             <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
                             Register New Device
                             </span>
-                        </Button>
-                    </CardFooter>
-                </Card>
-            </TabsContent>
-            <TabsContent value="keys">
-                <Card className="bg-card/60 backdrop-blur-sm">
-                    <CardHeader>
-                        <div className="flex items-center gap-3">
-                            <KeyRound className="h-6 w-6 text-primary" />
-                            <CardTitle>API & Device Keys</CardTitle>
-                        </div>
-                        <CardDescription>
-                            Manage the keys used by devices and services to interact with the LARI engine.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Key Name</TableHead>
-                                    <TableHead>LARI Sub-Engine</TableHead>
-                                    <TableHead>Entitlement</TableHead>
-                                    <TableHead>Status</TableHead>
-                                    <TableHead className="text-right">Actions</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {mockKeys.map(key => (
-                                    <TableRow key={key.id}>
-                                        <TableCell className="font-medium">
-                                            {key.name}
-                                            <div className="text-xs text-muted-foreground font-mono">{key.id}</div>
-                                        </TableCell>
-                                        <TableCell>
-                                            <Badge variant="outline">{key.lariEngine}</Badge>
-                                        </TableCell>
-                                        <TableCell>
-                                            <Badge variant={key.entitlement === 'Pro' || key.entitlement === 'Enterprise' ? 'pro' : 'secondary'}>{key.entitlement}</Badge>
-                                        </TableCell>
-                                        <TableCell>
-                                            <Badge variant={key.status === 'Active' ? "default" : 'secondary'}>{key.status}</Badge>
-                                        </TableCell>
-                                        <TableCell className="text-right">
-                                            <Button variant="ghost" size="icon"><Trash2 className="h-4 w-4"/></Button>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </CardContent>
-                    <CardFooter className="border-t pt-6">
-                       <Button asChild size="sm" variant="outline" className="h-8 gap-1">
-                           <Link href="/finances">
-                                <PlusCircle className="h-3.5 w-3.5" />
-                                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                                Purchase New Key
-                                </span>
-                           </Link>
                         </Button>
                     </CardFooter>
                 </Card>

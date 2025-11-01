@@ -24,6 +24,7 @@ const mockInvoices = [
 ]
 
 export default function FinancesPage() {
+  const currentPlan = mockSubscriptionPlans.find(p => p.isCurrent) || mockSubscriptionPlans[1];
   return (
     <div className="mx-auto w-full max-w-6xl px-4 lg:px-6">
       <div className="flex flex-col gap-8">
@@ -62,6 +63,47 @@ export default function FinancesPage() {
             </CardContent>
           </Card>
         </div>
+        
+        <Card className="bg-card/60 backdrop-blur-sm">
+          <CardHeader>
+              <CardTitle>Subscription Plan</CardTitle>
+              <CardDescription>You are currently on the <span className="font-bold text-pro">{currentPlan.name}</span> plan.</CardDescription>
+          </CardHeader>
+          <CardContent>
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                  {mockSubscriptionPlans.map((plan) => (
+                  <Card key={plan.name} className={cn("flex flex-col bg-card/60 backdrop-blur-sm", plan.isCurrent && "border-primary ring-2 ring-primary")}>
+                      <CardHeader>
+                      <CardTitle>{plan.name}</CardTitle>
+                      <CardDescription>
+                          <span className="text-3xl font-bold">{plan.price}</span>
+                          <span className="text-muted-foreground">{plan.pricePeriod}</span>
+                      </CardDescription>
+                      </CardHeader>
+                      <CardContent className="flex-1 grid gap-4">
+                      <ul className="grid gap-2 text-sm text-muted-foreground">
+                          {plan.features.map((feature) => (
+                          <li key={feature} className="flex items-start gap-2">
+                              <Check className="h-4 w-4 text-primary flex-shrink-0 mt-1" />
+                              <span>{feature}</span>
+                          </li>
+                          ))}
+                      </ul>
+                      </CardContent>
+                      <CardFooter>
+                      <Button
+                          className="w-full"
+                          disabled={plan.isCurrent}
+                          variant={plan.name === 'Pro' || plan.name === 'Enterprise' || plan.name === 'Enterprise MAX' ? 'pro' : plan.isCurrent ? 'outline' : 'default'}
+                      >
+                          {plan.cta}
+                      </Button>
+                      </CardFooter>
+                  </Card>
+                  ))}
+              </div>
+          </CardContent>
+        </Card>
 
         <div className="grid md:grid-cols-2 gap-8">
           <Card className="bg-card/60 backdrop-blur-sm">
@@ -157,46 +199,6 @@ export default function FinancesPage() {
           </Card>
         </div>
 
-        <Card className="bg-card/60 backdrop-blur-sm">
-          <CardHeader>
-              <CardTitle>Subscription Plan</CardTitle>
-              <CardDescription>You are currently on the Pro plan.</CardDescription>
-          </CardHeader>
-          <CardContent>
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-                  {mockSubscriptionPlans.map((plan) => (
-                  <Card key={plan.name} className={cn("flex flex-col bg-card/60 backdrop-blur-sm", plan.isCurrent && "border-primary ring-2 ring-primary")}>
-                      <CardHeader>
-                      <CardTitle>{plan.name}</CardTitle>
-                      <CardDescription>
-                          <span className="text-3xl font-bold">{plan.price}</span>
-                          <span className="text-muted-foreground">{plan.pricePeriod}</span>
-                      </CardDescription>
-                      </CardHeader>
-                      <CardContent className="flex-1 grid gap-4">
-                      <ul className="grid gap-2 text-sm text-muted-foreground">
-                          {plan.features.map((feature) => (
-                          <li key={feature} className="flex items-center gap-2">
-                              <Check className="h-4 w-4 text-primary" />
-                              {feature}
-                          </li>
-                          ))}
-                      </ul>
-                      </CardContent>
-                      <CardFooter>
-                      <Button
-                          className="w-full"
-                          disabled={plan.isCurrent}
-                          variant={plan.isCurrent ? "outline" : "default"}
-                      >
-                          {plan.cta}
-                      </Button>
-                      </CardFooter>
-                  </Card>
-                  ))}
-              </div>
-          </CardContent>
-        </Card>
       </div>
     </div>
   )

@@ -192,28 +192,15 @@ export const mockSubscriptionPlans: SubscriptionPlan[] = [
   {
     name: "Free",
     price: "$0",
-    pricePeriod: "/ month (7-day trial)",
-    features: [
-      "1 inspector",
-      "Basic PDF reports",
-      "5 GB storage",
-      "1 Device Key"
-    ],
-    cta: "Start Trial"
-  },
-  {
-    name: "Basic",
-    price: "$29",
     pricePeriod: "/ month",
     features: [
-      "Up to 2 inspectors",
-      "Standard PDF reports",
-      "50 GB storage",
-      "Google Maps overlays",
-      "Scheduling features",
-      "2 Device Keys"
+      "1 inspector seat",
+      "Core LARI Engines (Vision, Mapper, GIS, Weather)",
+      "Mobile device sensors only",
+      "5 GB Cloud Storage",
+      "Basic PDF reports"
     ],
-    cta: "Subscribe"
+    cta: "Start for Free"
   },
   {
     name: "Pro",
@@ -221,12 +208,12 @@ export const mockSubscriptionPlans: SubscriptionPlan[] = [
     pricePeriod: "/ month",
     isCurrent: true,
     features: [
-      "Up to 5 inspectors",
-      "Advanced device support (Drones, LiDAR)",
-      "500 GB storage",
-      "API Access",
-      "Dispatch list priority",
-      "Model-run credits"
+      "Up to 5 inspector seats",
+      "All Core LARI Engines",
+      "External device integration (drones, LiDAR, thermal)",
+      "500 GB Cloud Storage",
+      "API Access & Webhooks",
+      "Purchase Add-on Keys (PRISM, ECHO, etc.)"
     ],
     cta: "Current Plan"
   },
@@ -235,12 +222,26 @@ export const mockSubscriptionPlans: SubscriptionPlan[] = [
     price: "Custom",
     pricePeriod: "",
     features: [
-      "Custom inspector numbers",
-      "Dedicated instance option",
-      "99.9% Uptime SLA",
-      "SSO & advanced security",
-      "Legal/compliance features",
-      "Priority support"
+      "Unlimited inspector seats",
+      "All LARI Engines included",
+      "Unlimited Cloud Storage",
+      "SSO and advanced security",
+      "Dedicated instances & support",
+      "Custom analytics & integrations"
+    ],
+    cta: "Contact Sales"
+  },
+  {
+    name: "Enterprise MAX",
+    price: "Custom",
+    pricePeriod: "",
+    features: [
+      "All Enterprise features",
+      "Multi-modal AI data fusion",
+      "Predictive analytics & lifecycle modeling",
+      "Insurance & regulatory data feeds",
+      "On-premise deployment options",
+      "VIP access to new LARI engines"
     ],
     cta: "Contact Sales"
   },
