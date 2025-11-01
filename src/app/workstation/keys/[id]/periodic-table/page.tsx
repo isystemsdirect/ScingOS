@@ -45,7 +45,7 @@ export default function PeriodicTablePage() {
                     <CardHeader>
                         <CardTitle>Manage Analyzable Elements</CardTitle>
                         <CardDescription>
-                            Select the elements that LARI-PRISM should analyze. Click an element to toggle its active state.
+                            Select the elements that LARI-PRISM should analyze. Hover or click an element to manage its settings.
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -64,8 +64,9 @@ export default function PeriodicTablePage() {
                                             <button
                                                 onClick={() => handleToggle(element.number, !isActive)}
                                                 className={cn(
-                                                    "relative aspect-square flex flex-col items-center justify-center p-1 border rounded-md cursor-pointer transition-all hover:scale-105 hover:z-10 text-foreground/80",
+                                                    "relative aspect-square flex flex-col items-center justify-center p-1 border rounded-md cursor-pointer transition-all hover:scale-105 hover:z-10",
                                                     elementCategories[element.category as keyof typeof elementCategories]?.bg,
+                                                    isActive ? 'text-foreground/90' : 'text-foreground/50',
                                                     !isActive && "opacity-40 hover:opacity-75 grayscale"
                                                 )}
                                                 style={{
@@ -78,29 +79,39 @@ export default function PeriodicTablePage() {
                                                 <div className="text-[10px] leading-none text-center truncate w-full font-medium">{element.name}</div>
                                             </button>
                                         </TooltipTrigger>
-                                        <TooltipContent className="max-w-xs p-4" side="top" align="center">
-                                            <div className="flex flex-col gap-4">
-                                                <div className="flex items-center gap-4">
-                                                    <div className={cn("flex h-16 w-16 items-center justify-center rounded-md text-foreground", elementCategories[element.category as keyof typeof elementCategories]?.bg)}>
-                                                        <span className="text-3xl font-bold">{element.symbol}</span>
+                                        <TooltipContent className="max-w-md p-6 rounded-xl shadow-2xl border bg-gradient-to-br from-white/90 via-slate-100/80 to-white/75 text-gray-900">
+                                            <div className="flex gap-5">
+                                                <div className={cn(
+                                                "flex h-20 w-20 items-center justify-center rounded-lg text-4xl font-bold ring-2 ring-inset",
+                                                elementCategories[element.category as keyof typeof elementCategories]?.bg,
+                                                isActive ? "ring-primary" : "ring-gray-400"
+                                                )}>{element.symbol}</div>
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="flex gap-2 items-center">
+                                                        <span className="font-bold text-xl">{element.name}</span>
+                                                        <span className={cn("text-xs rounded-full px-2 py-1", elementCategories[element.category as keyof typeof elementCategories]?.bg)}>{elementCategories[element.category as keyof typeof elementCategories]?.label}</span>
+                                                        {isActive && <span className="ml-2 px-2 py-1 text-[10px] rounded bg-primary/70 text-white">Active Analysis</span>}
                                                     </div>
-                                                    <div className="flex-1">
-                                                        <p className="text-lg font-bold">{element.name}</p>
-                                                        <p className="text-sm text-muted-foreground capitalize">{element.category}</p>
+                                                    <div className="grid grid-cols-2 gap-x-6 gap-y-1 mt-2 text-sm">
+                                                        <div>Atomic Number: <span className="font-semibold float-right text-primary">{element.number}</span></div>
+                                                        <div>Atomic Mass: <span className="font-semibold float-right">{element.atomic_mass.toFixed(3)}</span></div>
+                                                    </div>
+                                                    <div className="mt-2 text-xs flex flex-wrap gap-2">
+                                                        <span className="inline-block px-2 py-1 bg-yellow-100/70 rounded">Industry Limits: <span className="font-semibold text-yellow-700">Available</span></span>
+                                                        <span className="inline-block px-2 py-1 bg-red-100/70 rounded">Flaggable: <span className="font-semibold text-red-700">Yes</span></span>
                                                     </div>
                                                 </div>
-                                                <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
-                                                    <div>Atomic Number: <span className="font-medium float-right">{element.number}</span></div>
-                                                    <div>Atomic Mass: <span className="font-medium float-right">{element.atomic_mass.toFixed(3)}</span></div>
-                                                </div>
-                                                 <div className="flex items-center space-x-2 border-t pt-4">
-                                                    <Switch
-                                                        id={`switch-${element.symbol}`}
-                                                        checked={isActive}
-                                                        onCheckedChange={(checked) => handleToggle(element.number, checked)}
-                                                    />
-                                                    <Label htmlFor={`switch-${element.symbol}`} className="cursor-pointer">Enable analysis for this element</Label>
-                                                </div>
+                                            </div>
+                                            <div className="pt-5 mt-2 border-t flex items-center space-x-3">
+                                                <Switch
+                                                id={`switch-${element.symbol}`}
+                                                checked={isActive}
+                                                onCheckedChange={(checked) => handleToggle(element.number, checked)}
+                                                />
+                                                <Label htmlFor={`switch-${element.symbol}`}>Enable analysis for this element</Label>
+                                                <Button size="sm" variant="default" className="ml-4 bg-pro hover:bg-pro/90">
+                                                Premium Analysis
+                                                </Button>
                                             </div>
                                         </TooltipContent>
                                     </Tooltip>
@@ -122,3 +133,4 @@ export default function PeriodicTablePage() {
         </div>
     );
 }
+
