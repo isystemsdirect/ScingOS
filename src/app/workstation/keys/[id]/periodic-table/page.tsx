@@ -19,6 +19,7 @@ export default function PeriodicTablePage() {
     const keyId = params.id;
     const [activeElements, setActiveElements] = useState<number[]>(periodicTableData.map(el => el.number));
     const [searchTerm, setSearchTerm] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
     const handleToggle = (elementNumber: number, checked: boolean) => {
         if (checked) {
@@ -29,14 +30,29 @@ export default function PeriodicTablePage() {
     };
 
     const filteredElements = periodicTableData.filter(element => {
-        if (searchTerm === '') return true;
-        const term = searchTerm.toLowerCase();
-        return (
-            element.name.toLowerCase().includes(term) ||
-            element.symbol.toLowerCase().includes(term) ||
-            String(element.number).includes(term)
-        );
+        const matchesSearch = searchTerm === '' ||
+            element.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            element.symbol.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            String(element.number).includes(searchTerm);
+        
+        const matchesCategory = selectedCategory === null || element.category === selectedCategory;
+
+        return matchesSearch && matchesCategory;
     });
+
+    const allVisibleSelected = filteredElements.every(el => activeElements.includes(el.number));
+
+    const handleToggleAll = () => {
+        const visibleElementNumbers = filteredElements.map(el => el.number);
+        if (allVisibleSelected) {
+            // Deselect all visible
+            setActiveElements(prev => prev.filter(num => !visibleElementNumbers.includes(num)));
+        } else {
+            // Select all visible
+            setActiveElements(prev => [...new Set([...prev, ...visibleElementNumbers])]);
+        }
+    };
+
 
     return (
         <div className="mx-auto w-full max-w-7xl px-4 lg:px-6">
@@ -67,7 +83,7 @@ export default function PeriodicTablePage() {
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
-                            <div className="absolute right-1 top-1/2 flex -translate-y-1/2 items-center">
+                             <div className="absolute right-1 top-1/2 flex -translate-y-1/2 items-center">
                                 <Button type="button" variant="ghost" size="icon" className="h-8 w-8 rounded-md">
                                     <Camera className="h-4 w-4 text-muted-foreground" />
                                     <span className="sr-only">Use visual search</span>
@@ -77,6 +93,15 @@ export default function PeriodicTablePage() {
                                     <span className="sr-only">Use voice command</span>
                                 </Button>
                             </div>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-2 pt-4">
+                            <Button onClick={handleToggleAll} variant="outline" size="sm">
+                                {allVisibleSelected ? 'Deselect All Visible' : 'Select All Visible'}
+                            </Button>
+                             <Button onClick={() => setSelectedCategory(null)} variant={selectedCategory === null ? 'default' : 'secondary'} size="sm">All</Button>
+                            {Object.entries(elementCategories).map(([key, { label }]) => (
+                                <Button key={key} onClick={() => setSelectedCategory(key)} variant={selectedCategory === key ? 'default' : 'secondary'} size="sm">{label}</Button>
+                            ))}
                         </div>
                     </CardHeader>
                     <CardContent>
@@ -91,7 +116,6 @@ export default function PeriodicTablePage() {
                                 {periodicTableData.map((element) => {
                                     const isActive = activeElements.includes(element.number);
                                     const isVisible = filteredElements.some(el => el.number === element.number);
-                                    const categoryInfo = elementCategories[element.category as keyof typeof elementCategories];
                                     return (
                                     <Tooltip key={element.symbol} delayDuration={100}>
                                         <TooltipTrigger asChild>
@@ -99,7 +123,7 @@ export default function PeriodicTablePage() {
                                                 onClick={() => handleToggle(element.number, !isActive)}
                                                 className={cn(
                                                     "relative aspect-square flex flex-col items-center justify-center p-1 border rounded-md cursor-pointer transition-all hover:scale-105 hover:z-10",
-                                                    categoryInfo?.bg,
+                                                    elementCategories[element.category as keyof typeof elementCategories]?.bg,
                                                     isActive ? 'text-foreground/90' : 'text-foreground/50',
                                                     !isActive && "opacity-40 hover:opacity-75 grayscale",
                                                     !isVisible && "opacity-10 grayscale pointer-events-none"
@@ -118,13 +142,13 @@ export default function PeriodicTablePage() {
                                               <div className="flex gap-5">
                                                 <div className={cn(
                                                   "flex h-20 w-20 items-center justify-center rounded-lg text-4xl font-bold ring-2 ring-inset",
-                                                  categoryInfo?.bg,
+                                                  elementCategories[element.category as keyof typeof elementCategories]?.bg,
                                                   isActive ? "ring-primary" : "ring-gray-400"
                                                 )}>{element.symbol}</div>
                                                 <div className="flex-1 min-w-0">
                                                   <div className="flex gap-2 items-center">
                                                     <span className="font-bold text-xl">{element.name}</span>
-                                                    <span className={cn("text-xs rounded-full px-2 py-1", categoryInfo?.bg)}>{categoryInfo?.label}</span>
+                                                    <span className={cn("text-xs rounded-full px-2 py-1", elementCategories[element.category as keyof typeof elementCategories]?.bg)}>{elementCategories[element.category as keyof typeof elementCategories]?.label}</span>
                                                     {isActive && <span className="ml-2 px-2 py-1 text-[10px] rounded bg-primary/70 text-white">Active Analysis</span>}
                                                   </div>
                                                   <div className="grid grid-cols-2 gap-x-6 gap-y-1 mt-2 text-sm">
