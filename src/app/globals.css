@@ -151,6 +151,10 @@
       background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 70%);
       z-index: -1;
     }
+
+    .text-glow-blue {
+        text-shadow: 0 0 5px hsl(205 80% 40% / 0.8), 0 0 10px hsl(205 80% 40% / 0.6);
+    }
 }
 
 @keyframes background-pan {
