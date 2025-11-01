@@ -4,7 +4,7 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { ChevronLeft, Search, Camera, Mic, Copy, Beaker, FileText, BadgeCheck, FlaskConical } from "lucide-react";
+import { ChevronLeft, Search, Camera, Mic, Copy, Beaker, FileText, BadgeCheck, FlaskConical, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { periodicTableData, elementCategories } from "@/lib/periodic-table-data";
@@ -17,49 +17,30 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { analyzeSubstanceComposition, type SubstanceCompositionOutput } from '@/ai/flows/analyze-substance-composition';
+
 
 const SubstanceAnalyzer = () => {
     const [substance, setSubstance] = useState('');
-    const [result, setResult] = useState<any>(null);
+    const [result, setResult] = useState<SubstanceCompositionOutput | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const { toast } = useToast();
 
-    const mockAnalysis = (query: string) => {
-        // In a real app, this would trigger the Firestore function.
-        // For now, we simulate the process.
+    const mockAnalysis = async (query: string) => {
         setIsLoading(true);
-        setTimeout(() => {
-            if (query.toLowerCase().includes("304")) {
-                 setResult({
-                    substance: "Type 304 Stainless Steel",
-                    elements: [
-                        { symbol: "Fe", percent: 71.0, role: "Primary Element" },
-                        { symbol: "Cr", percent: 18.0, role: "Corrosion Resistance" },
-                        { symbol: "Ni", percent: 8.0, role: "Ductility" },
-                        { symbol: "Mn", percent: 2.0, role: "Deoxidizer" },
-                        { symbol: "Si", percent: 1.0, role: "Trace" },
-                    ],
-                    regulatoryFlags: [
-                        { code: "REACH", compliant: true },
-                        { code: "FDA", note: "Food-grade only if Ni < 10%" }
-                    ],
-                    paidFeatures: ["compliance", "traceAnalytics"]
-                });
-            } else {
-                 setResult({
-                    substance: "Unknown Alloy",
-                    elements: [],
-                    regulatoryFlags: [],
-                    paidFeatures: []
-                 });
-                 toast({
-                     variant: "destructive",
-                     title: "Analysis Failed",
-                     description: "Could not identify substance. Please try a different query."
-                 })
-            }
-            setIsLoading(false);
-        }, 1500);
+        setResult(null);
+        try {
+            const analysisResult = await analyzeSubstanceComposition({ substanceQuery: query });
+            setResult(analysisResult);
+        } catch (error) {
+            console.error(error);
+            toast({
+                variant: "destructive",
+                title: "Analysis Failed",
+                description: "The AI could not identify the substance or an error occurred."
+            });
+        }
+        setIsLoading(false);
     };
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -85,16 +66,16 @@ const SubstanceAnalyzer = () => {
             </CardHeader>
             <CardContent className="space-y-6">
                 <form onSubmit={handleSubmit} className="grid gap-4">
-                    <div className="flex items-center gap-2">
+                     <div className="flex items-center gap-2">
                         <div className="relative flex-1">
-                            <Beaker className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Beaker className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                             <Input 
                                 value={substance}
                                 onChange={e => setSubstance(e.target.value)}
                                 placeholder="e.g., 304 stainless steel pipe" 
-                                className="pl-9 pr-20 rounded-full"
+                                className="pl-10 pr-20 rounded-full"
                             />
-                             <div className="absolute right-1 top-1/2 flex -translate-y-1/2">
+                            <div className="absolute right-1 top-1/2 flex -translate-y-1/2 items-center">
                                 <Button type="button" variant="ghost" size="icon" className="h-8 w-8 rounded-md">
                                     <Camera className="h-4 w-4 text-muted-foreground" />
                                     <span className="sr-only">Use visual search</span>
@@ -110,61 +91,69 @@ const SubstanceAnalyzer = () => {
                         </Button>
                     </div>
 
-                    {result && (
-                        <div className="border rounded-lg p-4 space-y-4">
-                            <h3 className="text-lg font-semibold">{result.substance}</h3>
-                            
-                            {result.elements.length > 0 && (
-                                <Table>
-                                    <TableHeader>
-                                        <TableRow>
-                                            <TableHead>Element</TableHead>
-                                            <TableHead>Symbol</TableHead>
-                                            <TableHead>Percentage</TableHead>
-                                            <TableHead>Role</TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {result.elements.map((e: any) => (
-                                            <TableRow key={e.symbol}>
-                                                <TableCell>{periodicTableData.find(el => el.symbol === e.symbol)?.name}</TableCell>
-                                                <TableCell className="font-bold">{e.symbol}</TableCell>
-                                                <TableCell>{e.percent.toFixed(2)}%</TableCell>
-                                                <TableCell>{e.role || '-'}</TableCell>
+                    <div className="pt-4">
+                        {isLoading && (
+                            <div className="flex items-center justify-center p-8 border rounded-lg">
+                                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                                <p className="ml-4 text-muted-foreground">AI is analyzing...</p>
+                            </div>
+                        )}
+                        {result && (
+                            <div className="border rounded-lg p-4 space-y-4">
+                                <h3 className="text-lg font-semibold">{result.substance}</h3>
+                                
+                                {result.elements.length > 0 && (
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow>
+                                                <TableHead>Element</TableHead>
+                                                <TableHead>Symbol</TableHead>
+                                                <TableHead>Percentage</TableHead>
+                                                <TableHead>Role</TableHead>
                                             </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            )}
-                            
-                            {result.regulatoryFlags.length > 0 && (
-                                <div>
-                                    <h4 className="font-semibold mb-2">Regulatory Flags</h4>
-                                    <div className="flex flex-wrap gap-2">
-                                    {result.regulatoryFlags.map((flag: any) => (
-                                        <Badge key={flag.code} variant={flag.compliant ? 'default' : 'destructive'} className="gap-2">
-                                            <BadgeCheck className="h-4 w-4" />
-                                            {flag.code}: {flag.compliant ? 'Compliant' : 'Flagged'}
-                                            {flag.note && <span className="ml-2 text-xs opacity-80">({flag.note})</span>}
-                                        </Badge>
-                                    ))}
-                                    </div>
-                                </div>
-                            )}
-                            
-                            {result.paidFeatures.length > 0 && (
-                                <div className="border-t pt-4 flex items-center justify-between bg-primary/10 p-4 rounded-md">
+                                        </TableHeader>
+                                        <TableBody>
+                                            {result.elements.map((e: any) => (
+                                                <TableRow key={e.symbol}>
+                                                    <TableCell>{periodicTableData.find(el => el.symbol === e.symbol)?.name}</TableCell>
+                                                    <TableCell className="font-bold">{e.symbol}</TableCell>
+                                                    <TableCell>{e.percent.toFixed(2)}%</TableCell>
+                                                    <TableCell>{e.role || '-'}</TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                )}
+                                
+                                {result.regulatoryFlags.length > 0 && (
                                     <div>
-                                        <h4 className="font-semibold text-primary">Premium Analysis Unlocked</h4>
-                                        <p className="text-sm text-primary/80">Full compliance analytics & export options available.</p>
+                                        <h4 className="font-semibold mb-2">Regulatory Flags</h4>
+                                        <div className="flex flex-wrap gap-2">
+                                        {result.regulatoryFlags.map((flag: any) => (
+                                            <Badge key={flag.code} variant={flag.compliant ? 'default' : 'destructive'} className="gap-2">
+                                                <BadgeCheck className="h-4 w-4" />
+                                                {flag.code}: {flag.compliant ? 'Compliant' : 'Flagged'}
+                                                {flag.note && <span className="ml-2 text-xs opacity-80">({flag.note})</span>}
+                                            </Badge>
+                                        ))}
+                                        </div>
                                     </div>
-                                    <Button size="sm" variant="outline">
-                                        <FileText className="mr-2 h-4 w-4" /> Export Report
-                                    </Button>
-                                </div>
-                            )}
-                        </div>
-                    )}
+                                )}
+                                
+                                {result.paidFeatures && result.paidFeatures.length > 0 && (
+                                    <div className="border-t pt-4 flex items-center justify-between bg-primary/10 p-4 rounded-md">
+                                        <div>
+                                            <h4 className="font-semibold text-primary">Premium Analysis Unlocked</h4>
+                                            <p className="text-sm text-primary/80">Full compliance analytics & export options available.</p>
+                                        </div>
+                                        <Button size="sm" variant="outline">
+                                            <FileText className="mr-2 h-4 w-4" /> Export Report
+                                        </Button>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </div>
                 </form>
             </CardContent>
         </Card>
@@ -241,7 +230,7 @@ export default function PeriodicTablePage() {
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
-                             <div className="absolute right-1 top-1/2 flex -translate-y-1/2">
+                             <div className="absolute right-1 top-1/2 flex -translate-y-1/2 items-center">
                                 <Button type="button" variant="ghost" size="icon" className="h-8 w-8 rounded-md">
                                     <Camera className="h-4 w-4 text-muted-foreground" />
                                     <span className="sr-only">Use visual search</span>
@@ -351,5 +340,3 @@ export default function PeriodicTablePage() {
         </div>
     );
 }
-
-    

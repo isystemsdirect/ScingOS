@@ -1,3 +1,4 @@
+
 import { config } from 'dotenv';
 config();
 
@@ -24,3 +25,4 @@ import '@/ai/flows/lari-geo-ai.ts';
 import '@/ai/flows/lari-health-ai.ts';
 import '@/ai/flows/lari-logistics-ai.ts';
 import '@/ai/flows/lari-weather-ai.ts';
+import '@/ai/flows/analyze-substance-composition.ts';
