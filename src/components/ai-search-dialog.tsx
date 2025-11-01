@@ -35,6 +35,7 @@ import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { mockSubscriptionPlans } from '@/lib/data';
 import Link from 'next/link';
+import { ScingularLogoText } from './ui/logo-text';
 
 const searchSchema = z.object({
   query: z.string().min(3, 'Search query must be at least 3 characters.'),
@@ -304,8 +305,8 @@ export function AiSearchDialog() {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[625px]">
         <DialogHeader>
-          <DialogTitle className="flex items-center">
-            {isProOrEnterprise ? 'Scing Pro Search' : 'SCINGULAR AI Search'}
+          <DialogTitle className="flex items-center gap-2">
+            {isProOrEnterprise ? 'Scing Pro Search' : <ScingularLogoText />} Search
           </DialogTitle>
           <DialogDescription>
             {isVisualSearchActive ? "Position the subject in the frame and capture." : "Cross-check standards, ask questions, or issue voice commands to your AI model."}

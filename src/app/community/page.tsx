@@ -47,6 +47,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
+import { ScingularLogoText } from '@/components/ui/logo-text';
 
 const mockPosts = [
   {
@@ -190,7 +191,7 @@ export default function CommunityPage() {
                                         <CardTitle className="text-lg">{post.title}</CardTitle>
                                     </div>
                                     <CardDescription>
-                                        Posted by {author?.name || 'Scingular AI'}
+                                        Posted by {post.isAiResponse ? <ScingularLogoText className="text-sm" /> : author?.name}
                                     </CardDescription>
                                 </div>
                                 <DropdownMenu>
