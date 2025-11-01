@@ -87,15 +87,18 @@ const keySpecifications: Record<string, CapabilitySpec> = {
     },
     'LARI-PRISM': {
         name: "LARI-PRISM",
-        description: "Spectrometry, Hazard, Advanced Sensor",
+        description: "Elemental analysis via spectrometry for hazard detection and compliance.",
         tiers: [
-            { core: 'N/A (Add-on Key)', pro: 'Basic Spectrometer Integration', max: 'Custom Sensor Profiles, Real-time Alerts' },
-            { core: 'N/A', pro: 'Material/Gas Classification', max: 'Multi-Substance Detection & Analysis' },
-            { core: 'N/A', pro: 'Cloud-based Spectral Library', max: 'On-Premise or Private Library Support' },
+            { core: 'Mobile/Handheld (XRF, basic optical)', pro: 'Multiple sensor workflows (XRF, LIBS)', max: 'Advanced lab sensors (ICP-OES, MS), spatial & visual overlays' },
+            { core: 'Basic element toggling & reporting', pro: 'Auto-compliance checks, risk scoring', max: 'Full periodic table control, trace analysis, historical audits' },
+            { core: 'On-device analysis', pro: 'Cloud libraries, sensor calibration', max: 'Enterprise dashboards, regulatory feeds, third-party integration' },
         ],
         featureToggles: [
-            { id: "custom_profiles", label: "Custom Sensor Profiles", description: "Create and upload custom profiles for unique sensors.", availability: "Max", defaultChecked: false },
-            { id: "realtime_hazard_alerts", label: "Real-time Hazard Alerts", description: "Receive immediate notifications for detected hazards.", availability: "Max", defaultChecked: true },
+            { id: "element_selector", label: "Periodic Table Element Selector", description: "Dynamically toggle analyzable elements for each job.", availability: "Core, Pro, Max", defaultChecked: true },
+            { id: "compliance_reporting", label: "Dynamic Compliance Reports", description: "Auto-generate reports cross-referenced to RoHS, REACH, FDA, EPA standards.", availability: "Pro/Max", defaultChecked: true },
+            { id: "calibration_qa", label: "Calibration & QA/QC Routines", description: "Integrated routines using certified reference materials.", availability: "Pro/Max", defaultChecked: false },
+            { id: "trace_analysis", label: "Trace Analysis (PPM/PPB)", description: "Enable high-sensitivity detection for ultra-trace elemental analysis.", availability: "Max", defaultChecked: false },
+            { id: "chain_of_custody", label: "Secure Chain-of-Custody", description: "Immutable WORM logging for all samples, tests, and results.", availability: "Max", defaultChecked: true },
         ]
     },
     'LARI-ECHO': {
@@ -308,3 +311,5 @@ export default function KeyManagementPage() {
     </div>
   );
 }
+
+    
