@@ -13,8 +13,8 @@ import { Chrome, Mail, MessageSquare, Apple } from "lucide-react";
 export default function LoginPage() {
   const router = useRouter();
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleLogin = (e?: React.MouseEvent<HTMLButtonElement> | React.FormEvent<HTMLFormElement>) => {
+    e?.preventDefault();
     if (document.documentElement.requestFullscreen) {
       document.documentElement.requestFullscreen().catch(err => {
         console.error(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
@@ -71,21 +71,21 @@ export default function LoginPage() {
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
-                 <Button variant="outline">
+                 <Button variant="outline" onClick={handleLogin}>
                   <Chrome className="mr-2 h-4 w-4" />
                   Google
                 </Button>
-                 <Button variant="outline">
+                 <Button variant="outline" onClick={handleLogin}>
                   <Apple className="mr-2 h-4 w-4" />
                   Apple
                 </Button>
               </div>
                <div className="grid grid-cols-2 gap-4">
-                <Button variant="outline">
+                <Button variant="outline" onClick={handleLogin}>
                   <Mail className="mr-2 h-4 w-4" />
                   Microsoft
                 </Button>
-                <Button variant="outline">
+                <Button variant="outline" onClick={handleLogin}>
                   <MessageSquare className="mr-2 h-4 w-4" />
                   Facebook
                 </Button>
