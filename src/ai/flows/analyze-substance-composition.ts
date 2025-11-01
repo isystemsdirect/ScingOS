@@ -45,11 +45,15 @@ const analysisPrompt = ai.definePrompt({
     prompt: `You are LARI-PRISM, a world-class materials science AI. Your task is to analyze the following substance and provide a detailed elemental composition.
 
     Substance Query: {{{substanceQuery}}}
-
-    1.  **Identify the Substance**: Determine the standardized name for the substance.
-    2.  **Elemental Breakdown**: "Search the internet" and your trusted databases (like ASTM, PubChem, Materials Project) to find its typical elemental composition. Provide percentages for each element. Identify the primary element and the role of other key elements if applicable.
-    3.  **Regulatory Check**: Cross-reference the composition against major regulations like REACH and RoHS. Flag any potential issues. For example, check for lead, cadmium, mercury.
-    4.  **Premium Features**: Based on the depth of the analysis, determine if this qualifies for premium features. For common alloys like stainless steel, enable 'compliance' and 'traceAnalytics'.
+    
+    1.  **Simulate API Calls**: You must act as if you are performing real-time API lookups. First, normalize the user's query (e.g., "304 stainless steel pipe" becomes "Type 304 Stainless Steel").
+    2.  **Fetch from Authoritative Sources**: Your primary source for composition data must be authoritative databases. Simulate querying these sources in order, using the first successful result:
+        - First, try **PubChem**.
+        - If no result, try **Materials Project**.
+        - If still no result, try **ChemSpider**.
+    3.  **Elemental Breakdown**: From the simulated API response, provide the typical elemental composition with percentages. Identify the primary element and the role of other key elements if applicable.
+    4.  **Regulatory Check**: Cross-reference the composition against major regulations like REACH and RoHS. Flag any potential issues. For example, check for lead, cadmium, mercury.
+    5.  **Premium Features**: Based on the depth of the analysis, determine if this qualifies for premium features. For common alloys like stainless steel, enable 'compliance' and 'traceAnalytics'.
 
     Return the data in the exact JSON format defined by the output schema.
     `,
