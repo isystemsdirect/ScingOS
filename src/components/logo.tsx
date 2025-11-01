@@ -2,6 +2,7 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
+import { ScingularLogoText } from "./ui/logo-text";
 
 const Logo = ({ className, isLoginPage = false }: { className?: string, isLoginPage?: boolean }) => {
   if (isLoginPage) {
@@ -37,9 +38,9 @@ const Logo = ({ className, isLoginPage = false }: { className?: string, isLoginP
       <div className="relative logo-gradient-light">
           <Image src="/logo.png" alt="Scingular Logo" width={32} height={32} className="transition-all size-8 group-data-[collapsed=true]:size-9" />
       </div>
-      <span className="font-sans uppercase font-bold italic text-xl group-data-[collapsed=true]:hidden">
-        SCINGULAR <span className="text-primary">AI</span>
-      </span>
+      <div className="group-data-[collapsed=true]:hidden">
+        <ScingularLogoText className="text-xl" />
+      </div>
     </Link>
   );
 };
