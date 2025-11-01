@@ -70,9 +70,14 @@ export default function KeyManagementPage() {
         </div>
 
         <Card>
-            <CardHeader>
-                <CardTitle>{details.name}</CardTitle>
-                <CardDescription>{details.description}</CardDescription>
+            <CardHeader className="flex flex-row items-start justify-between">
+                <div>
+                    <CardTitle>{details.name}</CardTitle>
+                    <CardDescription>{details.description}</CardDescription>
+                </div>
+                <Button asChild>
+                    <Link href="/finances">Manage Plan</Link>
+                </Button>
             </CardHeader>
             <CardContent className="prose prose-sm prose-invert max-w-none">
                 <h4 className="text-foreground">Industry Applications:</h4>
