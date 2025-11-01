@@ -57,7 +57,7 @@ export default function PeriodicTablePage() {
                     <CardHeader>
                         <CardTitle>Manage Analyzable Elements</CardTitle>
                         <CardDescription>
-                            Select the elements that LARI-PRISM should analyze. Use the search bar to filter, and click an element to toggle its active state.
+                            Select the elements that LARI-PRISM should analyze. Hover or click an element to manage its settings.
                         </CardDescription>
                          <div className="relative pt-4">
                             <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -82,7 +82,7 @@ export default function PeriodicTablePage() {
                     <CardContent>
                         <TooltipProvider>
                             <div
-                                className="grid gap-1"
+                                className="grid gap-1 min-w-[1200px]"
                                 style={{
                                     gridTemplateColumns: "repeat(18, minmax(0, 1fr))",
                                 }}
