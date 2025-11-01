@@ -35,11 +35,11 @@ const Logo = ({ className, isLoginPage = false }: { className?: string, isLoginP
         className
       )}
     >
-      <div className="relative logo-gradient-light">
+      <div className="relative">
           <Image src="/logo.png" alt="Scingular Logo" width={32} height={32} className="transition-all size-8 group-data-[collapsed=true]:size-9" />
       </div>
       <div className="group-data-[collapsed=true]:hidden">
-        <ScingularLogoText className="text-xl" />
+        <ScingularLogoText className="text-xl" isLoginPage={false} />
       </div>
     </Link>
   );

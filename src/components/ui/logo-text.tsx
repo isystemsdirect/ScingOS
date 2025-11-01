@@ -1,10 +1,10 @@
 
 import { cn } from "@/lib/utils";
 
-export function ScingularLogoText({ className }: { className?: string }) {
+export function ScingularLogoText({ className, isLoginPage = true }: { className?: string; isLoginPage?: boolean; }) {
   return (
     <span className={cn("font-sans uppercase font-bold italic", className)}>
-        <span className="text-scingular-glow">SCINGULAR</span> <span className="text-primary text-ai-glow">AI</span>
+        <span className={cn(isLoginPage && "text-scingular-glow")}>SCINGULAR</span> <span className={cn("text-primary", isLoginPage && "text-ai-glow")}>AI</span>
     </span>
   );
 }
