@@ -285,7 +285,7 @@ export default function AppLayout({
           </div>
         </header>
         <FlashNotificationBar />
-        <main className="flex-1 overflow-y-auto p-4 sm:px-6 sm:py-6 bg-black/20 backdrop-blur-sm">
+        <main className="flex-1 overflow-y-auto p-4 sm:px-6 sm:py-6 bg-black/20 backdrop-blur-sm bg-[radial-gradient(ellipse_at_center,hsl(var(--card)/0.1)_0%,transparent_70%)]">
           {children}
         </main>
       </div>
