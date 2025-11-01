@@ -30,7 +30,8 @@ import {
   Rss,
   RefreshCw,
   Calendar,
-  Map
+  Map,
+  Shield,
 } from "lucide-react";
 import { useRouter, usePathname } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
@@ -184,6 +185,10 @@ export default function AppLayout({
                 <DollarSign className="h-4 w-4" />
                 Finances
               </NavLink>
+               <NavLink href="/admin">
+                <Shield className="h-4 w-4" />
+                Admin
+              </NavLink>
             </nav>
           </div>
           <div className="mt-auto p-4 border-t border-sidebar-border space-y-4">
@@ -294,6 +299,10 @@ export default function AppLayout({
                   <DollarSign className="h-5 w-5" />
                   Finances
                 </NavLink>
+                 <NavLink href="/admin" isMobile>
+                  <Shield className="h-5 w-5" />
+                  Admin
+                </NavLink>
               </nav>
             </SheetContent>
           </Sheet>
@@ -317,7 +326,9 @@ export default function AppLayout({
           </div>
         </header>
         <FlashNotificationBar />
-        <main className={cn("flex-1 overflow-y-auto p-4 sm:px-6 sm:py-6 bg-black/20 backdrop-blur-sm bg-[radial-gradient(ellipse_at_center,hsl(var(--card)/0.1)_0%,transparent_70%)]", "rounded-xl")}>
+        <main className={cn("flex-1 overflow-y-auto p-4 sm:px-6 sm:py-6 bg-black/[.05] rounded-xl", 
+          "bg-[radial-gradient(ellipse_at_center,hsl(var(--card)/0.1)_0%,transparent_70%)]"
+        )}>
           {children}
         </main>
       </div>
