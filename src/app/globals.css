@@ -160,6 +160,10 @@
         color: white;
         animation: pulsate-glow 4s ease-in-out infinite;
     }
+
+    .text-ai-glow {
+        animation: pulsate-ai-glow 4s ease-in-out infinite;
+    }
 }
 
 @keyframes background-pan {
@@ -189,5 +193,14 @@
     text-shadow: 0 0 6px #fff, 0 0 12px #fff, 
                  0 0 18px hsl(205 80% 40%), 
                  0 0 24px hsl(205 80% 40%);
+  }
+}
+
+@keyframes pulsate-ai-glow {
+  0%, 100% {
+    text-shadow: 0 0 4px hsl(var(--primary) / 0.6), 0 0 8px hsl(var(--primary) / 0.4);
+  }
+  50% {
+    text-shadow: 0 0 8px hsl(var(--primary) / 0.8), 0 0 16px hsl(var(--primary) / 0.6);
   }
 }
