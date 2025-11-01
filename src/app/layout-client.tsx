@@ -66,6 +66,7 @@ import { Separator } from "@/components/ui/separator";
 import { FlashNotificationBar } from "@/components/flash-notification-bar";
 import { WeatherWidget } from "@/components/weather-widget";
 import { NewsWidget } from "@/components/news-widget";
+import { cn } from "@/lib/utils";
 
 export default function AppLayout({
   children,
@@ -285,7 +286,7 @@ export default function AppLayout({
           </div>
         </header>
         <FlashNotificationBar />
-        <main className="flex-1 overflow-y-auto p-4 sm:px-6 sm:py-6 bg-black/20 backdrop-blur-sm bg-[radial-gradient(ellipse_at_center,hsl(var(--card)/0.1)_0%,transparent_70%)]">
+        <main className={cn("flex-1 overflow-y-auto p-4 sm:px-6 sm:py-6 bg-black/20 backdrop-blur-sm bg-[radial-gradient(ellipse_at_center,hsl(var(--card)/0.1)_0%,transparent_70%)]", "md:rounded-xl")}>
           {children}
         </main>
       </div>
