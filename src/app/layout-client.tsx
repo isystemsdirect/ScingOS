@@ -154,6 +154,10 @@ export default function AppLayout({
               
               <Separator className="my-2 bg-sidebar-border" />
 
+              <NavLink href="/maps-weather">
+                <Map className="h-4 w-4" />
+                Maps & Weather
+              </NavLink>
               <NavLink href="/library">
                 <Library className="h-4 w-4" />
                 Standards Library
@@ -270,6 +274,10 @@ export default function AppLayout({
                   Teams & Dispatch
                 </NavLink>
                  <Separator className="my-2 bg-sidebar-border" />
+                <NavLink href="/maps-weather" isMobile>
+                  <Map className="h-5 w-5" />
+                  Maps & Weather
+                </NavLink>
                 <NavLink href="/library" isMobile>
                   <Library className="h-5 w-5" />
                   Standards Library
