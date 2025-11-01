@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { ChevronLeft, Search, Camera, Mic } from "lucide-react";
+import { ChevronLeft, Search, Camera, Mic, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { periodicTableData, elementCategories } from "@/lib/periodic-table-data";
@@ -13,6 +13,151 @@ import { useState } from "react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
+
+const CodeBlock = ({ code, language }: { code: string; language: string }) => {
+    const { toast } = useToast();
+    const handleCopy = () => {
+        navigator.clipboard.writeText(code);
+        toast({
+            title: "Copied to clipboard!",
+        });
+    };
+    return (
+        <div className="relative">
+            <Button
+                variant="ghost"
+                size="icon"
+                className="absolute top-2 right-2 h-7 w-7"
+                onClick={handleCopy}
+            >
+                <Copy className="h-4 w-4" />
+                <span className="sr-only">Copy code</span>
+            </Button>
+            <pre className="bg-muted/50 p-4 rounded-md overflow-x-auto text-xs">
+                <code className={`language-${language}`}>{code}</code>
+            </pre>
+        </div>
+    );
+};
+
+
+const firestoreStructureCode = `
+// /substanceQueries (collection)
+{
+  queryId: "auto-uuid",
+  userId: "user-123",
+  queryText: "304 stainless steel pipe", // user search
+  normalized: "Type 304 Stainless Steel", // resolved by SCING AI NLP handler
+  status: "pending" | "processing" | "complete" | "error",
+  requestedAt: Timestamp,
+  resultId: "elementBreakdown-autoid"
+}
+
+// /elementBreakdowns (collection)
+{
+  resultId: "elementBreakdown-autoid",
+  queryId: "auto-uuid",
+  substance: "Type 304 Stainless Steel",
+  elements: [
+    { symbol: "Fe", percent: 71.0, primary: true },
+    { symbol: "Cr", percent: 18.0, role: "corrosion resistance" },
+    { symbol: "Ni", percent: 8.0, role: "ductility" },
+    { symbol: "Mn", percent: 2.0, role: "deoxidizer" },
+    { symbol: "Si", percent: 1.0 },
+    // ...trace (ppm, hazardous, flagged)
+  ],
+  regulatoryFlags: [
+    { code: "REACH", compliant: true },
+    { code: "FDA", note: "Food-grade only if Ni < 10%" }
+  ],
+  provenance: [
+    { source: "ASTM spec A312", uri: "...", date: "2025-01-01" },
+    { source: "PubChem", uri: "...", date: "2024-09-15" }
+  ],
+  created: Timestamp,
+  paidFeatures: ["compliance", "traceAnalytics", "reportExport"]
+}
+`;
+
+const firebaseFunctionCode = `
+exports.analyzeSubstance = functions.firestore
+  .document('/substanceQueries/{queryId}')
+  .onCreate(async (snap, context) => {
+    const { queryText, userId } = snap.data();
+    // Use SCING AI NLP API to normalize and classify search term
+    const normalized = await scingNlpResolve(queryText);
+    // Search trusted external databases (Materials Project, PubChem, ASTM, vendor APIs)
+    const composition = await getElementBreakdown(normalized);
+    // Run compliance and flagged element logic, assign premium status if needed
+    const flags = computeCompliance(composition, userId);
+    // Store result in /elementBreakdowns
+    await firestore.collection("elementBreakdowns").add({
+      queryId: context.params.queryId,
+      substance: normalized,
+      elements: composition.elements,
+      regulatoryFlags: flags,
+      provenance: composition.sources,
+      created: Date.now(),
+      paidFeatures: flags.premium ? ["compliance", "traceAnalytics", "reportExport"] : []
+    });
+    // Optionally: push notification to user/device/email
+    return;
+  });
+`;
+
+const frontendExampleCode = `
+export default function SubstanceSearch() {
+  const [substance, setSubstance] = useState('');
+  const [result, setResult] = useState(null);
+  const [isPremium, setIsPremium] = useState(false);
+
+  const handleSubmit = async () => {
+    // Add query to Firestore to kick off Function
+    const docRef = await addDoc(collection(db, 'substanceQueries'), {
+      queryText: substance,
+      userId: user.uid,
+      requestedAt: serverTimestamp()
+    });
+    // Listen for result in elementBreakdowns
+    onSnapshot(doc(db, 'elementBreakdowns', docRef.id), (snap) => {
+      setResult(snap.data());
+      setIsPremium(snap.data().paidFeatures.length > 0);
+    });
+  };
+
+  return (
+    <div>
+      <input value={substance} onChange={e => setSubstance(e.target.value)} />
+      <button onClick={handleSubmit}>Analyze Substance</button>
+      {result && (
+        <div className="result-card lucrative">
+          <h2>{result.substance}</h2>
+          <table>
+            <thead><tr><th>Element</th><th>%</th><th>Role</th></tr></thead>
+            <tbody>
+              {result.elements.map(e => <tr key={e.symbol}>
+                <td>{e.symbol}</td><td>{e.percent.toFixed(2)}</td><td>{e.role || '-'}</td>
+              </tr>)}
+            </tbody>
+          </table>
+          <div className="reg-flags">
+            {result.regulatoryFlags.map(flag => (
+              <span className={flag.compliant ? 'compliant' : 'flagged'}>{flag.code}</span>
+            ))}
+          </div>
+          {isPremium && 
+            <button className="premium-btn" onClick={openUpgradeModal}>
+              Unlock full compliance analytics & export
+            </button>
+          }
+        </div>
+      )}
+    </div>
+  );
+}
+`;
+
 
 export default function PeriodicTablePage() {
     const params = useParams<{ id: string }>();
@@ -105,10 +250,10 @@ export default function PeriodicTablePage() {
                         </div>
                     </CardHeader>
                     <CardContent>
-                      <div>
+                      <div className="overflow-x-auto pb-4">
                         <TooltipProvider>
                             <div
-                                className="grid gap-1"
+                                className="grid gap-1 min-w-[1200px]"
                                 style={{
                                     gridTemplateColumns: "repeat(18, minmax(0, 1fr))",
                                 }}
@@ -186,7 +331,39 @@ export default function PeriodicTablePage() {
                         </div>
                     </CardContent>
                 </Card>
+
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Substance Analysis Architecture</CardTitle>
+                        <CardDescription>
+                            Technical architecture for integrating SCING AI substance search with the LARI elemental analytics engine.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-8">
+                        <div>
+                            <h3 className="text-lg font-semibold mb-4">1. Firestore Database Structure</h3>
+                            <CodeBlock code={firestoreStructureCode} language="js" />
+                        </div>
+                        <div>
+                            <h3 className="text-lg font-semibold mb-4">2. Firebase Function — Substance Analyzer</h3>
+                            <CodeBlock code={firebaseFunctionCode} language="js" />
+                        </div>
+                        <div>
+                            <h3 className="text-lg font-semibold mb-4">3. Front-End Example (React + Firestore)</h3>
+                             <CodeBlock code={frontendExampleCode} language="jsx" />
+                        </div>
+                        <div>
+                            <h3 className="text-lg font-semibold mb-4">Lucrative SaaS Features</h3>
+                            <ul className="list-disc space-y-2 pl-5 text-sm text-muted-foreground">
+                                <li><strong>Premium exports:</strong> PDF/CSV, regulatory reports, flagged/at-risk batch auditing.</li>
+                                <li><strong>Compliance modules:</strong> RoHS, REACH, FDA, country/region laws attached per inquiry.</li>
+                                <li><strong>Bulk/enterprise jobs:</strong> Batch analysis, scheduled reports, webhook/API integration.</li>
+                                <li><strong>Data enrichment:</strong> Upcharge for proprietary datasets, advanced provenance, insurance risk analytics.</li>
+                                <li><strong>User Logs & Upgrades:</strong> Per-user tracking, usage counts, upgrade journeys.</li>
+                            </ul>
+                        </div>
+                    </CardContent>
+                </Card>
             </div>
         </div>
     );
-}
