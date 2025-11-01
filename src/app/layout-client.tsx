@@ -32,6 +32,7 @@ import {
   Calendar,
   Map,
   Shield,
+  FileText,
 } from "lucide-react";
 import { useRouter, usePathname } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
@@ -131,6 +132,10 @@ export default function AppLayout({
               <NavLink href="/dashboard">
                 <Home className="h-4 w-4" />
                 Dashboard
+              </NavLink>
+              <NavLink href="/overview">
+                <FileText className="h-4 w-4" />
+                Overview Report
               </NavLink>
               <NavLink href="/inspections">
                 <ClipboardList className="h-4 w-4" />
@@ -253,6 +258,10 @@ export default function AppLayout({
                  <NavLink href="/dashboard" isMobile>
                   <Home className="h-5 w-5" />
                   Dashboard
+                </NavLink>
+                <NavLink href="/overview" isMobile>
+                  <FileText className="h-5 w-5" />
+                  Overview Report
                 </NavLink>
                 <NavLink href="/inspections" isMobile>
                   <ClipboardList className="h-5 w-5" />
