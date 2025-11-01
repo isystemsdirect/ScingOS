@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { ChevronLeft, Search, Camera, Mic, Copy } from "lucide-react";
+import { ChevronLeft, Search, Camera, Mic, Copy, Beaker, FileText, BadgeCheck, FlaskConical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { periodicTableData, elementCategories } from "@/lib/periodic-table-data";
@@ -14,149 +14,149 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 
-const CodeBlock = ({ code, language }: { code: string; language: string }) => {
+const SubstanceAnalyzer = () => {
+    const [substance, setSubstance] = useState('');
+    const [result, setResult] = useState<any>(null);
+    const [isLoading, setIsLoading] = useState(false);
     const { toast } = useToast();
-    const handleCopy = () => {
-        navigator.clipboard.writeText(code);
-        toast({
-            title: "Copied to clipboard!",
-        });
+
+    const mockAnalysis = (query: string) => {
+        // In a real app, this would trigger the Firestore function.
+        // For now, we simulate the process.
+        setIsLoading(true);
+        setTimeout(() => {
+            if (query.toLowerCase().includes("304")) {
+                 setResult({
+                    substance: "Type 304 Stainless Steel",
+                    elements: [
+                        { symbol: "Fe", percent: 71.0, role: "Primary Element" },
+                        { symbol: "Cr", percent: 18.0, role: "Corrosion Resistance" },
+                        { symbol: "Ni", percent: 8.0, role: "Ductility" },
+                        { symbol: "Mn", percent: 2.0, role: "Deoxidizer" },
+                        { symbol: "Si", percent: 1.0, role: "Trace" },
+                    ],
+                    regulatoryFlags: [
+                        { code: "REACH", compliant: true },
+                        { code: "FDA", note: "Food-grade only if Ni < 10%" }
+                    ],
+                    paidFeatures: ["compliance", "traceAnalytics"]
+                });
+            } else {
+                 setResult({
+                    substance: "Unknown Alloy",
+                    elements: [],
+                    regulatoryFlags: [],
+                    paidFeatures: []
+                 });
+                 toast({
+                     variant: "destructive",
+                     title: "Analysis Failed",
+                     description: "Could not identify substance. Please try a different query."
+                 })
+            }
+            setIsLoading(false);
+        }, 1500);
     };
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!substance) {
+            toast({
+                variant: "destructive",
+                title: "Input required",
+                description: "Please enter a substance to analyze."
+            });
+            return;
+        }
+        mockAnalysis(substance);
+    };
+
     return (
-        <div className="relative">
-            <Button
-                variant="ghost"
-                size="icon"
-                className="absolute top-2 right-2 h-7 w-7"
-                onClick={handleCopy}
-            >
-                <Copy className="h-4 w-4" />
-                <span className="sr-only">Copy code</span>
-            </Button>
-            <pre className="bg-muted/50 p-4 rounded-md overflow-x-auto text-xs">
-                <code className={`language-${language}`}>{code}</code>
-            </pre>
-        </div>
+         <Card>
+            <CardHeader>
+                <CardTitle>Substance Analysis Engine</CardTitle>
+                <CardDescription>
+                    Use SCING AI to analyze the elemental composition of a substance.
+                </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+                <form onSubmit={handleSubmit} className="flex items-center gap-2">
+                    <div className="relative flex-1">
+                        <Beaker className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input 
+                            value={substance}
+                            onChange={e => setSubstance(e.target.value)}
+                            placeholder="e.g., 304 stainless steel pipe" 
+                            className="pl-9"
+                        />
+                    </div>
+                    <Button type="submit" disabled={isLoading}>
+                        {isLoading ? 'Analyzing...' : 'Analyze Substance'}
+                    </Button>
+                </form>
+
+                {result && (
+                    <div className="border rounded-lg p-4 space-y-4">
+                        <h3 className="text-lg font-semibold">{result.substance}</h3>
+                        
+                        {result.elements.length > 0 && (
+                             <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Element</TableHead>
+                                        <TableHead>Symbol</TableHead>
+                                        <TableHead>Percentage</TableHead>
+                                        <TableHead>Role</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {result.elements.map((e: any) => (
+                                        <TableRow key={e.symbol}>
+                                            <TableCell>{periodicTableData.find(el => el.symbol === e.symbol)?.name}</TableCell>
+                                            <TableCell className="font-bold">{e.symbol}</TableCell>
+                                            <TableCell>{e.percent.toFixed(2)}%</TableCell>
+                                            <TableCell>{e.role || '-'}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        )}
+                        
+                        {result.regulatoryFlags.length > 0 && (
+                            <div>
+                                <h4 className="font-semibold mb-2">Regulatory Flags</h4>
+                                <div className="flex flex-wrap gap-2">
+                                {result.regulatoryFlags.map((flag: any) => (
+                                    <Badge key={flag.code} variant={flag.compliant ? 'default' : 'destructive'} className="gap-2">
+                                        <BadgeCheck className="h-4 w-4" />
+                                        {flag.code}: {flag.compliant ? 'Compliant' : 'Flagged'}
+                                        {flag.note && <span className="ml-2 text-xs opacity-80">({flag.note})</span>}
+                                    </Badge>
+                                ))}
+                                </div>
+                            </div>
+                        )}
+                        
+                        {result.paidFeatures.length > 0 && (
+                            <div className="border-t pt-4 flex items-center justify-between bg-primary/10 p-4 rounded-md">
+                                <div>
+                                    <h4 className="font-semibold text-primary">Premium Analysis Unlocked</h4>
+                                    <p className="text-sm text-primary/80">Full compliance analytics & export options available.</p>
+                                </div>
+                                <Button size="sm" variant="outline">
+                                    <FileText className="mr-2 h-4 w-4" /> Export Report
+                                </Button>
+                            </div>
+                        )}
+                    </div>
+                )}
+            </CardContent>
+        </Card>
     );
 };
-
-
-const firestoreStructureCode = `
-// /substanceQueries (collection)
-{
-  queryId: "auto-uuid",
-  userId: "user-123",
-  queryText: "304 stainless steel pipe", // user search
-  normalized: "Type 304 Stainless Steel", // resolved by SCING AI NLP handler
-  status: "pending" | "processing" | "complete" | "error",
-  requestedAt: Timestamp,
-  resultId: "elementBreakdown-autoid"
-}
-
-// /elementBreakdowns (collection)
-{
-  resultId: "elementBreakdown-autoid",
-  queryId: "auto-uuid",
-  substance: "Type 304 Stainless Steel",
-  elements: [
-    { symbol: "Fe", percent: 71.0, primary: true },
-    { symbol: "Cr", percent: 18.0, role: "corrosion resistance" },
-    { symbol: "Ni", percent: 8.0, role: "ductility" },
-    { symbol: "Mn", percent: 2.0, role: "deoxidizer" },
-    { symbol: "Si", percent: 1.0 },
-    // ...trace (ppm, hazardous, flagged)
-  ],
-  regulatoryFlags: [
-    { code: "REACH", compliant: true },
-    { code: "FDA", note: "Food-grade only if Ni < 10%" }
-  ],
-  provenance: [
-    { source: "ASTM spec A312", uri: "...", date: "2025-01-01" },
-    { source: "PubChem", uri: "...", date: "2024-09-15" }
-  ],
-  created: Timestamp,
-  paidFeatures: ["compliance", "traceAnalytics", "reportExport"]
-}
-`;
-
-const firebaseFunctionCode = `
-exports.analyzeSubstance = functions.firestore
-  .document('/substanceQueries/{queryId}')
-  .onCreate(async (snap, context) => {
-    const { queryText, userId } = snap.data();
-    // Use SCING AI NLP API to normalize and classify search term
-    const normalized = await scingNlpResolve(queryText);
-    // Search trusted external databases (Materials Project, PubChem, ASTM, vendor APIs)
-    const composition = await getElementBreakdown(normalized);
-    // Run compliance and flagged element logic, assign premium status if needed
-    const flags = computeCompliance(composition, userId);
-    // Store result in /elementBreakdowns
-    await firestore.collection("elementBreakdowns").add({
-      queryId: context.params.queryId,
-      substance: normalized,
-      elements: composition.elements,
-      regulatoryFlags: flags,
-      provenance: composition.sources,
-      created: Date.now(),
-      paidFeatures: flags.premium ? ["compliance", "traceAnalytics", "reportExport"] : []
-    });
-    // Optionally: push notification to user/device/email
-    return;
-  });
-`;
-
-const frontendExampleCode = `
-export default function SubstanceSearch() {
-  const [substance, setSubstance] = useState('');
-  const [result, setResult] = useState(null);
-  const [isPremium, setIsPremium] = useState(false);
-
-  const handleSubmit = async () => {
-    // Add query to Firestore to kick off Function
-    const docRef = await addDoc(collection(db, 'substanceQueries'), {
-      queryText: substance,
-      userId: user.uid,
-      requestedAt: serverTimestamp()
-    });
-    // Listen for result in elementBreakdowns
-    onSnapshot(doc(db, 'elementBreakdowns', docRef.id), (snap) => {
-      setResult(snap.data());
-      setIsPremium(snap.data().paidFeatures.length > 0);
-    });
-  };
-
-  return (
-    <div>
-      <input value={substance} onChange={e => setSubstance(e.target.value)} />
-      <button onClick={handleSubmit}>Analyze Substance</button>
-      {result && (
-        <div className="result-card lucrative">
-          <h2>{result.substance}</h2>
-          <table>
-            <thead><tr><th>Element</th><th>%</th><th>Role</th></tr></thead>
-            <tbody>
-              {result.elements.map(e => <tr key={e.symbol}>
-                <td>{e.symbol}</td><td>{e.percent.toFixed(2)}</td><td>{e.role || '-'}</td>
-              </tr>)}
-            </tbody>
-          </table>
-          <div className="reg-flags">
-            {result.regulatoryFlags.map(flag => (
-              <span className={flag.compliant ? 'compliant' : 'flagged'}>{flag.code}</span>
-            ))}
-          </div>
-          {isPremium && 
-            <button className="premium-btn" onClick={openUpgradeModal}>
-              Unlock full compliance analytics & export
-            </button>
-          }
-        </div>
-      )}
-    </div>
-  );
-}
-`;
 
 
 export default function PeriodicTablePage() {
@@ -228,7 +228,7 @@ export default function PeriodicTablePage() {
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
-                             <div className="absolute right-1 top-1/2 flex -translate-y-1/2 items-center">
+                             <div className="absolute right-1 top-1/2 flex -translate-y-1/2">
                                 <Button type="button" variant="ghost" size="icon" className="h-8 w-8 rounded-md">
                                     <Camera className="h-4 w-4 text-muted-foreground" />
                                     <span className="sr-only">Use visual search</span>
@@ -332,38 +332,8 @@ export default function PeriodicTablePage() {
                     </CardContent>
                 </Card>
 
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Substance Analysis Architecture</CardTitle>
-                        <CardDescription>
-                            Technical architecture for integrating SCING AI substance search with the LARI elemental analytics engine.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-8">
-                        <div>
-                            <h3 className="text-lg font-semibold mb-4">1. Firestore Database Structure</h3>
-                            <CodeBlock code={firestoreStructureCode} language="js" />
-                        </div>
-                        <div>
-                            <h3 className="text-lg font-semibold mb-4">2. Firebase Function — Substance Analyzer</h3>
-                            <CodeBlock code={firebaseFunctionCode} language="js" />
-                        </div>
-                        <div>
-                            <h3 className="text-lg font-semibold mb-4">3. Front-End Example (React + Firestore)</h3>
-                             <CodeBlock code={frontendExampleCode} language="jsx" />
-                        </div>
-                        <div>
-                            <h3 className="text-lg font-semibold mb-4">Lucrative SaaS Features</h3>
-                            <ul className="list-disc space-y-2 pl-5 text-sm text-muted-foreground">
-                                <li><strong>Premium exports:</strong> PDF/CSV, regulatory reports, flagged/at-risk batch auditing.</li>
-                                <li><strong>Compliance modules:</strong> RoHS, REACH, FDA, country/region laws attached per inquiry.</li>
-                                <li><strong>Bulk/enterprise jobs:</strong> Batch analysis, scheduled reports, webhook/API integration.</li>
-                                <li><strong>Data enrichment:</strong> Upcharge for proprietary datasets, advanced provenance, insurance risk analytics.</li>
-                                <li><strong>User Logs & Upgrades:</strong> Per-user tracking, usage counts, upgrade journeys.</li>
-                            </ul>
-                        </div>
-                    </CardContent>
-                </Card>
+                <SubstanceAnalyzer />
+                
             </div>
         </div>
     );
