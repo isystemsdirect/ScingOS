@@ -64,10 +64,9 @@ export default function PeriodicTablePage() {
                                             <button
                                                 onClick={() => handleToggle(element.number, !isActive)}
                                                 className={cn(
-                                                    "relative aspect-square flex flex-col items-center justify-center p-1 border rounded-md cursor-pointer transition-all hover:scale-105 hover:z-10",
-                                                    "text-gray-900/80 dark:text-gray-900",
+                                                    "relative aspect-square flex flex-col items-center justify-center p-1 border rounded-md cursor-pointer transition-all hover:scale-105 hover:z-10 text-foreground/80",
                                                     elementCategories[element.category as keyof typeof elementCategories]?.bg,
-                                                    !isActive && "opacity-40 hover:opacity-75"
+                                                    !isActive && "opacity-40 hover:opacity-75 grayscale"
                                                 )}
                                                 style={{
                                                     gridColumn: element.xpos,
@@ -82,7 +81,7 @@ export default function PeriodicTablePage() {
                                         <TooltipContent className="max-w-xs p-4" side="top" align="center">
                                             <div className="flex flex-col gap-4">
                                                 <div className="flex items-center gap-4">
-                                                    <div className={cn("flex h-16 w-16 items-center justify-center rounded-md text-gray-900", elementCategories[element.category as keyof typeof elementCategories]?.bg)}>
+                                                    <div className={cn("flex h-16 w-16 items-center justify-center rounded-md text-foreground", elementCategories[element.category as keyof typeof elementCategories]?.bg)}>
                                                         <span className="text-3xl font-bold">{element.symbol}</span>
                                                     </div>
                                                     <div className="flex-1">

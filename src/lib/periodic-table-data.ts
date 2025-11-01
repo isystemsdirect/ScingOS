@@ -1,16 +1,16 @@
 
 export const elementCategories = {
-    'diatomic nonmetal': { label: 'Diatomic Nonmetal', bg: 'bg-green-400' },
-    'noble gas': { label: 'Noble Gas', bg: 'bg-purple-400' },
-    'alkali metal': { label: 'Alkali Metal', bg: 'bg-red-400' },
-    'alkaline earth metal': { label: 'Alkaline Earth Metal', bg: 'bg-orange-400' },
-    'metalloid': { label: 'Metalloid', bg: 'bg-yellow-400' },
-    'polyatomic nonmetal': { label: 'Polyatomic Nonmetal', bg: 'bg-emerald-400' },
-    'post-transition metal': { label: 'Post-transition Metal', bg: 'bg-cyan-400' },
-    'transition metal': { label: 'Transition Metal', bg: 'bg-sky-400' },
-    'lanthanide': { label: 'Lanthanide', bg: 'bg-pink-400' },
-    'actinide': { label: 'Actinide', bg: 'bg-rose-400' },
-    'unknown': { label: 'Unknown', bg: 'bg-gray-400' }
+    'diatomic nonmetal': { label: 'Diatomic Nonmetal', bg: 'bg-green-500/40' },
+    'noble gas': { label: 'Noble Gas', bg: 'bg-purple-500/40' },
+    'alkali metal': { label: 'Alkali Metal', bg: 'bg-red-500/40' },
+    'alkaline earth metal': { label: 'Alkaline Earth Metal', bg: 'bg-orange-500/40' },
+    'metalloid': { label: 'Metalloid', bg: 'bg-yellow-500/40' },
+    'polyatomic nonmetal': { label: 'Polyatomic Nonmetal', bg: 'bg-emerald-500/40' },
+    'post-transition metal': { label: 'Post-transition Metal', bg: 'bg-cyan-500/40' },
+    'transition metal': { label: 'Transition Metal', bg: 'bg-sky-500/40' },
+    'lanthanide': { label: 'Lanthanide', bg: 'bg-pink-500/40' },
+    'actinide': { label: 'Actinide', bg: 'bg-rose-500/40' },
+    'unknown': { label: 'Unknown', bg: 'bg-gray-500/40' }
 };
 
 export const periodicTableData = [
