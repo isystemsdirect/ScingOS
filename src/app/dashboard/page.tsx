@@ -9,16 +9,13 @@ import {
   DollarSign,
   Users,
   PlusCircle,
-  Cpu,
   Map,
-  FileText,
   UserCheck,
   ShieldAlert,
   Bell,
   CalendarClock
 } from "lucide-react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -41,7 +38,9 @@ import {
 import { mockInspections, mockInspectors, mockClients } from "@/lib/data";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { MarketplaceMap } from "@/components/marketplace-map";
-import { Separator } from "@/components/ui/separator";
+import { DashboardCharts } from "@/components/dashboard-charts";
+import Image from "next/image";
+
 
 const mockAgenda = [
     { time: "09:00 AM", title: "Pre-Purchase Inspection", address: "456 Oak Ave", id: "INS-002" },
@@ -78,56 +77,7 @@ export default function Dashboard() {
               </Button>
           </div>
         </div>
-        <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
-          <Card className="bg-card/60 backdrop-blur-sm">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">$45,231.89</div>
-              <p className="text-xs text-muted-foreground">
-                +20.1% from last month
-              </p>
-            </CardContent>
-          </Card>
-          <Card className="bg-card/60 backdrop-blur-sm">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Inspections This Month
-              </CardTitle>
-              <ClipboardCheck className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">+265</div>
-              <p className="text-xs text-muted-foreground">
-                +180.1% from last month
-              </p>
-            </CardContent>
-          </Card>
-          <Card className="bg-card/60 backdrop-blur-sm">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Team Members Online</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">3 / 4</div>
-              <p className="text-xs text-muted-foreground">1 member offline</p>
-            </CardContent>
-          </Card>
-          <Card className="bg-card/60 backdrop-blur-sm">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Marketplace Jobs</CardTitle>
-              <Activity className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">+18</div>
-              <p className="text-xs text-muted-foreground">
-                new jobs available in your area
-              </p>
-            </CardContent>
-          </Card>
-        </div>
+        <DashboardCharts />
         <div className="grid gap-8 md:grid-cols-3">
           <div className="md:col-span-2 grid gap-8">
              <Card className="bg-card/60 backdrop-blur-sm">
