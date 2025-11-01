@@ -73,7 +73,7 @@ export type Device = {
 };
 
 export type SubscriptionPlan = {
-  name: "Free" | "Basic" | "Pro" | "Enterprise";
+  name: "Individual Inspector" | "Small Business" | "Enterprise" | "Gov/Enterprise MAX";
   price: string;
   pricePeriod: string;
   features: string[];

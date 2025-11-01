@@ -18,9 +18,9 @@ import { Globe } from "lucide-react"
 
 
 const mockInvoices = [
-    { id: 'INV-2024-001', date: '2024-07-15', amount: '$199.00', status: 'Paid' },
-    { id: 'INV-2024-002', date: '2024-06-15', amount: '$199.00', status: 'Paid' },
-    { id: 'INV-2024-003', date: '2024-05-15', amount: '$29.00', status: 'Paid' },
+    { id: 'INV-2024-001', date: '2024-07-15', amount: '$149.00', status: 'Paid' },
+    { id: 'INV-2024-002', date: '2024-06-15', amount: '$149.00', status: 'Paid' },
+    { id: 'INV-2024-003', date: '2024-05-15', amount: '$49.00', status: 'Paid' },
 ]
 
 export default function FinancesPage() {
@@ -94,7 +94,7 @@ export default function FinancesPage() {
                       <Button
                           className="w-full"
                           disabled={plan.isCurrent}
-                          variant={plan.name === 'Pro' || plan.name === 'Enterprise' || plan.name === 'Enterprise MAX' ? 'pro' : plan.isCurrent ? 'outline' : 'default'}
+                          variant={plan.name.includes('Enterprise') ? 'pro' : plan.isCurrent ? 'outline' : 'default'}
                       >
                           {plan.cta}
                       </Button>

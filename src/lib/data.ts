@@ -155,7 +155,7 @@ export const mockInspectors: Inspector[] = [
         "Storm/hail/wind damage assessment",
         "Settlement/structural movement monitoring"
     ],
-    location: { name: 'Someville, TX', lat: 30.2672, lng: -97.7431 },
+    location: { name: 'Someville, TX', lat: 30.2672, lng: -97.7431 }, 
     onCall: true 
   },
   { 
@@ -190,58 +190,50 @@ export const mockDevices: Device[] = [
 
 export const mockSubscriptionPlans: SubscriptionPlan[] = [
   {
-    name: "Free",
-    price: "$0",
+    name: "Individual Inspector",
+    price: "$49",
     pricePeriod: "/ month",
     features: [
-      "1 inspector seat",
-      "Core LARI Engines (Vision, Mapper, GIS, Weather)",
-      "Mobile device sensors only",
-      "5 GB Cloud Storage",
-      "Basic PDF reports"
+      "Basic AI inspection tools",
+      "Compliance references",
+      "Marketplace Listing Add-on ($25/mo)"
     ],
-    cta: "Start for Free"
+    cta: "Select Plan"
   },
   {
-    name: "Pro",
-    price: "$199",
+    name: "Small Business",
+    price: "$149",
     pricePeriod: "/ month",
     isCurrent: true,
     features: [
-      "Up to 5 inspector seats",
-      "All Core LARI Engines",
-      "External device integration (drones, LiDAR, thermal)",
-      "500 GB Cloud Storage",
-      "API Access & Webhooks",
-      "Purchase Add-on Keys (PRISM, ECHO, etc.)"
+      "Up to 5 inspectors",
+      "Shared dashboards",
+      "Marketplace Listing Included",
+      "Basic API Access",
     ],
     cta: "Current Plan"
   },
   {
     name: "Enterprise",
-    price: "Custom",
-    pricePeriod: "",
+    price: "$399",
+    pricePeriod: "/ month",
     features: [
-      "Unlimited inspector seats",
-      "All LARI Engines included",
-      "Unlimited Cloud Storage",
-      "SSO and advanced security",
-      "Dedicated instances & support",
-      "Custom analytics & integrations"
+      "Up to 20 inspectors",
+      "Advanced AI Analytics",
+      "CRM Integration",
+      "Priority Support"
     ],
     cta: "Contact Sales"
   },
   {
-    name: "Enterprise MAX",
-    price: "Custom",
-    pricePeriod: "",
+    name: "Gov/Enterprise MAX",
+    price: "$999",
+    pricePeriod: "/mo",
     features: [
-      "All Enterprise features",
-      "Multi-modal AI data fusion",
-      "Predictive analytics & lifecycle modeling",
-      "Insurance & regulatory data feeds",
-      "On-premise deployment options",
-      "VIP access to new LARI engines"
+      "Unlimited users",
+      "Full compliance library",
+      "On-premise options",
+      "Dedicated AI models",
     ],
     cta: "Contact Sales"
   },
