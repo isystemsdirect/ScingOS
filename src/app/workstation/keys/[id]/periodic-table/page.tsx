@@ -1,10 +1,9 @@
 
-
 'use client';
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { ChevronLeft, Search, Camera, Mic, Copy, Beaker, FileText, BadgeCheck, FlaskConical, Loader2 } from "lucide-react";
+import { ChevronLeft, Search, Camera, Mic, Copy, Beaker, FileText, BadgeCheck, FlaskConical, Loader2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { periodicTableData, elementCategories } from "@/lib/periodic-table-data";
@@ -42,6 +41,14 @@ const SubstanceAnalyzer = () => {
         }
         setIsLoading(false);
     };
+    
+    const handleCancel = () => {
+        setIsLoading(false);
+        toast({
+            title: "Analysis Cancelled",
+            description: "The substance analysis request has been cancelled.",
+        });
+    }
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -74,6 +81,7 @@ const SubstanceAnalyzer = () => {
                                 onChange={e => setSubstance(e.target.value)}
                                 placeholder="e.g., 304 stainless steel pipe" 
                                 className="pl-10 pr-20 rounded-full"
+                                disabled={isLoading}
                             />
                             <div className="absolute right-1 top-1/2 flex -translate-y-1/2 items-center">
                                 <Button type="button" variant="ghost" size="icon" className="h-8 w-8 rounded-md">
@@ -86,16 +94,18 @@ const SubstanceAnalyzer = () => {
                                 </Button>
                             </div>
                         </div>
-                        <Button type="submit" disabled={isLoading}>
-                            {isLoading ? 'Analyzing...' : 'Analyze'}
-                        </Button>
+                        {!isLoading && <Button type="submit">Analyze</Button>}
+                        {isLoading && <Button type="button" variant="destructive" onClick={handleCancel}>Cancel</Button>}
                     </div>
 
                     <div className="pt-4">
                         {isLoading && (
-                            <div className="flex items-center justify-center p-8 border rounded-lg">
+                            <div className="flex items-center justify-center p-8 border rounded-lg bg-muted/30">
                                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                                <p className="ml-4 text-muted-foreground">AI is analyzing...</p>
+                                <div className="ml-4 text-left">
+                                     <p className="font-semibold">AI is analyzing...</p>
+                                     <p className="text-sm text-muted-foreground">Simulating real-time lookup to authoritative databases.</p>
+                                </div>
                             </div>
                         )}
                         {result && (
@@ -340,3 +350,5 @@ export default function PeriodicTablePage() {
         </div>
     );
 }
+
+    
