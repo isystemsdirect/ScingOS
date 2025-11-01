@@ -20,7 +20,7 @@ const Logo = ({ className, isLoginPage = false }: { className?: string, isLoginP
            <span className="font-sans uppercase font-bold italic text-4xl whitespace-nowrap text-glow-blue">
             SCINGULAR <span className="text-primary">AI</span>
           </span>
-          <span className="font-sans font-bold text-[0.4em] absolute top-[0.8em] -right-[2.5em]">TM</span>
+          <span className="font-sans font-bold text-[0.4em] absolute top-[1.2em] right-[-3.5em]">TM</span>
         </div>
       </Link>
     );
