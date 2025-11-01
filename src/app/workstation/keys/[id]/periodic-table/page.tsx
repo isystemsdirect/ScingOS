@@ -253,7 +253,7 @@ export default function PeriodicTablePage() {
                       <div className="overflow-x-auto pb-4">
                         <TooltipProvider>
                             <div
-                                className="grid gap-1 min-w-[1200px]"
+                                className="grid gap-1"
                                 style={{
                                     gridTemplateColumns: "repeat(18, minmax(0, 1fr))",
                                 }}
@@ -367,3 +367,4 @@ export default function PeriodicTablePage() {
             </div>
         </div>
     );
+}
