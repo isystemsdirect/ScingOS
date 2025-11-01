@@ -33,6 +33,7 @@ import {
   Map
 } from "lucide-react";
 import { useRouter, usePathname } from 'next/navigation';
+import React, { useState, useEffect } from 'react';
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -80,6 +81,32 @@ export default function AppLayout({
   const isProOrEnterprise = currentPlan && (currentPlan.name === 'Pro' || currentPlan.name === 'Enterprise');
   const router = useRouter();
   const pathname = usePathname();
+
+  const [isFullScreen, setIsFullScreen] = useState(false);
+
+  useEffect(() => {
+    const handleFullScreenChange = () => {
+      setIsFullScreen(!!document.fullscreenElement);
+    };
+
+    document.addEventListener('fullscreenchange', handleFullScreenChange);
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullScreenChange);
+    };
+  }, []);
+
+  const toggleFullScreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(err => {
+        alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+      });
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  };
 
   const handleRefresh = () => {
     router.refresh();
@@ -278,6 +305,10 @@ export default function AppLayout({
               <Button variant="ghost" size="icon" className="rounded-full" onClick={handleRefresh}>
                 <RefreshCw className="h-5 w-5" />
                 <span className="sr-only">Refresh Page</span>
+              </Button>
+              <Button variant="ghost" size="icon" className="rounded-full" onClick={toggleFullScreen}>
+                {isFullScreen ? <Shrink className="h-5 w-5" /> : <Expand className="h-5 w-5" />}
+                <span className="sr-only">{isFullScreen ? 'Exit Full Screen' : 'Enter Full Screen'}</span>
               </Button>
               <Button variant="ghost" size="icon" className="rounded-full">
                 <Bell className="h-5 w-5" />
