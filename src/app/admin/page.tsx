@@ -106,7 +106,6 @@ export default function AdminPage() {
                       const avatar = PlaceHolderImages.find(
                         (p) => p.id === user.imageHint
                       );
-                      const role = index === 0 ? 'Admin' : 'Inspector';
                       const status = index % 2 === 0 ? 'Active' : 'Suspended';
 
                       return (
@@ -132,10 +131,10 @@ export default function AdminPage() {
                           <TableCell>
                             <Badge
                               variant={
-                                role === 'Admin' ? 'default' : 'secondary'
+                                user.role === 'Admin' ? 'default' : 'secondary'
                               }
                             >
-                              {role}
+                              {user.role}
                             </Badge>
                           </TableCell>
                           <TableCell className="hidden md:table-cell">
