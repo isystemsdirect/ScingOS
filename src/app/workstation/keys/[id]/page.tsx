@@ -22,6 +22,33 @@ export default function KeyManagementPage() {
   if (!params.id) {
     notFound();
   }
+  
+  const keyDetails: {[key: string]: {name: string, description: string, capabilities: {[key: string]: string}}} = {
+    'key_vision_std_abc123': {
+        name: "LARI-VISION",
+        description: "Image/Video/CCTV/Drone/Direct Visual",
+        capabilities: {
+            "Construction": "Facade, roof, bridge, tunnel, elevator, crane, traffic, site safety",
+            "Energy": "Solar array, wind turbine, substation, oil/gas tanks/platforms, nuclear visual checks",
+            "Water": "Tank/reservoir, pump station, canal, dam",
+            "Transportation": "Vehicle, rail rolling stock, cargo bay, road surface, airport field marking",
+            "Manufacturing": "Packed goods, batch output, label and packaging checks, cleanroom monitoring",
+            "Healthcare": "Medical device surface, internal endoscopy, facility safety",
+            "Agriculture": "Livestock visual, produce grading, storage/warehouse",
+            "Environmental": "Landfill, hazardous waste, soil/air visible pollutants"
+        }
+    }
+  }
+  
+  // A real implementation would fetch this data, for now we just use a placeholder for any non-mapped key.
+  const details = keyDetails[params.id] || {
+        name: "LARI Engine Key",
+        description: "Manages a specific LARI sub-engine.",
+        capabilities: {
+            "General": "This key enables access to a specialized LARI sub-engine for advanced data processing."
+        }
+  }
+
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 lg:px-6">
@@ -37,18 +64,23 @@ export default function KeyManagementPage() {
               <KeyRound className="h-6 w-6 text-primary" />
           </div>
           <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
-            Manage Key
+            {details.name}
           </h1>
           <Badge variant="secondary" className="font-mono">{params.id}</Badge>
         </div>
 
         <Card>
             <CardHeader>
-                <CardTitle>Key Details</CardTitle>
-                <CardDescription>Details for key: {params.id}</CardDescription>
+                <CardTitle>{details.name}</CardTitle>
+                <CardDescription>{details.description}</CardDescription>
             </CardHeader>
-            <CardContent>
-                <p>Management interface for this key will be built here.</p>
+            <CardContent className="prose prose-sm prose-invert max-w-none">
+                <h4 className="text-foreground">Industry Applications:</h4>
+                <ul>
+                    {Object.entries(details.capabilities).map(([industry, uses]) => (
+                        <li key={industry}><strong>{industry}:</strong> {uses}</li>
+                    ))}
+                </ul>
             </CardContent>
         </Card>
 
@@ -56,5 +88,3 @@ export default function KeyManagementPage() {
     </div>
   );
 }
-
-    
