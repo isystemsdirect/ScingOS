@@ -60,14 +60,14 @@ export default function PeriodicTablePage() {
                             Select the elements that LARI-PRISM should analyze. Use the search bar to filter, and click an element to toggle its active state.
                         </CardDescription>
                          <div className="relative pt-4">
-                            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                            <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                             <Input
                                 placeholder="Search by element name, symbol, or atomic number..."
-                                className="w-full rounded-full bg-background pl-9 pr-20"
+                                className="w-full rounded-full bg-background pl-10 pr-20"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
-                            <div className="absolute right-1 top-1/2 flex -translate-y-1/2">
+                            <div className="absolute right-1 top-1/2 flex -translate-y-1/2 items-center">
                                 <Button type="button" variant="ghost" size="icon" className="h-8 w-8 rounded-md">
                                     <Camera className="h-4 w-4 text-muted-foreground" />
                                     <span className="sr-only">Use visual search</span>
