@@ -94,7 +94,7 @@ export default function AdminPage() {
                       <TableHead>Role</TableHead>
                       <TableHead className="hidden md:table-cell">Status</TableHead>
                       <TableHead className="hidden md:table-cell">
-                        Last Seen
+                        Fields of Service
                       </TableHead>
                       <TableHead>
                         <span className="sr-only">Actions</span>
@@ -141,7 +141,12 @@ export default function AdminPage() {
                             <Badge variant={status === 'Active' ? 'secondary' : 'destructive'}>{status}</Badge>
                           </TableCell>
                           <TableCell className="hidden md:table-cell">
-                            {`2023-10-${28 - index} 10:1${index} AM`}
+                             <div className="flex flex-wrap gap-1 max-w-xs">
+                                {user.offeredServices.slice(0, 2).map(service => (
+                                    <Badge key={service} variant="outline">{service.split('(')[0].trim()}</Badge>
+                                ))}
+                                {user.offeredServices.length > 2 && <Badge variant="outline">+{user.offeredServices.length - 2} more</Badge>}
+                            </div>
                           </TableCell>
                           <TableCell>
                             <DropdownMenu>
