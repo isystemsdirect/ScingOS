@@ -40,7 +40,7 @@ export default function PeriodicTablePage() {
         return matchesSearch && matchesCategory;
     });
 
-    const allVisibleSelected = filteredElements.every(el => activeElements.includes(el.number));
+    const allVisibleSelected = filteredElements.length > 0 && filteredElements.every(el => activeElements.includes(el.number));
 
     const handleToggleAll = () => {
         const visibleElementNumbers = filteredElements.map(el => el.number);
@@ -105,10 +105,10 @@ export default function PeriodicTablePage() {
                         </div>
                     </CardHeader>
                     <CardContent>
-                      <div className="overflow-x-auto">
+                      <div>
                         <TooltipProvider>
                             <div
-                                className="grid gap-1 min-w-[1200px]"
+                                className="grid gap-1"
                                 style={{
                                     gridTemplateColumns: "repeat(18, minmax(0, 1fr))",
                                 }}
