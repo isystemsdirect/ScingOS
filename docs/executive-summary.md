@@ -18,14 +18,14 @@ The four foundational innovations driving our market disruption.
 
 ### The AI Trinity: LARI, Scing & BANE
 -   **LARI™ (Logistical, Analytical, & Reporting Interface):** The core analytical engine. A suite of interoperable AI sub-engines designed for multimodal data fusion and complex analysis of physical data.
--   **Scing™:** The interactive, conversational AI persona and user interface. Scing handles voice commands, natural language queries, and delivers real-time guidance to the field inspector, acting as the bridge between the user and LARI's power.
--   **BANE™ (Business Analytics & Network Engine):** The strategic monetization and business intelligence layer. BANE analyzes aggregated, anonymized data from across the entire network to generate high-value market insights, risk models, and predictive analytics for enterprise customers and new revenue streams.
+-   **Scing™ AI:** The human-relations AI bot. Scing is the user-centric, front-end of the application, trained to learn individual user workflows, provide a natural language interface, and deliver a personalized, predictive, and seamless user experience.
+-   **BANE™ (Business Analytics & Network Engine):** The security and business intelligence AI. BANE ensures platform integrity, data provenance, and entitlement enforcement. It also analyzes aggregated network data to generate high-value market insights and risk models.
 
 ### Edge-to-Cloud Continuum
 A hybrid architecture enabling real-time, on-device processing via Scing and LARI for speed and offline capability, with seamless offload to high-compute cloud infrastructure for deep analytics by BANE.
 
 ### Trust & Provenance
-Every data point, analysis, and report is cryptographically signed and chained, creating an immutable audit trail from sensor to final sign-off, ensuring scientific and legal defensibility.
+Every data point, analysis, and report is cryptographically signed and chained by the BANE engine, creating an immutable audit trail from sensor to final sign-off, ensuring scientific and legal defensibility.
 
 ### Monetization Framework
 A sophisticated, entitlement-driven SaaS model where functionality is unlocked via tiered and specialized 'Keys'. This model is managed and optimized by the BANE engine, which identifies upsell opportunities and new data products.
@@ -44,14 +44,16 @@ A breakdown of the specialized AI sub-engines that form our proprietary analytic
 -   **LARI-COMPLIANCE & LARI-SYNTHESIZER**: The reporting powerhouses. Cross-references all findings against a vast library of codes and standards, then synthesizes the data into coherent, actionable executive summaries.
 -   **LARI-GUANGEL & Domain Models**: A suite of specialized models for safety (Guardian Angel AI), logistics, environmental analysis, and other industry verticals, providing hyper-contextual, actionable intelligence.
 
-### Scing™: The Inspector's AI Partner
-Scing is the voice and intelligence in the field, providing a natural language interface to the immense power of LARI.
+### Scing™ AI: The Inspector's AI Partner
+Scing is the adaptive, intelligent interface that makes the power of LARI intuitive and personal.
+- **Personalized Workflows:** Learns an inspector's habits and preferences to anticipate needs and surface relevant tools.
 - **Voice-Activated Operations:** "Scing, start a new moisture intrusion survey."
 - **On-Site Analysis:** "Scing, what does the code say about this type of electrical panel?"
 - **Real-time Data Capture:** "Scing, document this crack as medium severity and attach the last three photos."
 
-### BANE™: The Business Intelligence Engine
-BANE turns our network of inspections into a priceless asset by analyzing macro trends and creating new data products.
+### BANE™: The Security & Business Intelligence Engine
+BANE serves two critical functions: securing the platform and turning network data into a priceless asset.
+- **Security & Provenance:** Manages cryptographic signing, secures the chain of custody for all data, and enforces user entitlements.
 - **Predictive Analytics:** Identifies patterns in component failures across thousands of properties to create predictive maintenance models.
 - **Risk Modeling:** Provides anonymized, aggregated risk data to insurance and finance industries for underwriting and portfolio assessment.
 - **Market Intelligence:** Creates reports on defect prevalence by region, material usage trends, and compliance hotspots.

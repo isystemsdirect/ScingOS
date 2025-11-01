@@ -22,7 +22,7 @@ const corePillars = [
     {
         icon: Cpu,
         title: "The AI Trinity: LARI, Scing & BANE",
-        description: "A synergistic trifecta. LARI analyzes, Scing interacts, and BANE strategizes, providing a complete intelligence ecosystem from the field to the boardroom."
+        description: "A synergistic trifecta. LARI analyzes, Scing interacts as the human-relations AI, and BANE secures the platform while driving business intelligence."
     },
     {
         icon: BrainCircuit,
@@ -32,12 +32,12 @@ const corePillars = [
     {
         icon: ShieldCheck,
         title: "Trust & Provenance",
-        description: "Every data point, analysis, and report is cryptographically signed and chained, creating an immutable audit trail from sensor to final sign-off, ensuring scientific and legal defensibility."
+        description: "Every data point, analysis, and report is cryptographically signed and chained by BANE, creating an immutable audit trail from sensor to final sign-off."
     },
     {
         icon: Gem,
         title: "Monetization Framework",
-        description: "A sophisticated, entitlement-driven SaaS model where functionality is unlocked via tiered and specialized 'Keys', creating powerful, recurring revenue streams."
+        description: "A sophisticated, entitlement-driven SaaS model where functionality is unlocked via tiered and specialized 'Keys', managed and optimized by BANE."
     }
 ];
 
@@ -115,7 +115,7 @@ export default function OverviewPage() {
                                 <ul className="text-xs space-y-2 text-muted-foreground">
                                     <li><span className="font-semibold text-foreground">LARI-VISION:</span> Processes all visual data.</li>
                                     <li><span className="font-semibold text-foreground">LARI-MAPPER:</span> The spatial intelligence core for 3D data.</li>
-                                    <li><span className-="font-semibold text-foreground">LARI-PRISM:</span> Groundbreaking elemental analysis engine.</li>
+                                    <li><span className="font-semibold text-foreground">LARI-PRISM:</span> Groundbreaking elemental analysis engine.</li>
                                     <li><span className="font-semibold text-foreground">LARI-THERM & ECHO:</span> Interpret thermal and acoustic data.</li>
                                     <li><span className="font-semibold text-foreground">LARI-COMPLIANCE:</span> Cross-references findings against codes.</li>
                                     <li><span className="font-semibold text-foreground">LARI-GUANGEL:</span> Domain models for safety and logistics.</li>
@@ -128,8 +128,9 @@ export default function OverviewPage() {
                                 <CardDescription>The Inspector's AI Partner</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                                <p className="text-sm text-muted-foreground">Scing is the voice and intelligence in the field, providing a natural language interface to the immense power of LARI.</p>
+                                <p className="text-sm text-muted-foreground">Scing is the adaptive, intelligent interface that makes the power of LARI intuitive and personal.</p>
                                 <ul className="text-xs space-y-2 text-muted-foreground">
+                                    <li><span className="font-semibold text-foreground">Personalized Workflows:</span> Learns habits to anticipate needs.</li>
                                     <li><span className="font-semibold text-foreground">Voice-Activated Ops:</span> "Scing, start a moisture survey."</li>
                                     <li><span className="font-semibold text-foreground">On-Site Analysis:</span> "Scing, what's the code for this panel?"</li>
                                     <li><span className="font-semibold text-foreground">Real-time Data Capture:</span> "Scing, document this crack."</li>
@@ -139,13 +140,14 @@ export default function OverviewPage() {
                          <Card className="bg-card/60 backdrop-blur-sm">
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2"><TrendingUp className="text-primary"/> BANE™ Engine</CardTitle>
-                                <CardDescription>The Business Intelligence Engine</CardDescription>
+                                <CardDescription>The Security & Business Intelligence Engine</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                                <p className="text-sm text-muted-foreground">BANE turns our network of inspections into a priceless asset by analyzing macro trends and creating new data products.</p>
+                                <p className="text-sm text-muted-foreground">BANE secures the platform and turns network data into a priceless asset.</p>
                                 <ul className="text-xs space-y-2 text-muted-foreground">
+                                    <li><span className="font-semibold text-foreground">Security & Provenance:</span> Manages data chain of custody.</li>
                                     <li><span className="font-semibold text-foreground">Predictive Analytics:</span> Identifies component failure patterns.</li>
-                                    <li><span className-="font-semibold text-foreground">Risk Modeling:</span> Provides risk data to insurance/finance.</li>
+                                    <li><span className="font-semibold text-foreground">Risk Modeling:</span> Provides risk data to insurance/finance.</li>
                                     <li><span className="font-semibold text-foreground">Market Intelligence:</span> Reports on defect trends and compliance.</li>
                                 </ul>
                             </CardContent>
