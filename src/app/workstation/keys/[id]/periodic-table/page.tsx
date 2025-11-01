@@ -65,7 +65,7 @@ export default function PeriodicTablePage() {
                                                 onClick={() => handleToggle(element.number, !isActive)}
                                                 className={cn(
                                                     "relative aspect-square flex flex-col items-center justify-center p-1 border rounded-md cursor-pointer transition-all hover:scale-105 hover:z-10",
-                                                    "text-white",
+                                                    "text-gray-900/80 dark:text-gray-900",
                                                     elementCategories[element.category as keyof typeof elementCategories]?.bg,
                                                     !isActive && "opacity-40 hover:opacity-75"
                                                 )}
@@ -74,15 +74,15 @@ export default function PeriodicTablePage() {
                                                     gridRow: element.ypos,
                                                 }}
                                             >
-                                                <div className="absolute top-1 left-1 text-xs font-light">{element.number}</div>
+                                                <div className="absolute top-1 left-1 text-xs font-semibold">{element.number}</div>
                                                 <div className="text-xl font-bold">{element.symbol}</div>
-                                                <div className="text-[10px] leading-none text-center truncate w-full">{element.name}</div>
+                                                <div className="text-[10px] leading-none text-center truncate w-full font-medium">{element.name}</div>
                                             </button>
                                         </TooltipTrigger>
                                         <TooltipContent className="max-w-xs p-4" side="top" align="center">
                                             <div className="flex flex-col gap-4">
                                                 <div className="flex items-center gap-4">
-                                                    <div className={cn("flex h-16 w-16 items-center justify-center rounded-md text-white", elementCategories[element.category as keyof typeof elementCategories]?.bg)}>
+                                                    <div className={cn("flex h-16 w-16 items-center justify-center rounded-md text-gray-900", elementCategories[element.category as keyof typeof elementCategories]?.bg)}>
                                                         <span className="text-3xl font-bold">{element.symbol}</span>
                                                     </div>
                                                     <div className="flex-1">
