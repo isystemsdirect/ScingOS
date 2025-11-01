@@ -158,10 +158,7 @@
 
     .text-scingular-glow {
         color: white;
-        text-shadow: 0 0 5px #fff, 0 0 10px #fff,
-                     0 0 15px hsl(52 80% 45%), 
-                     0 0 20px hsl(128 65% 42%), 
-                     0 0 25px hsl(205 80% 40%);
+        animation: pulsate-glow 4s ease-in-out infinite;
     }
 }
 
@@ -174,5 +171,23 @@
   }
   100% {
     background-position: 0% center;
+  }
+}
+
+@keyframes pulsate-glow {
+  0%, 100% {
+    text-shadow: 0 0 5px #fff, 0 0 10px #fff, 
+                 0 0 15px hsl(52 80% 45%), 
+                 0 0 20px hsl(52 80% 45%);
+  }
+  33% {
+    text-shadow: 0 0 6px #fff, 0 0 12px #fff, 
+                 0 0 18px hsl(128 65% 42%), 
+                 0 0 24px hsl(128 65% 42%);
+  }
+  66% {
+    text-shadow: 0 0 6px #fff, 0 0 12px #fff, 
+                 0 0 18px hsl(205 80% 40%), 
+                 0 0 24px hsl(205 80% 40%);
   }
 }
