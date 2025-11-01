@@ -200,15 +200,16 @@ export default function WorkstationPage() {
                                     <TableHead>LARI Sub-Engine</TableHead>
                                     <TableHead>Entitlement</TableHead>
                                     <TableHead>Status</TableHead>
-                                    <TableHead className="text-right">Actions</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {mockKeys.map(key => (
-                                    <TableRow key={key.id}>
+                                     <TableRow key={key.id} className="cursor-pointer">
                                         <TableCell className="font-medium">
+                                          <Link href={`/workstation/keys/${key.id}`} className="hover:underline">
                                             {key.name}
-                                            <div className="text-xs text-muted-foreground font-mono">{key.id}</div>
+                                             <div className="text-xs text-muted-foreground font-mono">{key.id}</div>
+                                          </Link>
                                         </TableCell>
                                         <TableCell>
                                             <Badge variant="outline">{key.lariEngine}</Badge>
@@ -218,9 +219,6 @@ export default function WorkstationPage() {
                                         </TableCell>
                                         <TableCell>
                                             <Badge variant={key.status === 'Active' ? "default" : 'secondary'}>{key.status}</Badge>
-                                        </TableCell>
-                                        <TableCell className="text-right">
-                                            <Button variant="ghost" size="icon"><Trash2 className="h-4 w-4"/></Button>
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -704,3 +702,5 @@ export default function WorkstationPage() {
     </div>
   )
 }
+
+    
