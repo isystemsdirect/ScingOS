@@ -35,6 +35,7 @@ type CapabilitySpec = {
         description: string;
         availability: string;
         defaultChecked: boolean;
+        href?: string;
     }[];
 };
 
@@ -94,7 +95,7 @@ const keySpecifications: Record<string, CapabilitySpec> = {
             { core: 'On-device analysis', pro: 'Cloud libraries, sensor calibration', max: 'Enterprise dashboards, regulatory feeds, third-party integration' },
         ],
         featureToggles: [
-            { id: "element_selector", label: "Periodic Table Element Selector", description: "Dynamically toggle analyzable elements for each job.", availability: "Core, Pro, Max", defaultChecked: true },
+            { id: "element_selector", label: "Periodic Table Element Selector", description: "Dynamically toggle analyzable elements for each job.", availability: "Core, Pro, Max", defaultChecked: true, href: "periodic-table" },
             { id: "compliance_reporting", label: "Dynamic Compliance Reports", description: "Auto-generate reports cross-referenced to RoHS, REACH, FDA, EPA standards.", availability: "Pro/Max", defaultChecked: true },
             { id: "calibration_qa", label: "Calibration & QA/QC Routines", description: "Integrated routines using certified reference materials.", availability: "Pro/Max", defaultChecked: false },
             { id: "trace_analysis", label: "Trace Analysis (PPM/PPB)", description: "Enable high-sensitivity detection for ultra-trace elemental analysis.", availability: "Max", defaultChecked: false },
@@ -201,6 +202,37 @@ export default function KeyManagementPage() {
        )
   }
 
+  const FeatureToggle = ({ feature }: { feature: CapabilitySpec['featureToggles'][0] }) => {
+    const content = (
+        <>
+            <div>
+                <Label htmlFor={feature.id} className="font-medium cursor-pointer">{feature.label}</Label>
+                <p className="text-sm text-muted-foreground">{feature.description}</p>
+            </div>
+            <div className="flex items-center gap-4">
+                <div className="text-xs text-muted-foreground">
+                    {feature.availability.split('/').map(tier => <Badge key={tier} variant={tier === 'Max' ? 'pro' : 'secondary'} className="mr-1">{tier}</Badge>)}
+                </div>
+                <Switch id={feature.id} defaultChecked={feature.defaultChecked} />
+            </div>
+        </>
+    );
+
+    if (feature.href) {
+        return (
+            <Link href={`/workstation/keys/${params.id}/${feature.href}`} className="flex items-center justify-between rounded-lg border p-4 hover:bg-muted/50 transition-colors">
+                {content}
+            </Link>
+        )
+    }
+
+    return (
+        <div className="flex items-center justify-between rounded-lg border p-4">
+            {content}
+        </div>
+    );
+  };
+
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 lg:px-6">
@@ -262,18 +294,7 @@ export default function KeyManagementPage() {
                     <h3 className="text-lg font-semibold mb-4">Feature Toggles</h3>
                     <div className="space-y-4">
                         {spec.featureToggles.map((feature) => (
-                        <div key={feature.id} className="flex items-center justify-between rounded-lg border p-4">
-                            <div>
-                                <Label htmlFor={feature.id} className="font-medium cursor-pointer">{feature.label}</Label>
-                                <p className="text-sm text-muted-foreground">{feature.description}</p>
-                            </div>
-                            <div className="flex items-center gap-4">
-                                <div className="text-xs text-muted-foreground">
-                                    {feature.availability.split('/').map(tier => <Badge key={tier} variant={tier === 'Max' ? 'pro' : 'secondary'} className="mr-1">{tier}</Badge>)}
-                                </div>
-                                <Switch id={feature.id} defaultChecked={feature.defaultChecked} />
-                            </div>
-                        </div>
+                          <FeatureToggle key={feature.id} feature={feature} />
                         ))}
                     </div>
                 </div>
@@ -311,5 +332,3 @@ export default function KeyManagementPage() {
     </div>
   );
 }
-
-    
