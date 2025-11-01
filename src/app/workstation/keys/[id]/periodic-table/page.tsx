@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import Link from "next/link";
@@ -83,76 +84,88 @@ const SubstanceAnalyzer = () => {
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-                <form onSubmit={handleSubmit} className="flex items-center gap-2">
-                    <div className="relative flex-1">
-                        <Beaker className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                        <Input 
-                            value={substance}
-                            onChange={e => setSubstance(e.target.value)}
-                            placeholder="e.g., 304 stainless steel pipe" 
-                            className="pl-9"
-                        />
-                    </div>
-                    <Button type="submit" disabled={isLoading}>
-                        {isLoading ? 'Analyzing...' : 'Analyze Substance'}
-                    </Button>
-                </form>
-
-                {result && (
-                    <div className="border rounded-lg p-4 space-y-4">
-                        <h3 className="text-lg font-semibold">{result.substance}</h3>
-                        
-                        {result.elements.length > 0 && (
-                             <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead>Element</TableHead>
-                                        <TableHead>Symbol</TableHead>
-                                        <TableHead>Percentage</TableHead>
-                                        <TableHead>Role</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {result.elements.map((e: any) => (
-                                        <TableRow key={e.symbol}>
-                                            <TableCell>{periodicTableData.find(el => el.symbol === e.symbol)?.name}</TableCell>
-                                            <TableCell className="font-bold">{e.symbol}</TableCell>
-                                            <TableCell>{e.percent.toFixed(2)}%</TableCell>
-                                            <TableCell>{e.role || '-'}</TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        )}
-                        
-                        {result.regulatoryFlags.length > 0 && (
-                            <div>
-                                <h4 className="font-semibold mb-2">Regulatory Flags</h4>
-                                <div className="flex flex-wrap gap-2">
-                                {result.regulatoryFlags.map((flag: any) => (
-                                    <Badge key={flag.code} variant={flag.compliant ? 'default' : 'destructive'} className="gap-2">
-                                        <BadgeCheck className="h-4 w-4" />
-                                        {flag.code}: {flag.compliant ? 'Compliant' : 'Flagged'}
-                                        {flag.note && <span className="ml-2 text-xs opacity-80">({flag.note})</span>}
-                                    </Badge>
-                                ))}
-                                </div>
-                            </div>
-                        )}
-                        
-                        {result.paidFeatures.length > 0 && (
-                            <div className="border-t pt-4 flex items-center justify-between bg-primary/10 p-4 rounded-md">
-                                <div>
-                                    <h4 className="font-semibold text-primary">Premium Analysis Unlocked</h4>
-                                    <p className="text-sm text-primary/80">Full compliance analytics & export options available.</p>
-                                </div>
-                                <Button size="sm" variant="outline">
-                                    <FileText className="mr-2 h-4 w-4" /> Export Report
+                <form onSubmit={handleSubmit} className="grid gap-4">
+                    <div className="flex items-center gap-2">
+                        <div className="relative flex-1">
+                            <Beaker className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Input 
+                                value={substance}
+                                onChange={e => setSubstance(e.target.value)}
+                                placeholder="e.g., 304 stainless steel pipe" 
+                                className="pl-9 pr-20 rounded-full"
+                            />
+                             <div className="absolute right-1 top-1/2 flex -translate-y-1/2">
+                                <Button type="button" variant="ghost" size="icon" className="h-8 w-8 rounded-md">
+                                    <Camera className="h-4 w-4 text-muted-foreground" />
+                                    <span className="sr-only">Use visual search</span>
+                                </Button>
+                                <Button type="button" variant="ghost" size="icon" className="h-8 w-8 rounded-md">
+                                    <Mic className="h-4 w-4 text-muted-foreground" />
+                                    <span className="sr-only">Use voice command</span>
                                 </Button>
                             </div>
-                        )}
+                        </div>
+                        <Button type="submit" disabled={isLoading}>
+                            {isLoading ? 'Analyzing...' : 'Analyze'}
+                        </Button>
                     </div>
-                )}
+
+                    {result && (
+                        <div className="border rounded-lg p-4 space-y-4">
+                            <h3 className="text-lg font-semibold">{result.substance}</h3>
+                            
+                            {result.elements.length > 0 && (
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow>
+                                            <TableHead>Element</TableHead>
+                                            <TableHead>Symbol</TableHead>
+                                            <TableHead>Percentage</TableHead>
+                                            <TableHead>Role</TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {result.elements.map((e: any) => (
+                                            <TableRow key={e.symbol}>
+                                                <TableCell>{periodicTableData.find(el => el.symbol === e.symbol)?.name}</TableCell>
+                                                <TableCell className="font-bold">{e.symbol}</TableCell>
+                                                <TableCell>{e.percent.toFixed(2)}%</TableCell>
+                                                <TableCell>{e.role || '-'}</TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            )}
+                            
+                            {result.regulatoryFlags.length > 0 && (
+                                <div>
+                                    <h4 className="font-semibold mb-2">Regulatory Flags</h4>
+                                    <div className="flex flex-wrap gap-2">
+                                    {result.regulatoryFlags.map((flag: any) => (
+                                        <Badge key={flag.code} variant={flag.compliant ? 'default' : 'destructive'} className="gap-2">
+                                            <BadgeCheck className="h-4 w-4" />
+                                            {flag.code}: {flag.compliant ? 'Compliant' : 'Flagged'}
+                                            {flag.note && <span className="ml-2 text-xs opacity-80">({flag.note})</span>}
+                                        </Badge>
+                                    ))}
+                                    </div>
+                                </div>
+                            )}
+                            
+                            {result.paidFeatures.length > 0 && (
+                                <div className="border-t pt-4 flex items-center justify-between bg-primary/10 p-4 rounded-md">
+                                    <div>
+                                        <h4 className="font-semibold text-primary">Premium Analysis Unlocked</h4>
+                                        <p className="text-sm text-primary/80">Full compliance analytics & export options available.</p>
+                                    </div>
+                                    <Button size="sm" variant="outline">
+                                        <FileText className="mr-2 h-4 w-4" /> Export Report
+                                    </Button>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </form>
             </CardContent>
         </Card>
     );
@@ -338,3 +351,5 @@ export default function PeriodicTablePage() {
         </div>
     );
 }
+
+    
