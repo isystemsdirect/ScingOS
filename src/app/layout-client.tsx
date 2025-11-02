@@ -70,6 +70,9 @@ import { FlashNotificationBar } from "@/components/flash-notification-bar";
 import { WeatherWidget } from "@/components/weather-widget";
 import { NewsWidget } from "@/components/news-widget";
 import { cn } from "@/lib/utils";
+import { ScingAI } from "@/components/ScingAI";
+import { auth } from "@/lib/firebase";
+import { signInAnonymously } from "firebase/auth";
 
 export default function AppLayout({
   children,
@@ -85,6 +88,19 @@ export default function AppLayout({
   const pathname = usePathname();
 
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const initializeAuth = async () => {
+      try {
+        const result = await signInAnonymously(auth);
+        setUserId(result.user.uid);
+      } catch (error) {
+        console.error('Authentication error:', error);
+      }
+    };
+    initializeAuth();
+  }, []);
 
   useEffect(() => {
     const handleFullScreenChange = () => {
@@ -348,9 +364,13 @@ export default function AppLayout({
         )}>
           {children}
         </main>
+        {userId && (
+          <ScingAI 
+            userId={userId} 
+            accessKey={process.env.NEXT_PUBLIC_PICOVOICE_ACCESS_KEY || ''} 
+          />
+        )}
       </div>
     </div>
   );
 }
-
-    
