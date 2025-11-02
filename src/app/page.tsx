@@ -13,6 +13,8 @@ export default function HomePage() {
 
   useEffect(() => {
     const initializeAuth = async () => {
+      // This logic will be improved to check for a valid API key
+      // For now, we will simulate a user ID to prevent crashes
       const apiKey = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
       if (auth && apiKey && apiKey !== 'your-firebase-api-key' && apiKey !== '') {
         try {
@@ -20,11 +22,14 @@ export default function HomePage() {
           setUserId(result.user.uid);
         } catch (error) {
           console.error('Authentication error:', error);
+          // Set a mock user ID for development to proceed without a real backend
+          setUserId('mock-dev-user');
         } finally {
           setIsLoading(false);
         }
       } else {
-        console.warn("Firebase API key is not configured. Skipping authentication.");
+        console.warn("Firebase API key is not configured. Using mock user ID for development.");
+        setUserId('mock-dev-user');
         setIsLoading(false);
       }
     };
