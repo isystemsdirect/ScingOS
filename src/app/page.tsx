@@ -1,3 +1,4 @@
+
 'use client';
 import { ScingAI } from '@/components/ScingAI';
 import { NewCaptureButton } from '@/components/NewCaptureButton';
@@ -12,12 +13,18 @@ export default function HomePage() {
 
   useEffect(() => {
     const initializeAuth = async () => {
-      try {
-        const result = await signInAnonymously(auth);
-        setUserId(result.user.uid);
-      } catch (error) {
-        console.error('Authentication error:', error);
-      } finally {
+      const apiKey = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
+      if (auth && apiKey && apiKey !== 'your-firebase-api-key' && apiKey !== '') {
+        try {
+          const result = await signInAnonymously(auth);
+          setUserId(result.user.uid);
+        } catch (error) {
+          console.error('Authentication error:', error);
+        } finally {
+          setIsLoading(false);
+        }
+      } else {
+        console.warn("Firebase API key is not configured. Skipping authentication.");
         setIsLoading(false);
       }
     };
