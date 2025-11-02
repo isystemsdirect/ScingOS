@@ -277,6 +277,66 @@
             "answers": { "type": "object" },
             "status": { "type": "string", "enum": ["pending", "confirmed", "cancelled"] }
         }
+    },
+    "review": {
+      "title": "Review",
+      "description": "A review submitted by a user for another user or service.",
+      "type": "object",
+      "properties": {
+        "reviewerId": { "type": "string" },
+        "revieweeId": { "type": "string" },
+        "revieweeType": { "type": "string", "enum": ["client", "contractor", "customer"] },
+        "projectId": { "type": "string" },
+        "rating": {
+          "type": "object",
+          "properties": {
+            "overall": { "type": "number" },
+            "communication": { "type": "number" },
+            "timeliness": { "type": "number" },
+            "quality": { "type": "number" },
+            "professionalism": { "type": "number" },
+            "value": { "type": "number" }
+          }
+        },
+        "content": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string" },
+            "description": { "type": "string" },
+            "pros": { "type": "array", "items": { "type": "string" } },
+            "cons": { "type": "array", "items": { "type": "string" } },
+            "wouldRecommend": { "type": "boolean" }
+          }
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "isVerified": { "type": "boolean" },
+            "isAnonymous": { "type": "boolean" },
+            "moderationStatus": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+            "aiSentimentScore": { "type": "number" },
+            "createdAt": { "type": "number" },
+            "updatedAt": { "type": "number" }
+          }
+        }
+      }
+    },
+    "ratingAggregation": {
+      "title": "Rating Aggregation",
+      "description": "Aggregated rating data for a user.",
+      "type": "object",
+      "properties": {
+        "overall": {
+          "type": "object",
+          "properties": {
+            "averageRating": { "type": "number" },
+            "totalReviews": { "type": "number" },
+            "distribution": { "type": "object" }
+          }
+        },
+        "byCategory": { "type": "object" },
+        "byReviewerType": { "type": "object" }
+      }
     }
   },
   "auth": {
@@ -322,6 +382,14 @@
     "/bookings/{bookingId}": {
         "schema": { "$ref": "#/entities/booking"},
         "description": "User bookings and reservations"
+    },
+    "/reviews/{reviewId}": {
+      "schema": { "$ref": "#/entities/review" },
+      "description": "User reviews and ratings."
+    },
+    "/ratingAggregations/{userId}": {
+      "schema": { "$ref": "#/entities/ratingAggregation" },
+      "description": "Aggregated ratings for users."
     }
   }
 }

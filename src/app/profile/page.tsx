@@ -11,8 +11,10 @@ import {
 } from "@/components/ui/card";
 import { mockInspectors } from "@/lib/data";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { Briefcase, Calendar, Edit, Mail, MapPin, Phone, Star, ShieldCheck } from "lucide-react";
+import { Briefcase, Calendar, Edit, Mail, MapPin, Phone, Star, ShieldCheck, MessageSquare } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ReviewForm } from "@/components/review-form";
 
 export default function ProfilePage() {
   const user = mockInspectors[0];
@@ -53,81 +55,102 @@ export default function ProfilePage() {
                 </Button>
               </div>
             </CardHeader>
-            <CardContent className="grid gap-6">
-              <div className="flex items-center gap-4 rounded-md border bg-muted/50 p-4">
-                  <div className="flex flex-1 items-center gap-2">
-                      <Star className="h-5 w-5 text-primary" />
-                      <span className="font-semibold">{user.rating}</span>
-                      <span className="text-muted-foreground">({user.reviews} reviews)</span>
-                  </div>
-                  <div className="flex flex-1 items-center gap-2">
-                      <MapPin className="h-5 w-5 text-primary" />
-                      <span className="font-semibold">{user.location.name}</span>
-                  </div>
-                  <div className="flex flex-1 items-center gap-2">
-                      <Briefcase className="h-5 w-5 text-primary" />
-                      <span className="font-semibold">{user.onCall ? 'On-Call' : 'Unavailable'}</span>
-                  </div>
-              </div>
-
-              <div className="grid gap-4">
-                  <h3 className="text-xl font-semibold">About Me</h3>
-                  <p className="text-sm text-muted-foreground">{user.bio}</p>
-              </div>
-              
-              <Separator />
-
-              <div className="grid gap-4">
-                  <h3 className="text-xl font-semibold">Contact Information</h3>
-                  <div className="grid md:grid-cols-2 gap-4 text-sm">
-                      <div className="flex items-center gap-3">
-                          <Mail className="h-5 w-5 text-muted-foreground" />
-                          <span>john.doe@scingular.com</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                          <Phone className="h-5 w-5 text-muted-foreground" />
-                          <span>(555) 123-4567</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                          <Calendar className="h-5 w-5 text-muted-foreground" />
-                          <span>Member since: Jan 1, 2023</span>
-                      </div>
-                  </div>
-              </div>
-
-              <Separator />
-
-              <div>
-                  <h3 className="text-xl font-semibold">Certifications</h3>
-                  <div className="space-y-4 mt-4">
-                  {user.certifications.map((cert) => (
-                      <div key={cert.id} className="flex items-start gap-4">
-                          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted">
-                              <ShieldCheck className="h-6 w-6 text-primary" />
+            <CardContent>
+              <Tabs defaultValue="overview">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="overview">Overview</TabsTrigger>
+                  <TabsTrigger value="reviews">Reviews & Ratings</TabsTrigger>
+                </TabsList>
+                <TabsContent value="overview" className="mt-6">
+                    <div className="grid gap-6">
+                      <div className="flex items-center gap-4 rounded-md border bg-muted/50 p-4">
+                          <div className="flex flex-1 items-center gap-2">
+                              <Star className="h-5 w-5 text-primary" />
+                              <span className="font-semibold">{user.rating}</span>
+                              <span className="text-muted-foreground">({user.reviews} reviews)</span>
                           </div>
-                          <div className="flex-1">
-                              <p className="font-semibold">{cert.name}</p>
-                              <div className="text-sm text-muted-foreground">
-                                  ID: {cert.id} {cert.verified && <Badge variant="secondary" className="ml-2">Verified</Badge>}
+                          <div className="flex flex-1 items-center gap-2">
+                              <MapPin className="h-5 w-5 text-primary" />
+                              <span className="font-semibold">{user.location.name}</span>
+                          </div>
+                          <div className="flex flex-1 items-center gap-2">
+                              <Briefcase className="h-5 w-5 text-primary" />
+                              <span className="font-semibold">{user.onCall ? 'On-Call' : 'Unavailable'}</span>
+                          </div>
+                      </div>
+
+                      <div className="grid gap-4">
+                          <h3 className="text-xl font-semibold">About Me</h3>
+                          <p className="text-sm text-muted-foreground">{user.bio}</p>
+                      </div>
+                      
+                      <Separator />
+
+                      <div className="grid gap-4">
+                          <h3 className="text-xl font-semibold">Contact Information</h3>
+                          <div className="grid md:grid-cols-2 gap-4 text-sm">
+                              <div className="flex items-center gap-3">
+                                  <Mail className="h-5 w-5 text-muted-foreground" />
+                                  <span>john.doe@scingular.com</span>
                               </div>
-                              <p className="text-xs text-muted-foreground">Expires: {cert.expiresAt}</p>
+                              <div className="flex items-center gap-3">
+                                  <Phone className="h-5 w-5 text-muted-foreground" />
+                                  <span>(555) 123-4567</span>
+                              </div>
+                              <div className="flex items-center gap-3">
+                                  <Calendar className="h-5 w-5 text-muted-foreground" />
+                                  <span>Member since: Jan 1, 2023</span>
+                              </div>
                           </div>
                       </div>
-                  ))}
-                  </div>
-              </div>
 
-              <Separator />
+                      <Separator />
 
-              <div>
-                <h3 className="text-xl font-semibold">Active Marketplace Dispatch Fields</h3>
-                <p className="text-sm text-muted-foreground mt-1 mb-4">This is a list of inspection types you have opted-in to for the Marketplace.</p>
-                <div className="flex flex-wrap gap-2">
-                  {user.offeredServices.map((service) => (
-                      <Badge key={service} variant="default">{service}</Badge>
-                  ))}
-                </div>
-              </div>
+                      <div>
+                          <h3 className="text-xl font-semibold">Certifications</h3>
+                          <div className="space-y-4 mt-4">
+                          {user.certifications.map((cert) => (
+                              <div key={cert.id} className="flex items-start gap-4">
+                                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted">
+                                      <ShieldCheck className="h-6 w-6 text-primary" />
+                                  </div>
+                                  <div className="flex-1">
+                                      <p className="font-semibold">{cert.name}</p>
+                                      <div className="text-sm text-muted-foreground">
+                                          ID: {cert.id} {cert.verified && <Badge variant="secondary" className="ml-2">Verified</Badge>}
+                                      </div>
+                                      <p className="text-xs text-muted-foreground">Expires: {cert.expiresAt}</p>
+                                  </div>
+                              </div>
+                          ))}
+                          </div>
+                      </div>
+
+                      <Separator />
+
+                      <div>
+                        <h3 className="text-xl font-semibold">Active Marketplace Dispatch Fields</h3>
+                        <p className="text-sm text-muted-foreground mt-1 mb-4">This is a list of inspection types you have opted-in to for the Marketplace.</p>
+                        <div className="flex flex-wrap gap-2">
+                          {user.offeredServices.map((service) => (
+                              <Badge key={service} variant="default">{service}</Badge>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                </TabsContent>
+                <TabsContent value="reviews" className="mt-6">
+                   <Card>
+                      <CardHeader>
+                          <CardTitle className="flex items-center gap-2"><MessageSquare className="h-5 w-5"/>Leave a Review</CardTitle>
+                          <CardDescription>Share your experience working with {user.name}.</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                          <ReviewForm revieweeId={user.id} revieweeType="contractor" />
+                      </CardContent>
+                   </Card>
+                </TabsContent>
+              </Tabs>
             </CardContent>
           </Card>
         </div>
