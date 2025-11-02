@@ -16,7 +16,7 @@ By vertically integrating sensor hardware, edge AI processing, cloud analytics, 
 
 The four foundational innovations driving our market disruption.
 
-### The AI Trinity: LARI, Scing & BANE
+### The AI Trinity: LARI (pronounced, "Larry"), Scing, (pronounced, "Sing"),  & BANE
 -   **LARI™ (Logistical, Analytical, & Reporting Interface):** The core analytical engine. A suite of interoperable AI sub-engines designed for multimodal data fusion and complex analysis of physical data.
 -   **Scing™ AI:** The human-relations AI bot. Scing is the user-centric, front-end of the application, trained to learn individual user workflows, provide a natural language interface, and deliver a personalized, predictive, and seamless user experience.
 -   **BANE™ (Business Analytics & Network Engine):** The security and business intelligence AI. BANE ensures platform integrity, data provenance, and entitlement enforcement. It also analyzes aggregated network data to generate high-value market insights and risk models.
