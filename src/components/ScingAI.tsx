@@ -1,3 +1,4 @@
+
 'use client';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useWakeWordDetection } from '@/hooks/useWakeWordDetection';
@@ -6,8 +7,8 @@ import { useTextToSpeech } from '@/hooks/useTextToSpeech';
 import { conversationStore } from '@/lib/conversationStore';
 import { autonomousDOMController, DOMAction } from '@/lib/autonomous-dom-controller';
 import { autonomousComponentController, ComponentAction } from '@/lib/autonomous-component-controller';
+import { getFirebaseFunctions } from '@/lib/firebase';
 import { httpsCallable } from 'firebase/functions';
-import { functions } from '@/lib/firebase';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 
@@ -28,6 +29,7 @@ export const ScingAI: React.FC<ScingAIAutonomousProps> = ({
   const [guiControlLevel, setGuiControlLevel] = useState<'basic' | 'advanced' | 'full'>('full');
 
   // Firebase Functions with enhanced capabilities
+  const functions = getFirebaseFunctions();
   const processAdvancedMessage = httpsCallable(functions, 'processAdvancedScingMessage');
 
   // Wake word detection

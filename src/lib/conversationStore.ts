@@ -1,3 +1,4 @@
+
 import { 
   collection, 
   addDoc, 
@@ -46,10 +47,8 @@ export interface ConversationSession {
 }
 
 class ConversationStore {
-  private db: Firestore;
-
-  constructor() {
-    this.db = getDb();
+  private get db() {
+    return getDb();
   }
 
   private get conversationsCollection() {
