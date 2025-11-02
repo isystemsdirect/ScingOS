@@ -19,14 +19,37 @@ export interface LiDARScan {
     points: LiDARPoint[];
 }
 
+export interface LiDARDevice {
+    id: string;
+    name: string;
+    type: string;
+    status: 'connected' | 'disconnected' | 'scanning' | 'error';
+    capabilities: {
+        maxRange: number;
+        accuracy: number;
+        pointsPerSecond: number;
+    };
+    connection: 'usb' | 'wifi' | 'ethernet';
+}
+
 class LARILiDARController {
     private activeScans: LiDARScan[] = [];
     private scanInterval: number | null = null;
+    private mockDevices: LiDARDevice[] = [
+        { id: 'LIDAR-001', name: 'Velodyne Puck', type: 'rotational_360', status: 'connected', capabilities: { maxRange: 100, accuracy: 0.03, pointsPerSecond: 300000 }, connection: 'ethernet' },
+        { id: 'LIDAR-002', name: 'Ouster OS1', type: 'solid_state', status: 'connected', capabilities: { maxRange: 120, accuracy: 0.015, pointsPerSecond: 655360 }, connection: 'ethernet' },
+        { id: 'LIDAR-003', name: 'iPhone 15 Pro LiDAR', type: 'mobile_integrated', status: 'disconnected', capabilities: { maxRange: 5, accuracy: 0.05, pointsPerSecond: 50000 }, connection: 'wifi' },
+    ];
 
     constructor() {
         if (typeof window !== 'undefined') {
             this.generateMockScan(); // Start with an initial scan
         }
+    }
+
+    public getDevices(): LiDARDevice[] {
+        // In a real app, this would discover connected devices
+        return this.mockDevices;
     }
 
     public getActiveScans(): LiDARScan[] {

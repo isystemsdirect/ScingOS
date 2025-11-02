@@ -8,7 +8,7 @@ import { autonomousDOMController, DOMAction } from '@/lib/autonomous-dom-control
 import { autonomousComponentController, ComponentAction } from '@/lib/autonomous-component-controller';
 import { httpsCallable } from 'firebase/functions';
 import { functions } from '@/lib/firebase';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 
 interface ScingAIAutonomousProps {
@@ -183,7 +183,7 @@ export const ScingAI: React.FC<ScingAIAutonomousProps> = ({
             <div class="space-y-2 text-sm">
               <div class="flex justify-between">
                 <span>DOM Elements:</span>
-                <span class="font-mono text-blue-600">${Object.keys(autonomousDOMController.getDOMSnapshot()).length}</span>
+                <span class="font-mono text-blue-600">${autonomousDOMController.getDOMSnapshot ? Object.keys(autonomousDOMController.getDOMSnapshot()).length : 0}</span>
               </div>
               <div class="flex justify-between">
                 <span>Components:</span>
@@ -231,13 +231,18 @@ export const ScingAI: React.FC<ScingAIAutonomousProps> = ({
     console.log('👤 User command:', transcript);
 
     try {
-      // This is a placeholder for the Firebase function call
-      const result: any = {
-          data: {
-              response: `I understood you said: "${transcript}". My GUI control logic is not fully implemented yet.`,
-              guiActions: null
-          }
-      }
+      // Process with enhanced AI that can generate GUI actions
+      const result: any = await processAdvancedMessage({
+        message: transcript,
+        sessionId,
+        userId,
+        context: {
+          domSnapshot: autonomousDOMController.getDOMSnapshot(),
+          mountedComponents: autonomousComponentController.getMountedComponents(),
+          guiControlLevel,
+          currentMode
+        }
+      });
 
       const { response, guiActions } = result.data;
 
