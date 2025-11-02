@@ -91,15 +91,25 @@ export default function AppLayout({
   const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
-    const initializeAuth = async () => {
-      try {
-        const result = await signInAnonymously(auth);
-        setUserId(result.user.uid);
-      } catch (error) {
-        console.error('Authentication error:', error);
-      }
-    };
-    initializeAuth();
+    // This logic will be improved to check for a valid API key
+    // For now, we will simulate a user ID to prevent crashes
+    const apiKey = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
+    if (auth && apiKey && apiKey !== 'your-firebase-api-key' && apiKey !== '') {
+      const initializeAuth = async () => {
+        try {
+          const result = await signInAnonymously(auth);
+          setUserId(result.user.uid);
+        } catch (error) {
+          console.error('Authentication error:', error);
+          // Set a mock user ID for development to proceed without a real backend
+          setUserId('mock-dev-user');
+        }
+      };
+      initializeAuth();
+    } else {
+      console.warn("Firebase API key is not configured. Using mock user ID for development.");
+      setUserId('mock-dev-user');
+    }
   }, []);
 
   useEffect(() => {
