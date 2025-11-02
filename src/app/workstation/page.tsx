@@ -1,6 +1,6 @@
 
 import Link from "next/link"
-import { CircleUser, Cpu, Palette, PlusCircle, Trash2, Globe, Linkedin, Facebook, History, Mic, Camera, Sparkles, Database, KeyRound, User, Settings, Store, Bell, SlidersHorizontal, Bot, Wifi, Bluetooth, MapPin, Search, Link2, Calendar, FileText } from "lucide-react"
+import { CircleUser, Cpu, Palette, PlusCircle, Trash2, Globe, Linkedin, Facebook, History, Mic, Camera, Sparkles, Database, KeyRound, User, Settings, Store, Bell, SlidersHorizontal, Bot, Wifi, Bluetooth, MapPin, Search, Link2, Calendar, FileText, ScanLine } from "lucide-react"
 
 
 import { Button } from "@/components/ui/button"
@@ -21,6 +21,14 @@ import { cn } from "@/lib/utils"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import inspectionData from '@/lib/inspection-types.json';
 import { WorkstationTimeFormatSwitch } from "@/components/workstation-time-format-switch"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 export default function WorkstationPage() {
   const user = mockInspectors[0];
@@ -49,7 +57,41 @@ export default function WorkstationPage() {
 
   return (
     <div className="mx-auto w-full max-w-6xl">
-      <h1 className="px-4 lg:px-6 text-3xl font-semibold">Workstation</h1>
+       <div className="flex items-center justify-between px-4 lg:px-6">
+        <h1 className="text-3xl font-semibold">Workstation</h1>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button>
+              <PlusCircle className="mr-2 h-4 w-4" /> New Capture
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuLabel>Start New Reading</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link href="/workstation/lidar">
+                <ScanLine className="mr-2 h-4 w-4" />
+                <span>LiDAR Capture</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Camera className="mr-2 h-4 w-4" />
+              <span>Visual Capture</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Mic className="mr-2 h-4 w-4" />
+              <span>Audio Recording</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+                <Link href="/inspections/new">
+                    <FileText className="mr-2 h-4 w-4" />
+                    <span>Start Full Inspection</span>
+                </Link>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
 
       <Tabs defaultValue="profile" className="relative">
         <div className="sticky top-0 z-20 pt-4 -mx-6 px-6 pb-2">
@@ -702,5 +744,3 @@ export default function WorkstationPage() {
     </div>
   )
 }
-
-    
