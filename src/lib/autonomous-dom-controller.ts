@@ -1,4 +1,3 @@
-
 'use client';
 import { db } from './firebase';
 import { doc, updateDoc, onSnapshot } from 'firebase/firestore';

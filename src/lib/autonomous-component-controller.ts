@@ -1,4 +1,3 @@
-
 'use client';
 import React, { ComponentType, ReactElement } from 'react';
 import { createRoot, Root } from 'react-dom/client';
