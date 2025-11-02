@@ -1,4 +1,3 @@
-
 'use client';
 import { ScingAI } from '@/components/ScingAI';
 import { useState, useEffect } from 'react';

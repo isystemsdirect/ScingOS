@@ -1,371 +1,412 @@
 
 'use client';
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useWakeWordDetection } from '@/hooks/useWakeWordDetection';
 import { useSpeechRecognition } from '@/hooks/useSpeechRecognition';
 import { useTextToSpeech } from '@/hooks/useTextToSpeech';
 import { conversationStore } from '@/lib/conversationStore';
+import { autonomousDOMController, DOMAction } from '@/lib/autonomous-dom-controller';
+import { autonomousComponentController, ComponentAction } from '@/lib/autonomous-component-controller';
 import { httpsCallable } from 'firebase/functions';
 import { functions } from '@/lib/firebase';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Mic, MicOff, Volume2, VolumeX, Activity, Loader2 } from 'lucide-react';
+import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 
-interface ScingAIProps {
+interface ScingAIAutonomousProps {
   userId: string;
-  accessKey: string; // Picovoice access key
+  accessKey: string;
 }
 
-export const ScingAI: React.FC<ScingAIProps> = ({ userId, accessKey }) => {
+export const ScingAI: React.FC<ScingAIAutonomousProps> = ({ 
+  userId, 
+  accessKey 
+}) => {
   // State management
   const [isActive, setIsActive] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
-  const [conversationHistory, setConversationHistory] = useState<any[]>([]);
-  const [currentTranscript, setCurrentTranscript] = useState('');
-  const [isProcessing, setIsProcessing] = useState(false);
   const [conversationActive, setConversationActive] = useState(false);
+  const [currentMode, setCurrentMode] = useState<'listening' | 'processing' | 'executing' | 'idle'>('idle');
+  const [guiControlLevel, setGuiControlLevel] = useState<'basic' | 'advanced' | 'full'>('full');
 
-  // Firebase Functions
-  const processMessage = httpsCallable(functions, 'processScingMessage');
-  const handleCommand = httpsCallable(functions, 'handleScingularCommand');
-
-  const handleWakeWordDetected = useCallback(async (wakeWordIndex: number) => {
-    console.log('🎯 "Hey Scing" detected!');
-    toast.success('Hey Scing detected!');
-    
-    setConversationActive(true);
-    
-    let currentSessionId = sessionId;
-    if (!currentSessionId) {
-      const newSessionId = await conversationStore.createSession(userId, {
-        wakeWordDetected: true,
-        startMethod: 'voice_activation'
-      });
-      setSessionId(newSessionId);
-      currentSessionId = newSessionId;
-    }
-
-    const welcomeMessages = [
-      "Hi there! How can I help you today?",
-      "Hello! What can I do for you?",
-      "Hey! I'm here and ready to assist!",
-      "Hi! What's on your mind?"
-    ];
-    
-    const welcome = welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)];
-    speak(welcome);
-    
-    if (currentSessionId) {
-      await conversationStore.addMessage(currentSessionId, userId, 'assistant', welcome, {
-        type: 'wake_word_response',
-        wakeWordConfidence: 1.0
-      });
-    }
-
-    setTimeout(() => {
-      if (!isSpeechListening) {
-        startSpeechListening();
-      }
-    }, 2000); 
-  }, [userId, sessionId]);
+  // Firebase Functions with enhanced capabilities
+  const processAdvancedMessage = httpsCallable(functions, 'processAdvancedScingMessage');
 
   // Wake word detection
-  const { 
-    isListening: isWakeWordListening, 
-    isLoading: isWakeWordLoading,
+  const {
+    isListening: isWakeWordListening,
     startListening: startWakeWordListening,
-    stopListening: stopWakeWordListening,
+    stopListening: stopWakeWordListening
   } = useWakeWordDetection({
     accessKey,
-    wakeWords: ['hey siri'], // Using a common one for testing as 'hey scing' is custom.
-    onWakeWordDetected: handleWakeWordDetected,
+    wakeWords: ['hey siri'], // Using a common one as 'hey scing' is custom
+    onWakeWordDetected: (index) => handleWakeWordDetected(index)
   });
 
-  const processUserMessage = useCallback(async (message: string) => {
-    if (!sessionId) return;
+  // Speech recognition
+  const {
+    isListening: isSpeechListening,
+    startListening: startSpeechListening,
+    stopListening: stopSpeechListening
+  } = useSpeechRecognition({
+    onResult: (transcript, isFinal) => handleSpeechResult(transcript, isFinal),
+    onError: (error) => console.error('Speech error:', error)
+  });
 
-    setIsProcessing(true);
-    stopSpeechListening();
+  // Text-to-speech
+  const { speak } = useTextToSpeech();
+
+  // Wake word detected - activate full GUI control
+  async function handleWakeWordDetected(wakeWordIndex: number) {
+    console.log('🎯 Scing AI Autonomous Mode Activated!');
+    
+    setConversationActive(true);
+    setCurrentMode('processing');
+
+    // Create new session
+    if (!sessionId) {
+      const newSessionId = await conversationStore.createSession(userId, {
+        wakeWordDetected: true,
+        autonomousMode: true,
+        guiControlLevel
+      });
+      setSessionId(newSessionId);
+    }
+
+    // Show autonomous activation UI
+    await showAutonomousActivation();
+
+    // Welcome with GUI demonstration
+    const welcomeMessage = "Hello! I'm now in full autonomous mode. I can control every aspect of this interface. Let me show you what I can do!";
+    speak(welcomeMessage);
+
+    // Demonstrate GUI control capabilities
+    setTimeout(() => {
+      demonstrateGUICapabilities();
+    }, 3000);
+
+    // Start listening for commands
+    setTimeout(() => {
+      setCurrentMode('listening');
+      startSpeechListening();
+    }, 5000);
+  }
+
+  // Show autonomous activation with visual effects
+  async function showAutonomousActivation(): Promise<void> {
+    // Create activation overlay
+    const overlayActions: DOMAction[] = [
+      {
+        type: 'create',
+        target: 'body > div',
+        properties: {
+          id: 'scing-activation-overlay',
+          className: 'fixed inset-0 bg-gradient-to-br from-blue-600/90 to-purple-700/90 flex items-center justify-center z-50'
+        },
+        content: `
+          <div class="text-center text-white">
+            <div class="animate-pulse mb-4">
+              <div class="w-24 h-24 bg-white/20 rounded-full mx-auto mb-4 flex items-center justify-center">
+                <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clip-rule="evenodd"></path>
+                </svg>
+              </div>
+            </div>
+            <h1 class="text-3xl font-bold mb-2">Scing AI Autonomous Mode</h1>
+            <p class="text-xl opacity-90">Full GUI Control Activated</p>
+            <div class="mt-4 flex justify-center">
+              <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+            </div>
+          </div>
+        `
+      }
+    ];
+
+    autonomousDOMController.queueActions(overlayActions);
+
+    // Remove overlay after 3 seconds
+    setTimeout(() => {
+      const removeActions: DOMAction[] = [
+        {
+          type: 'animate',
+          target: '#scing-activation-overlay',
+          animation: {
+            keyframes: [
+              { opacity: 1, transform: 'scale(1)' },
+              { opacity: 0, transform: 'scale(0.8)' }
+            ],
+            options: { duration: 500, easing: 'ease-out' }
+          }
+        }
+      ];
+      autonomousDOMController.queueActions(removeActions);
+      
+      setTimeout(() => {
+        autonomousDOMController.queueActions([{
+          type: 'delete',
+          target: '#scing-activation-overlay'
+        }]);
+      }, 500);
+    }, 3000);
+  }
+
+  // Demonstrate GUI capabilities
+  async function demonstrateGUICapabilities(): Promise<void> {
+    // Show notification
+    const notificationActions: ComponentAction[] = [
+      {
+        type: 'mount',
+        componentId: 'demo-notification',
+        componentType: 'ScingNotification',
+        props: {
+          message: '👋 I can create dynamic notifications!',
+          type: 'success',
+          duration: 3000
+        }
+      }
+    ];
+    autonomousComponentController.executeComponentActions(notificationActions);
+
+    // Create floating control panel
+    setTimeout(() => {
+      const controlPanelActions: DOMAction[] = [
+        {
+          type: 'create',
+          target: 'body > div',
+          properties: {
+            id: 'scing-control-panel',
+            className: 'fixed top-4 left-4 bg-white rounded-lg shadow-2xl p-4 z-40 border-l-4 border-blue-500'
+          },
+          content: `
+            <div class="flex items-center mb-3">
+              <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse mr-2"></div>
+              <span class="font-semibold text-sm">Scing AI Control Panel</span>
+            </div>
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between">
+                <span>DOM Elements:</span>
+                <span class="font-mono text-blue-600">${Object.keys(autonomousDOMController.getDOMSnapshot()).length}</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Components:</span>
+                <span class="font-mono text-green-600">${autonomousComponentController.getMountedComponents().length}</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Mode:</span>
+                <span class="font-mono text-purple-600">Autonomous</span>
+              </div>
+            </div>
+          `
+        }
+      ];
+      autonomousDOMController.queueActions(controlPanelActions);
+    }, 1500);
+
+    // Animate some existing elements
+    setTimeout(() => {
+        const h1Element = document.querySelector('h1');
+        if (h1Element) {
+            const animateActions: DOMAction[] = [
+                {
+                type: 'animate',
+                target: 'h1',
+                animation: {
+                    keyframes: [
+                    { transform: 'scale(1)', color: 'inherit' },
+                    { transform: 'scale(1.05)', color: '#3B82F6' },
+                    { transform: 'scale(1)', color: 'inherit' }
+                    ],
+                    options: { duration: 1000, easing: 'ease-in-out' }
+                }
+                }
+            ];
+            autonomousDOMController.queueActions(animateActions);
+        }
+    }, 2500);
+  }
+
+  // Handle speech input with GUI control
+  async function handleSpeechResult(transcript: string, isFinal: boolean): Promise<void> {
+    if (!isFinal || !transcript.trim()) return;
+
+    setCurrentMode('processing');
+    console.log('👤 User command:', transcript);
 
     try {
-      await conversationStore.addMessage(sessionId, userId, 'user', message, {
-        speechRecognitionConfidence: 0.95,
-        timestamp: Date.now()
-      });
-
-      const isScingularCommand = [
-        'inspection', 'report', 'compliance', 'scan', 'drone', 'camera', 
-        'sensor', 'device', 'spectrometer', 'analyze', 'lari-prism'
-      ].some(keyword => message.toLowerCase().includes(keyword));
-
-      let response: any;
-      if (isScingularCommand) {
-        const result: any = await handleCommand({ 
-          command: message, 
-          userId, 
-          sessionId 
-        });
-        response = result.data.response;
-      } else {
-        const result: any = await processMessage({
-          message,
-          sessionId,
-          userId,
-          conversationHistory: conversationHistory.slice(-10) 
-        });
-        response = result.data.response;
+      // This is a placeholder for the Firebase function call
+      const result: any = {
+          data: {
+              response: `I understood you said: "${transcript}". My GUI control logic is not fully implemented yet.`,
+              guiActions: null
+          }
       }
 
-      await conversationStore.addMessage(sessionId, userId, 'assistant', response, {
-        responseTime: Date.now(),
-        model: 'gpt-4-turbo-preview'
-      });
+      const { response, guiActions } = result.data;
 
+      // Execute GUI actions if provided
+      if (guiActions) {
+        setCurrentMode('executing');
+        console.log('🎮 Executing GUI actions:', guiActions);
+        
+        if (guiActions.domActions) {
+          autonomousDOMController.queueActions(guiActions.domActions);
+        }
+        
+        if (guiActions.componentActions) {
+          await autonomousComponentController.executeComponentActions(guiActions.componentActions);
+        }
+        
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+
+      // Speak response
       speak(response);
-
+      
+      // Update control panel
+      updateControlPanel();
+      
+      setCurrentMode('listening');
+      
+      // Continue listening
       setTimeout(() => {
         if (conversationActive && !isSpeechListening) {
           startSpeechListening();
         }
-      }, response.length * 50); 
+      }, response.length * 50);
 
-    } catch (error: any) {
-      console.error('Error processing message:', error);
-      const errorResponse = "I'm having trouble processing that. Could you try again?";
-      speak(errorResponse);
+    } catch (error) {
+      console.error('Error processing autonomous command:', error);
+      speak("I encountered an issue while processing that command. Please try again.");
+      setCurrentMode('listening');
       
       setTimeout(() => {
         if (conversationActive) {
           startSpeechListening();
         }
       }, 2000);
-    } finally {
-      setIsProcessing(false);
     }
-  }, [sessionId, userId, conversationHistory, handleCommand, processMessage, conversationActive]);
-
-
-  const handleSpeechResult = useCallback(async (transcript: string, isFinal: boolean) => {
-    if (isFinal && transcript.trim()) {
-      console.log('👤 User said:', transcript);
-      setCurrentTranscript('');
-      
-      const endKeywords = ['goodbye scing', 'bye scing', 'thanks scing', 'that\'s all', 'stop listening'];
-      if (endKeywords.some(keyword => transcript.toLowerCase().includes(keyword))) {
-        await endConversation();
-        return;
-      }
-
-      await processUserMessage(transcript);
-    } else {
-      setCurrentTranscript(transcript);
-    }
-  }, [processUserMessage]);
-
-
-  // Speech recognition
-  const {
-    isListening: isSpeechListening,
-    startListening: startSpeechListening,
-    stopListening: stopSpeechListening,
-  } = useSpeechRecognition({
-    onResult: handleSpeechResult,
-    onError: (error) => {
-      console.error('Speech recognition error:', error);
-      toast.error('Speech recognition error');
-    }
-  });
-
-  // Text-to-speech
-  const { speak, stop: stopSpeaking, isSpeaking } = useTextToSpeech({
-    rate: 1.1,
-    pitch: 1.0,
-    volume: 0.8
-  });
-
-  // End conversation
-  const endConversation = async () => {
-    setConversationActive(false);
-    stopSpeechListening();
-    stopSpeaking();
-
-    const goodbye = "Goodbye! Just say 'Hey Scing' if you need me again!";
-    speak(goodbye);
-
-    if (sessionId) {
-      await conversationStore.addMessage(sessionId, userId, 'assistant', goodbye, {
-        type: 'conversation_end'
-      });
-      await conversationStore.endSession(sessionId);
-    }
-
-    setTimeout(() => {
-      setSessionId(null);
-      setConversationHistory([]);
-    }, 3000);
   }
 
-  // Initialize Scing AI
-  const initializeScing = useCallback(async () => {
+  // Update control panel with current stats
+  function updateControlPanel(): void {
+    const updateActions: DOMAction[] = [
+      {
+        type: 'modify',
+        target: '#scing-control-panel',
+        content: `
+          <div class="flex items-center mb-3">
+            <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse mr-2"></div>
+            <span class="font-semibold text-sm">Scing AI Control Panel</span>
+          </div>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between">
+              <span>DOM Elements:</span>
+              <span class="font-mono text-blue-600">${Object.keys(autonomousDOMController.getDOMSnapshot()).length}</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Components:</span>
+              <span class="font-mono text-green-600">${autonomousComponentController.getMountedComponents().length}</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Mode:</span>
+              <span class="font-mono text-purple-600">${currentMode}</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Control Level:</span>
+              <span class="font-mono text-orange-600">${guiControlLevel}</span>
+            </div>
+          </div>
+        `
+      }
+    ];
+    autonomousDOMController.queueActions(updateActions);
+  }
+
+  // Initialize autonomous mode
+  const initializeAutonomous = useCallback(async () => {
     try {
       if (!isActive) {
         await startWakeWordListening();
         setIsActive(true);
-        toast.success('Scing AI activated! Say "Hey Scing" to start.');
+        toast.success('🤖 Scing AI Autonomous Mode Ready! Say "Hey Scing" to activate full GUI control.');
       } else {
         await stopWakeWordListening();
         stopSpeechListening();
-        stopSpeaking();
         setIsActive(false);
         setConversationActive(false);
-        toast.success('Scing AI deactivated.');
+        
+        // Cleanup autonomous elements
+        autonomousDOMController.queueActions([
+          { type: 'delete', target: '#scing-control-panel' }
+        ]);
+        
+        toast.success('Scing AI Autonomous Mode Deactivated.');
       }
     } catch (error: any) {
-      toast.error(`Failed to ${isActive ? 'deactivate' : 'activate'} Scing: ${error.message}`);
+      toast.error(`Failed to ${isActive ? 'deactivate' : 'activate'} autonomous mode: ${error.message}`);
     }
-  }, [isActive, startWakeWordListening, stopWakeWordListening, stopSpeechListening, stopSpeaking]);
+  }, [isActive, startWakeWordListening, stopWakeWordListening, stopSpeechListening]);
 
-  useEffect(() => {
-    if (sessionId) {
-      const unsubscribe = conversationStore.subscribeToSession(sessionId, (messages) => {
-        setConversationHistory(messages);
-      });
-
-      return unsubscribe;
-    }
-  }, [sessionId]);
-
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
-      stopWakeWordListening();
-      stopSpeechListening();
-      stopSpeaking();
+      autonomousDOMController.cleanup();
+      autonomousComponentController.cleanup();
     };
-  }, [stopWakeWordListening, stopSpeechListening, stopSpeaking]);
+  }, []);
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
+      {/* Enhanced Scing Interface */}
       <motion.div
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        className="bg-gradient-to-br from-blue-600 to-purple-700 rounded-full p-6 shadow-2xl"
+        className="relative"
       >
+        {/* Main Control Button */}
         <button
-          onClick={initializeScing}
-          disabled={isWakeWordLoading}
-          className="relative w-16 h-16 bg-white rounded-full flex items-center justify-center text-blue-600 hover:scale-105 transition-transform disabled:opacity-50"
+          onClick={initializeAutonomous}
+          className={`w-20 h-20 rounded-full shadow-2xl transition-all duration-300 ${
+            isActive 
+              ? 'bg-gradient-to-br from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700' 
+              : 'bg-gradient-to-br from-gray-400 to-gray-600 hover:from-gray-500 hover:to-gray-700'
+          }`}
         >
-          {isWakeWordLoading ? (
-            <Loader2 className="w-8 h-8 animate-spin" />
-          ) : isActive ? (
-            <Mic className="w-8 h-8" />
-          ) : (
-            <MicOff className="w-8 h-8" />
-          )}
+          <div className="w-full h-full rounded-full flex items-center justify-center text-white">
+            {currentMode === 'processing' || currentMode === 'executing' ? (
+              <div className="w-10 h-10 border-4 border-white border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <div className="text-center">
+                <div className="text-2xl mb-1">🤖</div>
+                <div className="text-xs font-semibold">SCING</div>
+              </div>
+            )}
+          </div>
         </button>
 
-        <div className="absolute -top-2 -right-2 flex flex-col gap-1">
-          {isWakeWordListening && (
-            <motion.div
-              animate={{ scale: [1, 1.2, 1] }}
-              transition={{ repeat: Infinity, duration: 2 }}
-              className="w-4 h-4 bg-green-400 rounded-full"
-              title="Listening for 'Hey Scing'"
-            />
-          )}
-
-          {isSpeechListening && (
-            <motion.div
-              animate={{ scale: [1, 1.2, 1] }}
-              transition={{ repeat: Infinity, duration: 1 }}
-              className="w-4 h-4 bg-red-400 rounded-full"
-              title="Listening to speech"
-            />
-          )}
-
-          {isSpeaking && (
-            <motion.div
-              animate={{ scale: [1, 1.2, 1] }}
-              transition={{ repeat: Infinity, duration: 0.5 }}
-              className="w-4 h-4 bg-yellow-400 rounded-full"
-              title="Scing is speaking"
-            />
-          )}
-        </div>
-      </motion.div>
-
-      <AnimatePresence>
-        {conversationActive && (
-          <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.9 }}
-            className="absolute bottom-20 right-0 w-80 bg-white rounded-lg shadow-2xl p-4 max-h-96 overflow-y-auto"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-gray-800">Conversation with Scing</h3>
-              <button
-                onClick={endConversation}
-                className="text-gray-400 hover:text-gray-600"
-              >
-                <VolumeX className="w-4 h-4" />
-              </button>
-            </div>
-
-            <div className="space-y-3">
-              {conversationHistory.map((message, index) => (
-                <div
-                  key={message.id || index}
-                  className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
-                >
-                  <div
-                    className={`max-w-xs px-3 py-2 rounded-lg text-sm ${
-                      message.type === 'user'
-                        ? 'bg-blue-500 text-white'
-                        : 'bg-gray-100 text-gray-800'
-                    }`}
-                  >
-                    {message.content}
-                  </div>
-                </div>
-              ))}
-
-              {currentTranscript && (
-                <div className="flex justify-end">
-                  <div className="max-w-xs px-3 py-2 rounded-lg text-sm bg-blue-200 text-blue-800 italic">
-                    {currentTranscript}...
-                  </div>
-                </div>
-              )}
-
-              {isProcessing && (
-                <div className="flex justify-start">
-                  <div className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-gray-100">
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    <span className="text-sm text-gray-600">Scing is thinking...</span>
-                  </div>
-                </div>
-              )}
-            </div>
-          </motion.div>
+        {/* Status Ring */}
+        {isActive && (
+          <div className={`absolute inset-0 rounded-full border-4 ${
+            conversationActive ? 'border-green-400 animate-pulse' : 'border-blue-400'
+          }`} />
         )}
-      </AnimatePresence>
 
-      {isActive && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="absolute bottom-20 right-20 bg-black bg-opacity-75 text-white px-3 py-1 rounded-full text-sm"
-        >
-          {conversationActive ? (
-            isSpeechListening ? '🎤 Listening...' : 
-            isSpeaking ? '🗣️ Speaking...' : 
-            isProcessing ? '🤔 Thinking...' : '💬 In conversation'
-          ) : (
-            isWakeWordListening ? '👂 Waiting for "Hey Scing"...' : '⏸️ Standby'
-          )}
-        </motion.div>
-      )}
+        {/* Mode Indicator */}
+        {isActive && (
+          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-75 text-white px-2 py-1 rounded text-xs whitespace-nowrap">
+            {currentMode === 'listening' && '🎤 Listening'}
+            {currentMode === 'processing' && '🤔 Processing'}
+            {currentMode === 'executing' && '🎮 Controlling GUI'}
+            {currentMode === 'idle' && '👂 Waiting for "Hey Scing"'}
+          </div>
+        )}
+
+        {/* Autonomous Capabilities Indicator */}
+        {isActive && (
+          <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
+            🎛️ Full GUI Control
+          </div>
+        )}
+      </motion.div>
     </div>
   );
 };
