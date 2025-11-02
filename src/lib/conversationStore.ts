@@ -9,9 +9,10 @@ import {
   doc,
   updateDoc,
   Timestamp,
-  getCountFromServer
+  getCountFromServer,
+  Firestore
 } from 'firebase/firestore';
-import { db } from './firebase';
+import { getDb } from './firebase';
 
 export interface ConversationMessage {
   id: string;
@@ -45,8 +46,20 @@ export interface ConversationSession {
 }
 
 class ConversationStore {
-  private conversationsCollection = collection(db, 'conversations');
-  private sessionsCollection = collection(db, 'conversationSessions');
+  private db: Firestore;
+
+  constructor() {
+    this.db = getDb();
+  }
+
+  private get conversationsCollection() {
+    return collection(this.db, 'conversations');
+  }
+
+  private get sessionsCollection() {
+    return collection(this.db, 'conversationSessions');
+  }
+
 
   async createSession(userId: string, context: any = {}): Promise<string> {
     const session = await addDoc(this.sessionsCollection, {
