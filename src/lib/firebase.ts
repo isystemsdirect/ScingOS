@@ -1,3 +1,4 @@
+
 'use client';
 
 import { initializeApp, getApps, getApp, type FirebaseApp } from 'firebase/app';
@@ -17,7 +18,6 @@ const firebaseConfig = {
     storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
     messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
     appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-    databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL
 };
 
 function getFirebaseApp(): FirebaseApp | null {
@@ -32,7 +32,7 @@ function getFirebaseApp(): FirebaseApp | null {
     }
     
     if (!firebaseConfig.apiKey) {
-        console.error('Firebase API key is not configured. Please check your .env.local file.');
+        console.error('Firebase API key is not configured. Please check your .env file.');
         return null;
     }
     
