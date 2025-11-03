@@ -1,4 +1,3 @@
-
 import { 
   collection, 
   addDoc, 
@@ -48,19 +47,30 @@ export interface ConversationSession {
 
 class ConversationStore {
   private get db() {
-    return getDb();
+    const dbInstance = getDb();
+    if (!dbInstance) {
+        // This can happen on the server. Return a mock or handle appropriately.
+        // For now, we'll throw an error if used incorrectly.
+        if (typeof window !== 'undefined') {
+            throw new Error("Firestore is not initialized. Check Firebase config.");
+        }
+    }
+    return dbInstance;
   }
 
   private get conversationsCollection() {
+    if (!this.db) return null;
     return collection(this.db, 'conversations');
   }
 
   private get sessionsCollection() {
+    if (!this.db) return null;
     return collection(this.db, 'conversationSessions');
   }
 
 
   async createSession(userId: string, context: any = {}): Promise<string> {
+    if (!this.sessionsCollection) throw new Error("Firestore not available");
     const session = await addDoc(this.sessionsCollection, {
       userId,
       startTime: serverTimestamp(),
@@ -79,6 +89,8 @@ class ConversationStore {
     content: string,
     metadata: any = {}
   ): Promise<string> {
+    if (!this.conversationsCollection || !this.sessionsCollection) throw new Error("Firestore not available");
+
     const message = await addDoc(this.conversationsCollection, {
       sessionId,
       userId,
@@ -104,6 +116,8 @@ class ConversationStore {
     sessionId: string, 
     callback: (messages: ConversationMessage[]) => void
   ): () => void {
+    if (!this.conversationsCollection) return () => {};
+    
     const q = query(
       this.conversationsCollection,
       orderBy('timestamp', 'asc'),
@@ -128,6 +142,7 @@ class ConversationStore {
   }
 
   async endSession(sessionId: string): Promise<void> {
+    if (!this.sessionsCollection) return;
     const sessionRef = doc(this.sessionsCollection, sessionId);
     await updateDoc(sessionRef, {
       endTime: serverTimestamp(),

@@ -1,4 +1,3 @@
-
 'use client';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useWakeWordDetection } from '@/hooks/useWakeWordDetection';
@@ -30,7 +29,7 @@ export const ScingAI: React.FC<ScingAIAutonomousProps> = ({
 
   // Firebase Functions with enhanced capabilities
   const functions = getFirebaseFunctions();
-  const processAdvancedMessage = httpsCallable(functions, 'processAdvancedScingMessage');
+  const processAdvancedMessage = functions ? httpsCallable(functions, 'processAdvancedScingMessage') : null;
 
   // Wake word detection
   const {
@@ -65,12 +64,20 @@ export const ScingAI: React.FC<ScingAIAutonomousProps> = ({
 
     // Create new session
     if (!sessionId) {
-      const newSessionId = await conversationStore.createSession(userId, {
-        wakeWordDetected: true,
-        autonomousMode: true,
-        guiControlLevel
-      });
-      setSessionId(newSessionId);
+      try {
+        const newSessionId = await conversationStore.createSession(userId, {
+            wakeWordDetected: true,
+            autonomousMode: true,
+            guiControlLevel
+        });
+        setSessionId(newSessionId);
+      } catch (e) {
+          console.error("Failed to create conversation session", e);
+          toast.error("Could not start AI session.");
+          setConversationActive(false);
+          setCurrentMode('idle');
+          return;
+      }
     }
 
     // Show autonomous activation UI
@@ -227,7 +234,7 @@ export const ScingAI: React.FC<ScingAIAutonomousProps> = ({
 
   // Handle speech input with GUI control
   async function handleSpeechResult(transcript: string, isFinal: boolean): Promise<void> {
-    if (!isFinal || !transcript.trim()) return;
+    if (!isFinal || !transcript.trim() || !processAdvancedMessage) return;
 
     setCurrentMode('processing');
     console.log('👤 User command:', transcript);
@@ -331,6 +338,10 @@ export const ScingAI: React.FC<ScingAIAutonomousProps> = ({
   const initializeAutonomous = useCallback(async () => {
     try {
       if (!isActive) {
+        if (!functions) {
+            toast.error("AI Functions not available. Cannot start autonomous mode.");
+            return;
+        }
         await startWakeWordListening();
         setIsActive(true);
         toast.success('🤖 Scing AI Autonomous Mode Ready! Say "Hey Scing" to activate full GUI control.');
@@ -350,7 +361,7 @@ export const ScingAI: React.FC<ScingAIAutonomousProps> = ({
     } catch (error: any) {
       toast.error(`Failed to ${isActive ? 'deactivate' : 'activate'} autonomous mode: ${error.message}`);
     }
-  }, [isActive, startWakeWordListening, stopWakeWordListening, stopSpeechListening]);
+  }, [isActive, startWakeWordListening, stopWakeWordListening, stopSpeechListening, functions]);
 
   // Cleanup on unmount
   useEffect(() => {
