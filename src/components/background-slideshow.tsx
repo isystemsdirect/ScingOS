@@ -1,3 +1,4 @@
+
 'use client';
 import { useEffect, useState } from 'react';
 
@@ -7,9 +8,21 @@ export default function BackgroundSlideshow() {
 
   useEffect(() => {
     fetch('/background-images.json')
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
       .then((data) => {
-        setImages(data.background_photos);
+        if (Array.isArray(data)) {
+          setImages(data);
+        } else {
+          console.error("Fetched data is not an array:", data);
+        }
+      })
+      .catch((error) => {
+        console.error("Could not fetch background images:", error);
       });
   }, []);
 
@@ -22,7 +35,12 @@ export default function BackgroundSlideshow() {
   }, [images.length]);
 
   if (images.length === 0) {
-    return null; // Or a placeholder
+    // Return a single static background to prevent a black screen on error
+    return (
+       <div className="background-slideshow">
+         <img src="/background_photos/bg-city-1.jpg" alt="" className="slide active" />
+       </div>
+    );
   }
 
   return (

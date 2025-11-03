@@ -1,29 +1,8 @@
-{
-  "background_photos": [
-    "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=2070&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=2070&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=2232&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1581094488348-762d443592b2?q=80&w=2070&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=2070&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1581093450021-4a7360e9a6b5?q=80&w=2070&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1664324699316-d8807d80a1f2?q=80&w=2070&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1581092448331-424d85835524?q=80&w=2070&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1679588699335-f250a2ca0c2f?q=80&w=2070&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1698221591842-b9b2a6d7132b?q=80&w=1974&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1519994994274-162058b7a6e1?q=80&w=2070&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1524231757912-21f4fe3a7207?q=80&w=1974&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1579598285883-5a75932087e5?q=80&w=2070&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1534430480872-3498386e7856?q=80&w=1974&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b?q=80&w=1974&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2070&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1631113038386-3d8413a9b433?q=80&w=2070&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1620712943543-959639e83679?q=80&w=2070&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1679588699335-f250a2ca0c2f?q=80&w=2070&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1698221591842-b9b2a6d7132b?q=80&w=1974&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1519994994274-162058b7a6e1?q=80&w=2070&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1524231757912-21f4fe3a7207?q=80&w=1974&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1579598285883-5a75932087e5?q=80&w=2070&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1534430480872-3498386e7856?q=80&w=1974&auto=format&fit=crop"
-  ]
-}
+
+[
+    "/background_photos/bg-city-1.jpg",
+    "/background_photos/bg-city-2.jpg",
+    "/background_photos/bg-city-3.jpg",
+    "/background_photos/bg-city-4.jpg",
+    "/background_photos/bg-city-5.jpg"
+]
