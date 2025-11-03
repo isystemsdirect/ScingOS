@@ -190,10 +190,15 @@ interface MarketplaceMapProps {
 export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
   const router = useRouter();
   const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
+  
+  const isApiKeyMissing = !googleMapsApiKey || googleMapsApiKey === "YOUR_API_KEY_HERE";
+
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: googleMapsApiKey,
     libraries: ['places'],
+    preventGoogleFontsLoading: true,
+    googleMapsScriptBaseUrl: isApiKeyMissing ? '' : undefined, // Prevent loading if key is missing
   });
 
   const [map, setMap] = useState(null)
@@ -222,6 +227,20 @@ export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
       );
     }
   }, []);
+
+  if (isApiKeyMissing) {
+      return (
+          <div className="flex items-center justify-center h-full w-full bg-muted p-4">
+              <Alert variant="destructive">
+                  <AlertTriangle className="h-4 w-4" />
+                  <AlertTitle>Google Maps API Key Missing</AlertTitle>
+                  <AlertDescription>
+                      Please add your `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` to the .env file to enable the map.
+                  </AlertDescription>
+              </Alert>
+          </div>
+      )
+  }
 
   if (loadError) {
     return (
