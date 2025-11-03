@@ -77,7 +77,7 @@ export default function Dashboard() {
               </Button>
           </div>
         </div>
-        <DashboardCharts />
+        {/* <DashboardCharts /> */}
         <div className="grid gap-8 md:grid-cols-3">
           <div className="md:col-span-2 grid gap-8">
              <Card className="bg-card/60 backdrop-blur-sm">
