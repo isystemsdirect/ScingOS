@@ -1,7 +1,8 @@
 
 "use client"
 
-import { Bar, BarChart, CartesianGrid, Cell, Line, LineChart, Pie, PieChart, XAxis, YAxis } from "recharts"
+import { BarChart, CartesianGrid, Cell, LineChart, PieChart, XAxis, YAxis } from "recharts"
+import dynamic from 'next/dynamic';
 
 import {
   Card,
@@ -18,6 +19,27 @@ import {
   ChartLegendContent,
 } from "@/components/ui/chart"
 import type { ChartConfig } from "@/components/ui/chart"
+import { Skeleton } from "./ui/skeleton";
+
+const DynamicPieChart = dynamic(() => import('recharts').then(mod => mod.PieChart), {
+  ssr: false,
+  loading: () => <Skeleton className="h-[250px] w-[250px] rounded-full" />,
+});
+
+const DynamicLineChart = dynamic(() => import('recharts').then(mod => mod.LineChart), {
+  ssr: false,
+  loading: () => <Skeleton className="h-[250px] w-full" />,
+});
+
+const DynamicBarChart = dynamic(() => import('recharts').then(mod => mod.BarChart), {
+  ssr: false,
+  loading: () => <Skeleton className="h-[250px] w-full" />,
+});
+
+const Pie = dynamic(() => import('recharts').then(mod => mod.Pie), { ssr: false });
+const Line = dynamic(() => import('recharts').then(mod => mod.Line), { ssr: false });
+const Bar = dynamic(() => import('recharts').then(mod => mod.Bar), { ssr: false });
+
 
 const inspectionStatusData = [
   { status: "Final", count: 1, fill: "hsl(var(--chart-1))" },
@@ -82,7 +104,7 @@ export function DashboardCharts() {
             </CardHeader>
             <CardContent className="flex justify-center">
                  <ChartContainer config={inspectionStatusConfig} className="mx-auto aspect-square w-full max-w-[250px]">
-                    <PieChart>
+                    <DynamicPieChart>
                         <ChartTooltip
                             cursor={false}
                             content={<ChartTooltipContent hideLabel />}
@@ -93,7 +115,7 @@ export function DashboardCharts() {
                             ))}
                         </Pie>
                         <ChartLegend content={<ChartLegendContent nameKey="status" />} />
-                    </PieChart>
+                    </DynamicPieChart>
                 </ChartContainer>
             </CardContent>
         </Card>
@@ -104,7 +126,7 @@ export function DashboardCharts() {
             </CardHeader>
             <CardContent>
                  <ChartContainer config={revenueConfig} className="h-[250px] w-full">
-                    <LineChart data={revenueData} margin={{ left: 12, right: 12, top: 5 }}>
+                    <DynamicLineChart data={revenueData} margin={{ left: 12, right: 12, top: 5 }}>
                         <CartesianGrid vertical={false} />
                         <XAxis
                             dataKey="month"
@@ -131,7 +153,7 @@ export function DashboardCharts() {
                                 r: 8,
                             }}
                         />
-                    </LineChart>
+                    </DynamicLineChart>
                 </ChartContainer>
             </CardContent>
         </Card>
@@ -140,9 +162,9 @@ export function DashboardCharts() {
                 <CardTitle>Inspections This Year</CardTitle>
                 <CardDescription>Total inspections completed each month.</CardDescription>
             </CardHeader>
-            <CardContent className="h-[250px] w-full">
-                 <ChartContainer config={inspectionsByMonthConfig} className="h-full w-full">
-                    <BarChart data={inspectionsByMonthData} accessibilityLayer>
+            <CardContent>
+                 <ChartContainer config={inspectionsByMonthConfig} className="h-[250px] w-full">
+                    <DynamicBarChart data={inspectionsByMonthData} accessibilityLayer>
                         <CartesianGrid vertical={false} />
                         <XAxis
                             dataKey="month"
@@ -157,7 +179,7 @@ export function DashboardCharts() {
                         />
                         <ChartTooltip content={<ChartTooltipContent indicator="dot" />} />
                         <Bar dataKey="inspections" fill="var(--color-inspections)" radius={4} />
-                    </BarChart>
+                    </DynamicBarChart>
                 </ChartContainer>
             </CardContent>
         </Card>
