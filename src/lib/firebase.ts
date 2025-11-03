@@ -1,4 +1,3 @@
-
 'use client';
 
 import { initializeApp, getApps, getApp, type FirebaseApp } from 'firebase/app';
@@ -11,16 +10,6 @@ let auth: Auth | undefined;
 let db: Firestore | undefined;
 let functions: Functions | undefined;
 
-const firebaseConfig = {
-    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-    databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL
-};
-
 function getFirebaseApp(): FirebaseApp {
     if (app) return app;
 
@@ -29,13 +18,24 @@ function getFirebaseApp(): FirebaseApp {
         return app;
     }
 
+    const firebaseConfig = {
+        apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+        authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+        projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+        storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+        messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+        appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+        databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL
+    };
+    
     if (!firebaseConfig.apiKey) {
-        throw new Error('Firebase API key is not configured in next.config.js. Please check your configuration.');
+        throw new Error('Firebase API key is not configured. Please check your .env file.');
     }
     
     app = initializeApp(firebaseConfig);
     return app;
 }
+
 
 function getFirebaseAuth(): Auth {
     if (auth) return auth;
