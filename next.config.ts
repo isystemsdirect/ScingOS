@@ -102,8 +102,6 @@ const nextConfig: NextConfig = {
     config.resolve.alias = {
       ...config.resolve.alias,
       '@drone': path.resolve(__dirname, 'src/lib/drone'),
-      '@components': path.resolve(__dirname, 'src/components'),
-      '@firebase': path.resolve(__dirname, 'src/lib/firebase'),
     };
     
     // utf-8-validate and bufferutil externals for ws package
