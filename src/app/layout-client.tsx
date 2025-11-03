@@ -138,13 +138,6 @@ export default function AppLayout({
   }, [isChatConnected, user.name, user.avatarUrl]);
 
   useEffect(() => {
-    if (isChatConnected && pathname === '/') {
-        router.replace('/dashboard');
-    }
-  }, [isChatConnected, pathname, router]);
-
-
-  useEffect(() => {
     const handleFullScreenChange = () => {
       setIsFullScreen(!!document.fullscreenElement);
     };
@@ -172,15 +165,11 @@ export default function AppLayout({
     router.refresh();
   };
 
-  const authRoutes = ['/login', '/signup', '/forgot-password'];
+  const authRoutes = ['/', '/signup', '/forgot-password'];
   if (authRoutes.includes(pathname)) {
     return <>{children}</>;
   }
   
-  if (pathname === '/') {
-    return <>{children}</>;
-  }
-
   if (!chatClient || !isChatConnected) {
     return (
        <div className="flex h-screen w-full items-center justify-center bg-background">
