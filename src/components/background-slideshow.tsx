@@ -1,11 +1,17 @@
-
 'use client';
 import { useEffect, useState } from 'react';
-import data from '@/lib/placeholder-images.json';
 
 export default function BackgroundSlideshow() {
   const [index, setIndex] = useState(0);
-  const images = data.background_photos; 
+  const [images, setImages] = useState<string[]>([]);
+
+  useEffect(() => {
+    fetch('/background-images.json')
+      .then((res) => res.json())
+      .then((data) => {
+        setImages(data.background_photos);
+      });
+  }, []);
 
   useEffect(() => {
     if (images.length === 0) return;
@@ -14,6 +20,10 @@ export default function BackgroundSlideshow() {
     }, 8000);
     return () => clearInterval(interval);
   }, [images.length]);
+
+  if (images.length === 0) {
+    return null; // Or a placeholder
+  }
 
   return (
     <div className="background-slideshow">
