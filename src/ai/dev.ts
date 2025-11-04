@@ -26,4 +26,3 @@ import '@/ai/flows/lari-health-ai.ts';
 import '@/ai/flows/lari-logistics-ai.ts';
 import '@/ai/flows/lari-weather-ai.ts';
 import '@/ai/flows/analyze-substance-composition.ts';
-import '@/ai/flows/generate-upload-url.ts';
