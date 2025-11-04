@@ -1,7 +1,7 @@
 
 'use client';
 
-import { Building, PlusCircle, Video, Users, Search, Globe, Lock, Clock, MoreVertical } from 'lucide-react';
+import { Building, PlusCircle, Video, Users, Search, Globe, Lock, Clock, MoreVertical, User } from 'lucide-react';
 import Link from 'next/link';
 
 import {
@@ -86,7 +86,7 @@ export default function MeetingsAndConferencesPage() {
             <CardFooter className="flex items-center gap-2">
                  <Button asChild className="w-full" disabled={!isLive && !isPrivate}>
                     <Link href={isLive ? `/conference-rooms/${room.id}` : '#'}>
-                        {isPrivate ? <><Lock className="mr-2 h-4 w-4"/>Request to Join</> : <><Video className="mr-2 h-4 w-4" />Join {room.type === 'conference' ? 'Conference' : 'Meeting'}</>}
+                        {isPrivate ? <><Lock className="mr-2 h-4 w-4"/>Request to Join</> : <><Video className="mr-2 h-4 w-4" />{room.type === 'conference' ? "Join Conference" : "Join Meeting"}</>}
                     </Link>
                 </Button>
                 <Button variant="ghost" size="icon">
