@@ -1,4 +1,3 @@
-
 'use client';
 import Link from "next/link";
 import { notFound, useParams } from "next/navigation";
@@ -49,6 +48,7 @@ import { useEffect, useRef, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 
 const chartData = Array.from({ length: 10 }, (_, i) => ({
@@ -135,10 +135,13 @@ export default function DeviceDashboardPage() {
           <div className="h-10 w-10 flex items-center justify-center bg-muted rounded-lg">
               <Cpu className="h-6 w-6 text-primary" />
           </div>
-          <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
-            {device.name}
-          </h1>
-          <Badge variant={device.status === 'Connected' ? 'default' : 'secondary'}>{device.status}</Badge>
+          <div>
+            <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
+              {device.name}
+            </h1>
+            <p className="text-sm text-muted-foreground">Manage and monitor your connected hardware in real-time.</p>
+          </div>
+          <Badge variant={device.status === 'Connected' ? 'default' : 'secondary'} className="ml-auto">{device.status}</Badge>
         </div>
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -148,9 +151,9 @@ export default function DeviceDashboardPage() {
                     <div className="flex items-center justify-between">
                       <div>
                         <CardTitle>Live HUD</CardTitle>
-                        <CardDescription>Real-time telemetry and signal strength.</CardDescription>
+                        <CardDescription>A real-time video feed from the device's primary camera.</CardDescription>
                       </div>
-                      <Switch checked={showLiveHud} onCheckedChange={setShowLiveHud} />
+                      <Switch checked={showLiveHud} onCheckedChange={setShowLiveHud} id="live-hud-toggle" />
                     </div>
                   </CardHeader>
                   {showLiveHud && (
@@ -174,14 +177,15 @@ export default function DeviceDashboardPage() {
                     <div className="flex items-center justify-between">
                       <div>
                         <CardTitle>Telemetry Readings</CardTitle>
-                        <CardDescription>Historical signal strength over the last 100 seconds.</CardDescription>
+                        <CardDescription>View historical data for key device metrics.</CardDescription>
                       </div>
-                      <Switch checked={showTelemetry} onCheckedChange={setShowTelemetry} />
+                      <Switch checked={showTelemetry} onCheckedChange={setShowTelemetry} id="telemetry-toggle" />
                     </div>
                   </CardHeader>
                   {showTelemetry && (
                     <CardContent>
-                        <ChartContainer config={chartConfig} className="h-[200px] w-full">
+                        <Label htmlFor="chart-metric">Signal Strength (last 100s)</Label>
+                        <ChartContainer config={chartConfig} className="h-[200px] w-full mt-2">
                             <AreaChart accessibilityLayer data={chartData}>
                                 <CartesianGrid vertical={false} />
                                 <XAxis
@@ -213,6 +217,7 @@ export default function DeviceDashboardPage() {
               <Card className="bg-card/60 backdrop-blur-sm">
                   <CardHeader>
                       <CardTitle>Device Controls</CardTitle>
+                      <CardDescription>Perform remote actions on your device.</CardDescription>
                   </CardHeader>
                   <CardContent className="grid grid-cols-2 gap-4">
                       <Button variant="outline"><Play className="mr-2"/>Diagnostics</Button>
@@ -224,36 +229,37 @@ export default function DeviceDashboardPage() {
               <Card className="bg-card/60 backdrop-blur-sm">
                   <CardHeader>
                       <CardTitle>Device Readings</CardTitle>
+                      <CardDescription>Real-time data from internal sensors.</CardDescription>
                   </CardHeader>
                   <CardContent className="grid gap-4 text-sm">
                       <div className="flex items-center">
                           <Thermometer className="h-4 w-4 mr-2 text-muted-foreground" />
-                          <span>Core Temp:</span>
+                          <Label>Core Temp:</Label>
                           <span className="ml-auto font-medium">45°C</span>
                       </div>
                       <div className="flex items-center">
                           <HardDrive className="h-4 w-4 mr-2 text-muted-foreground" />
-                          <span>Storage:</span>
+                          <Label>Storage:</Label>
                           <span className="ml-auto font-medium">12.5 / 64 GB</span>
                       </div>
                       <div className="flex items-center">
                           <Cloud className="h-4 w-4 mr-2 text-muted-foreground" />
-                          <span>Cloud Sync:</span>
+                          <Label>Cloud Sync:</Label>
                           <span className="ml-auto font-medium">Up to date</span>
                       </div>
                       <div className="flex items-center">
                           <BatteryCharging className="h-4 w-4 mr-2 text-muted-foreground" />
-                          <span>Battery 1 (Active):</span>
+                          <Label>Battery 1 (Active):</Label>
                           <span className="ml-auto font-medium">88% (2h 15m)</span>
                       </div>
                       <div className="flex items-center">
                           <BatteryCharging className="h-4 w-4 mr-2 text-muted-foreground" />
-                          <span>Battery 2:</span>
+                          <Label>Battery 2:</Label>
                           <span className="ml-auto font-medium">95%</span>
                       </div>
                       <div className="flex items-center">
                           <Bell className="h-4 w-4 mr-2 text-muted-foreground" />
-                          <span>Alerts:</span>
+                          <Label>Alerts:</Label>
                           <span className="ml-auto font-medium">Nominal</span>
                       </div>
                   </CardContent>
@@ -261,6 +267,7 @@ export default function DeviceDashboardPage() {
               <Card className="bg-card/60 backdrop-blur-sm">
                   <CardHeader>
                       <CardTitle>Device Info</CardTitle>
+                      <CardDescription>Essential identification and status details.</CardDescription>
                   </CardHeader>
                   <CardContent>
                       <Table>
