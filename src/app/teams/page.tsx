@@ -1,7 +1,7 @@
 
 'use client';
 
-import { Building, Users, ArrowRight, PlusCircle, UserPlus, Search, Globe, Lock, Briefcase, MapPin, Star, ShieldCheck, Phone, Mail, Clock } from 'lucide-react';
+import { Building, Users, ArrowRight, PlusCircle, UserPlus, Search, Globe, Lock, Briefcase, MapPin, Star, ShieldCheck, Phone, Mail, Clock, ListFilter } from 'lucide-react';
 import Link from 'next/link';
 
 import {
@@ -20,6 +20,8 @@ import { Badge } from '@/components/ui/badge';
 import { MarketplaceMap } from '@/components/marketplace-map';
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 export default function TeamDispatchPage() {
   const availableInspectors = mockInspectors.filter(i => i.onCall);
@@ -62,32 +64,72 @@ export default function TeamDispatchPage() {
             <div className="grid grid-rows-2 gap-6 h-full overflow-hidden">
                 <Card className="bg-card/60 backdrop-blur-sm h-full flex flex-col">
                     <CardHeader>
-                        <CardTitle className="flex items-center gap-2"><Briefcase className="h-5 w-5 text-primary"/> Dispatch Control Panel: Incoming Requests</CardTitle>
-                        <CardDescription>New inspection requests awaiting dispatch from clients.</CardDescription>
+                         <div className="flex items-center justify-between">
+                            <div>
+                                <CardTitle className="flex items-center gap-2"><Briefcase className="h-5 w-5 text-primary"/> Dispatch Control Panel</CardTitle>
+                                <CardDescription>Manage incoming inspection requests and assign them to your team.</CardDescription>
+                            </div>
+                             <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="outline" size="sm" className="h-8 gap-1">
+                                        <ListFilter className="h-3.5 w-3.5" />
+                                        <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Filter</span>
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                    <DropdownMenuLabel>Sort By</DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem>Priority</DropdownMenuItem>
+                                    <DropdownMenuItem>Newest</DropdownMenuItem>
+                                    <DropdownMenuItem>Closest</DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
                     </CardHeader>
-                    <ScrollArea className="flex-1">
-                        <CardContent className="space-y-4">
-                            {unassignedJobs.map(job => (
-                                <div key={job.id} className="p-4 rounded-lg border bg-background/50 space-y-3">
-                                    <div className="flex justify-between items-start">
-                                        <div>
-                                            <p className="font-semibold">{job.type}</p>
-                                            <p className="text-sm text-muted-foreground flex items-center gap-1"><MapPin className="h-3 w-3" /> {job.address}</p>
-                                        </div>
-                                        <Badge variant={job.priority === 'High' ? 'destructive' : 'secondary'}>{job.priority}</Badge>
+                    <CardContent className="flex-1 p-0 flex flex-col">
+                         <Tabs defaultValue="incoming" className="flex-1 flex flex-col">
+                            <div className="px-6">
+                                <TabsList className="grid w-full grid-cols-2">
+                                    <TabsTrigger value="incoming">Incoming ({unassignedJobs.length})</TabsTrigger>
+                                    <TabsTrigger value="queued">Queued (0)</TabsTrigger>
+                                </TabsList>
+                            </div>
+                            <TabsContent value="incoming" className="flex-1 mt-0">
+                                <ScrollArea className="h-full">
+                                    <div className="space-y-4 p-6 pt-4">
+                                        {unassignedJobs.map(job => (
+                                            <div key={job.id} className="p-4 rounded-lg border bg-background/50 space-y-3">
+                                                <div className="flex justify-between items-start">
+                                                    <div>
+                                                        <p className="font-semibold">{job.type}</p>
+                                                        <p className="text-sm text-muted-foreground flex items-center gap-1"><MapPin className="h-3 w-3" /> {job.address}</p>
+                                                    </div>
+                                                    <Badge variant={job.priority === 'High' ? 'destructive' : 'secondary'}>{job.priority}</Badge>
+                                                </div>
+                                                <div className="flex items-center justify-between text-xs text-muted-foreground">
+                                                    <span>Client: {mockClients.find(c => c.id === job.clientId)?.name}</span>
+                                                    <div className="flex items-center gap-1"><Clock className="h-3 w-3" /> Requested: {job.requestTime}</div>
+                                                </div>
+                                                <div className="border-t pt-3 flex flex-wrap gap-1">
+                                                    <Badge variant="outline">Roofing</Badge>
+                                                    <Badge variant="outline">Thermal</Badge>
+                                                </div>
+                                                <div className="flex gap-2 pt-2">
+                                                    <Button variant="outline" size="sm" className="w-full">View Details</Button>
+                                                    <Button size="sm" className="w-full">Dispatch</Button>
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
-                                    <div className="flex items-center justify-between text-xs text-muted-foreground">
-                                        <span>Client: {mockClients.find(c => c.id === job.clientId)?.name}</span>
-                                        <div className="flex items-center gap-1"><Clock className="h-3 w-3" /> Requested: {job.requestTime}</div>
-                                    </div>
-                                    <div className="flex gap-2 pt-2">
-                                        <Button variant="outline" size="sm" className="w-full">View Details</Button>
-                                        <Button size="sm" className="w-full">Dispatch</Button>
-                                    </div>
+                                </ScrollArea>
+                            </TabsContent>
+                            <TabsContent value="queued" className="flex-1 mt-0">
+                                <div className="h-full flex items-center justify-center text-muted-foreground text-sm">
+                                    <p>No jobs in the queue.</p>
                                 </div>
-                            ))}
-                        </CardContent>
-                    </ScrollArea>
+                            </TabsContent>
+                        </Tabs>
+                    </CardContent>
                 </Card>
 
                 <Card className="bg-card/60 backdrop-blur-sm h-full flex flex-col">
