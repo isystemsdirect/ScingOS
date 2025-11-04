@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -7,7 +8,8 @@ import {
   Send,
   Paperclip,
   Mic,
-  MoreVertical
+  MoreVertical,
+  Video
 } from 'lucide-react';
 import { notFound, useParams } from 'next/navigation';
 import Link from 'next/link';
@@ -56,7 +58,7 @@ export default function ConferenceRoomHub() {
           <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-bold tracking-tight sm:grow-0">
             {room.name}
           </h1>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 ml-auto">
             <div className="flex -space-x-2 overflow-hidden">
                 {room.participants.slice(0, 5).map(member => {
                     const avatar = PlaceHolderImages.find(p => p.id === member.imageHint);
@@ -64,6 +66,7 @@ export default function ConferenceRoomHub() {
                 })}
             </div>
              <Button variant="outline">Meeting Details</Button>
+             <Button><Video className="mr-2 h-4 w-4" /> Join Meeting</Button>
           </div>
         </div>
 
@@ -84,7 +87,7 @@ export default function ConferenceRoomHub() {
                         <div>
                             <div className="flex items-center gap-2">
                                 <p className="font-semibold">Jane Smith</p>
-                                <p className="text-xs text-muted-foreground">10:05 AM</p>
+                                <p className className="text-xs text-muted-foreground">10:05 AM</p>
                             </div>
                             <div className="mt-1 rounded-lg bg-muted p-3 text-sm">
                                 Alright, let's start with the structural findings from the 123 Main St inspection. John, can you walk us through the foundation crack you noted?

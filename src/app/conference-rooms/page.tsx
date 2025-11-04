@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Calendar, PlusCircle, Video } from 'lucide-react';
@@ -29,7 +30,7 @@ export default function ConferenceRoomsPage() {
             </p>
           </div>
           <Button>
-              <PlusCircle className="mr-2 h-4 w-4" /> Create New Room
+              <PlusCircle className="mr-2 h-4 w-4" /> Create Conference Room
           </Button>
         </div>
         
@@ -63,12 +64,15 @@ export default function ConferenceRoomsPage() {
                             </div>
                         </div>
                     </CardContent>
-                    <CardFooter>
+                    <CardFooter className="flex items-center gap-2">
                          <Button asChild className="w-full">
                             <Link href={`/conference-rooms/${room.id}`}>
                                 <Video className="mr-2 h-4 w-4" />
                                 {room.status === 'Live' ? 'Join Now' : 'Enter Room'}
                             </Link>
+                        </Button>
+                        <Button variant="outline" className="w-full">
+                            Join Conference
                         </Button>
                     </CardFooter>
                 </Card>

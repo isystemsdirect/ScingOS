@@ -1,7 +1,7 @@
 
 'use client';
 
-import { Building, Users, ArrowRight, PlusCircle } from 'lucide-react';
+import { Building, Users, ArrowRight, PlusCircle, UserPlus } from 'lucide-react';
 import Link from 'next/link';
 
 import {
@@ -43,12 +43,17 @@ export default function TeamSelectionPage() {
           <div>
             <h1 className="text-3xl font-bold">Teams & Dispatch</h1>
             <p className="text-muted-foreground">
-              Choose a team to view its central hub or create a new one.
+              Choose a team to view its central hub, join a team, or create a new one.
             </p>
           </div>
-          <Button>
+          <div className="flex items-center gap-2">
+            <Button variant="outline">
+              <UserPlus className="mr-2 h-4 w-4" /> Join a Team
+            </Button>
+            <Button>
               <PlusCircle className="mr-2 h-4 w-4" /> Create New Team
-          </Button>
+            </Button>
+          </div>
         </div>
         
         <div className="grid gap-6">
