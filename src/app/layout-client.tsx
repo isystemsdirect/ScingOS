@@ -71,6 +71,8 @@ import { WeatherWidget } from "@/components/weather-widget";
 import { NewsWidget } from "@/components/news-widget";
 import { cn } from "@/lib/utils";
 import { ScingAI } from "@/components/ScingAI";
+import { chatClient } from "@/lib/chat-client";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 
 export default function AppLayout({
@@ -88,6 +90,7 @@ export default function AppLayout({
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isChatClientConnected, setChatClientConnected] = useState(false);
 
 
   useEffect(() => {
@@ -361,28 +364,60 @@ export default function AppLayout({
             </SheetContent>
           </Sheet>
           <div className="flex-1 flex items-center gap-2">
-            {userId && (
-              <ScingAI 
-                userId={userId} 
-                accessKey={process.env.NEXT_PUBLIC_PICOVOICE_ACCESS_KEY || ''} 
-              />
+            {userId && process.env.NEXT_PUBLIC_PICOVOICE_ACCESS_KEY && (
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <div>
+                            <ScingAI 
+                                userId={userId} 
+                                accessKey={process.env.NEXT_PUBLIC_PICOVOICE_ACCESS_KEY} 
+                            />
+                        </div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <p>Toggle Scing AI Automaton</p>
+                        <p className="text-xs text-muted-foreground">Activate full GUI control with voice commands.</p>
+                    </TooltipContent>
+                </Tooltip>
             )}
              <AiSearchDialog />
           </div>
           
           <div className="flex items-center gap-2 ml-auto">
-              <Button variant="ghost" size="icon" className="rounded-full" onClick={handleRefresh}>
-                <RefreshCw className="h-5 w-5" />
-                <span className="sr-only">Refresh Page</span>
-              </Button>
-              <Button variant="ghost" size="icon" className="rounded-full" onClick={toggleFullScreen}>
-                {isFullScreen ? <Shrink className="h-5 w-5" /> : <Expand className="h-5 w-5" />}
-                <span className="sr-only">{isFullScreen ? 'Exit Full Screen' : 'Enter Full Screen'}</span>
-              </Button>
-              <Button variant="ghost" size="icon" className="rounded-full">
-                <Bell className="h-5 w-5" />
-                <span className="sr-only">Toggle notifications</span>
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                    <Button variant="ghost" size="icon" className="rounded-full" onClick={handleRefresh}>
+                        <RefreshCw className="h-5 w-5" />
+                        <span className="sr-only">Refresh Page</span>
+                    </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                    <p>Refresh Page</p>
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                    <Button variant="ghost" size="icon" className="rounded-full" onClick={toggleFullScreen}>
+                        {isFullScreen ? <Shrink className="h-5 w-5" /> : <Expand className="h-5 w-5" />}
+                        <span className="sr-only">{isFullScreen ? 'Exit Full Screen' : 'Enter Full Screen'}</span>
+                    </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                    <p>{isFullScreen ? 'Exit Full Screen' : 'Enter Full Screen'}</p>
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                    <Button variant="ghost" size="icon" className="rounded-full">
+                        <Bell className="h-5 w-5" />
+                        <span className="sr-only">Toggle notifications</span>
+                    </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                    <p>Notifications</p>
+                    <p className="text-xs text-muted-foreground">View recent alerts and messages.</p>
+                </TooltipContent>
+              </Tooltip>
           </div>
         </header>
         <FlashNotificationBar />
