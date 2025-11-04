@@ -167,6 +167,12 @@
     .star-rating--small .star { font-size: 1rem; }
     .star-rating--medium .star { font-size: 1.5rem; }
     .star-rating--large .star { font-size: 2rem; }
+
+    .loading-logo-trace {
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+      animation: trace-logo 3s ease-in-out forwards, pulsate-glow-stroke 4s ease-in-out infinite 2s;
+    }
 }
 
 @keyframes background-pan {
@@ -217,5 +223,27 @@
   }
   66% {
     box-shadow: 0 0 24px 8px hsl(205 80% 40% / 0.5);
+  }
+}
+
+
+@keyframes trace-logo {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes pulsate-glow-stroke {
+  0%, 100% {
+    stroke: hsl(52 80% 45%);
+    filter: drop-shadow(0 0 3px hsl(52 80% 45%));
+  }
+  33% {
+    stroke: hsl(128 65% 42%);
+    filter: drop-shadow(0 0 4px hsl(128 65% 42%));
+  }
+  66% {
+    stroke: hsl(205 80% 40%);
+    filter: drop-shadow(0 0 4px hsl(205 80% 40%));
   }
 }

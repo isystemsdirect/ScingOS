@@ -90,7 +90,6 @@ export default function AppLayout({
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isChatClientConnected, setChatClientConnected] = useState(false);
 
 
   useEffect(() => {
