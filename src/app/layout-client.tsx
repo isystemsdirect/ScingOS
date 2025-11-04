@@ -430,7 +430,6 @@ export default function AppLayout({
           </header>
           <FlashNotificationBar />
           <main className={cn("flex-1 overflow-y-auto p-4 sm:px-6 sm:py-6 bg-black/[.05] rounded-xl", 
-            "bg-[radial-gradient(ellipse_at_center,hsl(var(--card)/0.1)_0%,transparent_70%)]",
             pathname === '/messaging' && 'p-0 sm:p-0'
           )}>
             {children}
