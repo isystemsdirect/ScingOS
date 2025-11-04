@@ -40,7 +40,10 @@ export default function TeamDispatchPage() {
           </div>
           <div className="flex items-center gap-2">
             <Button asChild variant="outline">
-              <Link href="/teams/manage"><Users className="mr-2 h-4 w-4"/>Manage Teams</Link>
+              <Link href="/teams/jobs">
+                <Briefcase className="mr-2 h-4 w-4" />
+                View Job Board
+              </Link>
             </Button>
             <Button>
               <PlusCircle className="mr-2 h-4 w-4" /> Create New Job
@@ -62,8 +65,8 @@ export default function TeamDispatchPage() {
                 </CardContent>
             </Card>
 
-            <div className="grid grid-rows-2 gap-6 h-full overflow-hidden">
-                <Card className="bg-card/60 backdrop-blur-sm h-full flex flex-col">
+            <div className="flex flex-col gap-6 h-full overflow-hidden">
+                <Card className="bg-card/60 backdrop-blur-sm">
                     <CardHeader>
                         <div className="flex items-center justify-between">
                             <div>
@@ -72,7 +75,7 @@ export default function TeamDispatchPage() {
                             </div>
                         </div>
                     </CardHeader>
-                    <CardContent className="flex-1 flex flex-col items-center justify-center text-center">
+                    <CardContent className="flex flex-col items-center justify-center text-center">
                         <FileText className="h-12 w-12 text-muted-foreground" />
                         <p className="mt-4 font-semibold">You have {unassignedJobs.length} unassigned jobs.</p>
                         <p className="text-sm text-muted-foreground">Go to the Job Board to view details and dispatch your team.</p>
@@ -82,7 +85,7 @@ export default function TeamDispatchPage() {
                     </CardContent>
                 </Card>
 
-                <Tabs defaultValue="available-inspectors" className="h-full flex flex-col">
+                <Tabs defaultValue="available-inspectors" className="flex-1 flex flex-col overflow-hidden">
                   <TabsList className="grid w-full grid-cols-2">
                       <TabsTrigger value="available-inspectors">Available Inspectors ({availableInspectors.length})</TabsTrigger>
                       <TabsTrigger value="active-jobs">Active Jobs ({activeJobs.length})</TabsTrigger>
