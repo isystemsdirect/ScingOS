@@ -62,8 +62,8 @@ export default function TeamDispatchPage() {
             <div className="grid grid-rows-2 gap-6 h-full overflow-hidden">
                 <Card className="bg-card/60 backdrop-blur-sm h-full flex flex-col">
                     <CardHeader>
-                        <CardTitle className="flex items-center gap-2"><Briefcase className="h-5 w-5 text-primary"/> Unassigned Jobs</CardTitle>
-                        <CardDescription>New inspection requests awaiting dispatch.</CardDescription>
+                        <CardTitle className="flex items-center gap-2"><Briefcase className="h-5 w-5 text-primary"/> Dispatch Control Panel: Incoming Requests</CardTitle>
+                        <CardDescription>New inspection requests awaiting dispatch from clients.</CardDescription>
                     </CardHeader>
                     <ScrollArea className="flex-1">
                         <CardContent className="space-y-4">
@@ -72,7 +72,7 @@ export default function TeamDispatchPage() {
                                     <div className="flex justify-between items-start">
                                         <div>
                                             <p className="font-semibold">{job.type}</p>
-                                            <p className="text-sm text-muted-foreground">{job.address}</p>
+                                            <p className="text-sm text-muted-foreground flex items-center gap-1"><MapPin className="h-3 w-3" /> {job.address}</p>
                                         </div>
                                         <Badge variant={job.priority === 'High' ? 'destructive' : 'secondary'}>{job.priority}</Badge>
                                     </div>
@@ -80,7 +80,10 @@ export default function TeamDispatchPage() {
                                         <span>Client: {mockClients.find(c => c.id === job.clientId)?.name}</span>
                                         <div className="flex items-center gap-1"><Clock className="h-3 w-3" /> Requested: {job.requestTime}</div>
                                     </div>
-                                    <Button className="w-full">Assign Inspector</Button>
+                                    <div className="flex gap-2 pt-2">
+                                        <Button variant="outline" size="sm" className="w-full">View Details</Button>
+                                        <Button size="sm" className="w-full">Dispatch</Button>
+                                    </div>
                                 </div>
                             ))}
                         </CardContent>
