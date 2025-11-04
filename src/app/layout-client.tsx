@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from "next/link";
@@ -193,7 +194,7 @@ export default function AppLayout({
                 </NavLink>
                 <NavLink href="/conference-rooms">
                     <Video className="h-4 w-4" />
-                    Conference Rooms
+                    Meetings & Conferences
                 </NavLink>
                 
                 <Separator className="my-2 bg-sidebar-border" />
@@ -327,7 +328,7 @@ export default function AppLayout({
                   </NavLink>
                   <NavLink href="/conference-rooms" isMobile>
                     <Video className="h-5 w-5" />
-                    Conference Rooms
+                    Meetings & Conferences
                   </NavLink>
                    <Separator className="my-2 bg-sidebar-border" />
                   <NavLink href="/maps-weather" isMobile>
