@@ -59,6 +59,7 @@ const mockActivityFeed = [
 export default function Dashboard() {
   const user = mockInspectors[0];
   const team = mockInspectors.slice(0, 4);
+  const isMapEnabled = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY && process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY !== "YOUR_API_KEY_HERE";
 
   return (
     <div className="mx-auto w-full max-w-7xl px-4 lg:px-6">
@@ -77,6 +78,7 @@ export default function Dashboard() {
               </Button>
           </div>
         </div>
+        <DashboardCharts />
         <div className="grid gap-8 md:grid-cols-3">
           <div className="md:col-span-2 grid gap-8">
              <Card className="bg-card/60 backdrop-blur-sm">
@@ -84,8 +86,12 @@ export default function Dashboard() {
                     <CardTitle className="flex items-center gap-2"><Map className="h-5 w-5" /> Live Operations Map</CardTitle>
                     <CardDescription>Real-time view of team members and active client needs.</CardDescription>
                 </CardHeader>
-                <CardContent className="h-[450px] p-0 flex items-center justify-center bg-muted/30">
-                    <p className="text-muted-foreground">Map component is temporarily disabled for stability.</p>
+                <CardContent className="h-[450px] p-0 flex items-center justify-center bg-muted/30 rounded-b-lg overflow-hidden">
+                    {isMapEnabled ? (
+                        <MarketplaceMap inspectors={mockInspectors} clients={mockClients} />
+                    ) : (
+                        <p className="text-muted-foreground text-center p-4">Map component is disabled. Please provide a valid Google Maps API Key.</p>
+                    )}
                 </CardContent>
             </Card>
             <Card className="bg-card/60 backdrop-blur-sm">
@@ -116,7 +122,9 @@ export default function Dashboard() {
                         <TableBody>
                         {team.map((inspector, index) => {
                             const avatar = PlaceHolderImages.find(p => p.id === inspector.imageHint);
-                            const status = index === 1 ? "In Inspection" : inspector.onCall ? "On-Call" : "Offline";
+                            const status = inspector.onCall ? "On-Call" : "Offline"; // Corrected logic
+                            const currentTask = index === 1 ? "INS-002: 456 Oak Ave" : "Idle"; // Mock logic for demo
+
                             return (
                                 <TableRow key={inspector.id}>
                                 <TableCell className="font-medium flex items-center gap-3">
@@ -124,16 +132,16 @@ export default function Dashboard() {
                                     {inspector.name}
                                 </TableCell>
                                 <TableCell>
-                                    <Badge variant={status === "In Inspection" ? "destructive" : status === "On-Call" ? "default" : "secondary"}>
+                                    <Badge variant={status === "On-Call" ? "default" : "secondary"}>
                                         {status}
                                     </Badge>
                                 </TableCell>
                                 <TableCell className="hidden md:table-cell">
-                                    {status === "In Inspection" ? "INS-002: 456 Oak Ave" : "Idle"}
+                                    {currentTask}
                                 </TableCell>
                                 <TableCell className="text-right">
-                                    <Button variant="outline" size="sm">
-                                        View
+                                    <Button variant="outline" size="sm" asChild>
+                                        <Link href={`/profile/${inspector.id}`}>View</Link>
                                     </Button>
                                 </TableCell>
                                 </TableRow>
