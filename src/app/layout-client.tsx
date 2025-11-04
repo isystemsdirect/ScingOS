@@ -72,7 +72,7 @@ import { NewsWidget } from "@/components/news-widget";
 import { cn } from "@/lib/utils";
 import { ScingAI } from "@/components/ScingAI";
 import { chatClient } from "@/lib/chat-client";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 
 export default function AppLayout({
@@ -135,7 +135,7 @@ export default function AppLayout({
     router.refresh();
   };
 
-  const authRoutes = ['/', '/signup', '/forgot-password'];
+  const authRoutes = ['/login', '/', '/signup', '/forgot-password'];
   if (authRoutes.includes(pathname)) {
     return <>{children}</>;
   }
@@ -152,283 +152,285 @@ export default function AppLayout({
   }
 
   const renderContent = () => (
-    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
-      <div className="hidden border-r bg-sidebar md:block group" data-collapsed="false">
-        <div className="flex h-full max-h-screen flex-col gap-2">
-          <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
-            <Logo />
-            {isProOrEnterprise && <Badge variant="pro" className="ml-2 text-[0.6rem] px-1.5 py-0.5 h-auto group-data-[collapsed=true]:hidden">Pro</Badge>}
-          </div>
-          <div className="flex-1 overflow-auto">
-            <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
-              <NavLink href="/dashboard">
-                <Home className="h-4 w-4" />
-                Dashboard
-              </NavLink>
-              <NavLink href="/overview">
-                <FileText className="h-4 w-4" />
-                Overview Report
-              </NavLink>
-              <NavLink href="/inspections">
-                <ClipboardList className="h-4 w-4" />
-                Inspections
-                <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                  3
-                </Badge>
-              </NavLink>
-               <NavLink href="/calendar">
-                <Calendar className="h-4 w-4" />
-                Calendar & Scheduling
-              </NavLink>
-               <NavLink href="/messaging">
-                <MessageSquare className="h-4 w-4" />
-                Messaging
-              </NavLink>
-              <NavLink href="/clients">
-                <Users className="h-4 w-4" />
-                Clients & Contacts
-              </NavLink>
-               <NavLink href="/teams">
-                <Users className="h-4 w-4" />
-                Teams & Dispatch
-              </NavLink>
-              
-              <Separator className="my-2 bg-sidebar-border" />
-
-              <NavLink href="/maps-weather">
-                <Map className="h-4 w-4" />
-                Maps & Weather
-              </NavLink>
-              <NavLink href="/library">
-                <Library className="h-4 w-4" />
-                Standards Library
-              </NavLink>
-              <NavLink href="/marketplace">
-                <Store className="h-4 w-4" />
-                Marketplace
-              </NavLink>
-              <NavLink href="/community">
-                <MessageSquare className="h-4 w-4" />
-                Community Hub
-              </NavLink>
-              <NavLink href="/social">
-                <Rss className="h-4 w-4" />
-                Social Timeline
-              </NavLink>
-              <NavLink href="/topics">
-                <Hash className="h-4 w-4" />
-                Topics
-              </NavLink>
-
-              <Separator className="my-2 bg-sidebar-border" />
-
-              <NavLink href="/workstation">
-                <Cpu className="h-4 w-4" />
-                Workstation
-              </NavLink>
-              <NavLink href="/finances">
-                <DollarSign className="h-4 w-4" />
-                Finances
-              </NavLink>
-               <NavLink href="/admin">
-                <Shield className="h-4 w-4" />
-                Admin
-              </NavLink>
-            </nav>
-          </div>
-          <div className="mt-auto p-4 border-t border-sidebar-border space-y-4">
-            <NewsWidget />
-            <WeatherWidget />
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center justify-start gap-2 w-full px-2">
-                  {avatarImage && (
-                    <Image
-                      src={avatarImage.imageUrl}
-                      width={32}
-                      height={32}
-                      alt={user.name}
-                      data-ai-hint={avatarImage.imageHint}
-                      className="rounded-full"
-                    />
-                  )}
-                  <div className="text-left group-data-[collapsed=true]:hidden">
-                    <div className="font-medium text-sidebar-foreground">{user.name}</div>
-                    <div className="text-xs text-muted-foreground">Inspector</div>
-                  </div>
-                  <ChevronDown className="ml-auto h-4 w-4 text-muted-foreground group-data-[collapsed=true]:hidden" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild><Link href="/profile"><User className="mr-2 h-4 w-4" />Profile</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild><Link href="/workstation"><Settings className="mr-2 h-4 w-4" />Workstation</Link></DropdownMenuItem>
-                <DropdownMenuItem>Support</DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild><Link href="/"><LogOut className="mr-2 h-4 w-4" />Logout</Link></DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        </div>
-      </div>
-      <div className="flex flex-col relative h-screen overflow-hidden">
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-muted/40 px-4 backdrop-blur-sm lg:h-[60px] lg:px-6">
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                className="shrink-0 md:hidden"
-              >
-                <Package2 className="h-5 w-5" />
-                <span className="sr-only">Toggle navigation menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="flex flex-col bg-sidebar text-sidebar-foreground">
-              <nav className="grid gap-2 text-lg font-medium">
-                <div className="flex items-center">
-                  <Logo />
-                  {isProOrEnterprise && <Badge variant="pro" className="ml-2 text-[0.6rem] px-1.5 py-0.5 h-auto">Pro</Badge>}
-                </div>
-                 <NavLink href="/dashboard" isMobile>
-                  <Home className="h-5 w-5" />
+    <TooltipProvider>
+      <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+        <div className="hidden border-r bg-sidebar md:block group" data-collapsed="false">
+          <div className="flex h-full max-h-screen flex-col gap-2">
+            <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
+              <Logo />
+              {isProOrEnterprise && <Badge variant="pro" className="ml-2 text-[0.6rem] px-1.5 py-0.5 h-auto group-data-[collapsed=true]:hidden">Pro</Badge>}
+            </div>
+            <div className="flex-1 overflow-auto">
+              <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
+                <NavLink href="/dashboard">
+                  <Home className="h-4 w-4" />
                   Dashboard
                 </NavLink>
-                <NavLink href="/overview" isMobile>
-                  <FileText className="h-5 w-5" />
+                <NavLink href="/overview">
+                  <FileText className="h-4 w-4" />
                   Overview Report
                 </NavLink>
-                <NavLink href="/inspections" isMobile>
-                  <ClipboardList className="h-5 w-5" />
+                <NavLink href="/inspections">
+                  <ClipboardList className="h-4 w-4" />
                   Inspections
                   <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
                     3
                   </Badge>
                 </NavLink>
-                 <NavLink href="/calendar" isMobile>
-                  <Calendar className="h-5 w-5" />
+                 <NavLink href="/calendar">
+                  <Calendar className="h-4 w-4" />
                   Calendar & Scheduling
                 </NavLink>
-                 <NavLink href="/messaging" isMobile>
-                  <MessageSquare className="h-5 w-5" />
+                 <NavLink href="/messaging">
+                  <MessageSquare className="h-4 w-4" />
                   Messaging
                 </NavLink>
-                <NavLink href="/clients" isMobile>
-                  <Users className="h-5 w-5" />
+                <NavLink href="/clients">
+                  <Users className="h-4 w-4" />
                   Clients & Contacts
                 </NavLink>
-                 <NavLink href="/teams" isMobile>
-                  <Users className="h-5 w-5" />
+                 <NavLink href="/teams">
+                  <Users className="h-4 w-4" />
                   Teams & Dispatch
                 </NavLink>
-                 <Separator className="my-2 bg-sidebar-border" />
-                <NavLink href="/maps-weather" isMobile>
-                  <Map className="h-5 w-5" />
+                
+                <Separator className="my-2 bg-sidebar-border" />
+
+                <NavLink href="/maps-weather">
+                  <Map className="h-4 w-4" />
                   Maps & Weather
                 </NavLink>
-                <NavLink href="/library" isMobile>
-                  <Library className="h-5 w-5" />
+                <NavLink href="/library">
+                  <Library className="h-4 w-4" />
                   Standards Library
                 </NavLink>
-                <NavLink href="/marketplace" isMobile>
-                  <Store className="h-5 w-5" />
+                <NavLink href="/marketplace">
+                  <Store className="h-4 w-4" />
                   Marketplace
                 </NavLink>
-                <NavLink href="/community" isMobile>
-                    <MessageSquare className="h-5 w-5" />
-                    Community Hub
+                <NavLink href="/community">
+                  <MessageSquare className="h-4 w-4" />
+                  Community Hub
                 </NavLink>
-                <NavLink href="/social" isMobile>
-                    <Rss className="h-5 w-5" />
-                    Social Timeline
+                <NavLink href="/social">
+                  <Rss className="h-4 w-4" />
+                  Social Timeline
                 </NavLink>
-                 <NavLink href="/topics" isMobile>
-                    <Hash className="h-5 w-5" />
-                    Topics
+                <NavLink href="/topics">
+                  <Hash className="h-4 w-4" />
+                  Topics
                 </NavLink>
-                 <Separator className="my-2 bg-sidebar-border" />
-                <NavLink href="/workstation" isMobile>
-                  <Cpu className="h-5 w-5" />
+
+                <Separator className="my-2 bg-sidebar-border" />
+
+                <NavLink href="/workstation">
+                  <Cpu className="h-4 w-4" />
                   Workstation
                 </NavLink>
-                <NavLink href="/finances" isMobile>
-                  <DollarSign className="h-5 w-5" />
+                <NavLink href="/finances">
+                  <DollarSign className="h-4 w-4" />
                   Finances
                 </NavLink>
-                 <NavLink href="/admin" isMobile>
-                  <Shield className="h-5 w-5" />
+                 <NavLink href="/admin">
+                  <Shield className="h-4 w-4" />
                   Admin
                 </NavLink>
               </nav>
-            </SheetContent>
-          </Sheet>
-          <div className="flex-1 flex items-center gap-2">
-            {userId && process.env.NEXT_PUBLIC_PICOVOICE_ACCESS_KEY && (
+            </div>
+            <div className="mt-auto p-4 border-t border-sidebar-border space-y-4">
+              <NewsWidget />
+              <WeatherWidget />
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="flex items-center justify-start gap-2 w-full px-2">
+                    {avatarImage && (
+                      <Image
+                        src={avatarImage.imageUrl}
+                        width={32}
+                        height={32}
+                        alt={user.name}
+                        data-ai-hint={avatarImage.imageHint}
+                        className="rounded-full"
+                      />
+                    )}
+                    <div className="text-left group-data-[collapsed=true]:hidden">
+                      <div className="font-medium text-sidebar-foreground">{user.name}</div>
+                      <div className="text-xs text-muted-foreground">Inspector</div>
+                    </div>
+                    <ChevronDown className="ml-auto h-4 w-4 text-muted-foreground group-data-[collapsed=true]:hidden" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild><Link href="/profile"><User className="mr-2 h-4 w-4" />Profile</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link href="/workstation"><Settings className="mr-2 h-4 w-4" />Workstation</Link></DropdownMenuItem>
+                  <DropdownMenuItem>Support</DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild><Link href="/"><LogOut className="mr-2 h-4 w-4" />Logout</Link></DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col relative h-screen overflow-hidden">
+          <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-muted/40 px-4 backdrop-blur-sm lg:h-[60px] lg:px-6">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="shrink-0 md:hidden"
+                >
+                  <Package2 className="h-5 w-5" />
+                  <span className="sr-only">Toggle navigation menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="flex flex-col bg-sidebar text-sidebar-foreground">
+                <nav className="grid gap-2 text-lg font-medium">
+                  <div className="flex items-center">
+                    <Logo />
+                    {isProOrEnterprise && <Badge variant="pro" className="ml-2 text-[0.6rem] px-1.5 py-0.5 h-auto">Pro</Badge>}
+                  </div>
+                   <NavLink href="/dashboard" isMobile>
+                    <Home className="h-5 w-5" />
+                    Dashboard
+                  </NavLink>
+                  <NavLink href="/overview" isMobile>
+                    <FileText className="h-5 w-5" />
+                    Overview Report
+                  </NavLink>
+                  <NavLink href="/inspections" isMobile>
+                    <ClipboardList className="h-5 w-5" />
+                    Inspections
+                    <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                      3
+                    </Badge>
+                  </NavLink>
+                   <NavLink href="/calendar" isMobile>
+                    <Calendar className="h-5 w-5" />
+                    Calendar & Scheduling
+                  </NavLink>
+                   <NavLink href="/messaging" isMobile>
+                    <MessageSquare className="h-5 w-5" />
+                    Messaging
+                  </NavLink>
+                  <NavLink href="/clients" isMobile>
+                    <Users className="h-5 w-5" />
+                    Clients & Contacts
+                  </NavLink>
+                   <NavLink href="/teams" isMobile>
+                    <Users className="h-5 w-5" />
+                    Teams & Dispatch
+                  </NavLink>
+                   <Separator className="my-2 bg-sidebar-border" />
+                  <NavLink href="/maps-weather" isMobile>
+                    <Map className="h-5 w-5" />
+                    Maps & Weather
+                  </NavLink>
+                  <NavLink href="/library" isMobile>
+                    <Library className="h-5 w-5" />
+                    Standards Library
+                  </NavLink>
+                  <NavLink href="/marketplace" isMobile>
+                    <Store className="h-5 w-5" />
+                    Marketplace
+                  </NavLink>
+                  <NavLink href="/community" isMobile>
+                      <MessageSquare className="h-5 w-5" />
+                      Community Hub
+                  </NavLink>
+                  <NavLink href="/social" isMobile>
+                      <Rss className="h-5 w-5" />
+                      Social Timeline
+                  </NavLink>
+                   <NavLink href="/topics" isMobile>
+                      <Hash className="h-5 w-5" />
+                      Topics
+                  </NavLink>
+                   <Separator className="my-2 bg-sidebar-border" />
+                  <NavLink href="/workstation" isMobile>
+                    <Cpu className="h-5 w-5" />
+                    Workstation
+                  </NavLink>
+                  <NavLink href="/finances" isMobile>
+                    <DollarSign className="h-5 w-5" />
+                    Finances
+                  </NavLink>
+                   <NavLink href="/admin" isMobile>
+                    <Shield className="h-5 w-5" />
+                    Admin
+                  </NavLink>
+                </nav>
+              </SheetContent>
+            </Sheet>
+            <div className="flex-1 flex items-center gap-2">
+              {userId && process.env.NEXT_PUBLIC_PICOVOICE_ACCESS_KEY && (
+                  <Tooltip>
+                      <TooltipTrigger asChild>
+                          <div>
+                              <ScingAI 
+                                  userId={userId} 
+                                  accessKey={process.env.NEXT_PUBLIC_PICOVOICE_ACCESS_KEY} 
+                              />
+                          </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                          <p>Toggle Scing AI Automaton</p>
+                          <p className="text-xs text-muted-foreground">Activate full GUI control with voice commands.</p>
+                      </TooltipContent>
+                  </Tooltip>
+              )}
+               <AiSearchDialog />
+            </div>
+            
+            <div className="flex items-center gap-2 ml-auto">
                 <Tooltip>
-                    <TooltipTrigger asChild>
-                        <div>
-                            <ScingAI 
-                                userId={userId} 
-                                accessKey={process.env.NEXT_PUBLIC_PICOVOICE_ACCESS_KEY} 
-                            />
-                        </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                        <p>Toggle Scing AI Automaton</p>
-                        <p className="text-xs text-muted-foreground">Activate full GUI control with voice commands.</p>
-                    </TooltipContent>
+                  <TooltipTrigger asChild>
+                      <Button variant="ghost" size="icon" className="rounded-full" onClick={handleRefresh}>
+                          <RefreshCw className="h-5 w-5" />
+                          <span className="sr-only">Refresh Page</span>
+                      </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                      <p>Refresh Page</p>
+                  </TooltipContent>
                 </Tooltip>
-            )}
-             <AiSearchDialog />
-          </div>
-          
-          <div className="flex items-center gap-2 ml-auto">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                    <Button variant="ghost" size="icon" className="rounded-full" onClick={handleRefresh}>
-                        <RefreshCw className="h-5 w-5" />
-                        <span className="sr-only">Refresh Page</span>
-                    </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                    <p>Refresh Page</p>
-                </TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                    <Button variant="ghost" size="icon" className="rounded-full" onClick={toggleFullScreen}>
-                        {isFullScreen ? <Shrink className="h-5 w-5" /> : <Expand className="h-5 w-5" />}
-                        <span className="sr-only">{isFullScreen ? 'Exit Full Screen' : 'Enter Full Screen'}</span>
-                    </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                    <p>{isFullScreen ? 'Exit Full Screen' : 'Enter Full Screen'}</p>
-                </TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                    <Button variant="ghost" size="icon" className="rounded-full">
-                        <Bell className="h-5 w-5" />
-                        <span className="sr-only">Toggle notifications</span>
-                    </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                    <p>Notifications</p>
-                    <p className="text-xs text-muted-foreground">View recent alerts and messages.</p>
-                </TooltipContent>
-              </Tooltip>
-          </div>
-        </header>
-        <FlashNotificationBar />
-        <main className={cn("flex-1 overflow-y-auto p-4 sm:px-6 sm:py-6 bg-black/[.05] rounded-xl", 
-          "bg-[radial-gradient(ellipse_at_center,hsl(var(--card)/0.1)_0%,transparent_70%)]",
-          pathname === '/messaging' && 'p-0 sm:p-0'
-        )}>
-          {children}
-        </main>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                      <Button variant="ghost" size="icon" className="rounded-full" onClick={toggleFullScreen}>
+                          {isFullScreen ? <Shrink className="h-5 w-5" /> : <Expand className="h-5 w-5" />}
+                          <span className="sr-only">{isFullScreen ? 'Exit Full Screen' : 'Enter Full Screen'}</span>
+                      </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                      <p>{isFullScreen ? 'Exit Full Screen' : 'Enter Full Screen'}</p>
+                  </TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                      <Button variant="ghost" size="icon" className="rounded-full">
+                          <Bell className="h-5 w-5" />
+                          <span className="sr-only">Toggle notifications</span>
+                      </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                      <p>Notifications</p>
+                      <p className="text-xs text-muted-foreground">View recent alerts and messages.</p>
+                  </TooltipContent>
+                </Tooltip>
+            </div>
+          </header>
+          <FlashNotificationBar />
+          <main className={cn("flex-1 overflow-y-auto p-4 sm:px-6 sm:py-6 bg-black/[.05] rounded-xl", 
+            "bg-[radial-gradient(ellipse_at_center,hsl(var(--card)/0.1)_0%,transparent_70%)]",
+            pathname === '/messaging' && 'p-0 sm:p-0'
+          )}>
+            {children}
+          </main>
+        </div>
       </div>
-    </div>
+    </TooltipProvider>
   );
   
   return renderContent();
