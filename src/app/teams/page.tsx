@@ -1,7 +1,7 @@
 
 'use client';
 
-import { Building, Users, ArrowRight, PlusCircle, UserPlus, Search, Globe, Lock, Briefcase, MapPin, Star, ShieldCheck, Phone, Mail, Clock, ListFilter, FileText, MessageSquare } from 'lucide-react';
+import { Building, Users, ArrowRight, PlusCircle, UserPlus, Search, Globe, Lock, Briefcase, MapPin, Star, ShieldCheck, Phone, Mail, Clock, ListFilter, FileText, MessageSquare, User } from 'lucide-react';
 import Link from 'next/link';
 
 import {
@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/card';
 import { mockTeamsData, mockInspectors, mockClients, mockJobs } from '@/lib/data';
 import Image from 'next/image';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { PlaceHolderImages } from '@/components/../lib/placeholder-images';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -84,8 +84,8 @@ export default function TeamDispatchPage() {
 
                 <Tabs defaultValue="available-inspectors" className="h-full flex flex-col">
                   <TabsList className="grid w-full grid-cols-2">
-                      <TabsTrigger value="available-inspectors">Available Inspectors</TabsTrigger>
-                      <TabsTrigger value="active-jobs">Active Jobs</TabsTrigger>
+                      <TabsTrigger value="available-inspectors">Available Inspectors ({availableInspectors.length})</TabsTrigger>
+                      <TabsTrigger value="active-jobs">Active Jobs ({activeJobs.length})</TabsTrigger>
                   </TabsList>
                   <TabsContent value="available-inspectors" className="flex-1 overflow-hidden">
                     <Card className="bg-card/60 backdrop-blur-sm h-full flex flex-col border-0 shadow-none">
@@ -100,7 +100,7 @@ export default function TeamDispatchPage() {
                                     return (
                                     <div key={inspector.id} className="p-4 rounded-lg border bg-background/50">
                                         <div className="flex items-start gap-4">
-                                            {avatar && <Image src={avatar.imageUrl} alt={inspector.name} width={48} height={48} className="rounded-full" />}
+                                            {avatar && <Image src={avatar.imageUrl} alt={inspector.name} width={48} height={48} className="rounded-full" data-ai-hint={avatar.imageHint} />}
                                             <div className="flex-1">
                                                 <p className="font-semibold">{inspector.name}</p>
                                                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -137,21 +137,44 @@ export default function TeamDispatchPage() {
                             <CardContent className="space-y-4">
                                 {activeJobs.map(job => {
                                     const inspector = mockInspectors.find(i => i.id === job.assignedInspectorId);
+                                    const avatar = inspector ? PlaceHolderImages.find(p => p.id === inspector.imageHint) : null;
                                     return (
                                         <div key={job.id} className="p-4 rounded-lg border bg-background/50">
                                             <div className="flex items-start gap-4">
-                                                <div className="flex-1">
+                                                <div className="flex-1 space-y-1">
                                                     <p className="font-semibold">{job.type}</p>
                                                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                                         <MapPin className="h-3 w-3" /> {job.address}
                                                     </div>
-                                                    {inspector && (
-                                                        <div className="flex items-center gap-2 text-sm text-muted-foreground mt-2">
-                                                            <UserPlus className="h-3 w-3" /> Assigned to: {inspector.name}
-                                                        </div>
-                                                    )}
                                                 </div>
                                                 <Badge variant="outline">{job.status}</Badge>
+                                            </div>
+                                            <Separator className="my-3" />
+                                            <div className="flex items-center justify-between">
+                                                {inspector && avatar ? (
+                                                     <div className="flex items-center gap-3">
+                                                        <Image src={avatar.imageUrl} alt={inspector.name} width={32} height={32} className="rounded-full" data-ai-hint={avatar.imageHint} />
+                                                        <div>
+                                                            <p className="text-sm font-medium">{inspector.name}</p>
+                                                            <p className="text-xs text-muted-foreground">Assigned Inspector</p>
+                                                        </div>
+                                                     </div>
+                                                ) : (
+                                                    <div className="flex items-center gap-3">
+                                                         <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
+                                                            <User className="h-4 w-4 text-muted-foreground" />
+                                                         </div>
+                                                         <p className="text-sm text-muted-foreground">Inspector not found</p>
+                                                     </div>
+                                                )}
+                                                <div className="flex items-center gap-2">
+                                                    <Button variant="outline" size="sm">View Job</Button>
+                                                    {inspector && (
+                                                        <Button variant="secondary" size="sm" asChild>
+                                                            <Link href="/messaging"><MessageSquare className="mr-2 h-3 w-3" />Message</Link>
+                                                        </Button>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
                                     )
