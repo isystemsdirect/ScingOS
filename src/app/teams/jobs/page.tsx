@@ -21,7 +21,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { mockClients, mockJobs } from '@/lib/data';
+import { Separator } from '@/components/ui/separator';
 
 export default function JobBoardPage() {
   const unassignedJobs = mockJobs.filter((j) => j.status === 'Unassigned');
@@ -80,45 +89,90 @@ export default function JobBoardPage() {
             </div>
           </CardHeader>
           <CardContent className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {unassignedJobs.map((job) => (
-              <Card key={job.id} className="flex flex-col bg-background/50">
-                <CardHeader>
-                  <div className="flex justify-between items-start">
-                    <CardTitle className="text-lg leading-tight">{job.type}</CardTitle>
-                    <Badge variant={job.priority === 'High' ? 'destructive' : 'secondary'}>
-                      {job.priority}
-                    </Badge>
-                  </div>
-                  <CardDescription className="flex items-center gap-1.5 pt-1">
-                    <MapPin className="h-4 w-4" /> {job.address}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="flex-1 space-y-4">
-                  <div className="text-sm text-muted-foreground">
-                    <p>
-                      <strong>Client:</strong>{' '}
-                      {mockClients.find((c) => c.id === job.clientId)?.name}
-                    </p>
-                    <div className="flex items-center gap-1.5">
-                      <Clock className="h-4 w-4" />
-                      <span>Requested: {job.requestTime}</span>
+            {unassignedJobs.map((job) => {
+              const client = mockClients.find((c) => c.id === job.clientId);
+              return (
+                <Card key={job.id} className="flex flex-col bg-background/50">
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <CardTitle className="text-lg leading-tight">{job.type}</CardTitle>
+                      <Badge variant={job.priority === 'High' ? 'destructive' : 'secondary'}>
+                        {job.priority}
+                      </Badge>
                     </div>
-                  </div>
-                  <div className="border-t pt-3 flex flex-wrap gap-2">
-                    <Badge variant="outline">Roofing</Badge>
-                    <Badge variant="outline">Thermal</Badge>
-                  </div>
-                </CardContent>
-                <CardContent className="flex gap-2">
-                    <Button variant="outline" size="sm" className="w-full">
-                        View Details
-                    </Button>
+                    <CardDescription className="flex items-center gap-1.5 pt-1">
+                      <MapPin className="h-4 w-4" /> {job.address}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="flex-1 space-y-4">
+                    <div className="text-sm text-muted-foreground">
+                      <p>
+                        <strong>Client:</strong>{' '}
+                        {client?.name}
+                      </p>
+                      <div className="flex items-center gap-1.5">
+                        <Clock className="h-4 w-4" />
+                        <span>Requested: {job.requestTime}</span>
+                      </div>
+                    </div>
+                    <div className="border-t pt-3 flex flex-wrap gap-2">
+                      <Badge variant="outline">Roofing</Badge>
+                      <Badge variant="outline">Thermal</Badge>
+                    </div>
+                  </CardContent>
+                  <CardContent className="flex gap-2">
+                    <Dialog>
+                      <DialogTrigger asChild>
+                         <Button variant="outline" size="sm" className="w-full">
+                            View Details
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-md bg-card/80 backdrop-blur-sm">
+                        <DialogHeader>
+                          <DialogTitle>{job.type}</DialogTitle>
+                          <DialogDescription>
+                            Job Request Details
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4 py-4">
+                            <div className="flex justify-between items-center">
+                                <span className="text-muted-foreground">Priority</span>
+                                <Badge variant={job.priority === 'High' ? 'destructive' : 'secondary'}>
+                                    {job.priority}
+                                </Badge>
+                            </div>
+                            <Separator />
+                             <div className="flex flex-col space-y-1">
+                                <span className="text-muted-foreground text-sm">Client</span>
+                                <span className="font-semibold">{client?.name}</span>
+                            </div>
+                             <div className="flex flex-col space-y-1">
+                                <span className="text-muted-foreground text-sm">Location</span>
+                                <span className="font-semibold">{job.address}</span>
+                            </div>
+                            <div className="flex flex-col space-y-1">
+                                <span className="text-muted-foreground text-sm">Requested</span>
+                                <span className="font-semibold">{job.requestTime}</span>
+                            </div>
+                            <Separator />
+                            <div className="flex flex-col space-y-2">
+                                <span className="text-muted-foreground text-sm">Required Skills</span>
+                                <div className="flex flex-wrap gap-2">
+                                    <Badge variant="outline">Roofing</Badge>
+                                    <Badge variant="outline">Thermal</Badge>
+                                    <Badge variant="outline">Drone Certified</Badge>
+                                </div>
+                            </div>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
                     <Button size="sm" className="w-full">
                         Dispatch
                     </Button>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              );
+            })}
              {unassignedJobs.length === 0 && (
                 <div className="col-span-full text-center py-12">
                   <FileText className="h-12 w-12 text-muted-foreground mx-auto" />
