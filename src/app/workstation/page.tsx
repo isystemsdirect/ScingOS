@@ -58,7 +58,10 @@ export default function WorkstationPage() {
   return (
     <div className="mx-auto w-full max-w-6xl">
        <div className="flex items-center justify-between px-4 lg:px-6">
-        <h1 className="text-3xl font-semibold">Workstation</h1>
+          <div>
+            <h1 className="text-3xl font-semibold">Workstation</h1>
+            <p className="text-muted-foreground max-w-2xl mt-1">This is your personal command center for managing your profile, devices, and settings. Configure your professional credentials, manage device keys, customize your AI, and fine-tune your marketplace presence.</p>
+          </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button>

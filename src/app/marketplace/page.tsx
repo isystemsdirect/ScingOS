@@ -42,8 +42,8 @@ export default function MarketplacePage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold">Marketplace</h1>
-            <p className="text-muted-foreground">
-              Discover inspectors, services, and integrations to expand your capabilities.
+            <p className="text-muted-foreground max-w-2xl mt-1">
+              Discover and procure professional services, find certified inspectors for dispatch, and expand your capabilities by purchasing new LARI sub-engine keys and third-party integrations.
             </p>
           </div>
         </div>

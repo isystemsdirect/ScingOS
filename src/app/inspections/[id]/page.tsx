@@ -79,9 +79,14 @@ export default function InspectionDetailPage({ params }: { params: { id: string 
               <span className="sr-only">Back</span>
             </Button>
           </Link>
-          <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
-            {inspection.title}
-          </h1>
+          <div className="flex-1">
+            <h1 className="shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
+              {inspection.title}
+            </h1>
+            <p className="text-muted-foreground text-sm mt-1">
+              Review all details, findings, evidence, and generated reports for this inspection.
+            </p>
+          </div>
           <Badge variant="outline" className="ml-auto sm:ml-0">
             {inspection.status}
           </Badge>

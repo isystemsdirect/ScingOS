@@ -25,8 +25,8 @@ export default function ProfilePage() {
       <div className="grid gap-8">
         <div>
           <h1 className="text-3xl font-bold">My Profile</h1>
-          <p className="text-muted-foreground">
-            View and manage your public inspector profile.
+          <p className="text-muted-foreground max-w-2xl mt-1">
+            This is your public-facing professional profile. Manage the information that clients and other professionals see, including your bio, certifications, and offered services. You can also view reviews and ratings left by others.
           </p>
         </div>
         <div className="grid gap-8 md:grid-cols-[200px_1fr]">

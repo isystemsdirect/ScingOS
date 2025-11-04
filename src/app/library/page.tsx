@@ -80,13 +80,13 @@ export default function LibraryPage() {
     const isProOrEnterprise = currentPlan && (currentPlan.name === 'Pro' || currentPlan.name === 'Enterprise');
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 lg:px-6">
+    <div className="mx-auto w-full max-w-6xl px-4 lg-px-6">
       <div className="flex flex-col gap-4">
         <div className="flex items-center">
           <div>
             <h1 className="text-2xl font-bold">Standards and Code Vault</h1>
-            <p className="text-muted-foreground">
-              Manage the codes and standards used to train your personal AI model.
+            <p className="text-muted-foreground max-w-2xl mt-1">
+              This is your central repository for all regulatory and standards documents. The documents you upload and save here are used to train your personal Scing AI model, enabling precise, context-aware code cross-referencing during inspections.
             </p>
           </div>
           <div className="ml-auto flex items-center gap-2">

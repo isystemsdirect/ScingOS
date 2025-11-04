@@ -38,8 +38,8 @@ export default function ClientsPage() {
         <div className="flex items-center">
           <div>
             <h1 className="text-2xl font-bold">Clients & Contacts</h1>
-            <p className="text-muted-foreground">
-              Manage your clients, contacts, and their inspection history.
+            <p className="text-muted-foreground max-w-2xl mt-1">
+              This is your centralized database for all clients and professional contacts. From here, you can add new clients, view their complete profiles and inspection histories, and manage their information.
             </p>
           </div>
           <div className="ml-auto flex items-center gap-2">

@@ -40,9 +40,14 @@ export default function ClientProfilePage({ params }: { params: { id: string } }
                 <span className="sr-only">Back to Clients & Contacts</span>
               </Button>
             </Link>
-            <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
-              Client & Contact Profile
-            </h1>
+            <div className="flex-1">
+              <h1 className="shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
+                Client & Contact Profile
+              </h1>
+              <p className="text-muted-foreground text-sm mt-1">
+                View and manage client details, contact information, and their complete inspection history.
+              </p>
+            </div>
           </div>
 
         <div className="grid gap-8 md:grid-cols-[200px_1fr]">

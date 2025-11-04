@@ -55,8 +55,8 @@ export default function AdminPage() {
               <Shield className="h-8 w-8" />
               Admin Control Center
             </h1>
-            <p className="text-muted-foreground">
-              Manage users, system settings, and view audit logs.
+            <p className="text-muted-foreground max-w-2xl mt-2">
+              This is the central hub for system administrators. From here, you can manage user accounts, assign roles and permissions, monitor system-wide activity through audit logs, and view real-time health metrics for the entire platform.
             </p>
           </div>
           <div className="flex items-center gap-2">
