@@ -416,15 +416,17 @@ export const mockConferenceRooms: ConferenceRoom[] = [
         id: 'conf-q4-planning',
         name: 'Q4 Executive Planning',
         description: 'Review of Q3 performance and strategic planning for Q4.',
+        type: 'conference',
         privacy: 'private',
         scheduledTime: '2023-10-28T14:00:00Z',
         status: 'Live',
-        participants: mockInspectors.slice(0, 3)
+        participants: [mockInspectors[0], mockInspectors[1], mockInspectors[2]]
     },
     {
         id: 'conf-project-alpha-debrief',
         name: 'Project Alpha Debrief',
         description: 'Post-mortem and final report review for Project Alpha.',
+        type: 'conference',
         privacy: 'private',
         scheduledTime: '2023-10-29T10:00:00Z',
         status: 'Scheduled',
@@ -434,9 +436,30 @@ export const mockConferenceRooms: ConferenceRoom[] = [
         id: 'conf-new-tech-demo',
         name: 'Public Tech Demo',
         description: 'Demonstration of the LARI-PRISM spectrometer capabilities.',
+        type: 'conference',
         privacy: 'public',
         scheduledTime: '2023-11-01T11:00:00Z',
         status: 'Scheduled',
         participants: mockInspectors.slice(0, 5)
+    },
+    {
+        id: 'meet-client-intake-stark',
+        name: 'Client Intake: Stark Industries',
+        description: 'Initial project scoping meeting for the Malibu property.',
+        type: 'meeting',
+        privacy: 'private',
+        scheduledTime: '2023-11-02T09:00:00Z',
+        status: 'Scheduled',
+        participants: [mockInspectors[0], mockInspectors[1]] // Assume client joins as guest
+    },
+     {
+        id: 'meet-daily-standup',
+        name: 'Daily Standup',
+        description: 'Quick sync on daily tasks and blockers.',
+        type: 'meeting',
+        privacy: 'private',
+        scheduledTime: '2023-11-03T08:30:00Z',
+        status: 'Completed',
+        participants: mockInspectors.slice(0, 4)
     }
 ];

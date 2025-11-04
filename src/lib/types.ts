@@ -152,6 +152,7 @@ export type ConferenceRoom = {
     id: string;
     name: string;
     description: string;
+    type: 'conference' | 'meeting';
     privacy: 'public' | 'private';
     scheduledTime: string;
     status: 'Live' | 'Scheduled' | 'Completed';
