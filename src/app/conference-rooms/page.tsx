@@ -60,7 +60,7 @@ export default function MeetingsAndConferencesPage() {
              <Button asChild className="w-full">
                 <Link href={`/conference-rooms/${room.id}`}>
                     <Video className="mr-2 h-4 w-4" />
-                    {room.status === 'Live' ? 'Join Now' : 'Enter Room'}
+                    {room.type === 'conference' ? 'Join Conference' : 'Join Meeting'}
                 </Link>
             </Button>
         </CardFooter>
