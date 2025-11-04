@@ -9,7 +9,8 @@ import {
   Paperclip,
   Mic,
   MoreVertical,
-  Video
+  Video,
+  UserPlus,
 } from 'lucide-react';
 import { notFound, useParams } from 'next/navigation';
 import Link from 'next/link';
@@ -131,7 +132,13 @@ export default function ConferenceRoomHub() {
              <Card className="bg-card/60 backdrop-blur-sm">
                 <CardHeader className="flex-row items-center justify-between">
                     <CardTitle className="flex items-center gap-2"><Users className="h-5 w-5"/> Participants</CardTitle>
-                    <p className="text-sm text-muted-foreground">{room.participants.length} members</p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm text-muted-foreground">{room.participants.length} members</p>
+                      <Button variant="outline" size="icon" className="h-7 w-7">
+                        <UserPlus className="h-4 w-4" />
+                        <span className="sr-only">Invite Participant</span>
+                      </Button>
+                    </div>
                 </CardHeader>
                 <ScrollArea className="h-48">
                     <CardContent>
