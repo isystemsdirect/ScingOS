@@ -1,6 +1,7 @@
+
 'use client';
 
-import { Building, Users, ArrowRight } from 'lucide-react';
+import { Building, Users, ArrowRight, PlusCircle } from 'lucide-react';
 import Link from 'next/link';
 
 import {
@@ -13,6 +14,7 @@ import {
 import { mockInspectors } from '@/lib/data';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { Button } from '@/components/ui/button';
 
 // Mock teams data based on your architecture
 const mockTeams = [
@@ -37,11 +39,16 @@ export default function TeamSelectionPage() {
   return (
     <div className="mx-auto w-full max-w-4xl px-4 lg:px-6">
       <div className="flex flex-col gap-8">
-        <div>
-          <h1 className="text-3xl font-bold">Team Select</h1>
-          <p className="text-muted-foreground">
-            Choose a team to view its central hub.
-          </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold">Teams & Dispatch</h1>
+            <p className="text-muted-foreground">
+              Choose a team to view its central hub or create a new one.
+            </p>
+          </div>
+          <Button>
+              <PlusCircle className="mr-2 h-4 w-4" /> Create New Team
+          </Button>
         </div>
         
         <div className="grid gap-6">

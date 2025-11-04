@@ -40,7 +40,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { mockInspectors } from "@/lib/data";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Separator } from "@/components/ui/separator";

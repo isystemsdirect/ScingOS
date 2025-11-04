@@ -3,7 +3,6 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
 import { ScingularLogoText } from "./ui/logo-text";
-import { LoadingLogo } from "./ui/loading-logo";
 
 const Logo = ({ className, isLoginPage = false }: { className?: string, isLoginPage?: boolean }) => {
   if (isLoginPage) {
@@ -15,8 +14,8 @@ const Logo = ({ className, isLoginPage = false }: { className?: string, isLoginP
           className
         )}
       >
-        <div className="relative logo-gradient-light rounded-full p-2 sm:p-4">
-            <LoadingLogo className="size-32 sm:size-40 md:size-48" />
+        <div className="relative logo-gradient-light rounded-full p-2">
+            <Image src="/logo.png" alt="Scingular Logo" width={160} height={160} className="transition-all size-32 sm:size-40 md:size-48" />
         </div>
         <div className="relative flex items-baseline justify-center">
            <span className="font-sans uppercase font-bold italic text-2xl sm:text-3xl md:text-4xl whitespace-nowrap">
