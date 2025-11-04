@@ -40,6 +40,7 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { MarketplaceMap } from "@/components/marketplace-map";
 import { DashboardCharts } from "@/components/dashboard-charts";
 import Image from "next/image";
+import { AnnouncementsWidget } from "@/components/announcements-widget";
 
 
 const mockAgenda = [
@@ -153,6 +154,7 @@ export default function Dashboard() {
             </Card>
           </div>
           <div className="space-y-8">
+            <AnnouncementsWidget />
             <Card className="bg-card/60 backdrop-blur-sm">
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">

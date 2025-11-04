@@ -138,6 +138,13 @@ export type MarketplaceIntegration = {
   vendor: string;
 };
 
+export type Notification = {
+  id: number;
+  type: NotificationType;
+  title: string;
+  description: string;
+};
+
 export type Team = {
   id: string;
   name: string;

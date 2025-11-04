@@ -1,6 +1,6 @@
 
 
-import type { Inspection, Inspector, Device, SubscriptionPlan, Client, MarketplaceService, MarketplaceIntegration, Team, ConferenceRoom, Job } from './types';
+import type { Inspection, Inspector, Device, SubscriptionPlan, Client, MarketplaceService, MarketplaceIntegration, Team, ConferenceRoom, Job, Notification } from './types';
 import { PlaceHolderImages } from './placeholder-images';
 
 const getImageUrl = (id: string) => PlaceHolderImages.find(p => p.id === id)?.imageUrl || '';
@@ -334,7 +334,7 @@ export const mockMarketplaceIntegrations: MarketplaceIntegration[] = [
     },
 ];
 
-export const mockNotifications = [
+export const mockNotifications: Notification[] = [
     { id: 1, type: 'post' as const, title: "Jane Smith posted in #foundation-cracks", description: "Unusual Efflorescence Pattern on a Poured Concrete Wall?" },
     { id: 2, type: 'topic' as const, title: "#thermal-imaging is trending", description: "Join the conversation on interpreting thermal data." },
     { id: 3, type: 'weather' as const, title: "Weather Update: Los Angeles, CA", description: "Clear skies, 75°F. Ideal conditions for outdoor and drone inspections." },
@@ -551,5 +551,29 @@ export const mockJobs: Job[] = [
         requestTime: '45m ago',
         status: 'Assigned',
         assignedInspectorId: 'USR-001',
+    }
+];
+
+export const mockAnnouncements = [
+    {
+        id: 'AN-001',
+        title: 'New LARI-PRISM Key Available',
+        content: 'Unlock advanced materials analysis with the new LARI-PRISM spectrometer key, now available in the Marketplace.',
+        date: '2023-11-05',
+        read: false
+    },
+    {
+        id: 'AN-002',
+        title: 'System Maintenance Scheduled',
+        content: 'Scheduled maintenance will occur on Nov 10th from 2-4 AM EST. Expect brief interruptions.',
+        date: '2023-11-04',
+        read: false
+    },
+    {
+        id: 'AN-003',
+        title: 'Updated Drone Compliance Guide',
+        content: 'The FAA compliance guide in the Standards Library has been updated with the latest regulations.',
+        date: '2023-11-02',
+        read: true
     }
 ]

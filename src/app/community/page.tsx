@@ -48,6 +48,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { ScingularLogoText } from '@/components/ui/logo-text';
+import { AnnouncementsWidget } from '@/components/announcements-widget';
 
 const mockPosts = [
   {
@@ -233,6 +234,7 @@ export default function CommunityPage() {
             </div>
 
              <div className="sticky top-20 space-y-6">
+                <AnnouncementsWidget />
                  <Card className="bg-card/60 backdrop-blur-sm">
                     <CardContent className="p-4 flex items-center gap-4">
                         {avatar && <Image src={avatar.imageUrl} alt={user.name} width={56} height={56} className="rounded-full border-2 border-primary" data-ai-hint={user.imageHint} />}
