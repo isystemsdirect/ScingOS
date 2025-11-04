@@ -1,7 +1,9 @@
+
 'use client';
 
 import { Building, Users, ArrowRight, PlusCircle, UserPlus, Search, Globe, Lock, Briefcase, MapPin, Star, ShieldCheck, Phone, Mail, Clock, ListFilter, FileText, MessageSquare, User } from 'lucide-react';
 import Link from 'next/link';
+import { useState } from 'react';
 
 import {
   Card,
@@ -20,8 +22,14 @@ import { MarketplaceMap } from '@/components/marketplace-map';
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import { useMessagingStore } from '@/lib/stores/messaging-store';
+import type { Inspector } from '@/lib/types';
+import { InspectorProfileModal } from '@/components/inspector-profile-modal';
 
 
 export default function TeamDispatchPage() {
@@ -29,6 +37,7 @@ export default function TeamDispatchPage() {
   const unassignedJobs = mockJobs.filter(j => j.status === 'Unassigned');
   const activeJobs = mockJobs.filter(j => j.status !== 'Unassigned' && j.status !== 'Completed');
   const openMessagingDialog = useMessagingStore((state) => state.openDialog);
+  const [selectedInspector, setSelectedInspector] = useState<Inspector | null>(null);
 
   return (
     <div className="mx-auto w-full max-w-full px-4 lg:px-6 h-[calc(100vh_-_9rem)] overflow-hidden">
@@ -103,30 +112,37 @@ export default function TeamDispatchPage() {
                                 {availableInspectors.map(inspector => {
                                     const avatar = PlaceHolderImages.find(p => p.id === inspector.imageHint);
                                     return (
-                                    <div key={inspector.id} className="p-4 rounded-lg border bg-background/50">
-                                        <div className="flex items-start gap-4">
-                                            {avatar && <Image src={avatar.imageUrl} alt={inspector.name} width={48} height={48} className="rounded-full" data-ai-hint={avatar.imageHint} />}
-                                            <div className="flex-1">
-                                                <p className="font-semibold">{inspector.name}</p>
-                                                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                                    <Star className="h-3 w-3 fill-primary text-primary" /> {inspector.rating}
-                                                    <Separator orientation="vertical" className="h-4" />
-                                                    <MapPin className="h-3 w-3" /> {inspector.location.name}
-                                                </div>
-                                                <div className="flex flex-wrap gap-1 mt-2">
-                                                    {inspector.certifications.slice(0, 2).map(cert => (
-                                                        <Badge key={cert.id} variant="secondary" className="text-xs font-normal gap-1"><ShieldCheck className="h-3 w-3"/>{cert.name.substring(0, 25)}...</Badge>
-                                                    ))}
+                                    <Dialog key={inspector.id} onOpenChange={(open) => !open && setSelectedInspector(null)}>
+                                        <DialogTrigger asChild>
+                                            <div 
+                                                onClick={() => setSelectedInspector(inspector)}
+                                                className="p-4 rounded-lg border bg-background/50 cursor-pointer hover:bg-muted/50 transition-colors"
+                                            >
+                                                <div className="flex items-start gap-4">
+                                                    {avatar && <Image src={avatar.imageUrl} alt={inspector.name} width={48} height={48} className="rounded-full" data-ai-hint={avatar.imageHint} />}
+                                                    <div className="flex-1">
+                                                        <p className="font-semibold">{inspector.name}</p>
+                                                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                                            <Star className="h-3 w-3 fill-primary text-primary" /> {inspector.rating}
+                                                            <Separator orientation="vertical" className="h-4" />
+                                                            <MapPin className="h-3 w-3" /> {inspector.location.name}
+                                                        </div>
+                                                        <div className="flex flex-wrap gap-1 mt-2">
+                                                            {inspector.certifications.slice(0, 2).map(cert => (
+                                                                <Badge key={cert.id} variant="secondary" className="text-xs font-normal gap-1"><ShieldCheck className="h-3 w-3"/>{cert.name.substring(0, 25)}...</Badge>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                    <Button variant="secondary" size="sm" onClick={(e) => { e.stopPropagation(); openMessagingDialog(inspector.id, inspector.name);}}>
+                                                        <MessageSquare className="mr-2 h-3 w-3" />Message
+                                                    </Button>
                                                 </div>
                                             </div>
-                                            <div className="flex flex-col gap-2">
-                                                <Button variant="outline" size="sm">Dispatch</Button>
-                                                <Button variant="secondary" size="sm" onClick={() => openMessagingDialog(inspector.id, inspector.name)}>
-                                                    <MessageSquare className="mr-2 h-3 w-3" />Message
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    </div>
+                                        </DialogTrigger>
+                                        <DialogContent className="sm:max-w-md bg-card/80 backdrop-blur-sm">
+                                            {selectedInspector && <InspectorProfileModal inspector={selectedInspector} />}
+                                        </DialogContent>
+                                    </Dialog>
                                 )})}
                             </CardContent>
                         </ScrollArea>
