@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Building, Users, ArrowRight, PlusCircle, UserPlus, Search, Globe, Lock, Briefcase, MapPin, Star, ShieldCheck, Phone, Mail, Clock, ListFilter, FileText, MessageSquare, User } from 'lucide-react';
@@ -22,11 +21,14 @@ import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { useMessagingStore } from '@/lib/stores/messaging-store';
+
 
 export default function TeamDispatchPage() {
   const availableInspectors = mockInspectors.filter(i => i.onCall);
   const unassignedJobs = mockJobs.filter(j => j.status === 'Unassigned');
   const activeJobs = mockJobs.filter(j => j.status !== 'Unassigned' && j.status !== 'Completed');
+  const openMessagingDialog = useMessagingStore((state) => state.openDialog);
 
   return (
     <div className="mx-auto w-full max-w-full px-4 lg:px-6 h-[calc(100vh_-_9rem)] overflow-hidden">
@@ -119,8 +121,8 @@ export default function TeamDispatchPage() {
                                             </div>
                                             <div className="flex flex-col gap-2">
                                                 <Button variant="outline" size="sm">Dispatch</Button>
-                                                <Button variant="secondary" size="sm" asChild>
-                                                    <Link href="/messaging"><MessageSquare className="mr-2 h-3 w-3" />Message</Link>
+                                                <Button variant="secondary" size="sm" onClick={() => openMessagingDialog(inspector.id, inspector.name)}>
+                                                    <MessageSquare className="mr-2 h-3 w-3" />Message
                                                 </Button>
                                             </div>
                                         </div>
@@ -173,8 +175,8 @@ export default function TeamDispatchPage() {
                                                 <div className="flex items-center gap-2">
                                                     <Button variant="outline" size="sm">View Job</Button>
                                                     {inspector && (
-                                                        <Button variant="secondary" size="sm" asChild>
-                                                            <Link href="/messaging"><MessageSquare className="mr-2 h-3 w-3" />Message</Link>
+                                                        <Button variant="secondary" size="sm" onClick={() => openMessagingDialog(inspector.id, inspector.name)}>
+                                                            <MessageSquare className="mr-2 h-3 w-3" />Message
                                                         </Button>
                                                     )}
                                                 </div>

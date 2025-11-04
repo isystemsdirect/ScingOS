@@ -1,20 +1,11 @@
-
 'use client';
-import { Channel, ChannelHeader, ChannelList, MessageInput, MessageList, Thread, Window } from 'stream-chat-react';
-import 'stream-chat-react/dist/css/index.css';
+import { Loader2 } from 'lucide-react';
 
 const MessagingPage = () => {
     return (
-        <div className="h-full">
-            <ChannelList />
-            <Channel>
-                <Window>
-                    <ChannelHeader />
-                    <MessageList />
-                    <MessageInput />
-                </Window>
-                <Thread />
-            </Channel>
+        <div className="h-full flex items-center justify-center text-muted-foreground">
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            <span>Loading Chat...</span>
         </div>
     );
 };

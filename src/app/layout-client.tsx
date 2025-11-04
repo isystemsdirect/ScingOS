@@ -1,4 +1,3 @@
-
 'use client';
 
 import Link from "next/link";
@@ -73,6 +72,7 @@ import { NewsWidget } from "@/components/news-widget";
 import { cn } from "@/lib/utils";
 import { ScingAI } from "@/components/ScingAI";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { MessagingDialog } from "@/components/messaging-dialog";
 
 
 export default function AppLayout({
@@ -429,11 +429,12 @@ export default function AppLayout({
             </div>
           </header>
           <FlashNotificationBar />
-          <main className={cn("flex-1 overflow-y-auto p-4 sm:px-6 sm:py-6 rounded-xl", 
+          <main className={cn("flex-1 overflow-y-auto p-4 sm:px-6 sm:py-6 rounded-xl bg-[radial-gradient(ellipse_at_center,hsl(var(--card)/0.1)_0%,transparent_70%)]", 
             pathname === '/messaging' && 'p-0 sm:p-0'
           )}>
             {children}
           </main>
+          <MessagingDialog />
         </div>
       </div>
     </TooltipProvider>
