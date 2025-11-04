@@ -36,8 +36,6 @@ import {
 } from "lucide-react";
 import { useRouter, usePathname } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
-import { StreamChat } from 'stream-chat';
-import { Chat, LoadingIndicator } from 'stream-chat-react';
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -73,7 +71,6 @@ import { WeatherWidget } from "@/components/weather-widget";
 import { NewsWidget } from "@/components/news-widget";
 import { cn } from "@/lib/utils";
 import { ScingAI } from "@/components/ScingAI";
-import { chatClient } from '@/lib/chat-client';
 
 
 export default function AppLayout({
@@ -90,7 +87,6 @@ export default function AppLayout({
 
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
-  const [isChatConnected, setIsChatConnected] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
 
@@ -99,9 +95,8 @@ export default function AppLayout({
     const mockUserId = 'mock-dev-user';
     setUserId(mockUserId);
     
-    // Simulate loading completion without chat connection
+    // Simulate loading completion
     const timer = setTimeout(() => {
-        setIsChatConnected(true); // Faking connection to proceed
         setIsLoading(false);
     }, 500);
 
@@ -147,7 +142,7 @@ export default function AppLayout({
        <div className="flex h-screen w-full items-center justify-center bg-background">
           <div className="flex flex-col items-center gap-4">
             <Logo isLoginPage={true} />
-            <LoadingIndicator />
+            <p className="text-muted-foreground">Loading Ecosystem...</p>
           </div>
        </div>
     )
@@ -365,7 +360,13 @@ export default function AppLayout({
               </nav>
             </SheetContent>
           </Sheet>
-          <div className="w-full flex-1">
+          <div className="flex-1 flex items-center gap-2">
+            {userId && (
+              <ScingAI 
+                userId={userId} 
+                accessKey={process.env.NEXT_PUBLIC_PICOVOICE_ACCESS_KEY || ''} 
+              />
+            )}
              <AiSearchDialog />
           </div>
           
@@ -391,19 +392,9 @@ export default function AppLayout({
         )}>
           {children}
         </main>
-        {userId && (
-          <ScingAI 
-            userId={userId} 
-            accessKey={process.env.NEXT_PUBLIC_PICOVOICE_ACCESS_KEY || ''} 
-          />
-        )}
       </div>
     </div>
   );
   
-  if (chatClient && isChatConnected) {
-    return <Chat client={chatClient}>{renderContent()}</Chat>
-  }
-
   return renderContent();
 }

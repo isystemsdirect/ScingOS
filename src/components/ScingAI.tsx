@@ -1,3 +1,4 @@
+
 'use client';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useWakeWordDetection } from '@/hooks/useWakeWordDetection';
@@ -10,6 +11,9 @@ import { getFirebaseFunctions } from '@/lib/firebase';
 import { httpsCallable } from 'firebase/functions';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
+import { Bot, Mic, Loader2 } from 'lucide-react';
+import { Button } from './ui/button';
+import { cn } from '@/lib/utils';
 
 interface ScingAIAutonomousProps {
   userId: string;
@@ -372,58 +376,24 @@ export const ScingAI: React.FC<ScingAIAutonomousProps> = ({
   }, []);
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
-      {/* Enhanced Scing Interface */}
-      <motion.div
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        className="relative"
+    <div className="relative">
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={initializeAutonomous}
+        className={cn(
+          "rounded-full h-8 w-8 transition-colors",
+          isActive && "bg-primary/20 text-primary",
+          currentMode === 'listening' && 'animate-pulse'
+        )}
       >
-        {/* Main Control Button */}
-        <button
-          onClick={initializeAutonomous}
-          className={`w-20 h-20 rounded-full shadow-2xl transition-all duration-300 ${
-            isActive 
-              ? 'bg-gradient-to-br from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700' 
-              : 'bg-gradient-to-br from-gray-400 to-gray-600 hover:from-gray-500 hover:to-gray-700'
-          }`}
-        >
-          <div className="w-full h-full rounded-full flex items-center justify-center text-white">
-            {currentMode === 'processing' || currentMode === 'executing' ? (
-              <div className="w-10 h-10 border-4 border-white border-t-transparent rounded-full animate-spin" />
-            ) : (
-              <div className="text-center">
-                <div className="text-2xl mb-1">🤖</div>
-                <div className="text-xs font-semibold">SCING</div>
-              </div>
-            )}
-          </div>
-        </button>
-
-        {/* Status Ring */}
-        {isActive && (
-          <div className={`absolute inset-0 rounded-full border-4 ${
-            conversationActive ? 'border-green-400 animate-pulse' : 'border-blue-400'
-          }`} />
+        {currentMode === 'processing' || currentMode === 'executing' ? (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        ) : (
+          <Bot className="h-4 w-4" />
         )}
-
-        {/* Mode Indicator */}
-        {isActive && (
-          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-75 text-white px-2 py-1 rounded text-xs whitespace-nowrap">
-            {currentMode === 'listening' && '🎤 Listening'}
-            {currentMode === 'processing' && '🤔 Processing'}
-            {currentMode === 'executing' && '🎮 Controlling GUI'}
-            {currentMode === 'idle' && '👂 Waiting for "Hey Scing"'}
-          </div>
-        )}
-
-        {/* Autonomous Capabilities Indicator */}
-        {isActive && (
-          <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
-            🎛️ Full GUI Control
-          </div>
-        )}
-      </motion.div>
+        <span className="sr-only">Toggle Scing AI Automaton</span>
+      </Button>
     </div>
   );
 };
