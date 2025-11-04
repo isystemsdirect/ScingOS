@@ -1,4 +1,3 @@
-
 'use client';
 
 import Link from "next/link";
@@ -33,6 +32,7 @@ import {
   Map,
   Shield,
   FileText,
+  Video,
 } from "lucide-react";
 import { useRouter, usePathname } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
@@ -71,7 +71,6 @@ import { WeatherWidget } from "@/components/weather-widget";
 import { NewsWidget } from "@/components/news-widget";
 import { cn } from "@/lib/utils";
 import { ScingAI } from "@/components/ScingAI";
-import { chatClient } from "@/lib/chat-client";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 
@@ -191,6 +190,10 @@ export default function AppLayout({
                  <NavLink href="/teams">
                   <Users className="h-4 w-4" />
                   Teams & Dispatch
+                </NavLink>
+                <NavLink href="/conference-rooms">
+                    <Video className="h-4 w-4" />
+                    Conference Rooms
                 </NavLink>
                 
                 <Separator className="my-2 bg-sidebar-border" />
@@ -321,6 +324,10 @@ export default function AppLayout({
                    <NavLink href="/teams" isMobile>
                     <Users className="h-5 w-5" />
                     Teams & Dispatch
+                  </NavLink>
+                  <NavLink href="/conference-rooms" isMobile>
+                    <Video className="h-5 w-5" />
+                    Conference Rooms
                   </NavLink>
                    <Separator className="my-2 bg-sidebar-border" />
                   <NavLink href="/maps-weather" isMobile>

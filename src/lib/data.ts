@@ -1,5 +1,4 @@
-
-import type { Inspection, Inspector, Device, SubscriptionPlan, Client, MarketplaceService, MarketplaceIntegration } from './types';
+import type { Inspection, Inspector, Device, SubscriptionPlan, Client, MarketplaceService, MarketplaceIntegration, Team, ConferenceRoom } from './types';
 import { PlaceHolderImages } from './placeholder-images';
 
 const getImageUrl = (id: string) => PlaceHolderImages.find(p => p.id === id)?.imageUrl || '';
@@ -378,5 +377,60 @@ export const mockNews = [
         url: "#",
         imageUrl: "https://picsum.photos/seed/news-materials/150/150",
         imageHint: "construction materials"
+    }
+];
+
+export const mockTeamsData: Record<string, Team> = {
+    'team-doe-inspections': {
+        id: 'team-doe-inspections',
+        name: 'Doe Inspections LLC',
+        description: 'Primary residential and commercial inspection team.',
+        memberCount: 4,
+        members: mockInspectors.slice(0, 4),
+        docs: [
+            { id: 'doc-1', name: 'Residential Inspection Checklist v2.3.pdf', type: 'pdf', lastUpdated: '2023-11-02' },
+            { id: 'doc-2', name: 'Commercial HVAC Inspection Guide.docx', type: 'doc', lastUpdated: '2023-10-15' },
+        ],
+        adminActions: [
+            { id: 'log-1', admin: 'John Doe', action: 'Updated member role for Jane Smith to "Lead Inspector".', timestamp: '2023-11-03 10:05 AM' },
+        ]
+    },
+    'team-special-projects': {
+        id: 'team-special-projects',
+        name: 'Special Projects Unit',
+        description: 'Focused on large-scale industrial and infrastructure projects.',
+        memberCount: 2,
+        members: [mockInspectors[2], mockInspectors[3]],
+        docs: [
+            { id: 'doc-3', name: 'Bridge Inspection Protocol (DOT-77B).pdf', type: 'pdf', lastUpdated: '2023-09-01' },
+        ],
+        adminActions: []
+    },
+};
+
+export const mockConferenceRooms: ConferenceRoom[] = [
+    {
+        id: 'conf-q4-planning',
+        name: 'Q4 Executive Planning',
+        description: 'Review of Q3 performance and strategic planning for Q4.',
+        scheduledTime: '2023-10-28T14:00:00Z',
+        status: 'Live',
+        participants: mockInspectors.slice(0, 3)
+    },
+    {
+        id: 'conf-project-alpha-debrief',
+        name: 'Project Alpha Debrief',
+        description: 'Post-mortem and final report review for Project Alpha.',
+        scheduledTime: '2023-10-29T10:00:00Z',
+        status: 'Scheduled',
+        participants: [mockInspectors[1], mockInspectors[2], mockInspectors[3]]
+    },
+    {
+        id: 'conf-new-tech-demo',
+        name: 'New Technology Demo',
+        description: 'Demonstration of the LARI-PRISM spectrometer capabilities.',
+        scheduledTime: '2023-11-01T11:00:00Z',
+        status: 'Scheduled',
+        participants: mockInspectors.slice(0, 5)
     }
 ];

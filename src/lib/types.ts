@@ -136,3 +136,22 @@ export type MarketplaceIntegration = {
   price: string;
   vendor: string;
 };
+
+export type Team = {
+  id: string;
+  name: string;
+  description: string;
+  memberCount: number;
+  members: Inspector[];
+  docs: { id: string, name: string, type: string, lastUpdated: string }[];
+  adminActions: { id: string, admin: string, action: string, timestamp: string }[];
+};
+
+export type ConferenceRoom = {
+    id: string;
+    name: string;
+    description: string;
+    scheduledTime: string;
+    status: 'Live' | 'Scheduled' | 'Completed';
+    participants: Inspector[];
+}

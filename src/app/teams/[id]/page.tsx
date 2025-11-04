@@ -1,4 +1,3 @@
-
 'use client';
 
 import Link from "next/link";
@@ -14,7 +13,8 @@ import {
   MoreVertical,
   Bell,
   CheckCircle,
-  Briefcase
+  Briefcase,
+  PlusCircle,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -40,38 +40,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { mockInspectors } from "@/lib/data";
+import { mockInspectors, mockTeamsData } from "@/lib/data";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Separator } from "@/components/ui/separator";
 
-// Mock data based on your architecture
-const mockTeamsData = {
-    'team-doe-inspections': {
-        id: 'team-doe-inspections',
-        name: 'Doe Inspections LLC',
-        description: 'Primary residential and commercial inspection team.',
-        members: mockInspectors.slice(0, 4),
-        docs: [
-            { id: 'doc-1', name: 'Residential Inspection Checklist v2.3.pdf', type: 'pdf', lastUpdated: '2023-11-02' },
-            { id: 'doc-2', name: 'Commercial HVAC Inspection Guide.docx', type: 'doc', lastUpdated: '2023-10-15' },
-        ],
-        adminActions: [
-            { id: 'log-1', admin: 'John Doe', action: 'Updated member role for Jane Smith to "Lead Inspector".', timestamp: '2023-11-03 10:05 AM' },
-        ]
-    },
-    'team-special-projects': {
-        id: 'team-special-projects',
-        name: 'Special Projects Unit',
-        description: 'Focused on large-scale industrial and infrastructure projects.',
-        members: [mockInspectors[2], mockInspectors[3]],
-        docs: [
-            { id: 'doc-3', name: 'Bridge Inspection Protocol (DOT-77B).pdf', type: 'pdf', lastUpdated: '2023-09-01' },
-        ],
-        adminActions: []
-    },
-};
-
-// Assume the current user is an admin
+// Assume the current user is an admin for demo purposes
 const currentUserRole = 'Admin';
 
 export default function TeamCentralHubPage() {
@@ -96,17 +69,22 @@ export default function TeamCentralHubPage() {
           <h1 className="flex-1 shrink-0 whitespace-nowrap text-3xl font-bold tracking-tight sm:grow-0">
             {team.name}
           </h1>
-          <Button>Send Announcement</Button>
+          <Button variant="outline"><Bell className="mr-2 h-4 w-4"/> Send Announcement</Button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-[240px_1fr] gap-8 items-start">
             {/* Action Sidebar */}
-            <nav className="sticky top-20 flex flex-col gap-2">
-                <Button variant="ghost" className="justify-start gap-2"><Users className="h-4 w-4"/> Team Roster</Button>
-                <Button variant="ghost" className="justify-start gap-2"><FileText className="h-4 w-4"/> Project Docs</Button>
-                <Button variant="ghost" className="justify-start gap-2"><MessageSquare className="h-4 w-4"/> Team Chat</Button>
+            <nav className="sticky top-20 flex flex-col gap-2 bg-card/40 p-2 rounded-lg border">
+                <h3 className="px-3 py-2 text-xs font-semibold text-muted-foreground tracking-wider uppercase">Team Hub</h3>
+                <Button variant="ghost" className="justify-start gap-3"><Users className="h-4 w-4"/> Team Roster</Button>
+                <Button variant="ghost" className="justify-start gap-3"><FileText className="h-4 w-4"/> Project Docs</Button>
+                <Button variant="ghost" className="justify-start gap-3"><MessageSquare className="h-4 w-4"/> Team Chat</Button>
                 {currentUserRole === 'Admin' && (
-                    <Button variant="ghost" className="justify-start gap-2"><Shield className="h-4 w-4"/> Admin Panel</Button>
+                    <>
+                    <Separator className="my-2" />
+                    <h3 className="px-3 py-2 text-xs font-semibold text-muted-foreground tracking-wider uppercase">Admin</h3>
+                    <Button variant="ghost" className="justify-start gap-3"><Shield className="h-4 w-4"/> Admin Panel</Button>
+                    </>
                 )}
             </nav>
 
@@ -142,7 +120,7 @@ export default function TeamCentralHubPage() {
                                     </div>
                                 </TableCell>
                                 <TableCell>
-                                    <Badge variant={role === 'Admin' ? 'default' : 'secondary'} className="gap-1">
+                                    <Badge variant={role === 'Admin' ? 'pro' : 'secondary'} className="gap-1">
                                     {role === 'Admin' && <Crown className="h-3 w-3" />}
                                     {role}
                                     </Badge>
@@ -183,7 +161,7 @@ export default function TeamCentralHubPage() {
                         {team.docs.length > 0 ? (
                            <ul className="space-y-3">
                                 {team.docs.map(doc => (
-                                    <li key={doc.id} className="flex items-center justify-between p-3 rounded-md border bg-background/50">
+                                    <li key={doc.id} className="flex items-center justify-between p-3 rounded-md border bg-background/50 hover:bg-muted/50 transition-colors">
                                         <div>
                                             <p className="font-medium">{doc.name}</p>
                                             <p className="text-xs text-muted-foreground">Last updated: {doc.lastUpdated}</p>
@@ -205,7 +183,10 @@ export default function TeamCentralHubPage() {
                         <CardDescription>Real-time messaging for members of {team.name}.</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-center text-muted-foreground py-8">Team chat component coming soon.</p>
+                        <div className="text-center text-muted-foreground py-8">
+                            <p>Real-time messaging service is initializing...</p>
+                            <p className="text-xs">(Chat component will appear here)</p>
+                        </div>
                     </CardContent>
                 </Card>
 
@@ -214,7 +195,7 @@ export default function TeamCentralHubPage() {
                     <Card className="bg-card/60 backdrop-blur-sm border-primary/30">
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2 text-primary"><Shield className="h-5 w-5"/> Admin Panel</CardTitle>
-                            <CardDescription>Tools for managing this team.</CardDescription>
+                            <CardDescription>High-level tools for managing this team.</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-6">
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -226,10 +207,10 @@ export default function TeamCentralHubPage() {
                             <div>
                                 <h4 className="font-semibold mb-2">Admin Action Log</h4>
                                 {team.adminActions.length > 0 ? (
-                                    <ul className="space-y-2 text-sm text-muted-foreground">
+                                    <ul className="space-y-2 text-sm text-muted-foreground max-h-40 overflow-y-auto">
                                         {team.adminActions.map(log => (
                                             <li key={log.id} className="flex gap-2">
-                                                <span className="font-mono text-xs">[{log.timestamp}]</span>
+                                                <span className="font-mono text-xs opacity-70">[{log.timestamp}]</span>
                                                 <span>{log.action}</span>
                                             </li>
                                         ))}
