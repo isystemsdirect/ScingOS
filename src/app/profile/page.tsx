@@ -15,6 +15,7 @@ import { Briefcase, Calendar, Edit, Mail, MapPin, Phone, Star, ShieldCheck, Mess
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ReviewForm } from "@/components/review-form";
+import { Label } from "@/components/ui/label";
 
 export default function ProfilePage() {
   const user = mockInspectors[0];
@@ -79,8 +80,8 @@ export default function ProfilePage() {
                           </div>
                       </div>
 
-                      <div className="grid gap-4">
-                          <h3 className="text-xl font-semibold">About Me</h3>
+                      <div className="grid gap-2">
+                          <Label>About Me</Label>
                           <p className="text-sm text-muted-foreground">{user.bio}</p>
                       </div>
                       
@@ -88,6 +89,7 @@ export default function ProfilePage() {
 
                       <div className="grid gap-4">
                           <h3 className="text-xl font-semibold">Contact Information</h3>
+                           <p className="text-sm text-muted-foreground -mt-3">Your primary contact details for client communication.</p>
                           <div className="grid md:grid-cols-2 gap-4 text-sm">
                               <div className="flex items-center gap-3">
                                   <Mail className="h-5 w-5 text-muted-foreground" />
@@ -108,6 +110,7 @@ export default function ProfilePage() {
 
                       <div>
                           <h3 className="text-xl font-semibold">Certifications</h3>
+                           <p className="text-sm text-muted-foreground -mt-1 mb-4">A list of your verified professional credentials.</p>
                           <div className="space-y-4 mt-4">
                           {user.certifications.map((cert) => (
                               <div key={cert.id} className="flex items-start gap-4">
@@ -143,7 +146,7 @@ export default function ProfilePage() {
                    <Card>
                       <CardHeader>
                           <CardTitle className="flex items-center gap-2"><MessageSquare className="h-5 w-5"/>Leave a Review</CardTitle>
-                          <CardDescription>Share your experience working with {user.name}.</CardDescription>
+                          <CardDescription>Share your experience working with {user.name}. Your feedback helps maintain a high-quality professional network.</CardDescription>
                       </CardHeader>
                       <CardContent>
                           <ReviewForm revieweeId={user.id} revieweeType="contractor" />

@@ -127,20 +127,24 @@ export default function WorkstationPage() {
                     <div className="grid grid-cols-2 gap-4">
                         <div className="grid gap-3">
                             <Label htmlFor="name">Full Name</Label>
+                            <p className="text-sm text-muted-foreground -mt-1">Your legal name, used for verification.</p>
                             <Input id="name" type="text" className="w-full" defaultValue={user.name} />
                         </div>
                         <div className="grid gap-3">
                             <Label htmlFor="email">Email</Label>
+                             <p className="text-sm text-muted-foreground -mt-1">Your primary contact and login email.</p>
                             <Input id="email" type="email" className="w-full" defaultValue="john.doe@scingular.com" />
                         </div>
                     </div>
                     <div className="grid gap-3">
                         <Label htmlFor="bio">Professional Bio</Label>
+                        <p className="text-sm text-muted-foreground -mt-1">A short summary of your experience. This appears on your public profile.</p>
                         <Textarea id="bio" defaultValue={user.bio} placeholder="Tell us about your experience, specialties, and what makes you a great inspector." />
                     </div>
                     <Separator />
                     <div className="grid gap-6">
                         <h4 className="text-lg font-semibold">Website & Socials</h4>
+                        <p className="text-sm text-muted-foreground -mt-5">Link to your professional presence on the web.</p>
                         <div className="grid gap-3">
                             <Label htmlFor="website">Website</Label>
                             <div className="relative">
@@ -166,10 +170,8 @@ export default function WorkstationPage() {
                     <Separator />
                     <div className="grid gap-3">
                         <Label htmlFor="profile-picture">Profile Selfie</Label>
+                        <p className="text-sm text-muted-foreground -mt-1">For verification, please upload a clear, forward-facing photo of yourself. This helps build trust in the marketplace.</p>
                         <Input id="profile-picture" type="file" accept="image/*" />
-                        <p className="text-xs text-muted-foreground">
-                            For verification, please upload a clear photo of your face. Photos without a detectable face will be rejected.
-                        </p>
                     </div>
                 </div>
                 </CardContent>
@@ -359,6 +361,7 @@ export default function WorkstationPage() {
                          <Separator />
                          <div>
                             <h4 className="text-lg font-semibold">Other Connections</h4>
+                            <p className="text-sm text-muted-foreground">Connect other tools to expand your workflow.</p>
                              <div className="grid gap-4 mt-4">
                                 <div className="border rounded-lg p-4 flex items-center">
                                     <Calendar className="h-6 w-6 mr-4 text-muted-foreground" />
@@ -384,10 +387,14 @@ export default function WorkstationPage() {
                     <CardContent className="grid gap-6">
                         <div className="grid gap-3">
                             <Label htmlFor="email-sec">Email</Label>
+                            <p className="text-sm text-muted-foreground -mt-1">This is the email address associated with your account.</p>
                             <Input id="email-sec" type="email" className="w-full" defaultValue="john.doe@scingular.com" disabled />
                         </div>
                         <div className="flex items-center justify-between">
-                            <p className="text-sm font-medium">Password</p>
+                            <div>
+                                <p className="text-sm font-medium">Password</p>
+                                <p className="text-sm text-muted-foreground">It's a good practice to use a strong, unique password.</p>
+                            </div>
                             <Button variant="outline">Change Password</Button>
                         </div>
                         <Separator />
@@ -423,6 +430,7 @@ export default function WorkstationPage() {
                     </div>
                     <div className="grid gap-3">
                         <Label htmlFor="mic-device">Microphone Input</Label>
+                        <p className="text-sm text-muted-foreground -mt-1">Select the audio device for voice commands.</p>
                         <Select>
                             <SelectTrigger id="mic-device">
                                 <SelectValue placeholder="Select a microphone" />
@@ -439,6 +447,7 @@ export default function WorkstationPage() {
                     <Separator />
                     <div className="grid gap-6">
                             <h4 className="text-lg font-semibold">Connectivity</h4>
+                             <p className="text-sm text-muted-foreground -mt-5">Manage how Scing connects to networks.</p>
                             <div className="flex items-center justify-between rounded-lg border p-4">
                                 <div>
                                     <h5 className="font-medium">Prioritize Stable WiFi Connection</h5>
@@ -461,6 +470,7 @@ export default function WorkstationPage() {
                     <Separator />
                     <div className="grid gap-3">
                         <Label htmlFor="scing-voice">Scing Voice Response</Label>
+                        <p className="text-sm text-muted-foreground -mt-1">Choose the voice for Scing's audio feedback.</p>
                         <Select defaultValue="algenib">
                             <SelectTrigger id="scing-voice">
                                 <SelectValue placeholder="Select a voice" />
@@ -475,6 +485,7 @@ export default function WorkstationPage() {
                     </div>
                     <div className="grid gap-3">
                         <Label htmlFor="recognition-sensitivity">Voice Recognition Sensitivity</Label>
+                        <p className="text-sm text-muted-foreground -mt-1">Adjust how sensitive the voice recognition is to your commands.</p>
                         <div className="flex items-center gap-4">
                             <span className="text-xs text-muted-foreground">Less</span>
                             <Slider id="recognition-sensitivity" defaultValue={[50]} max={100} step={1} />
@@ -534,6 +545,7 @@ export default function WorkstationPage() {
                         </div>
                         <div className="grid gap-3">
                             <Label htmlFor="marketplace-notifications">Marketplace Notification Urgency</Label>
+                            <p className="text-sm text-muted-foreground -mt-1">How often do you want to be notified about new jobs?</p>
                             <Select defaultValue="instant">
                                 <SelectTrigger id="marketplace-notifications">
                                     <SelectValue placeholder="Select notification preference" />
@@ -554,8 +566,9 @@ export default function WorkstationPage() {
                         <CardDescription>Define your geographical work zones to get relevant job requests.</CardDescription>
                     </CardHeader>
                     <CardContent className="grid gap-6">
-                        <div className="grid gap-4">
+                        <div className="grid gap-3">
                             <Label htmlFor="primary-location">Primary Location / Home Base</Label>
+                            <p className="text-sm text-muted-foreground -mt-1">The central point of your service area.</p>
                             <div className="relative">
                                 <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                                 <Input id="primary-location" defaultValue="Anytown, CA" className="pl-9" />
@@ -563,6 +576,7 @@ export default function WorkstationPage() {
                         </div>
                         <div className="grid gap-3">
                             <Label htmlFor="service-radius">Service Radius: 50 miles</Label>
+                             <p className="text-sm text-muted-foreground -mt-1">The maximum distance you're willing to travel from your primary location.</p>
                              <Slider id="service-radius" defaultValue={[50]} max={100} step={5} />
                               <div className="flex justify-between text-xs text-muted-foreground">
                                 <span>5 mi</span>
@@ -571,6 +585,7 @@ export default function WorkstationPage() {
                         </div>
                          <div className="grid gap-3">
                             <Label>Custom Zones</Label>
+                             <p className="text-sm text-muted-foreground -mt-1">Define specific counties, cities, or ZIP codes you serve.</p>
                             <div className="flex flex-wrap gap-2">
                                <Badge variant="secondary">Someville County</Badge>
                                <Badge variant="secondary">Zip: 90210-90214</Badge>

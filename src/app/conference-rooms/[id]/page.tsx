@@ -53,7 +53,7 @@ export default function ConferenceRoomHub() {
           <Link href="/conference-rooms">
             <Button variant="outline" size="icon" className="h-7 w-7">
               <ChevronLeft className="h-4 w-4" />
-              <span className="sr-only">Back to Conference Rooms</span>
+              <span className="sr-only">Back to Meetings & Conferences</span>
             </Button>
           </Link>
           <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-bold tracking-tight sm:grow-0">
@@ -76,6 +76,7 @@ export default function ConferenceRoomHub() {
           <Card className="flex flex-col bg-card/60 backdrop-blur-sm h-full">
             <CardHeader>
                 <CardTitle>Meeting Discussion</CardTitle>
+                <CardDescription>This is the central chat for all meeting participants. Files and images shared here are visible to everyone in the room.</CardDescription>
             </CardHeader>
             <ScrollArea className="flex-1 px-6">
                 <div className="space-y-6">
@@ -131,7 +132,10 @@ export default function ConferenceRoomHub() {
           <div className="flex flex-col gap-6 h-full overflow-hidden">
              <Card className="bg-card/60 backdrop-blur-sm">
                 <CardHeader className="flex-row items-center justify-between">
-                    <CardTitle className="flex items-center gap-2"><Users className="h-5 w-5"/> Participants</CardTitle>
+                    <div>
+                        <CardTitle className="flex items-center gap-2"><Users className="h-5 w-5"/> Participants</CardTitle>
+                        <CardDescription className="mt-1">View and manage meeting attendees.</CardDescription>
+                    </div>
                     <div className="flex items-center gap-2">
                       <p className="text-sm text-muted-foreground">{room.participants.length} members</p>
                       <Button variant="outline" size="icon" className="h-7 w-7">
@@ -165,6 +169,7 @@ export default function ConferenceRoomHub() {
              <Card className="flex-1 flex flex-col bg-card/60 backdrop-blur-sm">
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2"><FileText className="h-5 w-5"/> Shared Documents</CardTitle>
+                    <CardDescription>Access all documents shared during this meeting.</CardDescription>
                 </CardHeader>
                 <ScrollArea className="flex-1">
                     <CardContent>
