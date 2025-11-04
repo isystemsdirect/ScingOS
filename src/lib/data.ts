@@ -1,5 +1,6 @@
 
-import type { Inspection, Inspector, Device, SubscriptionPlan, Client, MarketplaceService, MarketplaceIntegration, Team, ConferenceRoom } from './types';
+
+import type { Inspection, Inspector, Device, SubscriptionPlan, Client, MarketplaceService, MarketplaceIntegration, Team, ConferenceRoom, Job } from './types';
 import { PlaceHolderImages } from './placeholder-images';
 
 const getImageUrl = (id: string) => PlaceHolderImages.find(p => p.id === id)?.imageUrl || '';
@@ -463,3 +464,37 @@ export const mockConferenceRooms: ConferenceRoom[] = [
         participants: mockInspectors.slice(0, 4)
     }
 ];
+
+
+export const mockJobs: Job[] = [
+    {
+        id: 'JOB-001',
+        clientId: 'CLI-001',
+        type: 'Envelope thermal imaging survey',
+        address: '10880 Malibu Point, Malibu, CA',
+        location: { lat: 34.033, lng: -118.805 },
+        priority: 'High',
+        requestTime: '2h ago',
+        status: 'Unassigned',
+    },
+    {
+        id: 'JOB-002',
+        clientId: 'CLI-003',
+        type: 'Phase I environmental site assessment (ESA)',
+        address: '18144 El Camino Real, Sunnyvale, CA',
+        location: { lat: 37.3688, lng: -122.0363 },
+        priority: 'Medium',
+        requestTime: '8h ago',
+        status: 'Unassigned',
+    },
+     {
+        id: 'JOB-003',
+        clientId: 'CLI-002',
+        type: 'Roof condition survey (low-slope/steep)',
+        address: '1007 Mountain Drive, Gotham City, NJ',
+        location: { lat: 40.7128, lng: -74.0060 },
+        priority: 'Low',
+        requestTime: '1d ago',
+        status: 'Unassigned',
+    }
+]

@@ -1,7 +1,7 @@
 
 'use client';
 
-import { Building, Users, ArrowRight, PlusCircle, UserPlus, Search, Globe, Lock } from 'lucide-react';
+import { Building, Users, ArrowRight, PlusCircle, UserPlus, Search, Globe, Lock, Briefcase, MapPin, Star, ShieldCheck, Phone, Mail, Clock } from 'lucide-react';
 import Link from 'next/link';
 
 import {
@@ -11,86 +11,117 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { mockTeamsData } from '@/lib/data';
+import { mockTeamsData, mockInspectors, mockClients, mockJobs } from '@/lib/data';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { MarketplaceMap } from '@/components/marketplace-map';
+import { Separator } from '@/components/ui/separator';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
-
-export default function TeamSelectionPage() {
-  const mockTeams = Object.values(mockTeamsData);
+export default function TeamDispatchPage() {
+  const availableInspectors = mockInspectors.filter(i => i.onCall);
+  const unassignedJobs = mockJobs.filter(j => j.status === 'Unassigned');
 
   return (
-    <div className="mx-auto w-full max-w-4xl px-4 lg:px-6">
-      <div className="flex flex-col gap-8">
+    <div className="mx-auto w-full max-w-full px-4 lg:px-6 h-[calc(100vh_-_9rem)] overflow-hidden">
+      <div className="flex flex-col gap-4 h-full">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold">Teams & Dispatch</h1>
-            <p className="text-muted-foreground">
-              Create, join, or manage your project teams.
+            <p className="text-muted-foreground max-w-3xl">
+              This is the operational command center for your field teams. View real-time locations, manage unassigned jobs, and dispatch available inspectors to new client requests.
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline">
-              <UserPlus className="mr-2 h-4 w-4" /> Join a Team
+            <Button asChild variant="outline">
+              <Link href="/teams/manage"><Users className="mr-2 h-4 w-4"/>Manage Teams</Link>
             </Button>
             <Button>
-              <PlusCircle className="mr-2 h-4 w-4" /> Create New Team
+              <PlusCircle className="mr-2 h-4 w-4" /> Create New Job
             </Button>
           </div>
         </div>
-
-        <div className="relative">
-          <Search className="absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            type="search"
-            placeholder="Search for public teams or members with Scing AI..."
-            className="w-full rounded-full bg-card/60 backdrop-blur-sm pl-12 h-12 text-base"
-          />
-        </div>
         
-        <div className="grid gap-6">
-            {mockTeams.map((team) => (
-                <Link href={`/teams/${team.id}`} key={team.id}>
-                    <Card className="bg-card/60 backdrop-blur-sm hover:border-primary/80 hover:shadow-lg transition-all">
-                        <CardHeader>
-                            <div className="flex items-start justify-between">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center">
-                                        <Building className="w-6 h-6 text-primary" />
-                                    </div>
-                                    <div>
-                                        <CardTitle className="flex items-center gap-2">
-                                          {team.name}
-                                          <Badge variant={team.privacy === 'public' ? 'secondary' : 'outline'} className="gap-1.5">
-                                            {team.privacy === 'public' ? <Globe className="h-3 w-3"/> : <Lock className="h-3 w-3" />}
-                                            <span className="capitalize">{team.privacy}</span>
-                                          </Badge>
-                                        </CardTitle>
-                                        <CardDescription>{team.description}</CardDescription>
-                                    </div>
-                                </div>
-                                <ArrowRight className="h-5 w-5 text-muted-foreground" />
-                            </div>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="flex items-center space-x-2">
-                                <div className="flex -space-x-2 overflow-hidden">
-                                    {team.members.map(member => {
-                                        const avatar = PlaceHolderImages.find(p => p.id === member.imageHint);
-                                        return avatar ? <Image key={member.id} className="inline-block h-8 w-8 rounded-full ring-2 ring-background" src={avatar.imageUrl} alt={member.name} width={32} height={32} /> : null
-                                    })}
-                                </div>
-                                <span className="text-sm text-muted-foreground font-medium">{team.memberCount} Members</span>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </Link>
-            ))}
-        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full overflow-hidden">
+            <Card className="bg-card/60 backdrop-blur-sm h-full flex flex-col">
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2"><MapPin className="h-5 w-5 text-primary"/> Live Dispatch Map</CardTitle>
+                    <CardDescription>Real-time overview of available inspectors and incoming job requests.</CardDescription>
+                </CardHeader>
+                <CardContent className="flex-1 p-0 rounded-b-lg overflow-hidden">
+                    <MarketplaceMap 
+                        inspectors={availableInspectors}
+                        clients={[]} // Pass jobs as clients for now for map markers
+                    />
+                </CardContent>
+            </Card>
 
+            <div className="grid grid-rows-2 gap-6 h-full overflow-hidden">
+                <Card className="bg-card/60 backdrop-blur-sm h-full flex flex-col">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2"><Briefcase className="h-5 w-5 text-primary"/> Unassigned Jobs</CardTitle>
+                        <CardDescription>New inspection requests awaiting dispatch.</CardDescription>
+                    </CardHeader>
+                    <ScrollArea className="flex-1">
+                        <CardContent className="space-y-4">
+                            {unassignedJobs.map(job => (
+                                <div key={job.id} className="p-4 rounded-lg border bg-background/50 space-y-3">
+                                    <div className="flex justify-between items-start">
+                                        <div>
+                                            <p className="font-semibold">{job.type}</p>
+                                            <p className="text-sm text-muted-foreground">{job.address}</p>
+                                        </div>
+                                        <Badge variant={job.priority === 'High' ? 'destructive' : 'secondary'}>{job.priority}</Badge>
+                                    </div>
+                                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                                        <span>Client: {mockClients.find(c => c.id === job.clientId)?.name}</span>
+                                        <div className="flex items-center gap-1"><Clock className="h-3 w-3" /> Requested: {job.requestTime}</div>
+                                    </div>
+                                    <Button className="w-full">Assign Inspector</Button>
+                                </div>
+                            ))}
+                        </CardContent>
+                    </ScrollArea>
+                </Card>
+
+                <Card className="bg-card/60 backdrop-blur-sm h-full flex flex-col">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2"><Users className="h-5 w-5 text-primary"/> Available Inspectors</CardTitle>
+                        <CardDescription>Team members currently on-call and ready for dispatch.</CardDescription>
+                    </CardHeader>
+                     <ScrollArea className="flex-1">
+                        <CardContent className="space-y-4">
+                            {availableInspectors.map(inspector => {
+                                const avatar = PlaceHolderImages.find(p => p.id === inspector.imageHint);
+                                return (
+                                <div key={inspector.id} className="p-4 rounded-lg border bg-background/50">
+                                    <div className="flex items-start gap-4">
+                                        {avatar && <Image src={avatar.imageUrl} alt={inspector.name} width={48} height={48} className="rounded-full" />}
+                                        <div className="flex-1">
+                                            <p className="font-semibold">{inspector.name}</p>
+                                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                                <Star className="h-3 w-3 fill-primary text-primary" /> {inspector.rating}
+                                                <Separator orientation="vertical" className="h-4" />
+                                                <MapPin className="h-3 w-3" /> {inspector.location.name}
+                                            </div>
+                                             <div className="flex flex-wrap gap-1 mt-2">
+                                                {inspector.certifications.slice(0, 2).map(cert => (
+                                                    <Badge key={cert.id} variant="secondary" className="text-xs font-normal gap-1"><ShieldCheck className="h-3 w-3"/>{cert.name.substring(0, 25)}...</Badge>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <Button variant="outline" size="sm">Dispatch</Button>
+                                    </div>
+                                </div>
+                            )})}
+                        </CardContent>
+                    </ScrollArea>
+                </Card>
+            </div>
+        </div>
       </div>
     </div>
   );
