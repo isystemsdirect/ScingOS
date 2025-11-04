@@ -1,7 +1,7 @@
 
 'use client';
 
-import { Calendar, PlusCircle, Video } from 'lucide-react';
+import { Calendar, PlusCircle, Video, Users } from 'lucide-react';
 import Link from 'next/link';
 
 import {
@@ -29,9 +29,14 @@ export default function ConferenceRoomsPage() {
               Schedule and join cross-team executive meetings.
             </p>
           </div>
-          <Button>
+          <div className="flex items-center gap-2">
+            <Button variant="outline">
+                <Users className="mr-2 h-4 w-4" /> Join Conference
+            </Button>
+            <Button>
               <PlusCircle className="mr-2 h-4 w-4" /> Create Conference Room
-          </Button>
+            </Button>
+          </div>
         </div>
         
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -70,9 +75,6 @@ export default function ConferenceRoomsPage() {
                                 <Video className="mr-2 h-4 w-4" />
                                 {room.status === 'Live' ? 'Join Now' : 'Enter Room'}
                             </Link>
-                        </Button>
-                        <Button variant="outline" className="w-full">
-                            Join Conference
                         </Button>
                     </CardFooter>
                 </Card>
