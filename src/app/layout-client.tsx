@@ -429,7 +429,7 @@ export default function AppLayout({
             </div>
           </header>
           <FlashNotificationBar />
-          <main className={cn("flex-1 overflow-y-auto p-4 sm:px-6 sm:py-6 bg-black/[.05] rounded-xl", 
+          <main className={cn("flex-1 overflow-y-auto p-4 sm:px-6 sm:py-6 rounded-xl", 
             pathname === '/messaging' && 'p-0 sm:p-0'
           )}>
             {children}
