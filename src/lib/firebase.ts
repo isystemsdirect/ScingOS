@@ -26,18 +26,24 @@ function getFirebaseApp(): FirebaseApp | null {
     }
     if (app) return app;
 
-    if (getApps().length > 0) {
-        app = getApp();
+    try {
+        if (getApps().length > 0) {
+            app = getApp();
+            return app;
+        }
+        
+        if (!firebaseConfig.apiKey) {
+            // Silently fail if no API key, as some features might not need it.
+            // Components should handle the null return.
+            return null;
+        }
+        
+        app = initializeApp(firebaseConfig);
         return app;
-    }
-    
-    if (!firebaseConfig.apiKey) {
-        console.error('Firebase API key is not configured. Please check your .env file.');
+    } catch (error) {
+        console.error("Firebase initialization error:", error);
         return null;
     }
-    
-    app = initializeApp(firebaseConfig);
-    return app;
 }
 
 
