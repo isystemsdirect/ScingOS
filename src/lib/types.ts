@@ -141,6 +141,7 @@ export type Team = {
   id: string;
   name: string;
   description: string;
+  privacy: 'public' | 'private';
   memberCount: number;
   members: Inspector[];
   docs: { id: string, name: string, type: string, lastUpdated: string }[];
@@ -151,6 +152,7 @@ export type ConferenceRoom = {
     id: string;
     name: string;
     description: string;
+    privacy: 'public' | 'private';
     scheduledTime: string;
     status: 'Live' | 'Scheduled' | 'Completed';
     participants: Inspector[];

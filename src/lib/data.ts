@@ -1,3 +1,4 @@
+
 import type { Inspection, Inspector, Device, SubscriptionPlan, Client, MarketplaceService, MarketplaceIntegration, Team, ConferenceRoom } from './types';
 import { PlaceHolderImages } from './placeholder-images';
 
@@ -385,6 +386,7 @@ export const mockTeamsData: Record<string, Team> = {
         id: 'team-doe-inspections',
         name: 'Doe Inspections LLC',
         description: 'Primary residential and commercial inspection team.',
+        privacy: 'private',
         memberCount: 4,
         members: mockInspectors.slice(0, 4),
         docs: [
@@ -399,6 +401,7 @@ export const mockTeamsData: Record<string, Team> = {
         id: 'team-special-projects',
         name: 'Special Projects Unit',
         description: 'Focused on large-scale industrial and infrastructure projects.',
+        privacy: 'public',
         memberCount: 2,
         members: [mockInspectors[2], mockInspectors[3]],
         docs: [
@@ -413,6 +416,7 @@ export const mockConferenceRooms: ConferenceRoom[] = [
         id: 'conf-q4-planning',
         name: 'Q4 Executive Planning',
         description: 'Review of Q3 performance and strategic planning for Q4.',
+        privacy: 'private',
         scheduledTime: '2023-10-28T14:00:00Z',
         status: 'Live',
         participants: mockInspectors.slice(0, 3)
@@ -421,14 +425,16 @@ export const mockConferenceRooms: ConferenceRoom[] = [
         id: 'conf-project-alpha-debrief',
         name: 'Project Alpha Debrief',
         description: 'Post-mortem and final report review for Project Alpha.',
+        privacy: 'private',
         scheduledTime: '2023-10-29T10:00:00Z',
         status: 'Scheduled',
         participants: [mockInspectors[1], mockInspectors[2], mockInspectors[3]]
     },
     {
         id: 'conf-new-tech-demo',
-        name: 'New Technology Demo',
+        name: 'Public Tech Demo',
         description: 'Demonstration of the LARI-PRISM spectrometer capabilities.',
+        privacy: 'public',
         scheduledTime: '2023-11-01T11:00:00Z',
         status: 'Scheduled',
         participants: mockInspectors.slice(0, 5)

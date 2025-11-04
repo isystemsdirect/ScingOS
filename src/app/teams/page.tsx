@@ -1,7 +1,7 @@
 
 'use client';
 
-import { Building, Users, ArrowRight, PlusCircle, UserPlus } from 'lucide-react';
+import { Building, Users, ArrowRight, PlusCircle, UserPlus, Search, Globe, Lock } from 'lucide-react';
 import Link from 'next/link';
 
 import {
@@ -11,31 +11,17 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { mockInspectors } from '@/lib/data';
+import { mockTeamsData } from '@/lib/data';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
-
-// Mock teams data based on your architecture
-const mockTeams = [
-    {
-        id: 'team-doe-inspections',
-        name: 'Doe Inspections LLC',
-        description: 'Primary residential and commercial inspection team.',
-        memberCount: 4,
-        members: mockInspectors.slice(0, 4)
-    },
-    {
-        id: 'team-special-projects',
-        name: 'Special Projects Unit',
-        description: 'Focused on large-scale industrial and infrastructure projects.',
-        memberCount: 2,
-        members: [mockInspectors[2], mockInspectors[3]]
-    },
-];
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 
 
 export default function TeamSelectionPage() {
+  const mockTeams = Object.values(mockTeamsData);
+
   return (
     <div className="mx-auto w-full max-w-4xl px-4 lg:px-6">
       <div className="flex flex-col gap-8">
@@ -43,7 +29,7 @@ export default function TeamSelectionPage() {
           <div>
             <h1 className="text-3xl font-bold">Teams & Dispatch</h1>
             <p className="text-muted-foreground">
-              Choose a team to view its central hub, join a team, or create a new one.
+              Create, join, or manage your project teams.
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -55,19 +41,34 @@ export default function TeamSelectionPage() {
             </Button>
           </div>
         </div>
+
+        <div className="relative">
+          <Search className="absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            type="search"
+            placeholder="Search for public teams or members with Scing AI..."
+            className="w-full rounded-full bg-card/60 backdrop-blur-sm pl-12 h-12 text-base"
+          />
+        </div>
         
         <div className="grid gap-6">
             {mockTeams.map((team) => (
                 <Link href={`/teams/${team.id}`} key={team.id}>
                     <Card className="bg-card/60 backdrop-blur-sm hover:border-primary/80 hover:shadow-lg transition-all">
                         <CardHeader>
-                            <div className="flex items-center justify-between">
+                            <div className="flex items-start justify-between">
                                 <div className="flex items-center gap-4">
                                     <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center">
                                         <Building className="w-6 h-6 text-primary" />
                                     </div>
                                     <div>
-                                        <CardTitle>{team.name}</CardTitle>
+                                        <CardTitle className="flex items-center gap-2">
+                                          {team.name}
+                                          <Badge variant={team.privacy === 'public' ? 'secondary' : 'outline'} className="gap-1.5">
+                                            {team.privacy === 'public' ? <Globe className="h-3 w-3"/> : <Lock className="h-3 w-3" />}
+                                            <span className="capitalize">{team.privacy}</span>
+                                          </Badge>
+                                        </CardTitle>
                                         <CardDescription>{team.description}</CardDescription>
                                     </div>
                                 </div>

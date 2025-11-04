@@ -1,7 +1,7 @@
 
 'use client';
 
-import { Calendar, PlusCircle, Video, Users } from 'lucide-react';
+import { Calendar, PlusCircle, Video, Users, Search, Globe, Lock } from 'lucide-react';
 import Link from 'next/link';
 
 import {
@@ -17,6 +17,7 @@ import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
 
 export default function ConferenceRoomsPage() {
   return (
@@ -38,6 +39,15 @@ export default function ConferenceRoomsPage() {
             </Button>
           </div>
         </div>
+
+        <div className="relative">
+          <Search className="absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            type="search"
+            placeholder="Search for public meetings or topics with Scing AI..."
+            className="w-full rounded-full bg-card/60 backdrop-blur-sm pl-12 h-12 text-base"
+          />
+        </div>
         
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {mockConferenceRooms.map((room) => (
@@ -45,7 +55,10 @@ export default function ConferenceRoomsPage() {
                     <CardHeader>
                         <div className="flex items-start justify-between">
                             <CardTitle className="text-xl">{room.name}</CardTitle>
-                            <Badge variant={room.status === 'Live' ? 'destructive' : 'secondary'}>{room.status}</Badge>
+                            <Badge variant={room.privacy === 'public' ? 'secondary' : 'outline'} className="gap-1.5">
+                              {room.privacy === 'public' ? <Globe className="h-3 w-3"/> : <Lock className="h-3 w-3" />}
+                              <span className="capitalize">{room.privacy}</span>
+                            </Badge>
                         </div>
                         <CardDescription>{room.description}</CardDescription>
                     </CardHeader>
