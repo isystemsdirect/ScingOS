@@ -87,7 +87,7 @@ export default function ConferenceRoomHub() {
                         <div>
                             <div className="flex items-center gap-2">
                                 <p className="font-semibold">Jane Smith</p>
-                                <p className className="text-xs text-muted-foreground">10:05 AM</p>
+                                <p className="text-xs text-muted-foreground">10:05 AM</p>
                             </div>
                             <div className="mt-1 rounded-lg bg-muted p-3 text-sm">
                                 Alright, let's start with the structural findings from the 123 Main St inspection. John, can you walk us through the foundation crack you noted?
