@@ -12,17 +12,17 @@ import {
   DialogDescription,
   DialogFooter,
   DialogTrigger,
-  DialogClose,
 } from '@/components/ui/dialog';
 import { Button } from './ui/button';
-import { Badge } from './ui/badge';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Textarea } from './ui/textarea';
 import { Label } from './ui/label';
 import { Separator } from './ui/separator';
-import { Check, User, MapPin, Briefcase, FileText } from 'lucide-react';
+import { Check, User, MapPin, Briefcase, FileText, Search, Users, Store } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from '@/hooks/use-toast';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import { Input } from './ui/input';
 
 interface DispatchWizardProps {
   job: Job;
@@ -99,29 +99,50 @@ export function DispatchWizard({ job, availableInspectors }: DispatchWizardProps
         {step === 1 && (
           <div className="space-y-4">
             <h4 className="font-semibold">Step 1: Select Inspector</h4>
-            <div className="max-h-[40vh] overflow-y-auto space-y-3 pr-2">
-              {availableInspectors.map((inspector) => {
-                const avatar = PlaceHolderImages.find((p) => p.id === inspector.imageHint);
-                const isSelected = selectedInspector?.id === inspector.id;
-                return (
-                  <div
-                    key={inspector.id}
-                    onClick={() => setSelectedInspector(inspector)}
-                    className={cn(
-                      'p-4 rounded-lg border flex items-center gap-4 cursor-pointer transition-colors',
-                      isSelected ? 'bg-primary/20 border-primary ring-2 ring-primary' : 'hover:bg-muted/50'
-                    )}
-                  >
-                    {avatar && <Image src={avatar.imageUrl} alt={inspector.name} width={40} height={40} className="rounded-full" />}
-                    <div className="flex-1">
-                      <p className="font-semibold">{inspector.name}</p>
-                      <p className="text-sm text-muted-foreground">{inspector.location.name}</p>
+             <Tabs defaultValue="team">
+                <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="team"><Users className="mr-2 h-4 w-4" />Team</TabsTrigger>
+                    <TabsTrigger value="marketplace"><Store className="mr-2 h-4 w-4" />Marketplace</TabsTrigger>
+                </TabsList>
+                <TabsContent value="team" className="space-y-4">
+                    <div className="relative">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input placeholder="Search team members..." className="pl-9" />
                     </div>
-                    {isSelected && <Check className="h-5 w-5 text-primary" />}
-                  </div>
-                );
-              })}
-            </div>
+                    <div className="max-h-[40vh] overflow-y-auto space-y-3 pr-2">
+                      {availableInspectors.map((inspector) => {
+                        const avatar = PlaceHolderImages.find((p) => p.id === inspector.imageHint);
+                        const isSelected = selectedInspector?.id === inspector.id;
+                        return (
+                          <div
+                            key={inspector.id}
+                            onClick={() => setSelectedInspector(inspector)}
+                            className={cn(
+                              'p-4 rounded-lg border flex items-center gap-4 cursor-pointer transition-colors',
+                              isSelected ? 'bg-primary/20 border-primary ring-2 ring-primary' : 'hover:bg-muted/50'
+                            )}
+                          >
+                            {avatar && <Image src={avatar.imageUrl} alt={inspector.name} width={40} height={40} className="rounded-full" />}
+                            <div className="flex-1">
+                              <p className="font-semibold">{inspector.name}</p>
+                              <p className="text-sm text-muted-foreground">{inspector.location.name}</p>
+                            </div>
+                            {isSelected && <Check className="h-5 w-5 text-primary" />}
+                          </div>
+                        );
+                      })}
+                    </div>
+                </TabsContent>
+                <TabsContent value="marketplace" className="space-y-4">
+                     <div className="relative">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input placeholder="Search marketplace for inspectors..." className="pl-9" />
+                    </div>
+                    <div className="text-center text-muted-foreground py-12">
+                        <p>Marketplace search coming soon.</p>
+                    </div>
+                </TabsContent>
+             </Tabs>
           </div>
         )}
 
