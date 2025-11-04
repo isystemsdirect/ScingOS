@@ -29,11 +29,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { mockClients, mockJobs } from '@/lib/data';
+import { mockClients, mockJobs, mockInspectors } from '@/lib/data';
 import { Separator } from '@/components/ui/separator';
+import { useState } from 'react';
+import type { Job } from '@/lib/types';
+import { DispatchWizard } from '@/components/dispatch-wizard';
 
 export default function JobBoardPage() {
   const unassignedJobs = mockJobs.filter((j) => j.status === 'Unassigned');
+  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 lg:px-6">
@@ -166,9 +170,7 @@ export default function JobBoardPage() {
                         </div>
                       </DialogContent>
                     </Dialog>
-                    <Button size="sm" className="w-full">
-                        Dispatch
-                    </Button>
+                    <DispatchWizard job={job} availableInspectors={mockInspectors.filter(i => i.onCall)} />
                   </CardContent>
                 </Card>
               );
