@@ -1,7 +1,7 @@
 
 'use client';
 
-import { Building, Users, ArrowRight, PlusCircle, UserPlus, Search, Globe, Lock, Briefcase, MapPin, Star, ShieldCheck, Phone, Mail, Clock, ListFilter, FileText } from 'lucide-react';
+import { Building, Users, ArrowRight, PlusCircle, UserPlus, Search, Globe, Lock, Briefcase, MapPin, Star, ShieldCheck, Phone, Mail, Clock, ListFilter, FileText, MessageSquare } from 'lucide-react';
 import Link from 'next/link';
 
 import {
@@ -26,6 +26,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 export default function TeamDispatchPage() {
   const availableInspectors = mockInspectors.filter(i => i.onCall);
   const unassignedJobs = mockJobs.filter(j => j.status === 'Unassigned');
+  const activeJobs = mockJobs.filter(j => j.status !== 'Unassigned' && j.status !== 'Completed');
 
   return (
     <div className="mx-auto w-full max-w-full px-4 lg:px-6 h-[calc(100vh_-_9rem)] overflow-hidden">
@@ -81,39 +82,90 @@ export default function TeamDispatchPage() {
                     </CardContent>
                 </Card>
 
-                <Card className="bg-card/60 backdrop-blur-sm h-full flex flex-col">
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2"><Users className="h-5 w-5 text-primary"/> Available Inspectors</CardTitle>
-                        <CardDescription>Team members currently on-call and ready for dispatch.</CardDescription>
-                    </CardHeader>
-                     <ScrollArea className="flex-1">
-                        <CardContent className="space-y-4">
-                            {availableInspectors.map(inspector => {
-                                const avatar = PlaceHolderImages.find(p => p.id === inspector.imageHint);
-                                return (
-                                <div key={inspector.id} className="p-4 rounded-lg border bg-background/50">
-                                    <div className="flex items-start gap-4">
-                                        {avatar && <Image src={avatar.imageUrl} alt={inspector.name} width={48} height={48} className="rounded-full" />}
-                                        <div className="flex-1">
-                                            <p className="font-semibold">{inspector.name}</p>
-                                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                                <Star className="h-3 w-3 fill-primary text-primary" /> {inspector.rating}
-                                                <Separator orientation="vertical" className="h-4" />
-                                                <MapPin className="h-3 w-3" /> {inspector.location.name}
+                <Tabs defaultValue="available-inspectors" className="h-full flex flex-col">
+                  <TabsList className="grid w-full grid-cols-2">
+                      <TabsTrigger value="available-inspectors">Available Inspectors</TabsTrigger>
+                      <TabsTrigger value="active-jobs">Active Jobs</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="available-inspectors" className="flex-1 overflow-hidden">
+                    <Card className="bg-card/60 backdrop-blur-sm h-full flex flex-col border-0 shadow-none">
+                        <CardHeader className="pt-4">
+                            <CardTitle className="flex items-center gap-2"><Users className="h-5 w-5 text-primary"/> Available Inspectors</CardTitle>
+                            <CardDescription>Team members currently on-call and ready for dispatch.</CardDescription>
+                        </CardHeader>
+                        <ScrollArea className="flex-1">
+                            <CardContent className="space-y-4">
+                                {availableInspectors.map(inspector => {
+                                    const avatar = PlaceHolderImages.find(p => p.id === inspector.imageHint);
+                                    return (
+                                    <div key={inspector.id} className="p-4 rounded-lg border bg-background/50">
+                                        <div className="flex items-start gap-4">
+                                            {avatar && <Image src={avatar.imageUrl} alt={inspector.name} width={48} height={48} className="rounded-full" />}
+                                            <div className="flex-1">
+                                                <p className="font-semibold">{inspector.name}</p>
+                                                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                                    <Star className="h-3 w-3 fill-primary text-primary" /> {inspector.rating}
+                                                    <Separator orientation="vertical" className="h-4" />
+                                                    <MapPin className="h-3 w-3" /> {inspector.location.name}
+                                                </div>
+                                                <div className="flex flex-wrap gap-1 mt-2">
+                                                    {inspector.certifications.slice(0, 2).map(cert => (
+                                                        <Badge key={cert.id} variant="secondary" className="text-xs font-normal gap-1"><ShieldCheck className="h-3 w-3"/>{cert.name.substring(0, 25)}...</Badge>
+                                                    ))}
+                                                </div>
                                             </div>
-                                             <div className="flex flex-wrap gap-1 mt-2">
-                                                {inspector.certifications.slice(0, 2).map(cert => (
-                                                    <Badge key={cert.id} variant="secondary" className="text-xs font-normal gap-1"><ShieldCheck className="h-3 w-3"/>{cert.name.substring(0, 25)}...</Badge>
-                                                ))}
+                                            <div className="flex flex-col gap-2">
+                                                <Button variant="outline" size="sm">Dispatch</Button>
+                                                <Button variant="secondary" size="sm" asChild>
+                                                    <Link href="/messaging"><MessageSquare className="mr-2 h-3 w-3" />Message</Link>
+                                                </Button>
                                             </div>
                                         </div>
-                                        <Button variant="outline" size="sm">Dispatch</Button>
                                     </div>
-                                </div>
-                            )})}
-                        </CardContent>
-                    </ScrollArea>
-                </Card>
+                                )})}
+                            </CardContent>
+                        </ScrollArea>
+                    </Card>
+                  </TabsContent>
+                  <TabsContent value="active-jobs" className="flex-1 overflow-hidden">
+                    <Card className="bg-card/60 backdrop-blur-sm h-full flex flex-col border-0 shadow-none">
+                        <CardHeader className="pt-4">
+                            <CardTitle className="flex items-center gap-2"><Briefcase className="h-5 w-5 text-primary"/> Active Jobs</CardTitle>
+                            <CardDescription>Inspections currently in progress by your team.</CardDescription>
+                        </CardHeader>
+                         <ScrollArea className="flex-1">
+                            <CardContent className="space-y-4">
+                                {activeJobs.map(job => {
+                                    const inspector = mockInspectors.find(i => i.id === job.assignedInspectorId);
+                                    return (
+                                        <div key={job.id} className="p-4 rounded-lg border bg-background/50">
+                                            <div className="flex items-start gap-4">
+                                                <div className="flex-1">
+                                                    <p className="font-semibold">{job.type}</p>
+                                                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                                        <MapPin className="h-3 w-3" /> {job.address}
+                                                    </div>
+                                                    {inspector && (
+                                                        <div className="flex items-center gap-2 text-sm text-muted-foreground mt-2">
+                                                            <UserPlus className="h-3 w-3" /> Assigned to: {inspector.name}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <Badge variant="outline">{job.status}</Badge>
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+                                 {activeJobs.length === 0 && (
+                                    <div className="text-center py-8">
+                                        <p className="text-muted-foreground">No active jobs at the moment.</p>
+                                    </div>
+                                )}
+                            </CardContent>
+                        </ScrollArea>
+                    </Card>
+                  </TabsContent>
+                </Tabs>
             </div>
         </div>
       </div>

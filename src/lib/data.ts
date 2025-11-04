@@ -496,5 +496,27 @@ export const mockJobs: Job[] = [
         priority: 'Low',
         requestTime: '1d ago',
         status: 'Unassigned',
+    },
+    {
+        id: 'JOB-004',
+        clientId: 'CLI-001',
+        type: 'Structural movement monitoring',
+        address: '10880 Malibu Point, Malibu, CA',
+        location: { lat: 34.033, lng: -118.805 },
+        priority: 'High',
+        requestTime: '1h ago',
+        status: 'In Progress',
+        assignedInspectorId: 'USR-001',
+    },
+    {
+        id: 'JOB-005',
+        clientId: 'CLI-002',
+        type: 'Commercial building inspection (office/retail/industrial)',
+        address: '1007 Mountain Drive, Gotham City, NJ',
+        location: { lat: 40.7128, lng: -74.0060 },
+        priority: 'Medium',
+        requestTime: '3h ago',
+        status: 'Assigned',
+        assignedInspectorId: 'USR-003',
     }
 ]
