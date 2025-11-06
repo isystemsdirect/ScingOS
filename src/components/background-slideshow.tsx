@@ -1,29 +1,19 @@
-
 'use client';
 import { useEffect, useState } from 'react';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export default function BackgroundSlideshow() {
   const [index, setIndex] = useState(0);
   const [images, setImages] = useState<string[]>([]);
 
   useEffect(() => {
-    fetch('/background-images.json')
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        return res.json();
-      })
-      .then((data) => {
-        if (Array.isArray(data)) {
-          setImages(data);
-        } else {
-          console.error("Fetched data is not an array:", data);
-        }
-      })
-      .catch((error) => {
-        console.error("Could not fetch background images:", error);
-      });
+    // Directly use the imported image data
+    const imageList = PlaceHolderImages.map(p => p.imageUrl);
+    if (Array.isArray(imageList)) {
+      setImages(imageList);
+    } else {
+      console.error("Loaded data is not an array:", imageList);
+    }
   }, []);
 
   useEffect(() => {
