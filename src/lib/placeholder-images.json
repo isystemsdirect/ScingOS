@@ -2,39 +2,39 @@
   "placeholderImages": [
     {
       "id": "hero",
-      "description": "Abstract architectural lines of a modern building",
-      "imageUrl": "/background_photos/bg-city-1.jpg",
-      "imageHint": "architecture building"
+      "description": "A low-angle shot of a futuristic building with a geometric facade against a clear sky, representing modern architecture and technology.",
+      "imageUrl": "https://images.unsplash.com/photo-1582209761498-3453919420fd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxmdXR1cmlzdGljJTIwYnVpbGRpbmd8ZW58MHx8fHwxNzE2NDAxODU0fDA&ixlib=rb-4.1.0&q=80&w=1920",
+      "imageHint": "architecture technology"
     },
     {
       "id": "avatar1",
-      "description": "Avatar of an inspector",
-      "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwZXJzb24lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjEyMjc5NjN8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "person portrait"
+      "description": "A construction site with workers and heavy machinery, showcasing the building industry in action.",
+      "imageUrl": "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjb25zdHJ1Y3Rpb24lMjBzaXRlfGVufDB8fHx8MTcxNjQwMTkyNnww&ixlib=rb-4.1.0&q=80&w=1920",
+      "imageHint": "construction site"
     },
     {
       "id": "avatar2",
-      "description": "Avatar of another inspector",
-      "imageUrl": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxwZXJzb24lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjEyMjc5NjN8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "person portrait"
+      "description": "The interior of a modern data center with rows of glowing server racks, representing the tech industry's infrastructure.",
+      "imageUrl": "https://images.unsplash.com/photo-1520288814389-c7d6c5643a6d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxkYXRhJTIwY2VudGVyfGVufDB8fHx8MTcxNjQwMTk1OXww&ixlib=rb-4.1.0&q=80&w=1920",
+      "imageHint": "data center"
     },
     {
       "id": "avatar3",
-      "description": "Avatar of a third inspector",
-      "imageUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxwZXJzb24lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjEyMjc5NjN8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "person portrait"
+      "description": "A close-up of a drone flying near a modern glass building, symbolizing technology in building inspection.",
+      "imageUrl": "https://images.unsplash.com/photo-1507563015567-0a131a1a5d16?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxjb25zdHJ1Y3Rpb24lMjBkcm9uZXxlbnwwfHx8fDE3MTY0MDE5ODl8MA&ixlib=rb-4.1.0&q=80&w=1920",
+      "imageHint": "drone building"
     },
     {
       "id": "avatar4",
-      "description": "Avatar of a fourth inspector",
-      "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwZXJzb24lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjEyMjc5NjN8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "person portrait"
+      "description": "An abstract view looking up at the intersecting lines of modern skyscrapers.",
+      "imageUrl": "https://images.unsplash.com/photo-1528502621037-e03622485648?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxhYnN0cmFjdCUyMGFyY2hpdGVjdHVyZXxlbnwwfHx8fDE3MTY0MDIwMTZ8MA&ixlib=rb-4.1.0&q=80&w=1920",
+      "imageHint": "architecture abstract"
     },
     {
       "id": "inspection-roof",
-      "description": "A drone shot of a residential roof",
+      "description": "A drone shot of a commercial flat roof with HVAC units.",
       "imageUrl": "https://images.unsplash.com/photo-1677618010764-4ebaac061ed0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxyb29mJTIwaG91c2V8ZW58MHx8fHwxNzYxMjM4OTc1fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "roof house"
+      "imageHint": "commercial roof"
     },
     {
       "id": "inspection-foundation",
