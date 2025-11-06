@@ -3,67 +3,67 @@
     {
       "id": "hero",
       "description": "A low-angle shot of a futuristic building with a geometric facade against a clear sky, representing modern architecture and technology.",
-      "imageUrl": "https://images.unsplash.com/photo-1582209761498-3453919420fd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxmdXR1cmlzdGljJTIwYnVpbGRpbmd8ZW58MHx8fHwxNzE2NDAxODU0fDA&ixlib=rb-4.1.0&q=80&w=1920",
+      "imageUrl": "https://images.unsplash.com/photo-1582209761498-3453919420fd?q=80&w=1920",
       "imageHint": "architecture technology"
     },
     {
       "id": "avatar1",
       "description": "A construction site with workers and heavy machinery, showcasing the building industry in action.",
-      "imageUrl": "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjb25zdHJ1Y3Rpb24lMjBzaXRlfGVufDB8fHx8MTcxNjQwMTkyNnww&ixlib=rb-4.1.0&q=80&w=1920",
+      "imageUrl": "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=1920",
       "imageHint": "construction site"
     },
     {
       "id": "avatar2",
       "description": "The interior of a modern data center with rows of glowing server racks, representing the tech industry's infrastructure.",
-      "imageUrl": "https://images.unsplash.com/photo-1520288814389-c7d6c5643a6d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxkYXRhJTIwY2VudGVyfGVufDB8fHx8MTcxNjQwMTk1OXww&ixlib=rb-4.1.0&q=80&w=1920",
+      "imageUrl": "https://images.unsplash.com/photo-1520288814389-c7d6c5643a6d?q=80&w=1920",
       "imageHint": "data center"
     },
     {
       "id": "avatar3",
       "description": "A close-up of a drone flying near a modern glass building, symbolizing technology in building inspection.",
-      "imageUrl": "https://images.unsplash.com/photo-1507563015567-0a131a1a5d16?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxjb25zdHJ1Y3Rpb24lMjBkcm9uZXxlbnwwfHx8fDE3MTY0MDE5ODl8MA&ixlib=rb-4.1.0&q=80&w=1920",
+      "imageUrl": "https://images.unsplash.com/photo-1507563015567-0a131a1a5d16?q=80&w=1920",
       "imageHint": "drone building"
     },
     {
       "id": "avatar4",
       "description": "An abstract view looking up at the intersecting lines of modern skyscrapers.",
-      "imageUrl": "https://images.unsplash.com/photo-1528502621037-e03622485648?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxhYnN0cmFjdCUyMGFyY2hpdGVjdHVyZXxlbnwwfHx8fDE3MTY0MDIwMTZ8MA&ixlib=rb-4.1.0&q=80&w=1920",
+      "imageUrl": "https://images.unsplash.com/photo-1528502621037-e03622485648?q=80&w=1920",
       "imageHint": "architecture abstract"
     },
     {
       "id": "inspection-roof",
       "description": "A drone shot of a commercial flat roof with HVAC units.",
-      "imageUrl": "https://images.unsplash.com/photo-1677618010764-4ebaac061ed0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxyb29mJTIwaG91c2V8ZW58MHx8fHwxNzYxMjM4OTc1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1677618010764-4ebaac061ed0?q=80&w=1080",
       "imageHint": "commercial roof"
     },
     {
       "id": "inspection-foundation",
       "description": "A crack in a concrete foundation",
-      "imageUrl": "https://images.unsplash.com/photo-1546816077-623b4eaab352?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxjb25jcmV0ZSUyMGNyYWNrfGVufDB8fHx8MTc2MTIzODk3NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1546816077-623b4eaab352?q=80&w=1080",
       "imageHint": "concrete crack"
     },
     {
       "id": "inspection-electrical",
       "description": "An open electrical panel",
-      "imageUrl": "https://images.unsplash.com/photo-1635335874521-7987db781153?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxlbGVjdHJpY2FsJTIwcGFuZWx8ZW58MHx8fHwxNzYxMjM4OTc1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1635335874521-7987db781153?q=80&w=1080",
       "imageHint": "electrical panel"
     },
     {
       "id": "inspection-plumbing",
       "description": "Pipes under a sink with a small leak",
-      "imageUrl": "https://images.unsplash.com/photo-1738918897772-0ba101be25c8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwaXBlcyUyMHBsdW1iaW5nfGVufDB8fHx8MTc2MTIzODk3Nnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1563259921-23301132432a?q=80&w=1080",
       "imageHint": "pipes plumbing"
     },
     {
       "id": "inspection-thermal",
       "description": "A thermal image of a wall showing heat loss",
-      "imageUrl": "https://images.unsplash.com/photo-1725118344977-79ac52071e93?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHx0aGVybWFsJTIwaW1hZ2V8ZW58MHx8fHwxNzYxMjAyMDcyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1617861213426-88062f854c63?q=80&w=1080",
       "imageHint": "thermal image"
     },
     {
       "id": "inspection-lidar",
       "description": "A 3D lidar scan of a room",
-      "imageUrl": "https://images.unsplash.com/photo-1646215279503-7dd99848a8ee?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHwzZCUyMHNjYW58ZW58MHx8fHwxNzYxMjM4OTc1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1646215279503-7dd99848a8ee?q=80&w=1080",
       "imageHint": "3d scan"
     }
   ]
