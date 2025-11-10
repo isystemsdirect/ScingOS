@@ -1,4 +1,3 @@
-
 'use client';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { useState, useEffect } from 'react';
