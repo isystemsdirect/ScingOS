@@ -2,69 +2,69 @@
   "placeholderImages": [
     {
       "id": "hero",
-      "description": "An abstract, glowing network of interconnected nodes on a dark background, representing AI and data.",
-      "imageUrl": "https://images.unsplash.com/photo-1531771686235-54f2c557382d?q=80&w=1920",
-      "imageHint": "network abstract"
+      "description": "An inspector in a hard hat reviewing blueprints on a large construction site with a building frame in the background.",
+      "imageUrl": "https://images.unsplash.com/photo-1581094483787-a1483a3b934b?q=80&w=1920",
+      "imageHint": "inspector construction"
     },
     {
       "id": "avatar1",
-      "description": "Close-up detail of a complex, modern building facade with geometric patterns and shadows.",
-      "imageUrl": "https://images.unsplash.com/photo-1521133573892-e449261b39a3?q=80&w=1920",
-      "imageHint": "architecture detail"
+      "description": "A stunning and complex modern architectural facade with geometric patterns and dramatic lighting.",
+      "imageUrl": "https://images.unsplash.com/photo-1594911762141-9a74287895e3?q=80&w=1920",
+      "imageHint": "modern architecture"
     },
     {
       "id": "avatar2",
-      "description": "A sleek, minimalist interior of a modern office building with clean lines and a sense of space.",
-      "imageUrl": "https://images.unsplash.com/photo-1600267185393-e158a7817cde?q=80&w=1920",
-      "imageHint": "minimalist interior"
+      "description": "A female engineer standing on a rooftop overlooking a city, holding a tablet and surveying the area.",
+      "imageUrl": "https://images.unsplash.com/photo-1552975025-05d541537335?q=80&w=1920",
+      "imageHint": "engineer city"
     },
     {
       "id": "avatar3",
-      "description": "A drone's perspective looking straight down at a complex highway interchange at night, with light trails from cars.",
-      "imageUrl": "https://images.unsplash.com/photo-1548882193-442c56b94326?q=80&w=1920",
-      "imageHint": "drone highway"
+      "description": "An aerial drone shot of a futuristic, curved building with a unique, flowing design.",
+      "imageUrl": "https://images.unsplash.com/photo-1629805973303-16a75a0d3e51?q=80&w=1920",
+      "imageHint": "futuristic building"
     },
     {
       "id": "avatar4",
-      "description": "An abstract macro shot of glowing fiber optic cables, representing data, speed, and technology.",
-      "imageUrl": "https://images.unsplash.com/photo-1587135304389-33cf47a304e6?q=80&w=1920",
-      "imageHint": "fiber optics"
+      "description": "A close-up of a surveyor using a theodolite, with a blurred construction site in the background.",
+      "imageUrl": "https://images.unsplash.com/photo-1535732759880-bbd1822b6e8a?q=80&w=1920",
+      "imageHint": "surveyor equipment"
     },
     {
       "id": "inspection-roof",
-      "description": "A detailed aerial view of a person inspecting solar panels on a modern roof.",
-      "imageUrl": "https://images.unsplash.com/photo-1508933569429-4a76156b2691?q=80&w=1080",
-      "imageHint": "solar inspection"
+      "description": "An interior shot of a massive, modern atrium with complex steel and glass structures.",
+      "imageUrl": "https://images.unsplash.com/photo-1611689103006-7a83a482b467?q=80&w=1080",
+      "imageHint": "modern atrium"
     },
     {
       "id": "inspection-foundation",
-      "description": "A high-contrast, detailed shot of a concrete wall texture.",
-      "imageUrl": "https://images.unsplash.com/photo-1581093370953-53e3d9023f0c?q=80&w=1080",
-      "imageHint": "concrete texture"
+      "description": "An inspector pointing a thermal imaging camera at an electrical panel, with the heat signature visible on the screen.",
+      "imageUrl": "https://images.unsplash.com/photo-1681235384352-19545c8f6acc?q=80&w=1080",
+      "imageHint": "thermal inspection"
     },
     {
       "id": "inspection-electrical",
-      "description": "A clean, well-organized server rack with neatly managed cables and glowing status lights.",
-      "imageUrl": "https://images.unsplash.com/photo-1580894894513-541e068234d5?q=80&w=1080",
-      "imageHint": "server rack"
+      "description": "The dramatic, sweeping curves of the Heydar Aliyev Center, an architectural marvel.",
+      "imageUrl": "https://images.unsplash.com/photo-1589363351303-7a2c67fed615?q=80&w=1080",
+      "imageHint": "curved architecture"
     },
     {
       "id": "inspection-plumbing",
-      "description": "Clean, industrial pipes running along a wall, showcasing modern plumbing infrastructure.",
-      "imageUrl": "https://images.unsplash.com/photo-1620528222958-a28980384355?q=80&w=1080",
-      "imageHint": "industrial pipes"
+      "description": "An inspector operating a drone, which is flying near a modern glass skyscraper.",
+      "imageUrl": "https://images.unsplash.com/photo-1625905273220-e0c145dec49a?q=80&w=1080",
+      "imageHint": "drone inspection"
     },
     {
       "id": "inspection-thermal",
-      "description": "Abstract representation of thermal data with a colorful heat map gradient.",
-      "imageUrl": "https://images.unsplash.com/photo-1633633855073-635582313bf3?q=80&w=1080",
-      "imageHint": "heatmap abstract"
+      "description": "An engineer walking through a vast, clean, and modern industrial facility or data center.",
+      "imageUrl": "https://images.unsplash.com/photo-1556020685-4c471a445731?q=80&w=1080",
+      "imageHint": "industrial facility"
     },
     {
       "id": "inspection-lidar",
-      "description": "A futuristic 3D point cloud representation of a cityscape.",
-      "imageUrl": "https://images.unsplash.com/photo-1634543444086-57753a811f3f?q=80&w=1080",
-      "imageHint": "point cloud"
+      "description": "A close-up perspective of the intricate steel structure of a modern bridge.",
+      "imageUrl": "https://images.unsplash.com/photo-1541832049949-16b772c91813?q=80&w=1080",
+      "imageHint": "bridge structure"
     }
   ]
 }
