@@ -20,9 +20,9 @@ import {
 import type { ChartConfig } from "@/components/ui/chart"
 
 const inspectionStatusData = [
-  { status: "Final", count: 1, fill: "hsl(var(--chart-1))" },
-  { status: "In Progress", count: 1, fill: "hsl(var(--chart-2))" },
-  { status: "Draft", count: 1, fill: "hsl(var(--chart-3))" },
+  { status: "Final", count: 1, fill: "var(--color-Final)" },
+  { status: "In Progress", count: 1, fill: "var(--color-In_Progress)" },
+  { status: "Draft", count: 1, fill: "var(--color-Draft)" },
 ]
 
 const inspectionStatusConfig = {
@@ -33,7 +33,7 @@ const inspectionStatusConfig = {
     label: "Final",
     color: "hsl(var(--chart-1))",
   },
-  "In Progress": {
+  "In_Progress": {
     label: "In Progress",
     color: "hsl(var(--chart-2))",
   },

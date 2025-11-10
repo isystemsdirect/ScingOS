@@ -141,7 +141,7 @@
         background-position: center;
         background-repeat: no-repeat;
         opacity: 0;
-        animation: imageAnimation 77s linear infinite;
+        animation: imageAnimation 35s linear infinite;
     }
 
     .logo-gradient-light {
