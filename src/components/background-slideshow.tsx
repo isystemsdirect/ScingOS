@@ -1,9 +1,9 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { cn } from '@/lib/utils';
 
 export default function BackgroundSlideshow() {
-  const [index, setIndex] = useState(0);
   const [images, setImages] = useState<string[]>([]);
 
   useEffect(() => {
@@ -16,13 +16,6 @@ export default function BackgroundSlideshow() {
     }
   }, []);
 
-  useEffect(() => {
-    if (images.length === 0) return;
-    const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % images.length);
-    }, 8000);
-    return () => clearInterval(interval);
-  }, [images.length]);
 
   if (images.length === 0) {
     // Return a single static background to prevent a black screen on error
@@ -36,11 +29,13 @@ export default function BackgroundSlideshow() {
   return (
     <div className="background-slideshow">
       {images.map((src, i) => (
-        <img
+        <div
           key={i}
-          src={src}
-          alt=""
-          className={`slide ${i === index ? 'active' : ''}`}
+          className="background-slideshow__slide"
+          style={{ 
+            backgroundImage: `url(${src})`,
+            animationDelay: `${i * 7}s`,
+           }}
         />
       ))}
     </div>
