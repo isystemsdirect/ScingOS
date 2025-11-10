@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import { Toaster as SonnerToaster } from "react-hot-toast";
 import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
+import "@/styles/background-slideshow.css";
 import { cn } from "@/lib/utils";
 import AppLayout from "@/app/layout-client";
 import BackgroundSlideshow from "@/components/background-slideshow";
