@@ -1,4 +1,3 @@
-
 'use client'
 
 import React, { useState, useEffect } from 'react'
@@ -126,7 +125,7 @@ export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
   
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
+    googleMapsApiKey: 'AIzaSyA8tBvdISGcHbNCHRMHzP_EySiBf1tMT0w',
     libraries: ['places', 'weather'],
     preventGoogleFontsLoading: true,
   });
@@ -167,20 +166,6 @@ export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
   const toggleWeatherLayer = (layer: keyof typeof weatherLayers) => {
     setWeatherLayers(prev => ({...prev, [layer]: !prev[layer]}));
   };
-
-  if (!process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY) {
-      return (
-          <div className="flex items-center justify-center h-full w-full bg-muted p-4">
-              <Alert variant="destructive">
-                  <AlertTriangle className="h-4 w-4" />
-                  <AlertTitle>Google Maps API Key Missing</AlertTitle>
-                  <AlertDescription>
-                      Please add your `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` to the .env file to enable the map.
-                  </AlertDescription>
-              </Alert>
-          </div>
-      )
-  }
 
   if (loadError) {
     return (

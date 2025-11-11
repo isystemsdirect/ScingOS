@@ -1,4 +1,3 @@
-
 'use client';
 
 import {
@@ -63,7 +62,7 @@ export default function MapsWeatherPage() {
     const currentUnit =
       localStorage.getItem('temperature-unit') === 'C' ? 'metric' : 'imperial';
     setUnit(currentUnit);
-    const apiKey = process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY;
+    const apiKey = '06145e5a1bff8a8d2d507f0b19a5f71d';
     if (!apiKey) {
         setError('OpenWeather API Key is not configured.');
         setLoading(false);
