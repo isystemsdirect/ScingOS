@@ -123,16 +123,12 @@ interface MarketplaceMapProps {
 
 export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
   const router = useRouter();
-  const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
   
-  const isApiKeyMissing = !googleMapsApiKey || googleMapsApiKey === "YOUR_API_KEY_HERE";
-
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: googleMapsApiKey,
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
     libraries: ['places', 'weather'],
     preventGoogleFontsLoading: true,
-    googleMapsScriptBaseUrl: isApiKeyMissing ? '' : undefined,
   });
 
   const [map, setMap] = useState(null)
@@ -172,7 +168,7 @@ export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
     setWeatherLayers(prev => ({...prev, [layer]: !prev[layer]}));
   };
 
-  if (isApiKeyMissing) {
+  if (!process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY) {
       return (
           <div className="flex items-center justify-center h-full w-full bg-muted p-4">
               <Alert variant="destructive">
