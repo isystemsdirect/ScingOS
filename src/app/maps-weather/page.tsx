@@ -63,11 +63,6 @@ export default function MapsWeatherPage() {
       localStorage.getItem('temperature-unit') === 'C' ? 'metric' : 'imperial';
     setUnit(currentUnit);
     const apiKey = '06145e5a1bff8a8d2d507f0b19a5f71d';
-    if (!apiKey) {
-        setError('OpenWeather API Key is not configured.');
-        setLoading(false);
-        return;
-    }
     const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=${currentUnit}&appid=${apiKey}`;
 
     setLoading(true);

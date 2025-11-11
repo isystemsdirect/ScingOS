@@ -137,7 +137,7 @@ export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
   const [activeClient, setActiveClient] = useState<Client | null>(null);
   const [weatherLayers, setWeatherLayers] = useState({
     precipitation: false,
-    clouds: true,
+    clouds: false,
     wind: false,
   });
   const [mapTypeId, setMapTypeId] = useState('roadmap');
