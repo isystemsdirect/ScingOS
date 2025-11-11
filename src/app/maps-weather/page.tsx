@@ -63,7 +63,12 @@ export default function MapsWeatherPage() {
     const currentUnit =
       localStorage.getItem('temperature-unit') === 'C' ? 'metric' : 'imperial';
     setUnit(currentUnit);
-    const apiKey = 'cf5f05aff1d3b71885fb90702f9fd4cb';
+    const apiKey = process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY;
+    if (!apiKey) {
+        setError('OpenWeather API Key is not configured.');
+        setLoading(false);
+        return;
+    }
     const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=${currentUnit}&appid=${apiKey}`;
 
     setLoading(true);
@@ -116,7 +121,7 @@ export default function MapsWeatherPage() {
     : weatherIcons.default;
 
   return (
-    <div className="mx-auto w-full max-w-7xl px-4 lg:px-6 h-full flex flex-col">
+    <div className="mx-auto w-full max-w-full px-4 lg:px-6 h-full flex flex-col">
       <div className="py-4">
           <h1 className="text-3xl font-bold">Maps & Weather</h1>
           <p className="text-muted-foreground">
