@@ -7,8 +7,6 @@ import { cn } from '@/lib/utils';
 export default function BackgroundSlideshow() {
   // A more robust way to select images for the background
   const backgroundImages = PlaceHolderImages.filter(p => 
-    p.id.startsWith('hero') || 
-    p.id.includes('architecture') ||
     p.id.startsWith('bg-')
   );
 

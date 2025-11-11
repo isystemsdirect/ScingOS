@@ -1,70 +1,100 @@
 {
   "placeholderImages": [
     {
-      "id": "hero",
-      "description": "An inspector in a hard hat reviewing blueprints on a large construction site with a building frame in the background.",
-      "imageUrl": "https://images.unsplash.com/photo-1581094483787-a1483a3b934b?q=80&w=1920",
-      "imageHint": "inspector construction"
-    },
-    {
-      "id": "avatar1",
+      "id": "bg-architecture-1",
       "description": "A stunning and complex modern architectural facade with geometric patterns and dramatic lighting.",
       "imageUrl": "https://images.unsplash.com/photo-1594911762141-9a74287895e3?q=80&w=1920",
       "imageHint": "modern architecture"
     },
     {
-      "id": "avatar2",
+      "id": "bg-inspector-1",
+      "description": "An inspector in a hard hat reviewing blueprints on a large construction site with a building frame in the background.",
+      "imageUrl": "https://images.unsplash.com/photo-1581094483787-a1483a3b934b?q=80&w=1920",
+      "imageHint": "inspector construction"
+    },
+    {
+      "id": "bg-engineer-1",
       "description": "A female engineer standing on a rooftop overlooking a city, holding a tablet and surveying the area.",
       "imageUrl": "https://images.unsplash.com/photo-1552975025-05d541537335?q=80&w=1920",
       "imageHint": "engineer city"
     },
     {
-      "id": "avatar3",
-      "description": "An aerial drone shot of a futuristic, curved building with a unique, flowing design.",
-      "imageUrl": "https://images.unsplash.com/photo-1629805973303-16a75a0d3e51?q=80&w=1920",
-      "imageHint": "futuristic building"
-    },
-    {
-      "id": "avatar4",
-      "description": "A close-up of a surveyor using a theodolite, with a blurred construction site in the background.",
-      "imageUrl": "https://images.unsplash.com/photo-1535732759880-bbd1822b6e8a?q=80&w=1920",
-      "imageHint": "surveyor equipment"
-    },
-    {
-      "id": "inspection-roof",
-      "description": "An interior shot of a massive, modern atrium with complex steel and glass structures.",
-      "imageUrl": "https://images.unsplash.com/photo-1611689103006-7a83a482b467?q=80&w=1080",
-      "imageHint": "modern atrium"
-    },
-    {
-      "id": "inspection-foundation",
-      "description": "An inspector pointing a thermal imaging camera at an electrical panel, with the heat signature visible on the screen.",
-      "imageUrl": "https://images.unsplash.com/photo-1681235384352-19545c8f6acc?q=80&w=1080",
-      "imageHint": "thermal inspection"
-    },
-    {
-      "id": "inspection-electrical",
-      "description": "The dramatic, sweeping curves of the Heydar Aliyev Center, an architectural marvel.",
-      "imageUrl": "https://images.unsplash.com/photo-1589363351303-7a2c67fed615?q=80&w=1080",
-      "imageHint": "curved architecture"
-    },
-    {
-      "id": "inspection-plumbing",
+      "id": "bg-drone-1",
       "description": "An inspector operating a drone, which is flying near a modern glass skyscraper.",
-      "imageUrl": "https://images.unsplash.com/photo-1625905273220-e0c145dec49a?q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1625905273220-e0c145dec49a?q=80&w=1920",
       "imageHint": "drone inspection"
     },
     {
-      "id": "inspection-thermal",
+      "id": "bg-industrial-1",
       "description": "An engineer walking through a vast, clean, and modern industrial facility or data center.",
-      "imageUrl": "https://images.unsplash.com/photo-1556020685-4c471a445731?q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1556020685-4c471a445731?q=80&w=1920",
       "imageHint": "industrial facility"
     },
     {
-      "id": "inspection-lidar",
+      "id": "bg-bridge-1",
       "description": "A close-up perspective of the intricate steel structure of a modern bridge.",
-      "imageUrl": "https://images.unsplash.com/photo-1541832049949-16b772c91813?q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1541832049949-16b772c91813?q=80&w=1920",
       "imageHint": "bridge structure"
+    },
+    {
+      "id": "avatar1",
+      "description": "A headshot of an inspector, John Doe.",
+      "imageUrl": "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8bWFsZSUyMHBvcnRyYWl0fGVufDB8fHx8MTc2Mjc5OTQwN3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "male portrait"
+    },
+    {
+      "id": "avatar2",
+      "description": "A headshot of an inspector, Jane Smith.",
+      "imageUrl": "https://images.unsplash.com/photo-1524255684952-d7185b509571?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxmZW1hbGUlMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjI4NjQ0NTZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "female portrait"
+    },
+    {
+      "id": "avatar3",
+      "description": "A headshot of an inspector, Mike Johnson.",
+      "imageUrl": "https://images.unsplash.com/photo-1618491831842-f34143a9b08f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxtYWxlJTIwcHJvZmVzc2lvbmFsfGVufDB8fHx8MTc2MjgyNTQ5NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "male professional"
+    },
+    {
+      "id": "avatar4",
+      "description": "A headshot of an inspector, Emily White.",
+      "imageUrl": "https://images.unsplash.com/photo-1581065178047-8ee15951ede6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxmZW1hbGUlMjBwcm9mZXNzaW9uYWx8ZW58MHx8fHwxNzYyOTAxMjA4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "female professional"
+    },
+    {
+      "id": "inspection-roof",
+      "description": "A detailed shot of a damaged roof with missing shingles.",
+      "imageUrl": "https://images.unsplash.com/photo-1712159221477-550e26fd5919?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxkYW1hZ2VkJTIwcm9vZnxlbnwwfHx8fDE3NjI5MDEyMDh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "damaged roof"
+    },
+    {
+      "id": "inspection-foundation",
+      "description": "A picture of a hairline crack in a concrete foundation.",
+      "imageUrl": "https://images.unsplash.com/photo-1694533483509-f743b0f18619?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxmb3VuZGF0aW9uJTIwY3JhY2t8ZW58MHx8fHwxNzYyOTAxMjA4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "foundation crack"
+    },
+    {
+      "id": "inspection-electrical",
+      "description": "An open electrical panel with wires visible.",
+      "imageUrl": "https://images.unsplash.com/photo-1544724569-5f546fd6f2b5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxlbGVjdHJpY2FsJTIwcGFuZWx8ZW58MHx8fHwxNzYyODYwNjYxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "electrical panel"
+    },
+    {
+      "id": "inspection-plumbing",
+      "description": "Pipes under a sink showing a small leak.",
+      "imageUrl": "https://images.unsplash.com/photo-1662374162155-2552f45b9f37?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxwaXBlJTIwbGVha3xlbnwwfHx8fDE3NjI5MDEyMDh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "pipe leak"
+    },
+    {
+      "id": "inspection-thermal",
+      "description": "A thermal image of a wall showing a cold spot, indicating an insulation issue.",
+      "imageUrl": "https://images.unsplash.com/photo-1725118345728-8bd80405866b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHx0aGVybWFsJTIwaW1hZ2V8ZW58MHx8fHwxNzYyOTAxMjA4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "thermal image"
+    },
+    {
+      "id": "inspection-lidar",
+      "description": "A 3D LiDAR point cloud of a room.",
+      "imageUrl": "https://picsum.photos/seed/lidar1/600/400",
+      "imageHint": "LiDAR scan"
     }
   ]
 }
