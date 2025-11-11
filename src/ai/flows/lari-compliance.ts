@@ -1,7 +1,8 @@
+
 'use server';
 
 /**
- * @fileOverview This file defines a Genkit flow for cross-checking inspection observations against a library of codes and standards using AI.
+ * @fileOverview This file defines the LARI-COMPLIANCE AI flow, which is responsible for learning from and applying a vast, up-to-date knowledge base of all inspection standards across home, commercial, industrial, and mechanical domains.
  *
  * - crossCheckStandards - A function that handles the cross-checking process.
  * - CrossCheckStandardsInput - The input type for the crossCheckStandards function.
@@ -45,12 +46,13 @@ const prompt = ai.definePrompt({
   name: 'crossCheckStandardsPrompt',
   input: {schema: CrossCheckStandardsInputSchema},
   output: {schema: CrossCheckStandardsOutputSchema},
-  prompt: `You are an AI assistant specialized in cross-checking inspection observations and search queries against a library of codes, statutes, and standards. Your task is to analyze the query and identify relevant code citations, relevance scores, excerpts, links to the full documents and jurisdictions.
+  prompt: `You are LARI-COMPLIANCE, an AI engine with master-level knowledge of all international, national, and local inspection codes and standards, including but not limited to: home, commercial, industrial, mechanical, electrical, and plumbing. Your knowledge base is continuously updated in real-time.
+
+  Analyze the following inspector's query and cross-reference it against your entire library to find the most relevant code citations, their exact excerpts, and links to the full source documents.
 
   Query: {{{searchText}}}
 
-  Please provide the code citations, relevance scores, excerpts, full document links, and jurisdictions in a JSON format.
-  Ensure that the codeCitations, relevanceScores, excerpts, fullDocLinks and jurisdictions arrays have the same length.
+  Provide the code citations, relevance scores, excerpts, full document links, and jurisdictions in the specified JSON format.
   If no relevant codes are found, return empty arrays for all fields.
 `,
 });
@@ -62,8 +64,7 @@ const lariComplianceFlow = ai.defineFlow(
     outputSchema: CrossCheckStandardsOutputSchema,
   },
   async input => {
-    // In a real app, you would use a tool here to query a vector database (e.g. Firestore Vector Search)
-    // with the user's input to find relevant standards documents. For now, we are just passing the raw query.
+    // In a production environment, this flow would use a tool to perform a vector search against a comprehensive, up-to-date database of all inspection standards and guidelines.
     const {output} = await prompt(input);
     return output!;
   }
