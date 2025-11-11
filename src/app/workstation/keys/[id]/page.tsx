@@ -159,7 +159,7 @@ const keySpecifications: Record<string, CapabilitySpec> = {
 const mockKeysData: Record<string, {name: string, lariEngine: string}> = {
     'key_vision_std_abc123': { name: "Standard Vision Key", lariEngine: "LARI-VISION"},
     'key_thermal_std_ghi789': { name: "Standard Thermal Key", lariEngine: "LARI-THERM"},
-    'key_audio_std_jkl012': { name: "Standard Audio Key", lariEngine: "LARI-NOSE"}, // Mapped to NOSE for demo
+    'key_audio_std_jkl012': { name: "Standard Audio Key", lariEngine: "LARI-ECHO"},
     'key_dose_pro_def456': { name: "Professional Drone Key", lariEngine: "LARI-DOSE"},
     'key_mapper_ent_ghi789': { name: "Enterprise LiDAR Key", lariEngine: "LARI-MAPPER"},
     'key_prism_max_jkl012': { name: "Max Spectrometer Key", lariEngine: "LARI-PRISM"},
