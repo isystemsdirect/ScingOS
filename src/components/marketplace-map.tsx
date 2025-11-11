@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation';
-import { GoogleMap, useJsApiLoader, MarkerF, InfoWindowF, WeatherLayer, CloudLayer, WindLayer } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, MarkerF, InfoWindowF, WeatherLayer, CloudLayer } from '@react-google-maps/api';
 import type { Inspector, Client } from '@/lib/types';
-import { Loader2, AlertTriangle, Map, Satellite, Layers, Cloud, Wind } from 'lucide-react';
+import { Loader2, AlertTriangle, Layers, Cloud, Wind } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import { Button } from './ui/button';
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from './ui/tooltip';
@@ -137,7 +137,7 @@ export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
   const [activeClient, setActiveClient] = useState<Client | null>(null);
   const [weatherLayers, setWeatherLayers] = useState({
     precipitation: false,
-    clouds: false,
+    clouds: true,
     wind: false,
   });
   const [mapTypeId, setMapTypeId] = useState('roadmap');
@@ -194,7 +194,7 @@ export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
         >
             {weatherLayers.precipitation && <WeatherLayer />}
             {weatherLayers.clouds && <CloudLayer />}
-            {weatherLayers.wind && <WindLayer />}
+            
 
           {inspectors.map(inspector => (
               <MarkerF 

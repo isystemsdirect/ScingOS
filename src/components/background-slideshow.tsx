@@ -1,9 +1,10 @@
 'use client';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { useState, useEffect } from 'react';
+import { cn } from '@/lib/utils';
 
 export default function BackgroundSlideshow() {
-  const images = PlaceHolderImages.filter(p => p.id.startsWith('bg-'));
+  const images = PlaceHolderImages.filter(p => p.id.startsWith('bg-') || p.id.startsWith('hero') || p.id.includes('architecture'));
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
@@ -16,7 +17,12 @@ export default function BackgroundSlideshow() {
   }, [images.length]);
 
   if (images.length === 0) {
-    return null;
+     return (
+       <div className="background-slideshow">
+         <div className="background-slide active" style={{ backgroundImage: `url(/bg-city-1.jpg)` }} />
+         <div className="background-overlay"></div>
+       </div>
+    );
   }
 
   return (
@@ -24,7 +30,7 @@ export default function BackgroundSlideshow() {
       {images.map((image, i) => (
          <div
           key={image.id}
-          className={`background-slide ${i === index ? 'active' : ''}`}
+          className={cn("background-slide", i === index && 'active')}
           style={{ backgroundImage: `url(${image.imageUrl})` }}
         />
       ))}
