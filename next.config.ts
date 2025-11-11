@@ -1,3 +1,4 @@
+
 // next.config.js - Complete Firebase-optimized configuration
 import type { NextConfig } from 'next';
 import path from 'path';
@@ -187,6 +188,10 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'storage.googleapis.com',
+      },
+       {
+        protocol: 'https',
+        hostname: 'weather.googleapis.com',
       }
     ],
     formats: ['image/webp', 'image/avif'],

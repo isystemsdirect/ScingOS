@@ -1,11 +1,14 @@
+
 'use client'
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation';
-import { GoogleMap, useJsApiLoader, MarkerF, InfoWindowF } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, MarkerF, InfoWindowF, WeatherLayer, CloudLayer } from '@react-google-maps/api';
 import type { Inspector, Client } from '@/lib/types';
-import { Loader2, AlertTriangle } from 'lucide-react';
+import { Loader2, AlertTriangle, Map, Satellite, Layers, Cloud, Wind } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
+import { Button } from './ui/button';
+import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from './ui/tooltip';
 
 const containerStyle = {
   width: '100%',
@@ -21,6 +24,95 @@ const mapOptions = {
     disableDefaultUI: true,
     zoomControl: true,
     scrollwheel: true,
+    styles: [
+        {
+          "elementType": "geometry",
+          "stylers": [{ "color": "#242f3e" }]
+        },
+        {
+          "elementType": "labels.text.fill",
+          "stylers": [{ "color": "#746855" }]
+        },
+        {
+          "elementType": "labels.text.stroke",
+          "stylers": [{ "color": "#242f3e" }]
+        },
+        {
+          "featureType": "administrative.locality",
+          "elementType": "labels.text.fill",
+          "stylers": [{ "color": "#d59563" }]
+        },
+        {
+          "featureType": "poi",
+          "elementType": "labels.text.fill",
+          "stylers": [{ "color": "#d59563" }]
+        },
+        {
+          "featureType": "poi.park",
+          "elementType": "geometry",
+          "stylers": [{ "color": "#263c3f" }]
+        },
+        {
+          "featureType": "poi.park",
+          "elementType": "labels.text.fill",
+          "stylers": [{ "color": "#6b9a76" }]
+        },
+        {
+          "featureType": "road",
+          "elementType": "geometry",
+          "stylers": [{ "color": "#38414e" }]
+        },
+        {
+          "featureType": "road",
+          "elementType": "geometry.stroke",
+          "stylers": [{ "color": "#212a37" }]
+        },
+        {
+          "featureType": "road",
+          "elementType": "labels.text.fill",
+          "stylers": [{ "color": "#9ca5b3" }]
+        },
+        {
+          "featureType": "road.highway",
+          "elementType": "geometry",
+          "stylers": [{ "color": "#746855" }]
+        },
+        {
+          "featureType": "road.highway",
+          "elementType": "geometry.stroke",
+          "stylers": [{ "color": "#1f2835" }]
+        },
+        {
+          "featureType": "road.highway",
+          "elementType": "labels.text.fill",
+          "stylers": [{ "color": "#f3d19c" }]
+        },
+        {
+          "featureType": "transit",
+          "elementType": "geometry",
+          "stylers": [{ "color": "#2f3948" }]
+        },
+        {
+          "featureType": "transit.station",
+          "elementType": "labels.text.fill",
+          "stylers": [{ "color": "#d59563" }]
+        },
+        {
+          "featureType": "water",
+          "elementType": "geometry",
+          "stylers": [{ "color": "#17263c" }]
+        },
+        {
+          "featureType": "water",
+          "elementType": "labels.text.fill",
+          "stylers": [{ "color": "#515c6d" }]
+        },
+        {
+          "featureType": "water",
+          "elementType": "labels.text.stroke",
+          "stylers": [{ "color": "#17263c" }]
+        }
+    ]
 };
 
 interface MarketplaceMapProps {
@@ -37,9 +129,9 @@ export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: googleMapsApiKey,
-    libraries: ['places'],
+    libraries: ['places', 'weather'],
     preventGoogleFontsLoading: true,
-    googleMapsScriptBaseUrl: isApiKeyMissing ? '' : undefined, // Prevent loading if key is missing
+    googleMapsScriptBaseUrl: isApiKeyMissing ? '' : undefined,
   });
 
   const [map, setMap] = useState(null)
@@ -47,6 +139,8 @@ export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
   const [zoom, setZoom] = useState(10);
   const [activeInspector, setActiveInspector] = useState<Inspector | null>(null);
   const [activeClient, setActiveClient] = useState<Client | null>(null);
+  const [activeWeatherLayer, setActiveWeatherLayer] = useState<string | null>(null);
+  const [mapTypeId, setMapTypeId] = useState('roadmap');
 
   const onLoad = React.useCallback(function callback(map: any) {
     setMap(map)
@@ -105,9 +199,12 @@ export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
           mapContainerStyle={containerStyle}
           center={center}
           zoom={zoom}
-          options={mapOptions}
+          options={{...mapOptions, mapTypeId}}
           onLoad={onLoad}
         >
+            {activeWeatherLayer === 'precipitation' && <WeatherLayer />}
+            {activeWeatherLayer === 'clouds' && <CloudLayer />}
+
           {inspectors.map(inspector => (
               <MarkerF 
                   key={`inspector-${inspector.id}`} 
@@ -172,6 +269,26 @@ export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
               </InfoWindowF>
           )}
         </GoogleMap>
+        <TooltipProvider>
+            <div className="absolute top-2 right-2 flex flex-col gap-2">
+                 <Tooltip>
+                    <TooltipTrigger asChild><Button variant="outline" size="icon" onClick={() => setMapTypeId(mapTypeId === 'roadmap' ? 'satellite' : 'roadmap')}><Layers className="h-4 w-4"/></Button></TooltipTrigger>
+                    <TooltipContent><p>Toggle Map Type</p></TooltipContent>
+                 </Tooltip>
+                 <Tooltip>
+                    <TooltipTrigger asChild><Button variant="outline" size="icon" onClick={() => setActiveWeatherLayer(activeWeatherLayer === 'precipitation' ? null : 'precipitation')}><Cloud className="h-4 w-4"/></Button></TooltipTrigger>
+                    <TooltipContent><p>Toggle Precipitation</p></TooltipContent>
+                 </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild><Button variant="outline" size="icon" onClick={() => setActiveWeatherLayer(activeWeatherLayer === 'clouds' ? null : 'clouds')}><Cloud className="h-4 w-4"/></Button></TooltipTrigger>
+                    <TooltipContent><p>Toggle Cloud Cover</p></TooltipContent>
+                 </Tooltip>
+                 <Tooltip>
+                    <TooltipTrigger asChild><Button variant="outline" size="icon" onClick={() => setActiveWeatherLayer(activeWeatherLayer === 'wind' ? null : 'wind')}><Wind className="h-4 w-4"/></Button></TooltipTrigger>
+                    <TooltipContent><p>Toggle Wind Speed</p></TooltipContent>
+                 </Tooltip>
+            </div>
+        </TooltipProvider>
       </div>
   )
 }
