@@ -4,7 +4,16 @@ import { LiveFusionData, DetectedObject, EnvironmentMetrics, AIInsight } from '.
 
 export interface LearningTask {
   id: string;
-  type: 'object_recognition' | 'environment_analysis' | 'anomaly_detection' | 'prediction' | 'optimization';
+  type: 
+    | 'object_recognition' 
+    | 'environment_analysis' 
+    | 'anomaly_detection' 
+    | 'prediction' 
+    | 'optimization'
+    | 'user_behavior_modeling'
+    | 'workflow_optimization'
+    | 'cross_domain_correlation'
+    | 'compliance_pattern_mining';
   objective: string;
   priority: number;
   status: 'active' | 'completed' | 'failed' | 'paused';
@@ -21,6 +30,8 @@ export interface KnowledgeBase {
   anomalyPatterns: Map<string, any>;
   behaviorModels: Map<string, any>;
   correlationRules: Map<string, any>;
+  userProfiles: Map<string, any>; // NEW: To store user-specific patterns
+  workflowPatterns: Map<string, any>; // NEW: To learn common sequences of actions
 }
 
 export class TaskDrivenAISystem {
@@ -30,6 +41,7 @@ export class TaskDrivenAISystem {
   private frameHistory: LiveFusionData[] = [];
   private learningRate = 0.01;
   private confidenceThreshold = 0.8;
+  private currentUserId: string = 'default_user'; // This would be dynamic in a real app
 
   constructor() {
     this.knowledgeBase = {
@@ -37,7 +49,9 @@ export class TaskDrivenAISystem {
       environmentProfiles: new Map(),
       anomalyPatterns: new Map(),
       behaviorModels: new Map(),
-      correlationRules: new Map()
+      correlationRules: new Map(),
+      userProfiles: new Map(),
+      workflowPatterns: new Map(),
     };
   }
 
@@ -48,31 +62,29 @@ export class TaskDrivenAISystem {
     // Start continuous learning tasks
     this.startContinuousLearning();
     
-    console.log('🧠 Task-Driven AI System initialized');
+    console.log('🧠 Task-Driven AI System initialized with User-Centric Learning');
   }
 
   private initializeBaseKnowledge(): void {
-    // Base object recognition patterns
-    this.knowledgeBase.objectPatterns.set('vehicle_standard', {
-      dimensions: { min: [2, 1, 1], max: [6, 3, 2.5] },
-      aspectRatio: { min: 1.5, max: 4.0 },
-      pointDensity: { min: 50, max: 1000 },
-      typical_locations: ['road', 'parking_lot', 'driveway']
+    // Base object recognition patterns for various engineering disciplines
+    this.knowledgeBase.objectPatterns.set('hvac_unit', {
+      dimensions: { min: [0.5, 0.5, 0.5], max: [3, 3, 4] },
+      pointDensity: { min: 80, max: 1200 },
+      signatures: ['thermal_hotspot', 'acoustic_hum'],
+    });
+     this.knowledgeBase.objectPatterns.set('electrical_panel', {
+      dimensions: { min: [0.3, 0.1, 0.5], max: [1.5, 0.5, 2.5] },
+      pointDensity: { min: 100, max: 800 },
+      signatures: ['em_field_anomaly', 'thermal_differential'],
     });
 
-    this.knowledgeBase.objectPatterns.set('building_standard', {
-      dimensions: { min: [3, 3, 2], max: [100, 100, 50] },
-      aspectRatio: { min: 0.5, max: 3.0 },
-      pointDensity: { min: 100, max: 5000 },
-      typical_locations: ['urban', 'residential', 'commercial']
-    });
-
-    // Base environment profiles
-    this.knowledgeBase.environmentProfiles.set('urban', {
-      building_density: { min: 0.3, max: 0.8 },
-      vehicle_density: { min: 0.1, max: 0.4 },
-      vegetation_ratio: { min: 0.1, max: 0.3 },
-      surface_types: ['concrete', 'asphalt', 'glass', 'metal']
+    // Base user profile
+    this.knowledgeBase.userProfiles.set(this.currentUserId, {
+        id: this.currentUserId,
+        preferredUnits: 'imperial',
+        expertiseAreas: ['structural', 'thermal'],
+        commonTasks: new Map(),
+        attentionPatterns: new Map(),
     });
 
     // Base anomaly patterns
@@ -86,9 +98,9 @@ export class TaskDrivenAISystem {
   private startContinuousLearning(): void {
     // Object pattern learning task
     this.createTask({
-      id: 'continuous_object_learning',
+      id: 'cross_disciplinary_object_learning',
       type: 'object_recognition',
-      objective: 'Continuously improve object classification accuracy',
+      objective: 'Continuously improve multi-domain object classification',
       priority: 1,
       status: 'active',
       progress: 0,
@@ -96,12 +108,12 @@ export class TaskDrivenAISystem {
       learningData: []
     });
 
-    // Environment profiling task
+    // User behavior modeling task
     this.createTask({
-      id: 'environment_profiling',
-      type: 'environment_analysis',
-      objective: 'Build comprehensive environment understanding',
-      priority: 2,
+      id: 'user_behavior_modeling',
+      type: 'user_behavior_modeling',
+      objective: 'Learn user patterns to anticipate needs and enhance capabilities',
+      priority: 1,
       status: 'active',
       progress: 0,
       startTime: Date.now(),
@@ -110,9 +122,9 @@ export class TaskDrivenAISystem {
 
     // Anomaly detection task
     this.createTask({
-      id: 'anomaly_detection',
+      id: 'advanced_anomaly_detection',
       type: 'anomaly_detection',
-      objective: 'Detect and learn from unusual patterns',
+      objective: 'Detect and learn from unusual patterns across all data types',
       priority: 3,
       status: 'active',
       progress: 0,
@@ -121,7 +133,7 @@ export class TaskDrivenAISystem {
     });
   }
 
-  public processFrame(fusionData: LiveFusionData): void {
+  public processFrame(fusionData: LiveFusionData, userAction?: any): void {
     // Store frame for learning
     this.frameHistory.push(fusionData);
     if (this.frameHistory.length > 1000) {
@@ -130,18 +142,19 @@ export class TaskDrivenAISystem {
 
     // Process each active task
     this.activeTasks.forEach(task => {
-      this.processTaskFrame(task, fusionData);
+      this.processTaskFrame(task, fusionData, userAction);
     });
 
     // Update knowledge base
     this.updateKnowledgeBase(fusionData);
   }
 
-  private processTaskFrame(task: LearningTask, fusionData: LiveFusionData): void {
+  private processTaskFrame(task: LearningTask, fusionData: LiveFusionData, userAction?: any): void {
     task.learningData.push({
       timestamp: fusionData.timestamp,
       objects: fusionData.detectedObjects,
-      metrics: fusionData.environmentMetrics
+      metrics: fusionData.environmentMetrics,
+      userAction: userAction // e.g., user focused on a specific object
     });
 
     switch (task.type) {
@@ -154,11 +167,36 @@ export class TaskDrivenAISystem {
       case 'anomaly_detection':
         this.processAnomalyDetectionTask(task, fusionData);
         break;
+      case 'user_behavior_modeling':
+        if(userAction) this.processUserBehaviorTask(task, userAction, fusionData);
+        break;
     }
 
     // Update task progress
     task.progress = Math.min(task.learningData.length / 1000, 1.0);
   }
+
+  private processUserBehaviorTask(task: LearningTask, userAction: any, fusionData: LiveFusionData): void {
+      const userProfile = this.knowledgeBase.userProfiles.get(this.currentUserId);
+      if (!userProfile) return;
+
+      // Example: Learning from a user focusing on an object
+      if (userAction.type === 'focus_object') {
+          const objectId = userAction.payload.objectId;
+          const focusedObject = fusionData.detectedObjects.find(o => o.id === objectId);
+          if (focusedObject) {
+              const objectType = focusedObject.type;
+              const currentFocusCount = userProfile.attentionPatterns.get(objectType) || 0;
+              userProfile.attentionPatterns.set(objectType, currentFocusCount + 1);
+
+              // If user frequently focuses on a certain type, increase expertise
+              if (currentFocusCount > 50 && !userProfile.expertiseAreas.includes(objectType)) {
+                  userProfile.expertiseAreas.push(objectType);
+              }
+          }
+      }
+  }
+
 
   private processObjectRecognitionTask(task: LearningTask, fusionData: LiveFusionData): void {
     fusionData.detectedObjects.forEach(obj => {
@@ -258,10 +296,42 @@ export class TaskDrivenAISystem {
     // Generate task completion insights
     insights.push(...this.generateTaskInsights());
 
+    // Generate user-centric insights
+    insights.push(...this.generateUserCentricInsights(objects));
+
     return insights.sort((a, b) => {
       const priorityOrder = { 'critical': 4, 'high': 3, 'medium': 2, 'low': 1 };
       return priorityOrder[b.priority] - priorityOrder[a.priority];
     });
+  }
+
+  private generateUserCentricInsights(objects: DetectedObject[]): AIInsight[] {
+      const insights: AIInsight[] = [];
+      const userProfile = this.knowledgeBase.userProfiles.get(this.currentUserId);
+      if (!userProfile) return insights;
+
+      // Suggest focusing on objects related to user's expertise
+      objects.forEach(obj => {
+          if (userProfile.expertiseAreas.includes(obj.type) && obj.confidence > 0.6) {
+              const focusCount = userProfile.attentionPatterns.get(obj.type) || 0;
+              if (focusCount < 5) { // Suggest if it's an area of expertise but hasn't been focused on recently
+                  insights.push({
+                      id: `suggestion_focus_${obj.id}`,
+                      type: 'recommendation',
+                      priority: 'low',
+                      title: 'Potential Area of Interest',
+                      description: `Detected a ${obj.type}, which matches your expertise. Recommend a closer look.`,
+                      confidence: 0.75,
+                      timestamp: Date.now(),
+                      relatedObjects: [obj.id],
+                      suggestedActions: ['Focus on object', 'Run detailed analysis'],
+                      learnedFrom: 'user_behavior_modeling'
+                  });
+              }
+          }
+      });
+
+      return insights;
   }
 
   private generateObjectInsights(objects: DetectedObject[]): AIInsight[] {
@@ -645,7 +715,8 @@ export class TaskDrivenAISystem {
         environmentProfiles: Object.fromEntries(this.knowledgeBase.environmentProfiles),
         anomalyPatterns: Object.fromEntries(this.knowledgeBase.anomalyPatterns),
         behaviorModels: Object.fromEntries(this.knowledgeBase.behaviorModels),
-        correlationRules: Object.fromEntries(this.knowledgeBase.correlationRules)
+        correlationRules: Object.fromEntries(this.knowledgeBase.correlationRules),
+        userProfiles: Object.fromEntries(this.knowledgeBase.userProfiles),
       },
       completedTasks: this.completedTasks,
       totalFramesProcessed: this.frameHistory.length,
