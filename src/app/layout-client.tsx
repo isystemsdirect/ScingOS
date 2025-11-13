@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from "next/link";
@@ -73,6 +74,7 @@ import { cn } from "@/lib/utils";
 import { ScingAI } from "@/components/ScingAI";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { MessagingDialog } from "@/components/messaging-dialog";
+import BackgroundSlideshow from "@/components/background-slideshow";
 
 
 export default function AppLayout({
@@ -135,13 +137,22 @@ export default function AppLayout({
   };
 
   const authRoutes = ['/login', '/', '/signup', '/forgot-password'];
-  if (authRoutes.includes(pathname)) {
-    return <>{children}</>;
+  
+  const isAuthRoute = authRoutes.includes(pathname);
+
+  if (isAuthRoute) {
+    return (
+        <>
+            <BackgroundSlideshow />
+            {children}
+        </>
+    );
   }
   
   if (isLoading) {
     return (
        <div className="flex h-screen w-full items-center justify-center bg-background">
+          <BackgroundSlideshow />
           <div className="flex flex-col items-center gap-4">
             <Logo isLoginPage={true} />
             <p className="text-muted-foreground">Loading Ecosystem...</p>
@@ -152,6 +163,7 @@ export default function AppLayout({
 
   const renderContent = () => (
     <TooltipProvider>
+      <BackgroundSlideshow />
       <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
         <div className="hidden border-r bg-sidebar md:block group" data-collapsed="false">
           <div className="flex h-full max-h-screen flex-col gap-2">

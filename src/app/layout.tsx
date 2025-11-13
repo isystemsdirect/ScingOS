@@ -1,4 +1,3 @@
-
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster as SonnerToaster } from "react-hot-toast";
@@ -7,7 +6,6 @@ import "./globals.css";
 import "@/styles/background-slideshow.css";
 import { cn } from "@/lib/utils";
 import AppLayout from "@/app/layout-client";
-import BackgroundSlideshow from "@/components/background-slideshow";
 
 
 const inter = Inter({
@@ -28,7 +26,6 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn("dark", inter.variable)}>
       <body>
-        <BackgroundSlideshow />
         <AppLayout>
           {children}
         </AppLayout>

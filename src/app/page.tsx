@@ -15,16 +15,11 @@ export default function LoginPage() {
 
   const handleLogin = (e?: React.MouseEvent<HTMLButtonElement> | React.FormEvent<HTMLFormElement>) => {
     e?.preventDefault();
-    if (typeof window !== 'undefined' && document.documentElement.requestFullscreen) {
-      document.documentElement.requestFullscreen().catch(err => {
-        console.error(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
-      });
-    }
     router.push('/dashboard');
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background/40 p-4">
+    <div className="flex min-h-screen items-center justify-center bg-transparent p-4">
       <Card className="mx-auto w-full max-w-sm shadow-2xl bg-card/60 backdrop-blur-sm overflow-hidden">
         <CardHeader className="text-center pt-8">
           <CardTitle className="text-2xl font-bold">Welcome to</CardTitle>
