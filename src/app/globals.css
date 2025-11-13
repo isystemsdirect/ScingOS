@@ -126,6 +126,10 @@
         animation: pulsate-background-glow 4s ease-in-out infinite;
     }
 
+    .logo-image-pulse {
+        animation: pulsate-image-opacity 4s ease-in-out infinite;
+    }
+
     .text-scingular-glow {
         color: white;
         animation: pulsate-glow 4s ease-in-out infinite;
@@ -192,5 +196,14 @@
   }
   66% {
     box-shadow: 0 0 24px 8px hsl(205 80% 40% / 0.5);
+  }
+}
+
+@keyframes pulsate-image-opacity {
+  0%, 100% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 1;
   }
 }
