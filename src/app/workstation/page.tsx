@@ -1,6 +1,6 @@
 
 import Link from "next/link"
-import { CircleUser, Cpu, Palette, PlusCircle, Trash2, Globe, Linkedin, Facebook, History, Mic, Camera, Sparkles, Database, KeyRound, User, Settings, Store, Bell, SlidersHorizontal, Bot, Wifi, Bluetooth, MapPin, Search, Link2, Calendar, FileText, ScanLine } from "lucide-react"
+import { CircleUser, Cpu, Palette, PlusCircle, Trash2, Globe, Linkedin, Facebook, History, Mic, Camera, Sparkles, Database, KeyRound, User, Settings, Store, Bell, SlidersHorizontal, Bot, Wifi, Bluetooth, MapPin, Search, Link2, Calendar, FileText, ScanLine, Eye } from "lucide-react"
 
 
 import { Button } from "@/components/ui/button"
@@ -71,6 +71,12 @@ export default function WorkstationPage() {
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel>Start New Reading</DropdownMenuLabel>
             <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link href="/workstation/vision">
+                <Eye className="mr-2 h-4 w-4" />
+                <span>Vision Analysis</span>
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link href="/workstation/lidar">
                 <ScanLine className="mr-2 h-4 w-4" />
