@@ -15,7 +15,7 @@ const Logo = ({ className, isLoginPage = false }: { className?: string, isLoginP
         )}
       >
         <div className="relative logo-gradient-light rounded-full p-2">
-            <Image src="/logo.png" alt="Scingular Logo" width={160} height={160} className="transition-all size-32 sm:size-40 md:size-48" />
+            <Image src="/logo.png" alt="Scingular Logo" width={160} height={160} className="transition-all size-32 sm:size-40 md:size-48 opacity-80" />
         </div>
         <div className="relative flex items-baseline justify-center">
            <span className="font-sans uppercase font-bold italic text-2xl sm:text-3xl md:text-4xl whitespace-nowrap text-shadow-drop">
