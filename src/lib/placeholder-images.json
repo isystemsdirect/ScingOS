@@ -1,40 +1,58 @@
 {
   "placeholderImages": [
     {
-      "id": "bg-architecture-1",
-      "description": "A stunning and complex modern architectural facade with geometric patterns and dramatic lighting.",
-      "imageUrl": "https://images.unsplash.com/photo-1594911762141-9a74287895e3?q=80&w=1920",
+      "id": "bg-user-1",
+      "description": "User provided background image 1",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/studio-3494288633-91d2b.firebasestorage.app/o/Images%2FBackground%20Images%2Fbckgrnd001.jpeg?alt=media",
       "imageHint": "modern architecture"
     },
     {
-      "id": "bg-inspector-1",
-      "description": "An inspector in a hard hat reviewing blueprints on a large construction site with a building frame in the background.",
-      "imageUrl": "https://images.unsplash.com/photo-1581094483787-a1483a3b934b?q=80&w=1920",
+      "id": "bg-user-2",
+      "description": "User provided background image 2",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/studio-3494288633-91d2b.firebasestorage.app/o/Images%2FBackground%20Images%2Fbckgrnd002.jpeg?alt=media",
       "imageHint": "inspector construction"
     },
     {
-      "id": "bg-engineer-1",
-      "description": "A female engineer standing on a rooftop overlooking a city, holding a tablet and surveying the area.",
-      "imageUrl": "https://images.unsplash.com/photo-1552975025-05d541537335?q=80&w=1920",
+      "id": "bg-user-3",
+      "description": "User provided background image 3",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/studio-3494288633-91d2b.firebasestorage.app/o/Images%2FBackground%20Images%2Fbckgrnd003.jpeg?alt=media",
       "imageHint": "engineer city"
     },
     {
-      "id": "bg-drone-1",
-      "description": "An inspector operating a drone, which is flying near a modern glass skyscraper.",
-      "imageUrl": "https://images.unsplash.com/photo-1625905273220-e0c145dec49a?q=80&w=1920",
+      "id": "bg-user-4",
+      "description": "User provided background image 4",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/studio-3494288633-91d2b.firebasestorage.app/o/Images%2FBackground%20Images%2Fbckgrnd004.jpeg?alt=media",
       "imageHint": "drone inspection"
     },
     {
-      "id": "bg-industrial-1",
-      "description": "An engineer walking through a vast, clean, and modern industrial facility or data center.",
-      "imageUrl": "https://images.unsplash.com/photo-1556020685-4c471a445731?q=80&w=1920",
+      "id": "bg-user-5",
+      "description": "User provided background image 5",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/studio-3494288633-91d2b.firebasestorage.app/o/Images%2FBackground%20Images%2Fbckgrnd005.jpeg?alt=media",
       "imageHint": "industrial facility"
     },
     {
-      "id": "bg-bridge-1",
-      "description": "A close-up perspective of the intricate steel structure of a modern bridge.",
-      "imageUrl": "https://images.unsplash.com/photo-1541832049949-16b772c91813?q=80&w=1920",
+      "id": "bg-user-6",
+      "description": "User provided background image 6",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/studio-3494288633-91d2b.firebasestorage.app/o/Images%2FBackground%20Images%2Fbckgrnd006.jpeg?alt=media",
       "imageHint": "bridge structure"
+    },
+    {
+      "id": "bg-user-7",
+      "description": "User provided background image 7",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/studio-3494288633-91d2b.firebasestorage.app/o/Images%2FBackground%20Images%2Fbckgrnd007.jpeg?alt=media",
+      "imageHint": "abstract building"
+    },
+    {
+      "id": "bg-user-8",
+      "description": "User provided background image 8",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/studio-3494288633-91d2b.firebasestorage.app/o/Images%2FBackground%20Images%2Fbckgrnd008.jpeg?alt=media",
+      "imageHint": "night city"
+    },
+    {
+      "id": "bg-user-9",
+      "description": "User provided background image 9",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/studio-3494288633-91d2b.firebasestorage.app/o/Images%2FBackground%20Images%2Fbckgrnd009.jpeg?alt=media",
+      "imageHint": "interior construction"
     },
     {
       "id": "avatar1",
