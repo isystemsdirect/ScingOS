@@ -3,26 +3,35 @@
 
 import { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { UploadCloud, X, Image as ImageIcon } from 'lucide-react';
+import { UploadCloud, X } from 'lucide-react';
+import * as exifr from 'exifr';
 import { Button } from '../ui/button';
 
 interface ImageUploadZoneProps {
-  onImageSelect: (base64: string) => void;
+  onImageProcessed: (data: { imageBase64: string; metadata: any }) => void;
   onReset: () => void;
   currentImage: string | null;
 }
 
-export function ImageUploadZone({ onImageSelect, onReset, currentImage }: ImageUploadZoneProps) {
-  const onDrop = useCallback((acceptedFiles: File[]) => {
+export function ImageUploadZone({ onImageProcessed, onReset, currentImage }: ImageUploadZoneProps) {
+  const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = (e) => {
-        onImageSelect(e.target?.result as string);
+      reader.onload = async (e) => {
+        const imageBase64 = e.target?.result as string;
+        try {
+          const metadata = await exifr.parse(file);
+          onImageProcessed({ imageBase64, metadata });
+        } catch (error) {
+          console.error("Metadata extraction failed:", error);
+          // Proceed without metadata if parsing fails
+          onImageProcessed({ imageBase64, metadata: { error: "Could not parse EXIF data." } });
+        }
       };
       reader.readAsDataURL(file);
     }
-  }, [onImageSelect]);
+  }, [onImageProcessed]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,

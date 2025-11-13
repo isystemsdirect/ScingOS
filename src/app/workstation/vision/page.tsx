@@ -9,12 +9,14 @@ import { FindingsDisplay } from '@/components/vision/FindingsDisplay';
 import type { VisionAnalysisOptions, VisionFinding } from '@/lib/vision-data';
 import { mockVisionAnalysis } from '@/lib/vision-data';
 import { Button } from '@/components/ui/button';
-import { Loader2, Wand2 } from 'lucide-react';
+import { Loader2, Wand2, Database } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Separator } from '@/components/ui/separator';
+import { MetadataDisplay } from '@/components/vision/MetadataDisplay';
 
 export default function LariVisionPage() {
   const [image, setImage] = useState<string | null>(null);
+  const [metadata, setMetadata] = useState<any | null>(null);
   const [analysisOptions, setAnalysisOptions] = useState<VisionAnalysisOptions>({
     detectCracks: true,
     detectCorrosion: true,
@@ -26,6 +28,11 @@ export default function LariVisionPage() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
+  const handleImageProcessed = ({ imageBase64, metadata }: { imageBase64: string, metadata: any }) => {
+    setImage(imageBase64);
+    setMetadata(metadata);
+  };
+  
   const handleAnalyze = async () => {
     if (!image) {
       toast({
@@ -38,11 +45,11 @@ export default function LariVisionPage() {
     setIsLoading(true);
     setFindings(null);
 
-    // Simulate API call to LARI-VISION
+    // Simulate API call to LARI-VISION, including metadata
+    console.log("Starting analysis with options:", analysisOptions);
+    console.log("Image metadata:", metadata);
     await new Promise(resolve => setTimeout(resolve, 2500));
     
-    // In a real app, this would be an API call:
-    // const results = await fetch('/api/analyze-image', { ... });
     const mockResults = mockVisionAnalysis(analysisOptions);
     setFindings(mockResults);
 
@@ -56,6 +63,7 @@ export default function LariVisionPage() {
   const handleReset = () => {
     setImage(null);
     setFindings(null);
+    setMetadata(null);
     setIsLoading(false);
   };
 
@@ -73,11 +81,11 @@ export default function LariVisionPage() {
           <div className="space-y-8">
             <Card className="bg-card/60 backdrop-blur-sm">
               <CardHeader>
-                <CardTitle>Image Analysis</CardTitle>
+                <CardTitle>Image Input</CardTitle>
                 <CardDescription>Upload an image to begin the analysis process.</CardDescription>
               </CardHeader>
               <CardContent>
-                <ImageUploadZone onImageSelect={setImage} onReset={handleReset} currentImage={image} />
+                <ImageUploadZone onImageProcessed={handleImageProcessed} onReset={handleReset} currentImage={image} />
               </CardContent>
             </Card>
             
@@ -86,7 +94,7 @@ export default function LariVisionPage() {
                     <CardHeader>
                         <CardTitle>Analysis Results</CardTitle>
                         <CardDescription>
-                            {isLoading ? 'The AI is analyzing your image...' : 'Review the findings identified by LARI-VISION. Click on a finding to highlight it.'}
+                            {isLoading ? 'The AI is analyzing your image...' : findings ? 'Review the findings identified by LARI-VISION. Click on a finding to highlight it.' : 'Analysis complete. No findings to display based on current criteria.'}
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -131,6 +139,17 @@ export default function LariVisionPage() {
                  )}
               </CardContent>
             </Card>
+            {metadata && (
+              <Card className="bg-card/60 backdrop-blur-sm">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2"><Database className="h-5 w-5"/> Photo Metadata</CardTitle>
+                  <CardDescription>Extracted EXIF data from the uploaded image.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <MetadataDisplay metadata={metadata} />
+                </CardContent>
+              </Card>
+            )}
           </div>
         </div>
       </div>
