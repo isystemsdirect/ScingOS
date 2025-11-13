@@ -149,6 +149,13 @@
 
 }
 
+@layer utilities {
+  .text-shadow-drop {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  }
+}
+
+
 @keyframes pulsate-glow {
   0%, 100% {
     text-shadow: 0 0 5px #fff, 0 0 10px #fff, 
