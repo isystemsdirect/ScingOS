@@ -68,7 +68,7 @@ export default function Dashboard() {
         <div className="flex items-center">
           <div>
               <h1 className="text-lg font-semibold md:text-2xl text-shadow-drop">Welcome, {user.name.split(' ')[0]}!</h1>
-              <p className="text-sm text-muted-foreground">This is your command center. Here's what's happening across the ecosystem.</p>
+              <p className="text-sm text-muted-foreground text-shadow-drop">This is your command center. Here's what's happening across the ecosystem.</p>
           </div>
           <div className="ml-auto flex items-center gap-2">
               <Button asChild>
