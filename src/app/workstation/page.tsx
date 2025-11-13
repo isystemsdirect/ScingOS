@@ -644,10 +644,29 @@ export default function WorkstationPage() {
                             <CardTitle>Device Lab</CardTitle>
                         </div>
                         <CardDescription>
-                            Manage, calibrate, and fine-tune your connected hardware outside of active inspections.
+                            Manage, calibrate, and fine-tune your connected hardware and AI interfaces outside of active inspections.
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <Card className="flex flex-col bg-card/60 backdrop-blur-sm">
+                            <CardHeader className="flex flex-row items-center gap-4 pb-4">
+                                <div className="flex items-center justify-center h-12 w-12 rounded-lg bg-muted text-primary">
+                                    <Eye className="h-6 w-6" />
+                                </div>
+                                <div>
+                                    <CardTitle className="text-base">LARI-VISION Lab</CardTitle>
+                                    <CardDescription>AI Image Analysis</CardDescription>
+                                </div>
+                            </CardHeader>
+                            <CardContent className="flex-grow space-y-2">
+                                <p className="text-xs text-muted-foreground">Direct interface to the LARI-VISION sub-engine for visual data processing.</p>
+                            </CardContent>
+                            <CardFooter>
+                                <Button asChild className="w-full">
+                                    <Link href="/workstation/vision">Launch Interface</Link>
+                                </Button>
+                            </CardFooter>
+                        </Card>
                         {mockDevices.map(device => (
                             <Card key={device.id} className="flex flex-col bg-card/60 backdrop-blur-sm">
                                 <CardHeader className="flex flex-row items-center gap-4 pb-4">
@@ -665,7 +684,6 @@ export default function WorkstationPage() {
                                         <p className="ml-auto text-xs text-muted-foreground">FW: {device.firmwareVersion}</p>
                                     </div>
                                     <p className="text-xs text-muted-foreground">Last seen: {device.lastSeen}</p>
-
                                 </CardContent>
                                 <CardFooter>
                                     <Button asChild className="w-full">
