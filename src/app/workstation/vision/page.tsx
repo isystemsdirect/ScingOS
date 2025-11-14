@@ -183,7 +183,10 @@ export default function LariVisionPage() {
                 <Mic className="h-4 w-4 text-muted-foreground" />
                 <span className="sr-only">Use voice command</span>
               </Button>
-              <Button type="button" size="sm" className="h-8">Search</Button>
+              <Button type="button" size="icon" className="h-8 w-8 rounded-full">
+                <Search className="h-4 w-4" />
+                <span className="sr-only">Search</span>
+              </Button>
           </div>
         </div>
 
