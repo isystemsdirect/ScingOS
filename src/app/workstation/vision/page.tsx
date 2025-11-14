@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ImageUploadZone } from '@/components/vision/ImageUploadZone';
 import { AnalysisControls } from '@/components/vision/AnalysisControls';
@@ -9,10 +9,13 @@ import { FindingsDisplay } from '@/components/vision/FindingsDisplay';
 import type { VisionAnalysisOptions, VisionFinding } from '@/lib/vision-data';
 import { mockVisionAnalysis } from '@/lib/vision-data';
 import { Button } from '@/components/ui/button';
-import { Loader2, Wand2, Database } from 'lucide-react';
+import { Loader2, Wand2, Database, Camera, Video, AlertTriangle, Monitor, Sparkles, Mic, Search } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Separator } from '@/components/ui/separator';
 import { MetadataDisplay } from '@/components/vision/MetadataDisplay';
+import { CameraControls } from '@/components/vision/CameraControls';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Input } from '@/components/ui/input';
 
 export default function LariVisionPage() {
   const [image, setImage] = useState<string | null>(null);
@@ -26,7 +29,77 @@ export default function LariVisionPage() {
   });
   const [findings, setFindings] = useState<VisionFinding[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  
+  const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
+  const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
+  const [selectedDeviceId, setSelectedDeviceId] = useState<string>('');
+
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  
   const { toast } = useToast();
+
+  const getCameraPermission = useCallback(async () => {
+    try {
+      // Get permission and initial stream
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      setHasCameraPermission(true);
+      
+      // Enumerate devices
+      const allDevices = await navigator.mediaDevices.enumerateDevices();
+      const videoDevices = allDevices.filter(device => device.kind === 'videoinput');
+      setDevices(videoDevices);
+      
+      if (videoDevices.length > 0) {
+        setSelectedDeviceId(videoDevices[0].deviceId);
+      }
+       // Stop the initial stream, the effect for selectedDeviceId will start the correct one
+      stream.getTracks().forEach(track => track.stop());
+    } catch (error) {
+      console.error('Error accessing camera:', error);
+      setHasCameraPermission(false);
+      toast({
+        variant: 'destructive',
+        title: 'Camera Access Denied',
+        description: 'Please enable camera permissions in your browser settings.',
+      });
+    }
+  }, [toast]);
+
+   useEffect(() => {
+    getCameraPermission();
+  }, [getCameraPermission]);
+
+  useEffect(() => {
+    if (selectedDeviceId) {
+      let stream: MediaStream;
+      const startStream = async () => {
+        try {
+            stream = await navigator.mediaDevices.getUserMedia({ 
+                video: { deviceId: { exact: selectedDeviceId } } 
+            });
+            if (videoRef.current) {
+                videoRef.current.srcObject = stream;
+            }
+        } catch (error) {
+            console.error("Error starting selected camera stream:", error);
+            toast({
+                variant: "destructive",
+                title: "Failed to Start Camera",
+                description: "Could not start the selected camera. It might be in use by another application."
+            })
+        }
+      };
+      startStream();
+
+      return () => {
+        if (stream) {
+          stream.getTracks().forEach(track => track.stop());
+        }
+      };
+    }
+  }, [selectedDeviceId, toast]);
+
 
   const handleImageProcessed = ({ imageBase64, metadata }: { imageBase64: string, metadata: any }) => {
     setImage(imageBase64);
@@ -38,14 +111,13 @@ export default function LariVisionPage() {
       toast({
         variant: 'destructive',
         title: 'No Image Selected',
-        description: 'Please upload an image before running the analysis.',
+        description: 'Please upload or capture an image before running the analysis.',
       });
       return;
     }
     setIsLoading(true);
     setFindings(null);
 
-    // Simulate API call to LARI-VISION, including metadata
     console.log("Starting analysis with options:", analysisOptions);
     console.log("Image metadata:", metadata);
     await new Promise(resolve => setTimeout(resolve, 2500));
@@ -58,6 +130,25 @@ export default function LariVisionPage() {
       title: 'Analysis Complete',
       description: `LARI-VISION identified ${mockResults.length} potential findings.`,
     });
+  };
+
+  const handleCapture = () => {
+    if (videoRef.current && canvasRef.current) {
+        const video = videoRef.current;
+        const canvas = canvasRef.current;
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const context = canvas.getContext('2d');
+        if (context) {
+            context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+            const dataUri = canvas.toDataURL('image/png');
+            handleImageProcessed({ imageBase64: dataUri, metadata: { source: 'Live Capture', device: selectedDeviceId } });
+            toast({
+              title: "Image Captured",
+              description: "The current frame has been captured and is ready for analysis."
+            })
+        }
+    }
   };
 
   const handleReset = () => {
@@ -76,23 +167,59 @@ export default function LariVisionPage() {
             The direct interface to the LARI-VISION sub-engine. Upload an image, configure analysis parameters, and receive structured, actionable insights from the AI.
           </p>
         </div>
+        
+         <div className="relative">
+          <Search className="absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            type="search"
+            placeholder="Scing Vision Search: Describe a visual anomaly to find in archives (e.g., 'hairline cracks on concrete, last 30 days')..."
+            className="w-full rounded-full bg-card/60 backdrop-blur-sm pl-12 h-12 text-base"
+          />
+          <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
+              <Button type="button" variant="ghost" size="icon" className="h-8 w-8 rounded-md">
+                <Mic className="h-4 w-4 text-muted-foreground" />
+                <span className="sr-only">Use voice command</span>
+              </Button>
+              <Button type="button" size="sm" className="h-8">Search</Button>
+          </div>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_350px] gap-8 items-start">
           <div className="space-y-8">
             <Card className="bg-card/60 backdrop-blur-sm">
               <CardHeader>
-                <CardTitle>Image Input</CardTitle>
-                <CardDescription>Upload an image to begin the analysis process.</CardDescription>
+                <CardTitle className="flex items-center gap-2"><Video className="h-5 w-5"/> Live Capture & Input</CardTitle>
+                <CardDescription>Capture an image from a connected device or upload a file.</CardDescription>
               </CardHeader>
               <CardContent>
+                {hasCameraPermission === false ? (
+                    <Alert variant="destructive">
+                        <AlertTriangle className="h-4 w-4" />
+                        <AlertTitle>Camera Access Denied</AlertTitle>
+                        <AlertDescription>
+                            Please grant camera permissions in your browser to use the live capture feature. You can still upload files manually.
+                        </AlertDescription>
+                    </Alert>
+                ) : hasCameraPermission === null ? (
+                    <div className="flex items-center justify-center h-48 text-muted-foreground">
+                        <Loader2 className="h-8 w-8 animate-spin mr-2"/>
+                        Initializing camera...
+                    </div>
+                ): (
+                   <div className="relative w-full aspect-video bg-muted rounded-md overflow-hidden border">
+                        <video ref={videoRef} className="w-full h-full object-cover" autoPlay muted playsInline />
+                   </div>
+                )}
+                <Separator className="my-4" />
                 <ImageUploadZone onImageProcessed={handleImageProcessed} onReset={handleReset} currentImage={image} />
+                <canvas ref={canvasRef} className="hidden" />
               </CardContent>
             </Card>
             
             {image && (
                 <Card className="bg-card/60 backdrop-blur-sm">
                     <CardHeader>
-                        <CardTitle>Analysis Results</CardTitle>
+                        <CardTitle className="flex items-center gap-2"><Sparkles className="h-5 w-5"/> Analysis Results</CardTitle>
                         <CardDescription>
                             {isLoading ? 'The AI is analyzing your image...' : findings ? 'Review the findings identified by LARI-VISION. Click on a finding to highlight it.' : 'Analysis complete. No findings to display based on current criteria.'}
                         </CardDescription>
@@ -105,6 +232,21 @@ export default function LariVisionPage() {
           </div>
           
           <div className="sticky top-20 space-y-8">
+            <Card className="bg-card/60 backdrop-blur-sm">
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2"><Monitor className="h-5 w-5"/> Device & Capture Controls</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <CameraControls 
+                        devices={devices}
+                        selectedDeviceId={selectedDeviceId}
+                        onDeviceChange={setSelectedDeviceId}
+                        onCapture={handleCapture}
+                        disabled={isLoading || !hasCameraPermission}
+                    />
+                </CardContent>
+            </Card>
+            
              <Card className="bg-card/60 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle>Analysis Controls</CardTitle>
@@ -139,6 +281,7 @@ export default function LariVisionPage() {
                  )}
               </CardContent>
             </Card>
+
             {metadata && (
               <Card className="bg-card/60 backdrop-blur-sm">
                 <CardHeader>
