@@ -9,7 +9,7 @@ import { FindingsDisplay } from '@/components/vision/FindingsDisplay';
 import type { VisionAnalysisOptions, VisionFinding } from '@/lib/vision-data';
 import { mockVisionAnalysis } from '@/lib/vision-data';
 import { Button } from '@/components/ui/button';
-import { Loader2, Wand2, Database, Camera, Video, AlertTriangle, Monitor, Sparkles, Mic, Search } from 'lucide-react';
+import { Loader2, Wand2, Database, Camera, Video, AlertTriangle, Monitor, Sparkles, Mic, Search, Wifi } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Separator } from '@/components/ui/separator';
 import { MetadataDisplay } from '@/components/vision/MetadataDisplay';
@@ -39,7 +39,7 @@ export default function LariVisionPage() {
   
   const { toast } = useToast();
 
-  const getCameraPermission = useCallback(async () => {
+  const getCameraPermission = useCallback(async (showAlerts = true) => {
     try {
       // Get permission and initial stream
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -50,7 +50,7 @@ export default function LariVisionPage() {
       const videoDevices = allDevices.filter(device => device.kind === 'videoinput');
       setDevices(videoDevices);
       
-      if (videoDevices.length > 0) {
+      if (videoDevices.length > 0 && !selectedDeviceId) {
         setSelectedDeviceId(videoDevices[0].deviceId);
       }
        // Stop the initial stream, the effect for selectedDeviceId will start the correct one
@@ -58,20 +58,23 @@ export default function LariVisionPage() {
     } catch (error) {
       console.error('Error accessing camera:', error);
       setHasCameraPermission(false);
-      toast({
-        variant: 'destructive',
-        title: 'Camera Access Denied',
-        description: 'Please enable camera permissions in your browser settings.',
-      });
+      if (showAlerts) {
+          toast({
+            variant: 'destructive',
+            title: 'Camera Access Denied',
+            description: 'Please enable camera permissions in your browser settings.',
+          });
+      }
     }
-  }, [toast]);
+  }, [toast, selectedDeviceId]);
 
    useEffect(() => {
-    getCameraPermission();
+    // Check for permission silently on load
+    getCameraPermission(false);
   }, [getCameraPermission]);
 
   useEffect(() => {
-    if (selectedDeviceId) {
+    if (selectedDeviceId && hasCameraPermission) {
       let stream: MediaStream;
       const startStream = async () => {
         try {
@@ -98,7 +101,7 @@ export default function LariVisionPage() {
         }
       };
     }
-  }, [selectedDeviceId, toast]);
+  }, [selectedDeviceId, hasCameraPermission, toast]);
 
 
   const handleImageProcessed = ({ imageBase64, metadata }: { imageBase64: string, metadata: any }) => {
@@ -193,13 +196,14 @@ export default function LariVisionPage() {
               </CardHeader>
               <CardContent>
                 {hasCameraPermission === false ? (
-                    <Alert variant="destructive">
-                        <AlertTriangle className="h-4 w-4" />
-                        <AlertTitle>Camera Access Denied</AlertTitle>
-                        <AlertDescription>
-                            Please grant camera permissions in your browser to use the live capture feature. You can still upload files manually.
-                        </AlertDescription>
-                    </Alert>
+                     <div className="p-8 border-2 border-dashed rounded-lg flex flex-col items-center justify-center text-center">
+                        <AlertTriangle className="h-10 w-10 text-destructive mb-4" />
+                        <h3 className="font-semibold">Camera Access Required</h3>
+                        <p className="text-sm text-muted-foreground mt-2 mb-4">To use the live capture feature, SCINGULAR needs permission to access your camera.</p>
+                        <Button onClick={() => getCameraPermission(true)}>
+                           <Wifi className="mr-2 h-4 w-4" /> Grant Permission
+                        </Button>
+                    </div>
                 ) : hasCameraPermission === null ? (
                     <div className="flex items-center justify-center h-48 text-muted-foreground">
                         <Loader2 className="h-8 w-8 animate-spin mr-2"/>
@@ -242,7 +246,9 @@ export default function LariVisionPage() {
                         selectedDeviceId={selectedDeviceId}
                         onDeviceChange={setSelectedDeviceId}
                         onCapture={handleCapture}
-                        disabled={isLoading || !hasCameraPermission}
+                        onConnect={() => getCameraPermission(true)}
+                        hasPermission={!!hasCameraPermission}
+                        disabled={isLoading}
                     />
                 </CardContent>
             </Card>
