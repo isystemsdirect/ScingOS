@@ -162,7 +162,7 @@ export default function RootLayout({
           <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
             <div className="hidden border-r bg-sidebar md:block group" data-collapsed="false">
               <div className="flex h-full max-h-screen flex-col gap-2">
-                <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
+                <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6 bg-white dark:bg-zinc-950/20">
                   <Logo />
                   {isProOrEnterprise && <Badge variant="pro" className="ml-2 text-[0.6rem] px-1.5 py-0.5 h-auto group-data-[collapsed=true]:hidden">Pro</Badge>}
                 </div>
@@ -464,4 +464,3 @@ export default function RootLayout({
     </html>
   );
 }
-
