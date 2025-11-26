@@ -8,22 +8,22 @@ SCINGULAR OS is a revolutionary AI-centric operating system **Powered by Scing**
 ## Logo
 
 ### Primary Mark
-The SCINGULAR OS logo features a thick navy circle with outer rounded ends, an open break at the top, and a prominent orange accent dot.
+The SCINGULAR OS logo features a thick navy circle with outer rounded ends, an open break at the top, and a prominent golden yellow accent dot.
 
 **Design Elements:**
 - **Navy Circle**: Represents the unified OS ecosystem and continuous intelligence
-- **Orange Accent Dot**: Symbolizes the Scing AI intelligence core
+- **Golden Yellow Accent Dot**: Symbolizes the Scing AI intelligence core, warmth, and approachability
 - **Open Break**: Suggests openness, accessibility, and portal interface
 - **Rounded Ends**: Modern, friendly, approachable technology
 
 ### Logo Variations
 
 **Primary (Full Color)**
-- Navy circle (#003D5B) with orange accent (#FF6600)
+- Navy circle (#003D5B) with golden yellow accent (#FFD700)
 - Use on white or light backgrounds
 
 **Reversed (Light on Dark)**
-- White circle (#FFFFFF) with orange accent (#FF6600)
+- White circle (#FFFFFF) with golden yellow accent (#FFD700)
 - Use on dark backgrounds or navy surfaces
 
 **Neon Variant**
@@ -39,7 +39,7 @@ The SCINGULAR OS logo features a thick navy circle with outer rounded ends, an o
 - Print: 0.5 inches / 1.27cm (badges, labels)
 
 ### Clear Space
-Maintain clear space equal to the diameter of the orange/green accent dot on all sides of the logo.
+Maintain clear space equal to the diameter of the golden yellow/green accent dot on all sides of the logo.
 
 ---
 
@@ -52,10 +52,10 @@ Maintain clear space equal to the diameter of the orange/green accent dot on all
 **CMYK:** 100, 33, 0, 64  
 **Usage:** Primary brand color, backgrounds, UI chrome, text
 
-**Orange** - #FF6600  
-**RGB:** 255, 102, 0  
-**CMYK:** 0, 60, 100, 0  
-**Usage:** Primary accent, CTAs, highlights, Scing intelligence indicators
+**Golden Yellow** - #FFD700  
+**RGB:** 255, 215, 0  
+**CMYK:** 0, 16, 100, 0  
+**Usage:** Primary accent, CTAs, highlights, Scing intelligence indicators, warmth and approachability
 
 **Neon Green** - #00FF88  
 **RGB:** 0, 255, 136  
@@ -86,7 +86,7 @@ Maintain clear space equal to the diameter of the orange/green accent dot on all
 ### Color Combinations
 
 **Primary Stack (Standard):**
-- Navy + Orange + White
+- Navy + Golden Yellow + White
 - Use for most applications, marketing, web
 
 **Tech Stack (Dark Mode):**
@@ -94,8 +94,12 @@ Maintain clear space equal to the diameter of the orange/green accent dot on all
 - Use for OS interfaces, boot screens, developer tools
 
 **Minimal Stack (Clean):**
-- White + Navy + Orange
+- White + Navy + Golden Yellow
 - Use for print, documentation, professional contexts
+
+**Premium Stack:**
+- Navy + Golden Yellow + Neon Green
+- Use for high-end branding, special editions
 
 ---
 
@@ -142,7 +146,7 @@ Powered by Scing
 - Circular or shield badge
 - Scing logo icon in center
 - "Powered by Scing" text below
-- Navy or white background
+- Navy or white background with golden yellow accent
 
 ---
 
@@ -187,7 +191,7 @@ For code, data, technical specifications
 ### Boot Screen Animation
 
 **Concept:**
-The orange (or neon green) accent dot rotates clockwise around the navy circle, completing one full rotation as the system initializes.
+The golden yellow (or neon green) accent dot rotates clockwise around the navy circle, completing one full rotation as the system initializes.
 
 **Timing:**
 - Duration: 2-3 seconds
@@ -196,7 +200,7 @@ The orange (or neon green) accent dot rotates clockwise around the navy circle, 
 
 **Sequence:**
 1. Logo fades in (0.5s)
-2. Orange dot begins rotation (1.5-2s)
+2. Golden yellow dot begins rotation (1.5-2s)
 3. "SCINGULAR OS" text fades in below (0.5s)
 4. "Powered by Scing" fades in (0.3s)
 5. On boot complete: dot stops at top, gentle pulse
@@ -206,6 +210,11 @@ For dark mode or night boot sequences, use neon green (#00FF88) accent with glow
 - Outer glow: 8px blur, 40% opacity
 - Inner glow: 4px blur, 60% opacity
 - Creates futuristic, tech-forward aesthetic
+
+**Golden Yellow Glow:**
+For light/standard boot sequences, golden yellow with warm glow:
+- Soft outer glow: 6px blur, 30% opacity
+- Creates warm, inviting, approachable aesthetic
 
 ### UI Element Animation
 
@@ -252,28 +261,31 @@ For dark mode or night boot sequences, use neon green (#00FF88) accent with glow
 - 1-2 inch diameter
 - "Powered by Scing" beneath logo
 - Placement: bottom-right corner of device
+- Gold metallic finish recommended
 
 **Product Packaging:**
 - Logo on front panel
 - Full brand lockup on back panel
 - Neon green variant for premium/developer editions
+- Golden yellow for standard consumer editions
 
 **Boot Screen (Device Startup):**
 - Full screen logo animation
 - Navy or deep blue background
-- Neon green accent for OLED/dark displays
+- Golden yellow for standard, neon green for dark mode/OLED displays
 
 ### Marketing Materials
 
 **Print Ads:**
 - Logo in top-right or bottom-left
 - "Powered by Scing" integrated with body copy
-- Primary color stack (Navy + Orange + White)
+- Primary color stack (Navy + Golden Yellow + White)
 
 **Digital Ads:**
 - Animated logo in corner
 - CTA: "Experience SCINGULAR OS"
 - Tech stack colors for dark creative
+- Golden yellow for warmth and approachability
 
 **Presentations:**
 - Logo on title slide
@@ -289,7 +301,7 @@ For dark mode or night boot sequences, use neon green (#00FF88) accent with glow
 **WCAG AAA Compliance:**
 - Navy (#003D5B) on White (#FFFFFF): 12.4:1 ✓
 - White (#FFFFFF) on Navy (#003D5B): 12.4:1 ✓
-- Orange (#FF6600) on Navy (#003D5B): 4.8:1 ✓
+- Golden Yellow (#FFD700) on Navy (#003D5B): 8.2:1 ✓
 - Neon Green (#00FF88) on Deep Blue (#001E3C): 7.2:1 ✓
 
 **Minimum Requirements:**
@@ -300,7 +312,7 @@ For dark mode or night boot sequences, use neon green (#00FF88) accent with glow
 ### Alternative Text
 
 **Logo Alt Text:**
-"SCINGULAR OS logo - Navy circle with orange accent"
+"SCINGULAR OS logo - Navy circle with golden yellow accent"
 
 **Icon Alt Text:**
 "SCINGULAR OS icon - Powered by Scing"
@@ -352,7 +364,7 @@ scingular-os-logo-mono.eps
 ❌ **Don't:**
 - Rotate the logo (except accent dot in animation)
 - Stretch or distort proportions
-- Change the orange accent to other colors (except approved neon green variant)
+- Change the golden yellow accent to other colors (except approved neon green variant)
 - Add drop shadows or effects (except approved animations)
 - Place on busy backgrounds without clear space
 - Recreate or redraw the logo
@@ -373,6 +385,7 @@ scingular-os-logo-mono.eps
 - Place navy text on deep blue background (low contrast)
 - Use neon green as primary brand color (accent only)
 - Apply gradients to logo (solid colors only)
+- Use golden yellow as background color (accent only)
 
 ---
 
@@ -380,9 +393,9 @@ scingular-os-logo-mono.eps
 
 ### Tone Attributes
 - **Intelligent**: Knowledgeable without being condescending
-- **Approachable**: Friendly and accessible
-- **Innovative**: Forward-thinking and cutting-edge
-- **Trustworthy**: Reliable and secure
+- **Approachable**: Friendly and accessible (reflected in golden yellow warmth)
+- **Innovative**: Forward-thinking and cutting-edge (reflected in neon green tech aesthetic)
+- **Trustworthy**: Reliable and secure (reflected in navy blue stability)
 - **Empowering**: Enabling users, not replacing them
 
 ### Messaging Pillars
@@ -401,7 +414,32 @@ scingular-os-logo-mono.eps
 
 ---
 
+## Color Psychology
+
+**Navy Blue (#003D5B)**
+- Trust, stability, professionalism
+- Depth, intelligence, authority
+- Foundation of the brand
+
+**Golden Yellow (#FFD700)**
+- Warmth, optimism, approachability
+- Intelligence, clarity, enlightenment
+- Scing's helpful, friendly nature
+
+**Neon Green (#00FF88)**
+- Innovation, technology, future
+- Energy, growth, vitality
+- Tech-forward, cutting-edge capabilities
+
+---
+
 ## Version History
+
+**v1.1.0** - November 26, 2025
+- Updated primary accent from orange to golden yellow
+- Added golden yellow glow animation spec
+- Enhanced color psychology section
+- Updated all examples and usage scenarios
 
 **v1.0.0** - November 26, 2025
 - Initial brand guidelines
