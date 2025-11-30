@@ -1,7 +1,7 @@
 
 "use client"
 
-import { Bar, BarChart, CartesianGrid, Cell, Line, LineChart, Pie, PieChart, XAxis, YAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts"
 
 import {
   Card,
@@ -14,10 +14,9 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-  ChartLegend,
-  ChartLegendContent,
 } from "@/components/ui/chart"
 import type { ChartConfig } from "@/components/ui/chart"
+import { ClientPieChart } from "./client-chart-wrapper"
 
 const inspectionStatusData = [
   { status: "Final", count: 1, fill: "var(--color-Final)" },
@@ -81,20 +80,7 @@ export function DashboardCharts() {
                 <CardDescription>Breakdown of all inspections by their current status.</CardDescription>
             </CardHeader>
             <CardContent className="flex justify-center">
-                 <ChartContainer config={inspectionStatusConfig} className="mx-auto aspect-square w-full max-w-[250px]">
-                    <PieChart>
-                        <ChartTooltip
-                            cursor={false}
-                            content={<ChartTooltipContent hideLabel />}
-                        />
-                        <Pie data={inspectionStatusData} dataKey="count" nameKey="status" innerRadius={60} strokeWidth={5}>
-                             {inspectionStatusData.map((entry) => (
-                                <Cell key={entry.status} fill={entry.fill} stroke={entry.fill} />
-                            ))}
-                        </Pie>
-                        <ChartLegend content={<ChartLegendContent nameKey="status" />} />
-                    </PieChart>
-                </ChartContainer>
+                 <ClientPieChart data={inspectionStatusData} config={inspectionStatusConfig} />
             </CardContent>
         </Card>
         <Card className="bg-card/60 backdrop-blur-sm lg:col-span-2">
