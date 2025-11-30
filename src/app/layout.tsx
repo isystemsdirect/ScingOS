@@ -1,4 +1,3 @@
-
 import { Inter } from "next/font/google";
 import { Toaster as SonnerToaster } from "react-hot-toast";
 import { Toaster } from "@/components/ui/toaster";
@@ -7,6 +6,7 @@ import AppShell from "@/components/app-shell";
 
 import "./globals.css";
 import "@/styles/background-slideshow.css";
+import { AppProvider } from "@/components/app-provider";
 
 
 const inter = Inter({
@@ -28,13 +28,12 @@ export default function RootLayout({
           <meta name="description" content="The future of inspection technology, powered by AI." />
       </head>
       <body>
-        <AppShell>
-            {children}
-        </AppShell>
+        <AppProvider>
+          {children}
+        </AppProvider>
         <Toaster />
         <SonnerToaster />
       </body>
     </html>
   );
 }
-
