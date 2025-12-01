@@ -50,6 +50,29 @@ export function WeatherWidget() {
   const [error, setError] = useState<string | null>(null);
   const [unit, setUnit] = useState<'metric' | 'imperial'>('imperial');
 
+  const fetchWeatherForCity = (city: string) => {
+      const apiKey = '06145e5a1bff8a8d2d507f0b19a5f71d'; // Ideally use env var
+      const unit = localStorage.getItem('temperature-unit') === 'C' ? 'metric' : 'imperial';
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=${unit}&appid=${apiKey}`;
+      
+      setLoading(true);
+      fetch(url)
+          .then(response => {
+              if (!response.ok) throw new Error('City not found or API error');
+              return response.json();
+          })
+          .then(data => {
+              setWeather(data);
+              setError(null);
+          })
+          .catch(err => {
+              setError(err.message);
+              console.error(err);
+          })
+          .finally(() => setLoading(false));
+  };
+
+
   const fetchWeather = (lat: number, lon: number) => {
     const currentUnit = localStorage.getItem('temperature-unit') === 'C' ? 'metric' : 'imperial';
     setUnit(currentUnit);
@@ -86,16 +109,26 @@ export function WeatherWidget() {
 
   useEffect(() => {
     const handleStorageChange = () => {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              fetchWeather(position.coords.latitude, position.coords.longitude);
-            },
-            () => {
-              setError("Cannot access location. Showing default weather.");
-              fetchWeather(34.0522, -118.2437); // Fallback to LA
+        const useGps = localStorage.getItem('use-gps-location') !== 'false'; // default to true
+        const manualLocation = localStorage.getItem('manual-location');
+        
+        if (!useGps && manualLocation) {
+            fetchWeatherForCity(manualLocation);
+        } else {
+             if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                    fetchWeather(position.coords.latitude, position.coords.longitude);
+                    },
+                    () => {
+                    setError("Cannot access location. Showing default weather.");
+                    fetchWeather(34.0522, -118.2437); // Fallback to LA
+                    }
+                );
+            } else {
+                setError("Geolocation is not supported by your browser.");
+                fetchWeatherForCity('New York'); // Ultimate fallback
             }
-          );
         }
     };
     

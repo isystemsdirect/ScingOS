@@ -29,6 +29,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { WorkstationLocationSettings } from "@/components/workstation-location-settings"
 
 export default function WorkstationPage() {
   const user = mockInspectors[0];
@@ -712,8 +713,9 @@ export default function WorkstationPage() {
                             Manage general application preferences.
                         </CardDescription>
                         </CardHeader>
-                        <CardContent>
-                            <WorkstationTimeFormatSwitch />
+                        <CardContent className="grid gap-6">
+                           <WorkstationTimeFormatSwitch />
+                           <WorkstationLocationSettings />
                         </CardContent>
                     </Card>
                     <Card className="bg-card/60 backdrop-blur-sm">

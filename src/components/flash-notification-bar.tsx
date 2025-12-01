@@ -42,6 +42,34 @@ export function FlashNotificationBar() {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [weatherUnit, setWeatherUnit] = useState<'metric' | 'imperial'>('imperial');
 
+  const fetchWeather = (lat: number, lon: number) => {
+    const apiKey = '06145e5a1bff8a8d2d507f0b19a5f71d'; // Replace with your key or move to env
+    const unit = localStorage.getItem('temperature-unit') === 'C' ? 'metric' : 'imperial';
+    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=${unit}&appid=${apiKey}`;
+    
+    fetch(url)
+        .then(response => {
+            if (!response.ok) throw new Error('Weather data fetch failed');
+            return response.json();
+        })
+        .then(data => setWeather(data))
+        .catch(console.error);
+  };
+  
+  const fetchWeatherForCity = (city: string) => {
+      const apiKey = '06145e5a1bff8a8d2d507f0b19a5f71d'; // Replace with your key or move to env
+      const unit = localStorage.getItem('temperature-unit') === 'C' ? 'metric' : 'imperial';
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=${unit}&appid=${apiKey}`;
+  
+      fetch(url)
+          .then(response => {
+              if (!response.ok) throw new Error('Weather data fetch for city failed');
+              return response.json();
+          })
+          .then(data => setWeather(data))
+          .catch(console.error);
+  };
+
   useEffect(() => {
     // Set initial time on client mount to avoid hydration errors
     setNow(new Date());
@@ -51,6 +79,25 @@ export function FlashNotificationBar() {
         setTimeFormat(newFormat);
         const newUnit = localStorage.getItem('temperature-unit') === 'C' ? 'metric' : 'imperial';
         setWeatherUnit(newUnit);
+
+        const manualLocation = localStorage.getItem('manual-location');
+        const useGps = localStorage.getItem('use-gps-location') === 'true';
+
+        if (!useGps && manualLocation) {
+            fetchWeatherForCity(manualLocation);
+        } else {
+             if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                    fetchWeather(position.coords.latitude, position.coords.longitude);
+                    },
+                    () => {
+                    // Fallback to a default location if GPS fails
+                    fetchWeather(34.0522, -118.2437);
+                    }
+                );
+            }
+        }
     };
 
     handleStorageChange(); // Check on mount
@@ -71,35 +118,6 @@ export function FlashNotificationBar() {
         clearInterval(timeInterval);
         clearInterval(toggleInterval);
         window.removeEventListener('storage', handleStorageChange);
-    }
-  }, []);
-
-
-  const fetchWeather = (lat: number, lon: number) => {
-    const apiKey = 'cf5f05aff1d3b71885fb90702f9fd4cb';
-    const unit = localStorage.getItem('temperature-unit') === 'C' ? 'metric' : 'imperial';
-    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=${unit}&appid=${apiKey}`;
-    
-    fetch(url)
-        .then(response => {
-            if (!response.ok) throw new Error('Weather data fetch failed');
-            return response.json();
-        })
-        .then(data => setWeather(data))
-        .catch(console.error);
-  };
-
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          fetchWeather(position.coords.latitude, position.coords.longitude);
-        },
-        () => {
-          // Fallback to a default location
-          fetchWeather(34.0522, -118.2437);
-        }
-      );
     }
   }, []);
 
