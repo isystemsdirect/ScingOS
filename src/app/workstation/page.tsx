@@ -708,7 +708,7 @@ export default function WorkstationPage() {
                 <div className="grid gap-6">
                     <Card className="bg-card/60 backdrop-blur-sm">
                         <CardHeader>
-                        <CardTitle>General Settings</CardTitle>
+                        <CardTitle>General Application Settings</CardTitle>
                         <CardDescription>
                             Manage general application preferences.
                         </CardDescription>
@@ -788,3 +788,5 @@ export default function WorkstationPage() {
     </div>
   )
 }
+
+    
