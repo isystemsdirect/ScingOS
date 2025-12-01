@@ -45,6 +45,7 @@ export function FlashNotificationBar() {
   const fetchWeather = (lat: number, lon: number) => {
     const apiKey = '06145e5a1bff8a8d2d507f0b19a5f71d'; // Replace with your key or move to env
     const unit = localStorage.getItem('temperature-unit') === 'C' ? 'metric' : 'imperial';
+    setWeatherUnit(unit);
     const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=${unit}&appid=${apiKey}`;
     
     fetch(url)
@@ -59,6 +60,7 @@ export function FlashNotificationBar() {
   const fetchWeatherForCity = (city: string) => {
       const apiKey = '06145e5a1bff8a8d2d507f0b19a5f71d'; // Replace with your key or move to env
       const unit = localStorage.getItem('temperature-unit') === 'C' ? 'metric' : 'imperial';
+      setWeatherUnit(unit);
       const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=${unit}&appid=${apiKey}`;
   
       fetch(url)
@@ -81,7 +83,7 @@ export function FlashNotificationBar() {
         setWeatherUnit(newUnit);
 
         const manualLocation = localStorage.getItem('manual-location');
-        const useGps = localStorage.getItem('use-gps-location') === 'true';
+        const useGps = localStorage.getItem('use-gps-location') !== 'false';
 
         if (!useGps && manualLocation) {
             fetchWeatherForCity(manualLocation);

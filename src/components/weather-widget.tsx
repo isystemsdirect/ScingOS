@@ -53,6 +53,7 @@ export function WeatherWidget() {
   const fetchWeatherForCity = (city: string) => {
       const apiKey = '06145e5a1bff8a8d2d507f0b19a5f71d'; // Ideally use env var
       const unit = localStorage.getItem('temperature-unit') === 'C' ? 'metric' : 'imperial';
+      setUnit(unit);
       const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=${unit}&appid=${apiKey}`;
       
       setLoading(true);
