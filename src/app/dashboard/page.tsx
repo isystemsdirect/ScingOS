@@ -82,12 +82,12 @@ export default function Dashboard() {
         <DashboardCharts />
         <div className="grid gap-8 md:grid-cols-3">
           <div className="md:col-span-2 grid gap-8">
-             <Card className="bg-card/60 backdrop-blur-sm">
+             <Card className="bg-card/60 backdrop-blur-sm flex flex-col">
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2"><Map className="h-5 w-5" /> Live Operations Map</CardTitle>
                     <CardDescription>Real-time view of team members and active client needs.</CardDescription>
                 </CardHeader>
-                <CardContent className="h-[450px] p-0 flex items-center justify-center bg-muted/30 rounded-b-lg overflow-hidden">
+                <CardContent className="flex-1 p-0 flex items-center justify-center bg-muted/30 rounded-b-lg overflow-hidden">
                     {isMapEnabled ? (
                         <MarketplaceMap inspectors={mockInspectors} clients={mockClients} />
                     ) : (
