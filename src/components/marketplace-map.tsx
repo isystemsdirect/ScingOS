@@ -126,7 +126,7 @@ export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
   
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: 'AIzaSyA8tBvdISGcHbNCHRMHzP_EySiBf1tMT0w',
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
     libraries: ['places', 'weather'],
     preventGoogleFontsLoading: true,
   });
