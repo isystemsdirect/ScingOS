@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -11,15 +12,26 @@ import { z } from 'genkit';
 
 export const MapperInputSchema = z.object({
   pointCloudUrl: z.string().url().describe("A URL to the LiDAR or 3D point cloud data file (e.g., .las, .laz, .ply)."),
-  industry: z.enum(['Construction', 'Energy', 'Water', 'Transportation', 'Manufacturing', 'Healthcare', 'Agriculture', 'Environmental']).describe('The industry vertical for the analysis.'),
-  analysisType: z.enum(['Floorplan', 'Volumetric', 'Geometric', 'Layout']).describe("The type of analysis to perform."),
+  inspectionId: z.string().describe("The ID of the inspection this scan belongs to."),
+  assetId: z.string().describe("The ID of the asset being scanned."),
+  scanId: z.string().describe("The unique ID for this specific scan."),
 });
 export type MapperInput = z.infer<typeof MapperInputSchema>;
 
+const FindingSchema = z.object({
+    type: z.string().describe("The type of finding, e.g., 'code_violation'."),
+    category: z.string().describe("The category of the finding, e.g., 'stairs'."),
+    code_ref: z.string().describe("The specific building code reference, e.g., 'IBC_1011.5.2'."),
+    message: z.string().describe("A descriptive message about the finding."),
+    severity: z.enum(['low', 'medium', 'high', 'critical']).describe("The severity of the finding."),
+});
+
 export const MapperOutputSchema = z.object({
-  analysisResult: z.string().describe("A summary of the 3D data analysis."),
-  measurements: z.record(z.number()).optional().describe("Key measurements extracted from the data (e.g., volumes, distances)."),
-  outputFileUrl: z.string().url().optional().describe("A URL to a generated output file (e.g., a 2D floorplan image or a CAD file)."),
+  graphId: z.string().describe("The ID of the generated or updated spatial graph."),
+  scanId: z.string().describe("The ID of the processed scan."),
+  inspectionId: z.string().describe("The ID of the parent inspection."),
+  sdrId: z.string().optional().describe("The Secure Data Record ID from BANE."),
+  findings: z.array(FindingSchema).describe("A list of findings generated from the scan analysis."),
 });
 export type MapperOutput = z.infer<typeof MapperOutputSchema>;
 
@@ -32,14 +44,17 @@ const mapperPrompt = ai.definePrompt({
   name: 'lariMapperPrompt',
   input: { schema: MapperInputSchema },
   output: { schema: MapperOutputSchema },
-  prompt: `You are LARI-MAPPER, an AI specializing in analyzing 3D point cloud data.
-  
-  Industry: {{industry}}
-  Analysis Type: {{analysisType}}
+  prompt: `You are LARI-MAPPER, an AI specializing in analyzing 3D point cloud data for building inspections.
   
   Process the point cloud data from the following location: {{pointCloudUrl}}
+  - Inspection ID: {{inspectionId}}
+  - Asset ID: {{assetId}}
+  - Scan ID: {{scanId}}
   
-  Perform the requested analysis and provide the results in the specified JSON format.
+  Perform semantic segmentation on the point cloud to identify building elements like floors, walls, and stairs.
+  Run building code compliance checks on the segmented data. For example, check stair riser height against IBC 1011.5.2 (~7.75 inches / 0.196m).
+
+  Return the results, including any code violation findings, in the specified JSON format.
   `,
 });
 
@@ -50,8 +65,10 @@ const lariMapperFlow = ai.defineFlow(
     outputSchema: MapperOutputSchema,
   },
   async (input) => {
-    // In a real application, a tool would be used here to fetch and process the large point cloud data.
+    // In a real application, this flow would call the backend service you defined.
+    // For now, we simulate the output from the AI model.
     const { output } = await mapperPrompt(input);
     return output!;
   }
 );
+
