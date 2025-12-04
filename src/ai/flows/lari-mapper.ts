@@ -31,11 +31,6 @@ export const MapperOutputSchema = z.object({
 });
 export type MapperOutput = z.infer<typeof MapperOutputSchema>;
 
-
-export async function process3dData(input: MapperInput): Promise<MapperOutput> {
-  return lariMapperFlow(input);
-}
-
 const mapperPrompt = ai.definePrompt({
   name: 'lariMapperPrompt',
   input: { schema: z.object({ pointCloudUrl: z.string() }) }, // The prompt still just needs the URL for the mock
@@ -71,3 +66,8 @@ const lariMapperFlow = ai.defineFlow(
     };
   }
 );
+
+// This exported function is what the LARI orchestrator will call.
+export async function process3dData(input: MapperInput): Promise<MapperOutput> {
+  return await lariMapperFlow(input);
+}

@@ -37,10 +37,6 @@ export const VisionOutputSchema = z.object({
 });
 export type VisionOutput = z.infer<typeof VisionOutputSchema>;
 
-export async function analyzeVisualData(input: VisionInput): Promise<VisionOutput> {
-  return lariVisionFlow(input);
-}
-
 const visionPrompt = ai.definePrompt({
   name: 'lariVisionPrompt',
   input: { schema: VisionInputSchema },
@@ -61,6 +57,7 @@ const visionPrompt = ai.definePrompt({
   `,
 });
 
+// The defineFlow now wraps the prompt call, acting as the service layer.
 const lariVisionFlow = ai.defineFlow(
   {
     name: 'lariVisionFlow',
@@ -68,11 +65,12 @@ const lariVisionFlow = ai.defineFlow(
     outputSchema: VisionOutputSchema,
   },
   async (input) => {
-    // This flow acts as the middleware service layer described in Phase 4.2
-    // It receives the request, calls the underlying model (Vertex AI Endpoint), and formats the output.
     const { output } = await visionPrompt(input);
     return output!;
   }
 );
 
-
+// This exported function is what the LARI orchestrator will call.
+export async function analyzeVisualData(input: VisionInput): Promise<VisionOutput> {
+  return await lariVisionFlow(input);
+}

@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -28,10 +29,6 @@ export const ThermOutputSchema = z.object({
 });
 export type ThermOutput = z.infer<typeof ThermOutputSchema>;
 
-export async function analyzeThermalData(input: ThermInput): Promise<ThermOutput> {
-  return lariThermFlow(input);
-}
-
 const thermPrompt = ai.definePrompt({
   name: 'lariThermPrompt',
   input: { schema: ThermInputSchema },
@@ -61,3 +58,8 @@ const lariThermFlow = ai.defineFlow(
     return output!;
   }
 );
+
+// This exported function is what the LARI orchestrator will call.
+export async function analyzeThermalData(input: ThermInput): Promise<ThermOutput> {
+  return await lariThermFlow(input);
+}
