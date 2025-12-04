@@ -78,24 +78,17 @@ export function AiSearchDialog() {
       // 1. Send transcribed text to LARI to understand intent
       const commandResult = await processVoiceCommand({ command: text });
       
-      let responseText = `Understood. Executing action: ${commandResult.action.replace(/_/g, ' ')}.`;
+      let responseText = commandResult.speech || `Understood. Executing action: ${commandResult.action.replace(/_/g, ' ')}.`;
 
-      // Example of handling a specific action - this can be expanded
-      // if (commandResult.action === 'get_weather') {
-      //   // You would call your weather tool here.
-      //   responseText = "Fetching weather for you.";
-      // }
-      
-      // 3. Send the text response to LARI to generate speech
+      // 2. Send the text response to LARI to generate speech
       const { audio } = await textToSpeech(responseText);
       
-      // 4. SCING plays the audio response
+      // 3. SCING plays the audio response
       const audioEl = new Audio(audio);
       audioEl.onplay = () => setDialogState('speaking');
       audioEl.onended = () => setDialogState('idle');
       audioEl.onerror = (e) => {
         console.error("Audio playback error:", e);
-        // Fallback to browser speech if audio fails
         toast({
             variant: "destructive",
             title: "Audio Error",
@@ -399,18 +392,18 @@ export function AiSearchDialog() {
               )}
               {results && (
                  <div className="max-h-[50vh] overflow-y-auto pr-4 space-y-4">
-                  {results.codeCitations && results.codeCitations.length > 0 ? (
-                    results.codeCitations.map((citation, index) => (
+                  {results.citations && results.citations.length > 0 ? (
+                    results.citations.map((citation, index) => (
                       <div key={index} className="rounded-lg border p-4">
                         <div className="flex items-start gap-3">
                           <Bot className="h-6 w-6 text-accent flex-shrink-0" />
                           <div>
-                            <p className="font-semibold">{citation}</p>
+                            <p className="font-semibold">{citation.citation}</p>
                             <p className="text-sm text-muted-foreground mt-1">
-                              {results.excerpts[index]}
+                              {citation.excerpt}
                             </p>
-                            <Link href={results.fullDocLinks[index] || '#'} target="_blank" className="text-xs text-accent hover:underline mt-2 inline-block">
-                              View Full Document ({results.jurisdictions[index]})
+                            <Link href={citation.docLink || '#'} target="_blank" className="text-xs text-accent hover:underline mt-2 inline-block">
+                              View Full Document ({citation.jurisdiction})
                             </Link>
                           </div>
                         </div>
@@ -434,5 +427,3 @@ export function AiSearchDialog() {
     </Dialog>
   );
 }
-
-    
