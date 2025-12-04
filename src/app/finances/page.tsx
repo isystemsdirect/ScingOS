@@ -1,5 +1,5 @@
 
-import { Check, CreditCard, Download, PlusCircle, DollarSign, ClipboardCheck, University, Mail, Apple, Landmark } from "lucide-react"
+import { Check, CreditCard, Download, PlusCircle, DollarSign, ClipboardCheck, University, Mail, Apple, Landmark, Globe } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -14,7 +14,6 @@ import { cn } from "@/lib/utils"
 import { Separator } from "@/components/ui/separator"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { Globe } from "lucide-react"
 
 
 const mockInvoices = [
@@ -203,3 +202,5 @@ export default function FinancesPage() {
     </div>
   )
 }
+
+    
