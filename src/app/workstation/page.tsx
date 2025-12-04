@@ -56,6 +56,24 @@ export default function WorkstationPage() {
       { id: "TPL-001", name: "My Custom Residential Template", description: "A variation of the standard residential template with added moisture checks.", date: "2023-10-29" },
   ];
 
+  const envVars = [
+      { key: "NEXT_PUBLIC_FIREBASE_API_KEY", value: process.env.NEXT_PUBLIC_FIREBASE_API_KEY },
+      { key: "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN", value: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN },
+      { key: "NEXT_PUBLIC_FIREBASE_PROJECT_ID", value: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID },
+      { key: "NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET", value: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET },
+      { key: "NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID", value: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID },
+      { key: "NEXT_PUBLIC_FIREBASE_APP_ID", value: process.env.NEXT_PUBLIC_FIREBASE_APP_ID },
+      { key: "FIREBASE_PROJECT_ID", value: process.env.FIREBASE_PROJECT_ID },
+      { key: "FIREBASE_CLIENT_EMAIL", value: process.env.FIREBASE_CLIENT_EMAIL },
+      { key: "FIREBASE_PRIVATE_KEY", value: process.env.FIREBASE_PRIVATE_KEY ? `${process.env.FIREBASE_PRIVATE_KEY.substring(0, 30)}...` : undefined },
+      { key: "NEXT_PUBLIC_PICOVOICE_ACCESS_KEY", value: process.env.NEXT_PUBLIC_PICOVOICE_ACCESS_KEY },
+      { key: "GOOGLE_WEATHER_API_KEY", value: process.env.GOOGLE_WEATHER_API_KEY },
+      { key: "NEXT_PUBLIC_STREAM_API_KEY", value: process.env.NEXT_PUBLIC_STREAM_API_KEY },
+      { key: "GEMINI_API_KEY", value: process.env.GEMINI_API_KEY ? `${process.env.GEMINI_API_KEY.substring(0, 10)}...` : undefined },
+      { key: "AWS_ACCESS_KEY_ID", value: process.env.AWS_ACCESS_KEY_ID },
+      { key: "AWS_SECRET_ACCESS_KEY", value: process.env.AWS_SECRET_ACCESS_KEY ? "********" : undefined },
+  ].filter(v => v.value);
+
   return (
     <div className="mx-auto w-full max-w-6xl">
        <div className="flex items-center justify-between px-4 lg:px-6">
@@ -781,6 +799,32 @@ export default function WorkstationPage() {
                         </Button>
                         </CardFooter>
                     </Card>
+                    <Card className="bg-card/60 backdrop-blur-sm">
+                        <CardHeader>
+                        <CardTitle>API Keys & Environment</CardTitle>
+                        <CardDescription>
+                            A list of all API keys currently configured for your application. For security, some values are truncated.
+                        </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Key</TableHead>
+                                        <TableHead>Value</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {envVars.map((envVar) => (
+                                        <TableRow key={envVar.key}>
+                                            <TableCell className="font-mono text-xs">{envVar.key}</TableCell>
+                                            <TableCell className="font-mono text-xs text-muted-foreground">{envVar.value}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </CardContent>
+                    </Card>
                 </div>
             </TabsContent>
         </div>
@@ -788,5 +832,3 @@ export default function WorkstationPage() {
     </div>
   )
 }
-
-    
