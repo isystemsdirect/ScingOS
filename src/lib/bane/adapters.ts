@@ -1,4 +1,3 @@
-
 // adapters.ts
 import type { Context } from './context';
 import type { Decision } from './decision';
