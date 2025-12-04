@@ -21,6 +21,7 @@ import '@/ai/flows/lari-gis.ts';
 
 // LARI Domain-Specific Models
 import '@/ai/flows/lari-guangel-ai.ts';
+import '@/ai/flows/lari-precog.ts';
 import '@/ai/flows/lari-enviro-ai.ts';
 import '@/ai/flows/lari-geo-ai.ts';
 import '@/ai/flows/lari-health-ai.ts';

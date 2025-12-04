@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -27,8 +28,8 @@ export const GuardianAngelInputSchema = z.object({
     weatherCondition: z.enum(['clear', 'clouds', 'rain', 'snow', 'thunderstorm', 'high_wind']).describe('The current weather condition.'),
   }),
   biometrics: z.object({
-    heartRate: z.number().optional().describe('The user\'s current heart rate in beats per minute.'),
-    activityStatus: z.enum(['stationary', 'walking', 'running', 'fall_detected']).describe('The user\'s current physical activity, detected by accelerometer.'),
+    heartRate: z.number().optional().describe("The user's current heart rate in beats per minute."),
+    activityStatus: z.enum(['stationary', 'walking', 'running', 'fall_detected']).describe("The user's current physical activity, detected by accelerometer."),
   }).optional().describe('Optional biometric data from a wearable device.'),
 });
 export type GuardianAngelInput = z.infer<typeof GuardianAngelInputSchema>;
