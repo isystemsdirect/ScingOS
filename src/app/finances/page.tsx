@@ -1,5 +1,5 @@
 
-import { Check, CreditCard, Download, PlusCircle, DollarSign, ClipboardCheck, University, Mail, Apple, Landmark, Globe, BarChart2 } from "lucide-react"
+import { Check, CreditCard, Download, PlusCircle, DollarSign, ClipboardCheck, University, Mail, Apple, Landmark, Globe, BarChart2, Users, Banknote } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -15,6 +15,17 @@ import { Separator } from "@/components/ui/separator"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Label } from "@/components/ui/label"
+import { DatePickerWithRange } from "@/components/ui/date-range-picker"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 
 
 const mockInvoices = [
@@ -31,6 +42,13 @@ const arAgingData = [
     { client: 'Stark Industries', invoice: 'Various', '0-30': '', '31-60': '', '61-90': '', '90+': '$5,500.00' },
 ];
 
+const mockPayoutBatches = [
+    { id: 'PAY-2024-07', period: 'July 1-31, 2024', total: '$12,450.00', status: 'Paid' },
+    { id: 'PAY-2024-06', period: 'June 1-30, 2024', total: '$11,800.00', status: 'Paid' },
+    { id: 'PAY-2024-08', period: 'Aug 1-31, 2024', total: '$13,100.00', status: 'Approved' },
+    { id: 'PAY-2024-09', period: 'Sep 1-30, 2024', total: '$14,200.00', status: 'Pending' },
+]
+
 
 export default function FinancesPage() {
   const currentPlan = mockSubscriptionPlans.find(p => p.isCurrent) || mockSubscriptionPlans[1];
@@ -39,22 +57,22 @@ export default function FinancesPage() {
       <div className="flex flex-col gap-8">
         <div>
           <h1 className="text-3xl font-bold">Financial Hub</h1>
-          <p className="text-muted-foreground">
-            Manage your subscription, billing, transactions, and financial reporting.
+          <p className="text-muted-foreground max-w-3xl mt-1">
+            This is your centralized command center for all financial operations. Manage subscriptions, view detailed transaction histories, generate financial reports, and configure team payouts.
           </p>
         </div>
 
         <Tabs defaultValue="dashboard">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="dashboard"><BarChart2 className="mr-2 h-4 w-4"/> Dashboard</TabsTrigger>
               <TabsTrigger value="transactions"><DollarSign className="mr-2 h-4 w-4"/> Transactions</TabsTrigger>
               <TabsTrigger value="reporting"><ClipboardCheck className="mr-2 h-4 w-4"/> Reporting</TabsTrigger>
+              <TabsTrigger value="payouts"><Users className="mr-2 h-4 w-4"/> Payouts</TabsTrigger>
               <TabsTrigger value="billing"><CreditCard className="mr-2 h-4 w-4"/> Billing</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="dashboard">
-             <div className="space-y-8">
-                <div className="grid gap-4 md:grid-cols-2 md:gap-8">
+          <TabsContent value="dashboard" className="space-y-8">
+             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 md:gap-8">
                 <Card className="bg-card/60 backdrop-blur-sm">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
@@ -69,61 +87,83 @@ export default function FinancesPage() {
                 </Card>
                 <Card className="bg-card/60 backdrop-blur-sm">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">
-                        Completed Inspections
-                    </CardTitle>
-                    <ClipboardCheck className="h-4 w-4 text-muted-foreground" />
+                    <CardTitle className="text-sm font-medium">Subscriptions</CardTitle>
+                    <Banknote className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                    <div className="text-2xl font-bold">+2350</div>
+                    <div className="text-2xl font-bold">+$2,350</div>
                     <p className="text-xs text-muted-foreground">
                         +180.1% from last month
                     </p>
                     </CardContent>
                 </Card>
-                </div>
-                
+                 <Card className="bg-card/60 backdrop-blur-sm">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Completed Inspections</CardTitle>
+                    <ClipboardCheck className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                    <div className="text-2xl font-bold">+1,234</div>
+                    <p className="text-xs text-muted-foreground">
+                        +19% from last month
+                    </p>
+                    </CardContent>
+                </Card>
                 <Card className="bg-card/60 backdrop-blur-sm">
-                <CardHeader>
-                    <CardTitle>Subscription Plan</CardTitle>
-                    <CardDescription>You are currently on the <span className="font-bold text-pro">{currentPlan.name}</span> plan.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-                        {mockSubscriptionPlans.map((plan) => (
-                        <Card key={plan.name} className={cn("flex flex-col bg-card/60 backdrop-blur-sm", plan.isCurrent && "border-primary ring-2 ring-primary")}>
-                            <CardHeader>
-                            <CardTitle>{plan.name}</CardTitle>
-                            <CardDescription>
-                                <span className="text-3xl font-bold">{plan.price}</span>
-                                <span className="text-muted-foreground">{plan.pricePeriod}</span>
-                            </CardDescription>
-                            </CardHeader>
-                            <CardContent className="flex-1 grid gap-4">
-                            <ul className="grid gap-2 text-sm text-muted-foreground">
-                                {plan.features.map((feature) => (
-                                <li key={feature} className="flex items-start gap-2">
-                                    <Check className="h-4 w-4 text-primary flex-shrink-0 mt-1" />
-                                    <span>{feature}</span>
-                                </li>
-                                ))}
-                            </ul>
-                            </CardContent>
-                            <CardFooter>
-                            <Button
-                                className="w-full"
-                                disabled={plan.isCurrent}
-                                variant={plan.name.includes('Enterprise') ? 'pro' : plan.isCurrent ? 'outline' : 'default'}
-                            >
-                                {plan.cta}
-                            </Button>
-                            </CardFooter>
-                        </Card>
-                        ))}
-                    </div>
-                </CardContent>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Active Now</CardTitle>
+                    <Users className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                    <div className="text-2xl font-bold">+573</div>
+                    <p className="text-xs text-muted-foreground">
+                        +201 since last hour
+                    </p>
+                    </CardContent>
                 </Card>
             </div>
+            
+            <Card className="bg-card/60 backdrop-blur-sm">
+            <CardHeader>
+                <CardTitle>Subscription Plan Management</CardTitle>
+                <CardDescription>Review and compare all available plans. You are currently on the <span className="font-bold text-pro">{currentPlan.name}</span> plan.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                    {mockSubscriptionPlans.map((plan) => (
+                    <Card key={plan.name} className={cn("flex flex-col bg-background/40", plan.isCurrent && "border-primary ring-2 ring-primary")}>
+                        <CardHeader className="flex-grow">
+                        <CardTitle>{plan.name}</CardTitle>
+                         <p className="text-muted-foreground pt-2">
+                            <span className="text-4xl font-bold text-foreground">{plan.price}</span>
+                            <span className="text-muted-foreground">{plan.pricePeriod}</span>
+                        </p>
+                        </CardHeader>
+                        <CardContent className="flex-grow grid gap-4">
+                        <h4 className="font-semibold text-sm">Features include:</h4>
+                        <ul className="grid gap-3 text-sm text-muted-foreground">
+                            {plan.features.map((feature) => (
+                            <li key={feature} className="flex items-start gap-3">
+                                <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                                <span>{feature}</span>
+                            </li>
+                            ))}
+                        </ul>
+                        </CardContent>
+                        <CardFooter>
+                        <Button
+                            className="w-full"
+                            disabled={plan.isCurrent}
+                            variant={plan.name.includes('Enterprise') || plan.name.includes('MAX') ? 'pro' : plan.isCurrent ? 'outline' : 'default'}
+                        >
+                            {plan.cta}
+                        </Button>
+                        </CardFooter>
+                    </Card>
+                    ))}
+                </div>
+            </CardContent>
+            </Card>
           </TabsContent>
 
           <TabsContent value="transactions">
@@ -190,6 +230,68 @@ export default function FinancesPage() {
                                     <TableCell>{row['31-60']}</TableCell>
                                     <TableCell>{row['61-90']}</TableCell>
                                     <TableCell>{row['90+']}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </CardContent>
+            </Card>
+          </TabsContent>
+           
+          <TabsContent value="payouts">
+              <Card className="bg-card/60 backdrop-blur-sm">
+                <CardHeader className="flex-row items-center justify-between">
+                  <div>
+                    <CardTitle>Team Payouts</CardTitle>
+                    <CardDescription>Manage and approve payout batches for your team members.</CardDescription>
+                  </div>
+                   <Dialog>
+                    <DialogTrigger asChild>
+                      <Button><PlusCircle className="mr-2 h-4 w-4" /> Generate Batch</Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-md bg-card/80 backdrop-blur-sm">
+                      <DialogHeader>
+                        <DialogTitle>Generate New Payout Batch</DialogTitle>
+                        <DialogDescription>
+                          Select a date range to calculate payouts for all completed and paid jobs.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="grid gap-2">
+                          <Label>Payout Period</Label>
+                          <DatePickerWithRange />
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button type="button" variant="secondary">Cancel</Button>
+                        <Button type="submit">Generate</Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </CardHeader>
+                <CardContent>
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                            <TableHead>Batch ID</TableHead>
+                            <TableHead>Period</TableHead>
+                            <TableHead>Total Amount</TableHead>
+                            <TableHead>Status</TableHead>
+                            <TableHead className="text-right">Actions</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {mockPayoutBatches.map(batch => (
+                                <TableRow key={batch.id}>
+                                    <TableCell className="font-mono text-xs">{batch.id}</TableCell>
+                                    <TableCell>{batch.period}</TableCell>
+                                    <TableCell>{batch.total}</TableCell>
+                                    <TableCell><Badge variant={batch.status === 'Paid' ? 'default' : (batch.status === 'Pending' ? 'secondary' : 'outline')}>{batch.status}</Badge></TableCell>
+                                    <TableCell className="text-right space-x-2">
+                                        <Button variant="outline" size="sm">View Details</Button>
+                                        {batch.status === 'Pending' && <Button size="sm">Approve</Button>}
+                                        {batch.status === 'Approved' && <Button size="sm" variant="secondary">Mark as Paid</Button>}
+                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -264,3 +366,5 @@ export default function FinancesPage() {
     </div>
   )
 }
+
+    
