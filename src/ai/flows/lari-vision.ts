@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -20,11 +21,17 @@ export const VisionInputSchema = z.object({
 export type VisionInput = z.infer<typeof VisionInputSchema>;
 
 export const VisionOutputSchema = z.object({
-  anomalies: z.array(z.object({
-    type: z.string().describe('The type of anomaly detected (e.g., "Crack", "Corrosion", "Spalling").'),
-    location: z.string().describe('A description of where the anomaly is located in the media.'),
-    severity: z.enum(['Low', 'Medium', 'High', 'Critical']).describe('The assessed severity of the anomaly.'),
+  findings: z.array(z.object({
+    finding_type: z.string().describe('The type of defect or finding, e.g., "defect_crack", "hazard_water_intrusion".'),
+    severity: z.enum(['Low', 'Medium', 'High', 'Critical']).describe('The assessed severity of the finding.'),
     confidence: z.number().min(0).max(1).describe('The confidence score of the detection.'),
+    location_context: z.object({
+        x_min: z.number(),
+        y_min: z.number(),
+        x_max: z.number(),
+        y_max: z.number(),
+    }).describe('The bounding box of the finding as a percentage of image dimensions.'),
+    suggested_tags: z.array(z.string()).describe('A list of suggested tags for categorization, e.g., ["structural", "immediate_action"].'),
   })),
   summary: z.string().describe('A summary of the visual analysis.'),
 });
@@ -38,7 +45,7 @@ const visionPrompt = ai.definePrompt({
   name: 'lariVisionPrompt',
   input: { schema: VisionInputSchema },
   output: { schema: VisionOutputSchema },
-  prompt: `You are LARI-VISION, an AI specializing in analyzing visual data from various industries.
+  prompt: `You are LARI-VISION, an AI specializing in analyzing visual data for industrial and commercial inspections.
   
   Industry: {{industry}}
   Context: {{context}}
@@ -48,7 +55,9 @@ const visionPrompt = ai.definePrompt({
   - {{media url=this.url}}
   {{/each}}
 
-  Identify and classify any anomalies, assess their severity, and provide a summary.
+  Identify and classify any anomalies according to the defined ontology (e.g., 'defect_crack', 'hazard_water_intrusion', 'hazard_electrical').
+  For each finding, provide the precise finding type, severity, confidence, bounding box coordinates, and suggested organizational tags.
+  Return your response in the exact JSON format specified by the output schema.
   `,
 });
 
@@ -59,7 +68,10 @@ const lariVisionFlow = ai.defineFlow(
     outputSchema: VisionOutputSchema,
   },
   async (input) => {
+    // This flow acts as the middleware service layer described in Phase 4.2
+    // It receives the request, calls the underlying model (Vertex AI Endpoint), and formats the output.
     const { output } = await visionPrompt(input);
     return output!;
   }
 );
+
