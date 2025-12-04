@@ -1,0 +1,79 @@
+name: CI - Test and Lint
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+  push:
+    branches:
+      - develop
+
+jobs:
+  client-test:
+    name: Client - Test & Lint
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: client
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: client/package-lock.json
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run linter
+        run: npm run lint
+      
+      - name: Type check
+        run: npm run type-check
+      
+      - name: Run tests
+        run: npm test -- --coverage
+      
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+        with:
+          directory: client/coverage
+          flags: client
+  
+  functions-test:
+    name: Functions - Test & Lint
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: cloud/functions
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: cloud/functions/package-lock.json
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run linter
+        run: npm run lint
+      
+      - name: Build TypeScript
+        run: npm run build
+      
+      - name: Run tests
+        run: npm test
