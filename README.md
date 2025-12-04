@@ -1,185 +1,199 @@
-# SCINGULAR OS
+<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
 
-**The Future of AI-Powered Operating Systems**
+# ScingOS
 
-**SCINGULAR OS — Powered by Scing**
+**The Voice-First Bona Fide Intelligence Gateway**
 
-A revolutionary thin-client, cloud-native operating system that acts as the intelligent portal to SCINGULAR AI. Voice-first, autonomous, and built for the future of human-AI collaboration.
+**ScingOS — Powered by SCINGULAR AI**
 
----
+A thin-client, cloud-native operating layer that acts as the intelligent, voice-first portal to SCINGULAR AI. ScingOS is built for human-AI collaboration, with Scing as the face and voice and SCINGULAR AI as the cloud brain. [file:2b852af5][file:d2ec4e3a]
+
+***
 
 ## Executive Summary
 
-**SCINGULAR OS** is an advanced, AI-powered inspection and code-intelligence platform built for scalable property compliance. Leveraging modular architecture and cloud-native infrastructure, SCINGULAR OS enables inspectors, property owners, and regulatory agencies to streamline inspection workflows, access real-time code intelligence, and transition seamlessly from cloud to owned server infrastructure as adoption and compliance requirements grow.
+**ScingOS** is a voice-first, augmented-intelligence operating layer that turns SCINGULAR AI into a trusted gateway for real-world work, starting with inspections, operations, and compliance-heavy workflows. It uses a modular, Firebase-backed architecture and a thin client shell to coordinate conversations, tools, and devices under a single Scing-centric experience. [file:2b852af5][file:d2ec4e3a]
 
 ### Mission and Vision
 
-Empowering professionals with instant access to compliance standards, actionable insights, and workflow automation. SCINGULAR OS is designed to expand seamlessly, matching evolving data governance and user needs.
+ScingOS exists to give professionals a **single, conversational interface** to their work: one place to speak intent, see actions, and review outcomes. It applies **Bona Fide Intelligence (BFI)** principles so AI extends human judgment, preserves authorship, and keeps users in visible control of what happens in their name. [file:2b852af5][file:cd4d672b]
 
 ### Technology Highlights
 
-- **Modular, cloud-native architecture** for flexibility and growth
-- **Semantic AI search** supporting multi-jurisdictional code intelligence
-- **Voice-activated, cross-device interaction** ("Hey, Scing!") for hands-free operation
-- **Real-time inspection data ingestion**, mapping, and compliance verification
-- **Interactive dashboards** with sentiment analysis and automated reporting
-- **LARI Hard-Engine** for offline AI capabilities and zero data loss
-- **Native social platforms** built directly into the OS via LARI-Social
+- **Voice-first, thin-client OS** orchestrated through Scing on web, desktop, or embedded devices. [file:2b852af5]
+- **Augmented intelligence pipeline** (LARI engines, SCINGULAR AI backend) for reasoning, inspection support, and code assistance. [file:d2ec4e3a]
+- **AIP protocol** to coordinate humans, AI services, and tools with clear roles and capabilities. [file:d2ec4e3a]
+- **Firebase / Next.js integration** for real-time sessions, storage, and auth across all ScingOS surfaces. [file:2b852af5][file:d2ec4e3a]
+- **BANE security and audit layer** enforcing policies, logging actions, and supporting zero-trust style governance. [file:d2ec4e3a]
+- **Extensible workflow model** that starts with inspections but generalizes to other domains (field ops, facilities, compliance). [file:2b852af5]
+
 
 ### Market Impact
 
-- Addresses rising demand for digital inspection and compliance in real estate, development, and industrial sectors
-- Distinguishes itself with rapid, AI-driven code lookup and workflow automation
-- Supports subscription-based models and premium service tiers
-- Ready to migrate from cloud infrastructure to owned server depot as usage scales
+- Targets professionals who need **hands-free, high-context** access to complex workflows (inspectors, operators, field staff, analysts). [file:2b852af5]
+- Differentiates by combining voice-first UX, persistent context, and explicit governance rather than just chat-style AI. [file:2b852af5][file:cd4d672b]
+- Aligns with subscription and service models where ScingOS becomes the front door to a portfolio of SCINGULAR AI capabilities. [file:5d1c83ff]
+
 
 ### Roadmap
 
-- **Q4 2025**: Closed beta with select partners, knowledge base refinement
-- **Q2 2026**: Public launch with subscription tiers and code assistant integration
-- **Late 2026**: Expansion to LiDAR mapping, 3D modeling, and server depot migration preparation
-- **Ongoing**: Continuous enhancement of AI, security, and workflow automation
+- **Q4 2025**: Internal and partner pilots; first ScingOS shell tied to Firebase and core SCINGULAR AI services. [file:2b852af5]
+- **Mid 2026**: Public ScingOS builds with pluggable workflows (starting with inspection/ops) and configurable governance profiles. [file:2b852af5]
+- **Beyond 2026**: Progressive rollout of richer device integration, offline patterns, and domain-specific ScingOS bundles. [file:d2ec4e3a]
 
----
+***
 
-## What Makes SCINGULAR OS Different?
+## What Makes ScingOS Different?
 
 ### Voice-First Interface
-Scing bot is the central interface. Say "Hey Scing!" and control everything hands-free. No keyboards, no mice, no menus — just natural conversation with your OS.
 
-### Full Autonomy Mode
-Scing can take complete control, pulling information, capturing media, and managing workflows without you touching any controls. Revolutionary for field work and inspections.
+Scing is the primary interface. Users say “Hey Scing” to open sessions, route jobs, or inspect history, with ScingOS handling context, handoffs, and confirmations. The emphasis is on natural conversation instead of menu trees, while still exposing controls when needed. [file:2b852af5]
 
-### Offline AI Intelligence
-LARI Hard-Engine provides local AI processing when offline. Never lose work progress, even in remote locations without connectivity.
+### Augmented, Not Autonomous
 
-### Zero-Trust Security
-Every action mediated by BANE security layer with cryptographic audit trails. Enterprise-grade compliance built into the architecture.
+ScingOS is designed so AI **augments**—not replaces—human action. It can prepare drafts, orchestrate steps, and surface risks, but users and organizations remain the accountable authors. Policies and logs make it clear who did what and why. [file:2b852af5][file:cd4d672b]
 
-### Universal Hardware Support
-Runs on smartphones, tablets, laptops, desktops, industrial equipment, and IoT devices through standardized hardware adapters.
+### Governed Intelligence
 
----
+BANE provides a governance layer over all actions initiated through ScingOS, with policy checks, audit logs, and risk gating. This allows ScingOS to operate in regulated environments without sacrificing usability. [file:d2ec4e3a]
+
+### Thin Client, Shared Brain
+
+ScingOS runs as a thin shell on devices, delegating heavy reasoning to SCINGULAR AI and LARI engines in the cloud. That keeps clients light while allowing deep, shared intelligence across many users and workflows. [file:2b852af5][file:d2ec4e3a]
+
+***
 
 ## Core Architecture
 
 ### The Three-Layer System
 
 **SCINGULAR AI (Cloud Brain)**
-- LARI: Multimodal analytics and inspection intelligence
-- Scing: Conversational AI and autonomous control
-- BANE: Security governance and zero-trust framework
-- LARI-Social: Social platform governance engine
 
-**AIP Protocol (Augmented Intelligent Portal)**
-- Proprietary communication framework
-- Secure capability-based authorization
-- Hot upgrades without OS reinstalls
-- Real-time bidirectional data streaming
+- LARI: Orchestrated reasoning and analytics for domain workflows. [file:d2ec4e3a]
+- Scing Services: Conversation, intent detection, and agent coordination. [file:2b852af5]
+- BANE: Policy, security posture, and audit logging for all actions. [file:d2ec4e3a]
 
-**SCINGULAR OS (Body/Interface)**
-- Thin-client portal on user devices
-- Voice-first Scing interface
-- Hardware abstraction layer
-- Offline contingency with local AI
+**AIP Protocol (Augmented Intelligence Protocol)**
 
----
+- Defines how humans, ScingOS clients, and SCINGULAR AI components exchange tasks and results. [file:d2ec4e3a]
+- Uses capability-based contracts so different tools and agents have clearly bounded powers. [file:2b852af5]
+
+**ScingOS (Body / Interface)**
+
+- Thin-client shell (e.g., Next.js app) that exposes Scing, captures voice, and shows state. [file:2b852af5]
+- Manages local session UX while delegating intelligence and persistence to SCINGULAR AI and Firebase. [file:d2ec4e3a]
+
+***
 
 ## Color Palette
 
 **Primary Colors:**
-- **Navy Blue**: #003D5B - Trust, stability, professionalism
-- **Golden Yellow**: #FFD700 - Warmth, approachability, intelligence
-- **Neon Green**: #00FF88 - Innovation, technology, future
+
+- **Deep Midnight**: \#020817 – Space for Scing’s presence and console views. [file:345f19d2]
+- **Scing Cyan**: \#00D9FF – Active voice, live connection, and actionable items. [file:345f19d2]
+- **Signal Amber**: \#FFB627 – Warnings, pending approvals, and attention states. [file:345f19d2]
 
 **Secondary Colors:**
-- Deep Blue: #001E3C
-- Bright Cyan: #00D9FF
-- White: #FFFFFF
+
+- Graphite: \#1E293B
+- Soft White: \#F9FAFB
+- Violet Accent: \#6366F1
 
 **Status Colors:**
-- Success: #00D084
-- Warning: #FFB627
-- Error: #FF4757
-- Neutral: #6C757D
 
----
+- Success: \#22C55E
+- Warning: \#FACC15
+- Error: \#EF4444
+- Neutral: \#6B7280  [file:345f19d2]
+
+***
 
 ## Documentation
 
 ### Core Documentation
-- [Architecture Overview](docs/ARCHITECTURE.md)
-- [AIP Protocol Specification](aip/PROTOCOL.md)
-- [Hardware Adapters](adapters/ADAPTERS.md)
-- [Brand Guidelines](docs/BRAND_GUIDELINES.md)
+
+- `docs/ARCHITECTURE.md` – Detailed view of the ScingOS + SCINGULAR AI stack. [file:2b852af5]
+- `aip/PROTOCOL.md` – AIP message types, roles, and capability model. [file:d2ec4e3a]
+- `adapters/ADAPTERS.md` – How devices and external systems attach to ScingOS. [file:9e8b7560]
+- `docs/BRAND_GUIDELINES.md` – Naming, marks, and Scing-first visual usage. [file:345f19d2]
+
 
 ### User Experience
-- [Scing-Centric UX Overview](docs/SCING-UX.md)
-- [Visual Mockups](docs/SCING-UX-VISUAL-MOCKUPS.md)
-- [User Stories](docs/SCING-UX-USER-STORIES.md)
-- [Technical Implementation](docs/SCING-UX-TECHNICAL.md)
+
+- `docs/SCING-UX.md` – Principles for Scing-led, voice-first flows. [file:2b852af5]
+- `docs/SCING-UX-VISUAL-MOCKUPS.md` – Key screens and motion references. [file:345f19d2]
+- `docs/SCING-UX-USER-STORIES.md` – Stories across inspection, ops, and admin roles. [file:5d1c83ff]
+- `docs/SCING-UX-TECHNICAL.md` – Implementation notes for the Next.js client and voice stack. [file:d2ec4e3a]
+
 
 ### Advanced Features
-- [LARI Hard-Engine (Offline AI)](docs/LARI-HARD-ENGINE.md)
-- [LARI-Social (Social Governance)](docs/LARI-SOCIAL.md)
-- [Next.js Firebase Integration](docs/INTEGRATION_NEXTJS_FIREBASE.md)
 
----
+- `docs/LARI-HARD-ENGINE.md` – Patterns for resilient, low-connectivity operation and local caching (where used). [file:d2ec4e3a]
+- `docs/LARI-SOCIAL.md` – Social and organizational layers on top of ScingOS events and artifacts. [file:2b852af5]
+- `docs/INTEGRATION_NEXTJS_FIREBASE.md` – How ScingOS binds to Firebase Auth, Firestore, and Functions. [file:d2ec4e3a]
+
+***
 
 ## Technology Stack
 
 ### Client-Side
-- **Voice**: Picovoice Porcupine, Web Speech API
-- **UI**: React/Flutter, Framer Motion, Canvas/Three.js
-- **ML**: TensorFlow Lite, ONNX Runtime
-- **Storage**: IndexedDB, LocalStorage, Service Workers
+
+- **Voice**: Browser/web platform voice stack (extensible to local wake-word where supported). [file:2b852af5]
+- **UI**: Next.js + React, with motion and canvas where appropriate. [file:d2ec4e3a]
+- **Local State**: IndexedDB and service workers for session resilience and quick resume. [file:2b852af5]
+
 
 ### Server-Side (SCINGULAR AI)
-- **AI**: Google Gemini 1.5 Flash, custom LARI models
-- **Backend**: Firebase Functions, Google Cloud AI
-- **Database**: Firestore, WORM audit logs
-- **Security**: BANE zero-trust framework
+
+- **AI**: SCINGULAR AI platform hosting LARI engines and integrated model backends. [file:d2ec4e3a]
+- **Backend**: Firebase Functions and complementary services for orchestration and APIs. [file:d2ec4e3a]
+- **Database**: Firestore for real-time state, plus append-only logs for compliance. [file:2b852af5]
+- **Security**: BANE policies, key management, and enforcement hooks integrated into every workflow. [file:d2ec4e3a]
+
 
 ### Communication
-- **Protocol**: AIP (WebSocket, TLS/QUIC)
-- **Format**: JSON, Protocol Buffers
-- **Auth**: Mutual TLS, capability tokens
 
----
+- **Protocol**: AIP over WebSocket/TLS, designed for live conversational and workflow messages. [file:d2ec4e3a]
+- **Formats**: JSON for control messages, with options for Protobuf in high-throughput paths. [file:d2ec4e3a]
+- **Auth**: Firebase-backed identity plus scoped capability tokens for tools and agents. [file:d2ec4e3a]
+
+***
 
 ## Getting Started
 
 ### For Users
-1. Download SCINGULAR OS installer for your device
-2. Complete setup and authentication via Firebase
-3. Activate Scing: "Hey Scing, let's get started!"
-4. Explore Full Autonomy Mode and voice commands
+
+1. Access a ScingOS surface (e.g., web client bound to your SCINGULAR AI project). [file:2b852af5]
+2. Sign in with your organization or project account via Firebase Authentication. [file:d2ec4e3a]
+3. Wake Scing and state your intent (for example, “Start a new inspection session”). [file:2b852af5]
+4. Follow Scing’s prompts as it assembles context, agents, and tools for your workflow. [file:d2ec4e3a]
 
 ### For Developers
-1. Clone this repository
-2. Review architecture and protocol documentation
-3. Set up development environment
-4. Explore plugin API and adapter system
-5. Join developer community
+
+1. Clone this repository.
+2. Review the architecture and AIP protocol documentation. [file:2b852af5]
+3. Configure Firebase and SCINGULAR AI credentials for your environment. [file:d2ec4e3a]
+4. Run the ScingOS client locally and inspect AIP traffic, logs, and workflows. [file:2b852af5]
+5. Extend ScingOS with new tools, adapters, or domain workflows via AIP and LARI. [file:d2ec4e3a]
 
 ### For Contributors
-1. Read [Contributing Guidelines](CONTRIBUTING.md)
-2. Review [Code of Conduct](CODE_OF_CONDUCT.md)
-3. Check [Open Issues](https://github.com/isystemsdirect/SCINGULAR-OS/issues)
-4. Submit pull requests to `develop` branch
 
----
+1. Read `CONTRIBUTING.md` and `CODE_OF_CONDUCT.md`.
+2. Check open issues and roadmap items relevant to ScingOS UX, workflows, or integrations. [file:5d1c83ff]
+3. Propose changes via pull requests against the active development branch.
+
+***
 
 ## Commitment
 
-SCINGULAR OS stands at the intersection of expert inspection and next-generation AI. The platform delivers robust data architecture, regulatory adaptability, and workflow automation — scaling confidently to meet the future of compliance and property intelligence.
+ScingOS combines a Scing-led, voice-first user experience with a governed, auditable intelligence backbone. It is designed to scale from individual experts to organizations and ecosystems, without losing sight of human authorship, accountability, or control. [file:2b852af5][file:cd4d672b]
 
----
+***
 
 ## Repository Structure
 
-```
-SCINGULAR-OS/
+```text
+ScingOS/
 ├── docs/              # Documentation
 │   ├── ARCHITECTURE.md
 │   ├── BRAND_GUIDELINES.md
@@ -187,50 +201,37 @@ SCINGULAR-OS/
 │   ├── LARI-HARD-ENGINE.md
 │   ├── LARI-SOCIAL.md
 │   └── INTEGRATION_NEXTJS_FIREBASE.md
-├── aip/               # AIP Protocol specs
+├── aip/               # AIP protocol definitions and examples
 │   └── PROTOCOL.md
-├── adapters/          # Hardware adapter specs
+├── adapters/          # Adapter specifications for devices and systems
 │   └── ADAPTERS.md
-├── client/            # Client source code (TBD)
-├── cloud/             # Cloud interface schemas (TBD)
+├── client/            # ScingOS client code (Next.js / React)
+├── cloud/             # Backend schemas, functions, and infra
 └── README.md          # This file
 ```
 
----
+
+***
 
 ## Branches
 
-- **main**: Production baseline
-- **develop**: Active development (v1.0.0)
-- **feature/lari-hard-engine**: Offline AI capabilities (v2.0.0-alpha)
+- **main**: Stable baseline.
+- **develop**: Active ScingOS development for the next minor/major release.
 
----
+Branching for specific features (for example, new workflows, adapters, or governance capabilities) can follow a `feature/...` convention aligned with your internal practices. [file:5d1c83ff]
 
-## Version History
-
-- **v1.0.0** (November 2025): Initial architecture, AIP protocol, Scing UX
-- **v2.0.0-alpha** (November 2025): LARI Hard-Engine, offline capabilities
-- **v2.0.0** (Planned Q1 2026): LARI-Social, full offline support
-- **v3.0.0** (Planned Q3 2026): Edge computing, distributed intelligence
-
----
+***
 
 ## Contact
 
-**Inspection Systems Direct LLC**  
-Founded: 2023  
-Website: [isystemsdirect.com](https://isystemsdirect.com)  
-Email: isystemsdirect@gmail.com  
-GitHub: [@isystemsdirect](https://github.com/isystemsdirect)
+**Inspection Systems Direct LLC**
+Founded: 2023
+Website: `isystemsdirect.com`
+Email: `isystemsdirect@gmail.com`
+GitHub: `@isystemsdirect`  [file:af42fb9d]
 
----
+***
 
-## License
+**ScingOS — Powered by SCINGULAR AI**
+*A voice-first Bona Fide Intelligence gateway OS*
 
-Proprietary - All Rights Reserved  
-Copyright © 2023-2025 Inspection Systems Direct LLC
-
----
-
-**SCINGULAR OS — Powered by Scing**  
-*The Future AI Interface*
