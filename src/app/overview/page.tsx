@@ -47,6 +47,7 @@ const lariEngines = [
     { name: "LARI-THERM & LARI-ECHO", description: "Interpret thermal, infrared, sonar, and acoustic data for subsurface defect detection." },
     { name: "LARI-COMPLIANCE & LARI-SYNTHESIZER", description: "Cross-references findings against codes and synthesizes data into reports." },
     { name: "LARI-GUANGEL & Domain Models", description: "A suite of specialized models for field safety, logistics, environmental analysis, and more." },
+    { name: "LARI-PRECOG", description: "The 'Paranoid Cortex' of the system. This predictive engine runs in parallel, analyzing telemetry and agent actions to forecast impending physical failures and agentic misalignments before they occur." },
 ];
 
 
