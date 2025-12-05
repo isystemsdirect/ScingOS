@@ -1,0 +1,11 @@
+node_modules
+.next
+build
+dist
+lib
+coverage
+*.lock
+*.log
+.firebase
+.vercel
+public
