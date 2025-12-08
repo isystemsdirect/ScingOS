@@ -1,3 +1,23 @@
+# Contribution Terms
+
+By submitting any contribution (code, documentation, design, or ideas) to 
+this repository, you agree that your contribution:
+
+1. Becomes the exclusive property of Inspection Systems Direct LLC  
+2. Transfers all intellectual property rights to Inspection Systems Direct LLC  
+3. Is provided without expectation of compensation  
+4. Does not violate the rights of any third party  
+5. May be modified, redistributed, or commercialized by ISD  
+
+If you do not agree to these terms, do not submit contributions.
+
+Inspection Systems Direct LLC reserves the right to reject any submission 
+for any reason.
+
+© 2025 Inspection Systems Direct LLC
+
+---
+
 # Contributing to ScingOS
 
 Thank you for your interest in contributing to ScingOS! This document provides guidelines and instructions for contributing to the project.
