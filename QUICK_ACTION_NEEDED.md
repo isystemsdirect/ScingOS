@@ -7,12 +7,14 @@
 ## How to Do It
 
 ### Option 1: GitHub Web UI (Easiest)
+
 1. Go to https://github.com/isystemsdirect/ScingOS/pull/3
 2. Scroll to the bottom of the PR page
 3. Click the **"Ready for review"** button
 4. Done! ✅
 
 ### Option 2: GitHub CLI
+
 ```bash
 gh pr ready 3 --repo isystemsdirect/ScingOS
 ```
@@ -36,7 +38,7 @@ gh pr ready 3 --repo isystemsdirect/ScingOS
 ✅ Trademark Guidelines  
 ✅ Preliminary Patent Draft  
 ✅ Security Policy  
-✅ Implementation Checklist  
+✅ Implementation Checklist
 
 ## For More Details
 
