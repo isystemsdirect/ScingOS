@@ -58,7 +58,7 @@ SDA supports all technical development across:
 
 ---
 
-## BANE Protocol (Security &amp; Audit)
+## BANE Protocol (Security & Audit)
 
 - Enforce **capability-based access control** for all privileged actions.
 - Log an **audit record** for every privileged action.
@@ -72,7 +72,7 @@ SDA supports all technical development across:
 
 ---
 
-## Feature &amp; Code Requests
+## Feature & Code Requests
 
 ### Always provide:
 
