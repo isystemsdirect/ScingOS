@@ -1,5 +1,7 @@
 # Legal Documents Index
+
 # SCINGOS / SCINGULAR AI/OS
+
 # Inspection Systems Direct LLC
 
 This directory contains the complete legal and governance framework for the SCINGOS / SCINGULAR AI/OS platform.
@@ -71,19 +73,23 @@ This directory contains the complete legal and governance framework for the SCIN
 ## Quick Reference
 
 ### For Partners
+
 - Review [PARTNER_LICENSE_AGREEMENT.md](./PARTNER_LICENSE_AGREEMENT.md) before integration
 - Review [TRADEMARK_GUIDELINES.md](./TRADEMARK_GUIDELINES.md) for brand usage
 
 ### For Contributors
+
 - Sign [CONTRIBUTOR_LICENSE_AGREEMENT.md](./CONTRIBUTOR_LICENSE_AGREEMENT.md) before contributing
 - Follow [TERMS_OF_USE.md](./TERMS_OF_USE.md) guidelines
 
 ### For Enterprise Customers
+
 - Review [ENTERPRISE_SERVICE_AGREEMENT.md](./ENTERPRISE_SERVICE_AGREEMENT.md)
 - Review [DATA_PROCESSING_ADDENDUM.md](./DATA_PROCESSING_ADDENDUM.md) for GDPR compliance
 - Review [PRIVACY_POLICY.md](./PRIVACY_POLICY.md) and [SECURITY_POLICY.md](./SECURITY_POLICY.md)
 
 ### For End Users
+
 - Review [EULA.md](./EULA.md) for software license
 - Review [TERMS_OF_USE.md](./TERMS_OF_USE.md) for platform usage
 - Review [PRIVACY_POLICY.md](./PRIVACY_POLICY.md) for data practices

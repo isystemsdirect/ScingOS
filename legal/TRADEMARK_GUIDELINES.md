@@ -1,5 +1,7 @@
 # Trademark Guidelines
+
 # SCINGOS / SCINGULAR AI/OS
+
 # Inspection Systems Direct LLC
 
 Effective Date: 2025
@@ -34,6 +36,7 @@ All associated logos, product names, and branding are also protected.
 ## 3. Permitted Uses
 
 ### 3.1 Referential Use (Fair Use)
+
 You may use our Marks to refer accurately to ISD's products or services, provided:
 
 - Use is truthful and not misleading
@@ -42,15 +45,19 @@ You may use our Marks to refer accurately to ISD's products or services, provide
 - ISD's ownership of the Marks is acknowledged when appropriate
 
 **Examples of Permitted Referential Use:**
+
 - "Compatible with SCINGOS™"
 - "Integrates with SCINGULAR™ AI/OS"
-- "Our platform supports SCINGOS file formats (.sg*)"
+- "Our platform supports SCINGOS file formats (.sg\*)"
 
 ### 3.2 Licensed Partner Use
+
 Authorized partners and resellers may use specified Marks under written license agreements, subject to brand guidelines and quality control requirements.
 
 ### 3.3 Community and Educational Use
+
 You may use our Marks in presentations, articles, or educational materials that discuss ISD's technology, provided:
+
 - Use complies with referential use guidelines
 - Materials clearly indicate ISD's ownership
 - No commercial exploitation without permission
@@ -60,6 +67,7 @@ You may use our Marks in presentations, articles, or educational materials that 
 ## 4. Prohibited Uses
 
 ### 4.1 General Prohibitions
+
 You may NOT:
 
 - Use our Marks in a company name, product name, domain name, or social media handle
@@ -70,11 +78,14 @@ You may NOT:
 - Use our Marks on merchandise without license
 
 ### 4.2 Domain Names and Social Media
+
 You may NOT register domain names or social media accounts containing our Marks, including:
+
 - scingos.com, scingular.com, or similar variations
 - Social media handles like @scingos, @scingular, etc.
 
 ### 4.3 Trade Dress and Design
+
 You may NOT imitate the distinctive visual design, color schemes, or "trade dress" of ISD's products or marketing materials.
 
 ---
@@ -82,6 +93,7 @@ You may NOT imitate the distinctive visual design, color schemes, or "trade dres
 ## 5. Logo Usage Guidelines
 
 ### 5.1 Logo Specifications
+
 When authorized to use ISD logos:
 
 - Use only official logo files provided by ISD
@@ -91,11 +103,13 @@ When authorized to use ISD logos:
 - Ensure legibility at all sizes
 
 ### 5.2 Color Requirements
+
 - **Primary Logo**: Use full-color version on light backgrounds
 - **Reverse Logo**: Use white/reversed version on dark backgrounds
 - **Monochrome**: Black logo acceptable where color is not feasible
 
 ### 5.3 Minimum Size
+
 - Digital: 120px width minimum
 - Print: 1 inch width minimum
 
@@ -104,27 +118,37 @@ When authorized to use ISD logos:
 ## 6. Proper Trademark Usage
 
 ### 6.1 Trademark Symbols
+
 Always use appropriate trademark symbols on first or prominent use:
+
 - ™ for unregistered marks
 - ® for registered marks (when registration is complete)
 
 ### 6.2 Distinctive Format
+
 Display trademarks in a distinctive manner:
+
 - Capitalize properly: "SCINGOS" not "scingos" or "Scingos"
 - Use bold, italics, or quotation marks to distinguish from surrounding text
 
 ### 6.3 Generic Terms
+
 Never use trademarks as generic terms or verbs:
+
 - ❌ Incorrect: "I'm scinging the property"
 - ✅ Correct: "I'm using SCINGOS to inspect the property"
 
 ### 6.4 Possessive and Plural Forms
+
 Avoid possessive or plural forms of trademarks:
+
 - ❌ Incorrect: "SCINGOS's features"
 - ✅ Correct: "The features of the SCINGOS platform"
 
 ### 6.5 Attribution
+
 Include appropriate trademark attribution:
+
 > "SCINGOS, SCINGULAR, and related marks are trademarks of Inspection Systems Direct LLC."
 
 ---
@@ -132,6 +156,7 @@ Include appropriate trademark attribution:
 ## 7. Partner and Reseller Guidelines
 
 ### 7.1 "Powered by Scing" Program
+
 Authorized partners may use the "Powered by Scing™" mark under license:
 
 - Must enter into written Partner License Agreement
@@ -140,10 +165,13 @@ Authorized partners may use the "Powered by Scing™" mark under license:
 - License may be revoked for non-compliance
 
 ### 7.2 Co-branding
+
 Co-branded materials require prior written approval from ISD's marketing team.
 
 ### 7.3 Advertising and Promotion
+
 Partners may reference ISD's Marks in advertising with prior approval, ensuring:
+
 - ISD's trademark ownership is acknowledged
 - Materials do not imply exclusive relationship unless authorized
 - Quality and accuracy standards are maintained
@@ -153,13 +181,17 @@ Partners may reference ISD's Marks in advertising with prior approval, ensuring:
 ## 8. Enforcement
 
 ### 8.1 Monitoring
+
 ISD actively monitors use of its Marks and enforces trademark rights.
 
 ### 8.2 Reporting Violations
+
 Report unauthorized or improper use to: legal@isystemsdirect.com
 
 ### 8.3 Consequences of Misuse
+
 Unauthorized or improper use may result in:
+
 - Cease and desist notification
 - License termination (for licensed users)
 - Legal action for trademark infringement
@@ -170,11 +202,15 @@ Unauthorized or improper use may result in:
 ## 9. Trademark Notices
 
 ### 9.1 In Documentation
+
 Include on copyright page or in footer:
+
 > "SCINGOS, SCINGULAR, SCING, LARI, BANE, and AIP are trademarks of Inspection Systems Direct LLC. All rights reserved."
 
 ### 9.2 In Software
+
 Include in "About" section or legal notices:
+
 > "This software uses technology licensed from Inspection Systems Direct LLC. SCINGOS™ and SCINGULAR™ are trademarks of Inspection Systems Direct LLC."
 
 ---
@@ -182,6 +218,7 @@ Include in "About" section or legal notices:
 ## 10. Questions and Permissions
 
 ### 10.1 Requesting Permission
+
 For uses not covered by these guidelines, contact:
 
 **Inspection Systems Direct LLC**  
@@ -189,6 +226,7 @@ Trademark Licensing Department
 Email: legal@isystemsdirect.com
 
 ### 10.2 Partnership Inquiries
+
 For partnership and licensing opportunities:
 Email: partnerships@isystemsdirect.com
 
