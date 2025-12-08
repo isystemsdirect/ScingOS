@@ -10,7 +10,7 @@ The extended legal and governance package PR (#3) for ScingOS includes documenta
 
 ## Solution Delivered
 
-Since the Copilot coding agent cannot directly update GitHub PR draft status via available API tools, this PR (# 4) provides comprehensive documentation to enable repository maintainers to complete the action.
+Since the Copilot coding agent cannot directly update GitHub PR draft status via available API tools, this PR (#4) provides comprehensive documentation to enable repository maintainers to complete the action.
 
 ### Files Created
 
