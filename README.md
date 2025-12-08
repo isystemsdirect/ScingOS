@@ -202,6 +202,18 @@ ScingOS implements a **zero-trust security model** through BANE:
 
 See `/docs/BANE-SECURITY.md` for complete security architecture.
 
+### Legal Documentation
+
+Comprehensive legal and governance documents are available in the `/legal` directory:
+
+- **[Legal Index](legal/README.md)** - Overview of all legal documents
+- **[Privacy Policy](legal/PRIVACY_POLICY.md)** - Data practices and user rights
+- **[Security Policy](legal/SECURITY_POLICY.md)** - Security framework and controls
+- **[Terms of Use](legal/TERMS_OF_USE.md)** - Platform usage terms
+- **[EULA](legal/EULA.md)** - End user license agreement
+
+For partnership and enterprise agreements, see the complete [legal documentation](legal/).
+
 ---
 
 ## Contributing
@@ -213,7 +225,9 @@ We welcome contributions from the community! Please read our [CONTRIBUTING.md](C
 - Pull request process
 - Testing requirements
 
-Before contributing, please review our [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+Before contributing:
+- Review our [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
+- Sign the [Contributor License Agreement](legal/CONTRIBUTOR_LICENSE_AGREEMENT.md)
 
 ---
 
