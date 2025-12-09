@@ -1,0 +1,40 @@
+name: Legal Docs CI
+
+on:
+  pull_request:
+    paths:
+      - "legal/**"
+      - "docs/**"
+  push:
+    paths:
+      - "legal/**"
+      - "docs/**"
+
+jobs:
+  lint-markdown:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Out Repository Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install and Run Markdown Linter
+        run: |
+          npm install -g markdownlint-cli
+          markdownlint "legal/**/*.md" "docs/**/*.md" || true
+          # Remove '|| true' when ready to block PR failures due to linting.
+
+  link-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Out Repository Code
+        uses: actions/checkout@v4
+
+      - name: Basic Internal Link Scan
+        run: |
+          grep -R "](../" docs || true
+          # Replace this with an advanced link-checking tool later.
