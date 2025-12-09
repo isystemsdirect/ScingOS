@@ -48,7 +48,7 @@ export class ISDCClient {
       payload,
     };
 
-    const handleMessage = httpsCallable(this.functions, 'isdc-handleMessage');
+    const handleMessage = httpsCallable(this.functions, 'isdc-handleISDCMessage');
     const response = await handleMessage(message);
 
     return response.data;
