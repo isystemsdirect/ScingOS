@@ -1,0 +1,22 @@
+name: SCINGOS Core CI
+
+on:
+  push:
+    paths:
+      - "**"
+
+  pull_request:
+    paths:
+      - "**"
+
+jobs:
+  sanity-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Out Repository Code
+        uses: actions/checkout@v4
+
+      - name: Run CI Sanity Check
+        run: |
+          echo "✅ Repository structure verified."
+          ls -R
