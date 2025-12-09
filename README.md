@@ -265,7 +265,7 @@ Comprehensive documentation is available in the `/docs` directory:
 
 **ScingOS** is developed by [Inspection Systems Direct LLC](https://isystemsdirect.com), founded in 2023 to build AI-assisted inspection software for every industry.
 
-**ISD-C Protocol**: Our core technology, the ISD-Communications Protocol (ISD-C), enables standardized, intelligent inspection workflows across all sectors.
+**ISDCProtocol2025**: Our core technology, the ISD-Communications Protocol (ISD-C), enables standardized, intelligent inspection workflows across all sectors. The 2025 version includes advanced details synchronization, conflict resolution, and real-time inspection data management. See [ISDCProtocol2025 Documentation](docs/ISDC-PROTOCOL-2025.md) for details.
 
 **SCINGULAR AI**: The cloud intelligence platform powering ScingOS, providing the "brain" for reasoning, perception, and decision support.
 

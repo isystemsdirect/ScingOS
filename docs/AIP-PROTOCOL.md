@@ -572,9 +572,26 @@ The AIP Protocol provides a robust, secure, and efficient communication channel 
 
 ---
 
+## Related Protocols
+
+### ISDCProtocol2025
+
+For inspection-specific data synchronization and workflow management, see [ISDCProtocol2025](./ISDC-PROTOCOL-2025.md). This protocol extends AIP with:
+
+- **Bidirectional sync** for inspection details, findings, and reports
+- **Conflict detection** and resolution for offline/online scenarios  
+- **Version tracking** for all inspection entities
+- **BANE integration** for audit and security
+
+ISDCProtocol2025 (ISD-Communications Protocol) is the standardized protocol for all Inspection Systems Direct workflows.
+
+---
+
 *For implementation details, see the client library in `/client/lib/aip/`*
 
 *For server implementation, see Cloud Functions in `/cloud/functions/aip/`*
+
+*For ISDCProtocol2025, see `/client/lib/isdc/` and `/cloud/functions/src/isdc/`*
 
 ---
 
