@@ -187,7 +187,7 @@ The **Augmented Intelligence Portal (AIP) Protocol** is a proprietary, real-time
     "capabilities": ["cap:camera.read"],
     "context": {
       "inspection_id": "insp_123",
-      "location": { "lat": 40.7128, "lng": -74.0060 }
+      "location": { "lat": 40.7128, "lng": -74.006 }
     }
   }
 }
@@ -241,7 +241,7 @@ The **Augmented Intelligence Portal (AIP) Protocol** is a proprietary, real-time
   "payload": {
     "updates": {
       "current_inspection": "insp_123",
-      "location": { "lat": 40.7128, "lng": -74.0060 },
+      "location": { "lat": 40.7128, "lng": -74.006 },
       "battery_level": 75
     }
   }
@@ -262,6 +262,7 @@ The **Augmented Intelligence Portal (AIP) Protocol** is a proprietary, real-time
 ```
 
 **Response**:
+
 ```json
 {
   "type": "heartbeat.ack",
@@ -364,16 +365,16 @@ The **Augmented Intelligence Portal (AIP) Protocol** is a proprietary, real-time
 
 ### Error Codes
 
-| Code | Description | Recoverable |
-|------|-------------|-------------|
-| `AUTH_FAILED` | Authentication failed | No |
-| `SESSION_EXPIRED` | Session has expired | Yes (re-auth) |
-| `INVALID_MESSAGE` | Message format invalid | No |
-| `CAPABILITY_DENIED` | Action not authorized | No |
-| `RATE_LIMIT_EXCEEDED` | Too many requests | Yes (backoff) |
-| `SERVER_ERROR` | Internal server error | Yes (retry) |
-| `NETWORK_ERROR` | Network connectivity issue | Yes (reconnect) |
-| `TIMEOUT` | Request timed out | Yes (retry) |
+| Code                  | Description                | Recoverable     |
+| --------------------- | -------------------------- | --------------- |
+| `AUTH_FAILED`         | Authentication failed      | No              |
+| `SESSION_EXPIRED`     | Session has expired        | Yes (re-auth)   |
+| `INVALID_MESSAGE`     | Message format invalid     | No              |
+| `CAPABILITY_DENIED`   | Action not authorized      | No              |
+| `RATE_LIMIT_EXCEEDED` | Too many requests          | Yes (backoff)   |
+| `SERVER_ERROR`        | Internal server error      | Yes (retry)     |
+| `NETWORK_ERROR`       | Network connectivity issue | Yes (reconnect) |
+| `TIMEOUT`             | Request timed out          | Yes (retry)     |
 
 ### Error Response Format
 
@@ -421,7 +422,7 @@ class AIPClient {
     // Get Firebase ID token
     const user = auth.currentUser;
     if (!user) throw new Error('User not authenticated');
-    
+
     const idToken = await user.getIdToken();
 
     // Connect to AIP endpoint
@@ -568,14 +569,31 @@ The AIP Protocol provides a robust, secure, and efficient communication channel 
 ✅ **Low latency** for real-time voice interactions  
 ✅ **Strong security** with zero-trust principles  
 ✅ **Reliability** through acknowledgments and reconnection  
-✅ **Extensibility** via versioning and modular message types  
+✅ **Extensibility** via versioning and modular message types
 
 ---
 
-*For implementation details, see the client library in `/client/lib/aip/`*
+## Related Protocols
 
-*For server implementation, see Cloud Functions in `/cloud/functions/aip/`*
+### ISDCProtocol2025
+
+For inspection-specific data synchronization and workflow management, see [ISDCProtocol2025](./ISDC-PROTOCOL-2025.md). This protocol extends AIP with:
+
+- **Bidirectional sync** for inspection details, findings, and reports
+- **Conflict detection** and resolution for offline/online scenarios
+- **Version tracking** for all inspection entities
+- **BANE integration** for audit and security
+
+ISDCProtocol2025 (ISD-Communications Protocol) is the standardized protocol for all Inspection Systems Direct workflows.
 
 ---
 
-*Built with Bona Fide Intelligence | © 2025 Inspection Systems Direct LLC*
+_For implementation details, see the client library in `/client/lib/aip/`_
+
+_For server implementation, see Cloud Functions in `/cloud/functions/aip/`_
+
+_For ISDCProtocol2025, see `/client/lib/isdc/` and `/cloud/functions/src/isdc/`_
+
+---
+
+_Built with Bona Fide Intelligence | © 2025 Inspection Systems Direct LLC_

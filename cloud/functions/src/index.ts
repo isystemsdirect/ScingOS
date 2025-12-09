@@ -3,6 +3,7 @@ import * as admin from 'firebase-admin';
 import { baneRouter } from './bane';
 import { lariRouter } from './lari';
 import { aipRouter } from './aip';
+import { isdcRouter } from './isdc';
 
 // Initialize Firebase Admin
 admin.initializeApp();
@@ -15,6 +16,9 @@ export const lari = lariRouter;
 
 // Export AIP functions (protocol)
 export const aip = aipRouter;
+
+// Export ISDC functions (ISDCProtocol2025)
+export const isdc = isdcRouter;
 
 // Health check endpoint
 export const healthCheck = functions.https.onRequest((req, res) => {

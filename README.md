@@ -32,6 +32,7 @@ At the heart of ScingOS is the philosophy of **Bona Fide Intelligence**. In this
 ## Technology Highlights
 
 ### Architecture
+
 - **Modular, cloud-native architecture** for flexible deployment and scaling
 - **Voice-first interface** with "Hey, Scing!" wake-word activation
 - **Cross-device synchronization** with persistent context and memory
@@ -40,18 +41,21 @@ At the heart of ScingOS is the philosophy of **Bona Fide Intelligence**. In this
 ### Core Components
 
 #### 🎤 **SCING** - Voice Interface & Orchestrator
+
 - Natural language understanding and task routing
 - Voice-activated, hands-free operation
 - Context-aware conversation management
 - Cross-platform UI coordination
 
 #### 🧠 **LARI** - Language and Reasoning Intelligence Engines
+
 - Perception and analysis engines
 - Standards lookup and code intelligence
 - Multi-jurisdictional compliance verification
 - Inspection workflow automation
 
 #### 🛡️ **BANE** - Backend Augmented Neural Engine (Security Governor)
+
 - Zero-trust security framework
 - Capability-based authorization
 - Immutable audit trails (Security Decision Records)
@@ -59,11 +63,13 @@ At the heart of ScingOS is the philosophy of **Bona Fide Intelligence**. In this
 - Policy enforcement and data minimization
 
 #### 🔗 **AIP Protocol** - Augmented Intelligence Portal
+
 - Real-time communication between client and cloud
 - Secure, authenticated data channels
 - Task orchestration and result delivery
 
 ### Technology Stack
+
 - **Frontend**: Next.js / React
 - **Backend**: Firebase (Authentication, Firestore, Cloud Functions, Storage)
 - **AI Platform**: SCINGULAR AI cloud services
@@ -98,6 +104,7 @@ At the heart of ScingOS is the philosophy of **Bona Fide Intelligence**. In this
 ### For Developers
 
 1. Clone this repository
+
    ```bash
    git clone https://github.com/isystemsdirect/ScingOS.git
    cd ScingOS
@@ -108,12 +115,14 @@ At the heart of ScingOS is the philosophy of **Bona Fide Intelligence**. In this
    - See `/docs/AIP-PROTOCOL.md` for protocol specification
 
 3. Configure Firebase and SCINGULAR AI credentials
+
    ```bash
    cp .env.example .env
    # Edit .env with your credentials
    ```
 
 4. Run the ScingOS client locally
+
    ```bash
    npm install
    npm run dev
@@ -155,24 +164,28 @@ ScingOS/
 ## Roadmap
 
 ### ✅ Phase 1: Foundation (Completed Q4 2025)
+
 - Core architecture development
 - Voice interface (Scing) implementation
 - Firebase integration
 - Basic security framework (BANE)
 
 ### 🔄 Phase 2: Beta Launch (Q1-Q2 2026)
+
 - Closed beta with select inspection partners
 - Knowledge base refinement
 - Multi-jurisdictional code intelligence
 - Enhanced device integration
 
 ### 🔜 Phase 3: Public Release (Q2-Q3 2026)
+
 - Public launch with subscription tiers
 - Code assistant integration
 - Advanced workflow automation
 - Mobile applications (iOS/Android)
 
 ### 🚀 Phase 4: Enterprise Scale (Late 2026+)
+
 - LiDAR mapping and 3D modeling expansion
 - Server depot migration preparations
 - Enterprise partnerships
@@ -226,6 +239,7 @@ We welcome contributions from the community! Please read our [CONTRIBUTING.md](C
 - Testing requirements
 
 Before contributing:
+
 - Review our [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
 - Sign the [Contributor License Agreement](legal/CONTRIBUTOR_LICENSE_AGREEMENT.md)
 
@@ -265,7 +279,7 @@ Comprehensive documentation is available in the `/docs` directory:
 
 **ScingOS** is developed by [Inspection Systems Direct LLC](https://isystemsdirect.com), founded in 2023 to build AI-assisted inspection software for every industry.
 
-**ISD-C Protocol**: Our core technology, the ISD-Communications Protocol (ISD-C), enables standardized, intelligent inspection workflows across all sectors.
+**ISDCProtocol2025**: Our core technology, the ISD-Communications Protocol (ISD-C), enables standardized, intelligent inspection workflows across all sectors. The 2025 version includes advanced details synchronization, conflict resolution, and real-time inspection data management. See [ISDCProtocol2025 Documentation](docs/ISDC-PROTOCOL-2025.md) for details.
 
 **SCINGULAR AI**: The cloud intelligence platform powering ScingOS, providing the "brain" for reasoning, perception, and decision support.
 
@@ -295,4 +309,4 @@ ScingOS represents the intersection of expert inspection knowledge and next-gene
 
 ---
 
-*Powered by SCINGULAR AI | Built with Bona Fide Intelligence*
+_Powered by SCINGULAR AI | Built with Bona Fide Intelligence_

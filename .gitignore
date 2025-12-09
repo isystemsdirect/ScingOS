@@ -60,6 +60,9 @@ Thumbs.db
 # TypeScript
 *.tsbuildinfo
 
+# TypeScript build output (Cloud Functions)
+cloud/functions/lib/
+
 # Optional npm cache directory
 .npm
 
