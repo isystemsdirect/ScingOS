@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { checkCapability } from '../bane/capability';
-import { createSecurityDecisionRecord } from '../bane/sdr';
+import {requestCapability} from '../bane/capability';
+import {createSDR} from '../bane/sdr';
 import {
   ISDCMessage,
   ISDCMessageType,
@@ -12,9 +12,45 @@ import {
   FindingDetails,
   SyncEntity,
   ConflictInfo,
-  ISDCErrorCode,
   ISDC_PROTOCOL_VERSION,
 } from './types';
+
+/**
+ * Check if user has required capability
+ * @param {string} userId User ID
+ * @param {string} action Action to check
+ * @return {Promise<boolean>} True if user has capability
+ */
+async function checkCapability(
+  userId: string,
+  action: string
+): Promise<boolean> {
+  try {
+    await requestCapability(userId, action);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+/**
+ * Create security decision record
+ * @param {object} data SDR data
+ * @return {Promise<string>} SDR ID
+ */
+async function createSecurityDecisionRecord(data: {
+  action: string;
+  userId: string;
+  result: 'allowed' | 'denied';
+  metadata?: any;
+}): Promise<string> {
+  return await createSDR({
+    userId: data.userId,
+    action: data.action,
+    result: data.result === 'allowed' ? 'success' : 'denied',
+    metadata: data.metadata,
+  });
+}
 
 /**
  * ISDCProtocol2025 Handler
@@ -31,39 +67,47 @@ export const handleISDCMessage = functions.https.onCall(
     }
 
     const userId = context.auth.uid;
-    const { type, payload, session_id } = data;
+    const { type, payload } = data;
 
-    console.log(`ISDCProtocol2025 message received: ${type} from user ${userId}`);
+    console.log(
+      `ISDCProtocol2025 message received: ${type} from user ${userId}`
+    );
 
     try {
       // Route message to appropriate handler
       switch (type) {
-        case 'details.sync':
-          return await handleDetailsSync(payload as DetailsSyncPayload, userId, session_id);
+      case 'details.sync':
+        return await handleDetailsSync(
+            payload as DetailsSyncPayload,
+            userId
+        );
 
-        case 'sync.request':
-          return await handleSyncRequest(payload as SyncRequestPayload, userId);
+      case 'sync.request':
+        return await handleSyncRequest(
+            payload as SyncRequestPayload,
+            userId
+        );
 
-        case 'inspection.create':
-        case 'inspection.update':
-          return await handleInspectionOperation(type, payload, userId);
+      case 'inspection.create':
+      case 'inspection.update':
+        return await handleInspectionOperation(type, payload, userId);
 
-        case 'finding.create':
-        case 'finding.update':
-          return await handleFindingOperation(type, payload, userId);
+      case 'finding.create':
+      case 'finding.update':
+        return await handleFindingOperation(type, payload, userId);
 
-        case 'conflict.resolution':
-          return await handleConflictResolution(payload, userId);
+      case 'conflict.resolution':
+        return await handleConflictResolution(payload, userId);
 
-        default:
-          throw new functions.https.HttpsError(
-            'invalid-argument',
-            `Unknown ISDCProtocol2025 message type: ${type}`
-          );
+      default:
+        throw new functions.https.HttpsError(
+          'invalid-argument',
+          `Unknown ISDCProtocol2025 message type: ${type}`
+        );
       }
     } catch (error: any) {
       console.error('ISDCProtocol2025 error:', error);
-      
+
       // Log audit record for failed operations
       await logAuditRecord(userId, type, 'failed', error.message);
 
@@ -77,20 +121,27 @@ export const handleISDCMessage = functions.https.onCall(
 
 /**
  * Handle details sync - primary sync functionality for inspection data
+ * @param {DetailsSyncPayload} payload Sync payload
+ * @param {string} userId User ID
+ * @return {Promise<SyncResponsePayload>} Sync response
  */
 async function handleDetailsSync(
   payload: DetailsSyncPayload,
-  userId: string,
-  sessionId: string
+  userId: string
 ): Promise<SyncResponsePayload> {
-  const { sync_mode, entities, client_state, options } = payload;
+  const { sync_mode, entities, client_state } = payload;
 
   console.log(`Details sync: mode=${sync_mode}, user=${userId}`);
 
   // Check sync capability
   const hasCapability = await checkCapability(userId, 'cap:sync.execute');
   if (!hasCapability) {
-    await logAuditRecord(userId, 'details.sync', 'denied', 'Missing sync capability');
+    await logAuditRecord(
+      userId,
+      'details.sync',
+      'denied',
+      'Missing sync capability'
+    );
     throw new functions.https.HttpsError(
       'permission-denied',
       'User does not have sync capability'
@@ -277,7 +328,7 @@ async function handleSyncRequest(
   payload: SyncRequestPayload,
   userId: string
 ): Promise<SyncResponsePayload> {
-  const { entity_type, since, filters } = payload;
+  const { entity_type, since } = payload;
   const db = admin.firestore();
   const entities: SyncEntity[] = [];
 
@@ -287,41 +338,41 @@ async function handleSyncRequest(
   let query: admin.firestore.Query;
 
   switch (entity_type) {
-    case 'inspection':
-      query = db.collection('inspections').where('inspector_id', '==', userId);
-      break;
+  case 'inspection':
+    query = db.collection('inspections').where('inspector_id', '==', userId);
+    break;
 
-    case 'finding':
-      query = db.collection('findings');
-      break;
+  case 'finding':
+    query = db.collection('findings');
+    break;
 
-    case 'all':
-      // Handle all entity types
-      const inspectionsSnapshot = await db
-        .collection('inspections')
-        .where('inspector_id', '==', userId)
-        .get();
+  case 'all':
+    // Handle all entity types
+    const inspectionsSnapshot = await db
+      .collection('inspections')
+      .where('inspector_id', '==', userId)
+      .get();
 
-      inspectionsSnapshot.forEach((doc) => {
-        const data = doc.data() as InspectionDetails;
-        entities.push({
-          entity_type: 'inspection',
-          entity_id: doc.id,
-          operation: 'update',
-          data,
-          version: data.version,
-          timestamp: data.updated_at,
-        });
+    inspectionsSnapshot.forEach((doc) => {
+      const data = doc.data() as InspectionDetails;
+      entities.push({
+        entity_type: 'inspection',
+        entity_id: doc.id,
+        operation: 'update',
+        data,
+        version: data.version,
+        timestamp: data.updated_at,
       });
+    });
 
-      return {
-        status: 'success',
-        entities,
-        has_more: false,
-      };
+    return {
+      status: 'success',
+      entities,
+      has_more: false,
+    };
 
-    default:
-      throw new Error(`Unsupported entity type: ${entity_type}`);
+  default:
+    throw new Error(`Unsupported entity type: ${entity_type}`);
   }
 
   // Apply timestamp filter if provided
@@ -361,7 +412,7 @@ async function handleInspectionOperation(
   userId: string
 ): Promise<any> {
   const db = admin.firestore();
-  const { inspection, audit_context } = payload;
+  const { inspection } = payload;
 
   const isCreate = type === 'inspection.create';
   const capability = isCreate ? 'cap:inspection.create' : 'cap:inspection.update';
@@ -384,9 +435,9 @@ async function handleInspectionOperation(
     inspectionData.status = 'draft';
   }
 
-  const docRef = isCreate
-    ? db.collection('inspections').doc()
-    : db.collection('inspections').doc(inspection.id);
+  const docRef = isCreate ?
+    db.collection('inspections').doc() :
+    db.collection('inspections').doc(inspection.id);
 
   await docRef.set(inspectionData, { merge: !isCreate });
 
@@ -408,7 +459,7 @@ async function handleFindingOperation(
   userId: string
 ): Promise<any> {
   const db = admin.firestore();
-  const { finding, audit_context } = payload;
+  const { finding } = payload;
 
   const isCreate = type === 'finding.create';
   const capability = isCreate ? 'cap:finding.create' : 'cap:finding.update';
@@ -430,9 +481,9 @@ async function handleFindingOperation(
     findingData.status = 'open';
   }
 
-  const docRef = isCreate
-    ? db.collection('findings').doc()
-    : db.collection('findings').doc(finding.id);
+  const docRef = isCreate ?
+    db.collection('findings').doc() :
+    db.collection('findings').doc(finding.id);
 
   await docRef.set(findingData, { merge: !isCreate });
 
@@ -449,7 +500,7 @@ async function handleFindingOperation(
  * Handle conflict resolution
  */
 async function handleConflictResolution(payload: any, userId: string): Promise<any> {
-  const { conflict_id, resolution_strategy, merged_data } = payload;
+  const { conflict_id, resolution_strategy } = payload;
 
   console.log(`Resolving conflict ${conflict_id} with strategy: ${resolution_strategy}`);
 

@@ -412,8 +412,8 @@ const client = createISDCClient();
 
 // Sync inspection details
 const localVersions = {
-  'insp_123': 5,
-  'insp_456': 3,
+  insp_123: 5,
+  insp_456: 3,
 };
 
 const response = await client.syncDetails(
@@ -441,7 +441,7 @@ if (response.conflicts && response.conflicts.length > 0) {
   for (const conflict of response.conflicts) {
     // Present to user for resolution
     const resolution = await presentConflictUI(conflict);
-    
+
     // Resolve conflict
     await client.resolveConflict(
       conflict.conflict_id,
@@ -499,6 +499,7 @@ await client.updateFinding({
 Sync inspection details with server.
 
 **Parameters**:
+
 - `entities`: Object with arrays of entity IDs to sync
 - `localVersions`: Map of entity IDs to version numbers
 - `options`: Sync options (mode, media, compression, batch size)
@@ -510,6 +511,7 @@ Sync inspection details with server.
 Request entities modified since timestamp.
 
 **Parameters**:
+
 - `entityType`: 'inspection' | 'finding' | 'report' | 'all'
 - `since`: ISO 8601 timestamp (optional)
 - `filters`: Additional filters (optional)
@@ -550,15 +552,15 @@ Resolve a sync conflict.
 
 ## Error Codes
 
-| Code | Description | Recoverable |
-|------|-------------|-------------|
-| `ISDC_SYNC_CONFLICT` | Version conflict detected | Yes (resolve conflict) |
-| `ISDC_VERSION_MISMATCH` | Protocol version incompatible | No |
-| `ISDC_INVALID_ENTITY` | Entity data invalid | No |
-| `ISDC_UNAUTHORIZED` | Authentication failed | No |
-| `ISDC_SYNC_FAILED` | Sync operation failed | Yes (retry) |
-| `ISDC_ENTITY_NOT_FOUND` | Entity not found | No |
-| `ISDC_CAPABILITY_DENIED` | Missing required capability | No |
+| Code                     | Description                   | Recoverable            |
+| ------------------------ | ----------------------------- | ---------------------- |
+| `ISDC_SYNC_CONFLICT`     | Version conflict detected     | Yes (resolve conflict) |
+| `ISDC_VERSION_MISMATCH`  | Protocol version incompatible | No                     |
+| `ISDC_INVALID_ENTITY`    | Entity data invalid           | No                     |
+| `ISDC_UNAUTHORIZED`      | Authentication failed         | No                     |
+| `ISDC_SYNC_FAILED`       | Sync operation failed         | Yes (retry)            |
+| `ISDC_ENTITY_NOT_FOUND`  | Entity not found              | No                     |
+| `ISDC_CAPABILITY_DENIED` | Missing required capability   | No                     |
 
 ---
 
@@ -587,4 +589,4 @@ Resolve a sync conflict.
 
 ---
 
-*Built with Bona Fide Intelligence | © 2025 Inspection Systems Direct LLC*
+_Built with Bona Fide Intelligence | © 2025 Inspection Systems Direct LLC_
