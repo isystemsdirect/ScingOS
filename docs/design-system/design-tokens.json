@@ -1,1 +1,14 @@
 
+docs/
+  SCINGOS_UIUX.md
+  design-system/
+    README.md
+    colors.md
+    typography.md
+    materials.md
+    components.md
+    motion.md
+    interaction.md
+    ai-sphere.md
+    ethics.md
+    design-tokens.json
