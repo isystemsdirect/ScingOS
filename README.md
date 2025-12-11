@@ -1,3 +1,65 @@
+# SCINGOS — SCINGULAR AI/OS
+
+SCINGOS is the native + web-augmented environment for the SCINGULAR AI/OS ecosystem.  
+It combines a Tauri native shell, a Next.js front-end, and a neural-driven 3D interface for the SCINGULAR Engine.
+
+## Structure
+
+- `ScingOSEnvironment/`
+  - Tauri native shell
+  - Next.js (App Router)
+  - Three.js / React Three Fiber 3D environment
+  - Neural visual pipeline (mock + Firebase-backed)
+
+## Neural 3D Environment
+
+The current environment renders:
+
+- A neural-reactive 3D scene (`app/components/Scene3D.tsx`)
+- A HUD showing:
+  - `Neural mode` (idle / thinking / speaking / error)
+  - `Intensity` (0–1)
+
+Neural state source:
+
+- `neural/mockNeuralState.ts`
+  - Cycles modes every few seconds (baseline behavior)
+- `hooks/useNeuralVisualState.ts`
+  - Switches between mock and Firebase-based state using:
+    - `NEXT_PUBLIC_USE_FIREBASE_NEURAL`
+
+Firebase wiring:
+
+- `firebase/client.ts` — Firebase app + Firestore init
+- `firebase/neuralState.ts` — subscribes to `neural/current` doc
+
+## Environment Concept
+
+The environment is the start of the SCINGULAR XI 3D interface:
+
+- Neural-driven visuals (no static UI)
+- Avatar and environment behavior controlled by internal AI state
+- Future integration:
+  - Sense Reactive Technology (SRT)® driving:
+    - Avatar morphing
+    - Reactive color schemes
+    - SCING mood states
+    - Dynamic background states
+
+## Development
+
+From `ScingOSEnvironment`:
+
+```bash
+npm install
+npm run tauri dev
+```
+
+Requirements:
+
+* Node.js
+* Rust + Cargo
+* Tauri prerequisites for Windows
 # ScingOS
 
 **Voice-First Bona Fide Intelligence Gateway Operating System**
