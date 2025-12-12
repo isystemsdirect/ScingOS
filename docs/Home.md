@@ -28,7 +28,8 @@ This wiki serves as the comprehensive documentation hub for ScingOS and the SCIN
 ### 🎯 Getting Started
 
 - [Quick Start Guide](QUICK-START.md) - Setup and first run
-- [Development Guide](API.md) - API and development workflows
+- [Development Guide](DEVELOPMENT.md) - Complete developer reference
+- [API Documentation](API.md) - API and development workflows
 - [UX Guidelines](UX-GUIDELINES.md) - User experience principles
 - [Firebase Integration](Firebase-Doc-Links.md) - Backend setup
 
