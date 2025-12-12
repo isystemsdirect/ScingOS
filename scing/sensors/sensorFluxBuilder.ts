@@ -1,10 +1,13 @@
-
 import { cameraFlux } from './camera'
 import { lidarFlux } from './lidar'
 import { micFlux } from './microphone'
 import { BioSignature, BioReading } from './smartwatch'
 import { ProsodySignature, ProsodyReading } from './voiceProsody'
 
+/**
+ * SensorFluxBuilder: merges live sensor streams into a single influence vector.
+ * Canon: no discretized states, only continuous modulation pressure.
+ */
 export class SensorFluxBuilder {
   private bio = new BioSignature()
   private prosody = new ProsodySignature()

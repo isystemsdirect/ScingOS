@@ -1,6 +1,7 @@
 /**
  * Order & Focus Protocol
  * Scing engineers solutions only when order/focus naturally emerge.
+ * This is a gate, not a mode.
  */
 export function orderAndFocus(influence: number[]): boolean {
   if (!influence?.length) return false

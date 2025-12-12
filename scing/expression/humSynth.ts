@@ -1,6 +1,6 @@
 /**
  * Hum synth: audible silhouette of presence.
- * No looped samples; no reset phases.
+ * Canon: no looped samples; no reset phases.
  */
 export function humValue(influence: number[]): number {
   let v = 0

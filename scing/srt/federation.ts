@@ -7,7 +7,7 @@ export type FederationNode = {
 }
 
 /**
- * Federation: autonomous yet interdependent algorithm set.
+ * Federation: autonomous yet interdependent algorithms.
  * No priority locks. No stable weights.
  */
 export class Federation {

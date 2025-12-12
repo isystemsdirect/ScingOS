@@ -1,7 +1,13 @@
-export type ProsodyReading = { cadence: number; pitchVar: number; pauseRate: number; intensity?: number }
+export type ProsodyReading = {
+  cadence: number
+  pitchVar: number
+  pauseRate: number
+  intensity?: number
+}
 
 /**
  * Learns prosody signature (drifting baseline), no emotion labels.
+ * Canon: listens to mood via prosody shifts and reacts through modulation.
  */
 export class ProsodySignature {
   private baseline = { cadence: 0, pitchVar: 0, pauseRate: 0, intensity: 0 }

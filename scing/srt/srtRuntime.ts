@@ -5,7 +5,9 @@ import { AntiRepeatGuard } from './antiRepeatGuard'
 
 /**
  * SRTRuntime: embedded sensory expression substrate.
- * Does not own timing. It is invoked continuously by ScingRuntime.
+ * Canon:
+ * - Does not own timing
+ * - Invoked continuously by ScingRuntime
  */
 export class SRTRuntime {
   influence = new InfluenceField(16)

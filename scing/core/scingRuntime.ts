@@ -8,12 +8,19 @@ export type SensorFlux = number[]
 
 /**
  * ScingRuntime: host runtime that continuously *invokes existence*.
- * IMPORTANT: This runtime must not own deterministic playback or animation loops.
+ * IMPORTANT:
+ * - Do not own deterministic playback
+ * - Do not store/replay frames
+ * - Do not implement expression state machines
  */
 export class ScingRuntime {
   private srt = new SRTRuntime()
   private audit = new AuditLog()
 
+  /**
+   * exist(): invoke continuously from your app scheduling mechanism.
+   * Canon: expression is field-driven; no loops/timelines owned here.
+   */
   exist(sensorFlux: SensorFlux, opts?: { persistence?: number; strain?: number }) {
     this.srt.exist(sensorFlux)
 
@@ -23,6 +30,7 @@ export class ScingRuntime {
     // Formal engineering gate: only engineer when ordered === true
     this.audit.note('orderFocus', { ordered })
 
+    // Autonomous sub-engine eligibility signals (stubs; wire real metrics later)
     const persistence = opts?.persistence ?? 0
     const strain = opts?.strain ?? 0
 
@@ -31,5 +39,7 @@ export class ScingRuntime {
 
     this.audit.note('growthEligibility', { growthOk, persistence })
     this.audit.note('catalystEligibility', { catalystOk, strain })
+
+    // NOTE: Actual sub-engine birth/merge/retire belongs in governance layer.
   }
 }

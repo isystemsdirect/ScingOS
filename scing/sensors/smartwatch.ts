@@ -1,7 +1,13 @@
-export type BioReading = { hr: number; hrv: number; stress: number; motion?: number }
+export type BioReading = {
+  hr: number
+  hrv: number
+  stress: number
+  motion?: number
+}
 
 /**
  * Learns user bio-signature over time (drifting baseline), no hard profiles.
+ * Canon: bio changes modulate SRT continuously.
  */
 export class BioSignature {
   private baseline = { hr: 0, hrv: 0, stress: 0, motion: 0 }

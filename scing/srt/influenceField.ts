@@ -1,6 +1,9 @@
 /**
  * InfluenceField: shared continuous signal substrate.
- * No resets. No replay caches. No deterministic stabilization.
+ * Canon:
+ * - No resets
+ * - No replay caches
+ * - No deterministic stabilization
  */
 export class InfluenceField {
   private field: number[]
@@ -12,9 +15,11 @@ export class InfluenceField {
   ingest(flux: number[]) {
     const n = Math.min(this.field.length, flux.length)
     for (let i = 0; i < n; i++) {
+      // micro-entropy to prevent convergence and identical repeats
       const eps = (Math.random() - 0.5) * 0.0001
       this.field[i] = this.field[i] + flux[i] + eps
     }
+    // gentle drift on unused dims
     for (let i = n; i < this.field.length; i++) {
       this.field[i] = this.field[i] * (0.999 + Math.random() * 0.002)
     }

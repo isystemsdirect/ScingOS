@@ -1,11 +1,13 @@
-
 import { ScingRuntime } from '../core/scingRuntime'
 import { SensorFluxBuilder } from '../sensors/sensorFluxBuilder'
 
 const scing = new ScingRuntime()
 const sensors = new SensorFluxBuilder()
 
-// Example invocation — call from your app scheduler / render tick
+/**
+ * Example: call this from your app scheduler/render tick.
+ * Canon note: this is an example driver; SRT itself owns no loop.
+ */
 export function tick() {
   const flux = sensors.build({
     camera: { motionFlux: Math.random(), luminanceFlux: Math.random() },
@@ -15,8 +17,5 @@ export function tick() {
     prosody: { cadence: Math.random(), pitchVar: Math.random(), pauseRate: Math.random() },
   })
 
-  scing.exist(flux, {
-    persistence: Math.random(),
-    strain: Math.random(),
-  })
+  scing.exist(flux, { persistence: Math.random(), strain: Math.random() })
 }

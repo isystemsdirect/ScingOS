@@ -2,7 +2,9 @@ import { InfluenceField } from './influenceField'
 
 /**
  * Motif Engine: "repetitive randomness"
- * Motif identities repeat (habit), exact execution never repeats.
+ * Canon:
+ * - Motif identities may repeat (habit)
+ * - Exact execution may never repeat
  */
 export type MotifId = 'sway' | 'pulse' | 'spiral' | 'breath' | 'flicker'
 
@@ -33,11 +35,13 @@ export class MotifEngine {
   }
 
   private pickMotif(): Motif {
+    // Habit bias: mildly favor repeating the previous motif, never forced
     if (this.lastMotif && Math.random() < 0.35) {
       const last = this.motifs.find((m) => m.id === this.lastMotif)
       if (last) return last
     }
 
+    // Weighted random by habitWeight
     const total = this.motifs.reduce((a, m) => a + m.habitWeight, 0)
     let t = Math.random() * total
     for (const m of this.motifs) {

@@ -2,7 +2,7 @@ export type RGB = { r: number; g: number; b: number }
 
 /**
  * Color field: derived tendencies (not states).
- * Cognitive density vs spectral expansion are *biases* only.
+ * Cognitive density vs spectral expansion are biases only.
  */
 export function colorFromInfluence(influence: number[]): RGB {
   const mag = influence.reduce((a, b) => a + Math.abs(b), 0) / (influence.length || 1)

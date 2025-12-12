@@ -14,6 +14,6 @@ export class AntiRepeatGuard {
   }
 
   private entropySignature(): string {
-    return `${Date.now()}-${Math.random().toString(36).slice(2)}`
+    return Date.now() + '-' + Math.random().toString(36).slice(2)
   }
 }
