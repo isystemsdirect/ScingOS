@@ -1,0 +1,39 @@
+name: scing-quality
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck scing (isolated)
+        run: npx -y tsc -p tools/tmp-tsconfig.json
+
+      - name: Lint scing + tools
+        run: npx eslint "scing/**/*.{ts,tsx}" "tools/**/*.{js,mjs}" --max-warnings=0
+
+      - name: Canon scan
+        run: node tools/canon-scan.mjs
+
+      - name: Prettier check (optional)
+        run: |
+          if npx --no -- prettier -v >/dev/null 2>&1; then
+            npx prettier --check "scing/**/*.{ts,tsx,js,mjs,json,md}" "tools/**/*.{js,mjs,json,md}"
+          else
+            echo "prettier not installed; skipping"
+          fi

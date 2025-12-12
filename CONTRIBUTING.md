@@ -446,3 +446,25 @@ Your contributions make ScingOS better for everyone. We appreciate your time and
 *Questions? Contact us at isystemsdirect@gmail.com*
 
 *Powered by SCINGULAR AI | Built with Bona Fide Intelligence*
+
+# Contributing
+
+## Guardrails
+
+### Changes under `scing/**`
+Treat `scing/**` as canon-bound implementation.
+
+Required before merging changes:
+- `npm run typecheck:scing`
+- `npm run lint:scing`
+- `npm run canon:scan`
+- `npm run format:check`
+
+### Discipline
+- Avoid deterministic seeding inside `scing/srt/**`.
+- Avoid timing ownership (intervals / animation frames) inside `scing/srt/**`.
+- Avoid replay/timeline/keyframe constructs inside `scing/srt/**`.
+- Prefer continuous modulation over state machines.
+
+## Local quality
+Run the full gate locally: npm run quality:scing
