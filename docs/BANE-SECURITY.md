@@ -137,17 +137,17 @@ Capabilities are **unforgeable tokens** that grant specific permissions:
 
 ### Capability Types
 
-| Capability | Permission |
-|------------|------------|
-| `camera.read` | Capture photos |
-| `camera.write` | Save images to storage |
-| `file.read` | Read files |
-| `file.write` | Write/delete files |
-| `net.call` | Make network requests |
-| `location.read` | Access GPS |
-| `mic.read` | Record audio |
-| `inspection.create` | Start new inspection |
-| `inspection.finalize` | Generate report |
+| Capability            | Permission             |
+| --------------------- | ---------------------- |
+| `camera.read`         | Capture photos         |
+| `camera.write`        | Save images to storage |
+| `file.read`           | Read files             |
+| `file.write`          | Write/delete files     |
+| `net.call`            | Make network requests  |
+| `location.read`       | Access GPS             |
+| `mic.read`            | Record audio           |
+| `inspection.create`   | Start new inspection   |
+| `inspection.finalize` | Generate report        |
 
 ### Policy Definition
 
@@ -248,6 +248,7 @@ interface ThreatScore {
 ```
 
 **Response by risk level**:
+
 - **Low**: Log only
 - **Medium**: Require re-authentication
 - **High**: Throttle requests
@@ -402,7 +403,7 @@ export const capturePhoto = functions.https.onCall(async (data, context) => {
   // Verify capability token
   const capability = data.capability_token;
   const valid = await verifyCapability(capability, 'camera.read', context.auth.uid);
-  
+
   if (!valid) {
     // Log unauthorized attempt
     await createSDR({
@@ -411,7 +412,7 @@ export const capturePhoto = functions.https.onCall(async (data, context) => {
       result: 'denied',
       reason: 'invalid_capability',
     });
-    
+
     throw new functions.https.HttpsError('permission-denied', 'Capability denied');
   }
 
@@ -444,14 +445,14 @@ BANE provides **enterprise-grade security** for ScingOS:
 ✅ **Threat detection** with anomaly monitoring and honeytokens  
 ✅ **Aggressive response** through demon mode isolation  
 ✅ **Data protection** with encryption and PII masking  
-✅ **Compliance-ready** for GDPR, HIPAA, SOC 2, ISO 27001  
+✅ **Compliance-ready** for GDPR, HIPAA, SOC 2, ISO 27001
 
 ---
 
-*For code examples, see `/cloud/functions/bane/`*
+_For code examples, see `/cloud/functions/bane/`_
 
-*For policy definitions, see `/docs/security-policies.md`*
+_For policy definitions, see `/docs/security-policies.md`_
 
 ---
 
-*Built with Bona Fide Intelligence | © 2025 Inspection Systems Direct LLC*
+_Built with Bona Fide Intelligence | © 2025 Inspection Systems Direct LLC_

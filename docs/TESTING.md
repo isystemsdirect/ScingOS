@@ -40,7 +40,7 @@ ScingOS follows a **comprehensive testing strategy** that balances coverage with
       /____\       - Critical user flows
      /      \      - Voice interactions
     /        \     - End-to-end scenarios
-   /__________\    
+   /__________\
   /            \   Integration Tests (30%)
  /              \  - Component integration
 /________________\ - API integration
@@ -65,6 +65,7 @@ ScingOS follows a **comprehensive testing strategy** that balances coverage with
 **Tools**: Jest, React Testing Library
 
 **Example**:
+
 ```typescript
 // client/__tests__/lib/utils/formatDate.test.ts
 import { formatDate } from '@/lib/utils/formatDate';
@@ -92,6 +93,7 @@ describe('formatDate', () => {
 **Tools**: Jest, React Testing Library, Testing Library User Event
 
 **Example**:
+
 ```typescript
 // client/__tests__/components/voice/VoiceButton.test.tsx
 import { render, screen, fireEvent } from '@testing-library/react';
@@ -128,6 +130,7 @@ describe('VoiceButton', () => {
 **Location**: `client/__tests__/integration/`, `cloud/functions/__tests__/integration/`
 
 **Example**:
+
 ```typescript
 // client/__tests__/integration/auth-flow.test.tsx
 import { render, screen, waitFor } from '@testing-library/react';
@@ -161,6 +164,7 @@ describe('Authentication Flow', () => {
 **Tools**: Playwright or Cypress
 
 **Example**:
+
 ```typescript
 // e2e/inspection-workflow.spec.ts
 import { test, expect } from '@playwright/test';
@@ -267,10 +271,10 @@ it('works', () => { ... })
 it('calculates total correctly', () => {
   // Arrange
   const items = [{ price: 10 }, { price: 20 }];
-  
+
   // Act
   const total = calculateTotal(items);
-  
+
   // Assert
   expect(total).toBe(30);
 });
@@ -326,12 +330,12 @@ global.fetch = jest.fn(() =>
 
 ### Coverage Targets
 
-| Type | Target | Minimum |
-|------|--------|----------|
-| Statements | 80% | 70% |
-| Branches | 75% | 65% |
-| Functions | 80% | 70% |
-| Lines | 80% | 70% |
+| Type       | Target | Minimum |
+| ---------- | ------ | ------- |
+| Statements | 80%    | 70%     |
+| Branches   | 75%    | 65%     |
+| Functions  | 80%    | 70%     |
+| Lines      | 80%    | 70%     |
 
 ### Viewing Coverage Reports
 
@@ -346,6 +350,7 @@ open coverage/lcov-report/index.html
 ### What to Cover
 
 ✅ **Prioritize**:
+
 - Business logic
 - Utility functions
 - Complex components
@@ -353,6 +358,7 @@ open coverage/lcov-report/index.html
 - Edge cases
 
 ❌ **Don't stress about**:
+
 - Simple presentational components
 - Constants and types
 - Generated code
@@ -365,6 +371,7 @@ open coverage/lcov-report/index.html
 ### GitHub Actions
 
 Tests run automatically on:
+
 - Every push to `develop` or `main`
 - Every pull request
 - Before deployments
@@ -385,13 +392,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '18'
-      
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Run tests
         run: npm test -- --coverage
-      
+
       - name: Upload coverage
         uses: codecov/codecov-action@v3
 ```
@@ -416,10 +423,10 @@ import { render, screen } from '@testing-library/react';
 
 it('debugs component', () => {
   render(<MyComponent />);
-  
+
   // Print entire component tree
   screen.debug();
-  
+
   // Print specific element
   screen.debug(screen.getByRole('button'));
 });
@@ -436,4 +443,4 @@ it('debugs component', () => {
 
 ---
 
-*Built with Bona Fide Intelligence | © 2025 Inspection Systems Direct LLC*
+_Built with Bona Fide Intelligence | © 2025 Inspection Systems Direct LLC_
