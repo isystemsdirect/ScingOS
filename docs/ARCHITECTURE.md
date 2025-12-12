@@ -15,24 +15,28 @@ For the complete architecture documentation, see the [root ARCHITECTURE.md](../A
 ## Core Architectural Principles
 
 ### 1. Voice-First Design
+
 - **Wake-word activation**: "Hey, Scing!"
 - Natural language as primary interface
 - Hands-free, touchless operation
 - Multi-turn conversational context
 
 ### 2. Thin-Client Model
+
 - Minimal local processing
 - Intelligence offloaded to SCINGULAR AI cloud
 - Fast, responsive UI with real-time updates
 - Cross-device synchronization
 
 ### 3. Zero-Trust Security
+
 - Every action requires explicit authorization
 - Capability-based access control
 - Immutable audit trails
 - Data minimization by default
 
 ### 4. Modular Component Design
+
 - Independent, loosely-coupled services
 - Well-defined APIs and protocols
 - Horizontal scalability
@@ -45,6 +49,7 @@ For the complete architecture documentation, see the [root ARCHITECTURE.md](../A
 ### Frontend Layer
 
 **ScingOS Client** (Next.js / React / TypeScript)
+
 - Web-based thin client
 - Voice interface components
 - Real-time UI updates via AIP
@@ -52,6 +57,7 @@ For the complete architecture documentation, see the [root ARCHITECTURE.md](../A
 - Optional Tauri native shell for desktop
 
 **Key Features**:
+
 - Authentication (Firebase Auth)
 - Voice capture and playback
 - Session management
@@ -61,6 +67,7 @@ For the complete architecture documentation, see the [root ARCHITECTURE.md](../A
 ### Backend Layer
 
 **Firebase Services**
+
 - **Authentication**: User identity and access
 - **Firestore**: Document-based data store
 - **Cloud Functions**: Serverless compute
@@ -68,6 +75,7 @@ For the complete architecture documentation, see the [root ARCHITECTURE.md](../A
 - **Hosting**: Static asset delivery
 
 **SCINGULAR AI Platform**
+
 - LARI intelligence engines
 - BANE security governor
 - Model hosting and inference
@@ -76,12 +84,14 @@ For the complete architecture documentation, see the [root ARCHITECTURE.md](../A
 ### Protocol Layer
 
 **AIP (Augmented Intelligence Portal)**
+
 - Real-time bidirectional communication
 - WebSocket-based with fallback
 - Authenticated, encrypted channels
 - Message routing and orchestration
 
 **ISDC Protocol 2025**
+
 - Inspection data synchronization
 - Details management
 - Conflict resolution
@@ -90,6 +100,7 @@ For the complete architecture documentation, see the [root ARCHITECTURE.md](../A
 ### Security Layer
 
 **BANE (Backend Augmented Neural Engine)**
+
 - Capability token issuance
 - Policy enforcement
 - Security Decision Records (SDR)
@@ -162,18 +173,21 @@ See [FILE-EXTENSION.md](FILE-EXTENSION.md) for complete specification.
 ## Deployment Models
 
 ### Cloud-Native (Current)
+
 - Firebase infrastructure
 - Serverless functions
 - Global CDN
 - Pay-per-use scaling
 
 ### Hybrid (Planned Q4 2026)
+
 - On-premise sensitive data
 - Cloud AI processing
 - VPN/secure tunnels
 - Local backup and caching
 
 ### Server Depot (Future)
+
 - Owned infrastructure
 - Kubernetes orchestration
 - PostgreSQL database
@@ -184,18 +198,21 @@ See [FILE-EXTENSION.md](FILE-EXTENSION.md) for complete specification.
 ## Scalability Strategy
 
 ### Horizontal Scaling
+
 - Stateless Cloud Functions
 - Load balancing via Firebase
 - CDN for static assets
 - Read replicas for Firestore
 
 ### Vertical Optimization
+
 - Edge caching
 - Lazy loading
 - Progressive enhancement
 - Optimistic UI updates
 
 ### Data Partitioning
+
 - Multi-tenant isolation
 - Organization-based sharding
 - Geographic distribution
@@ -205,27 +222,28 @@ See [FILE-EXTENSION.md](FILE-EXTENSION.md) for complete specification.
 
 ## Technology Stack
 
-| Layer | Technology | Purpose |
-|-------|-----------|---------|
-| Frontend | Next.js 14+ | React framework with SSR |
-| UI Library | React 18+ | Component framework |
-| Language | TypeScript | Type-safe development |
-| Styling | Tailwind CSS | Utility-first styling |
-| Auth | Firebase Auth | User authentication |
-| Database | Firestore | Document database |
-| Functions | Cloud Functions | Serverless compute |
-| Storage | Firebase Storage | File/media storage |
-| Voice | OpenAI Whisper | Speech-to-text |
-| Voice | ElevenLabs | Text-to-speech |
-| Wake Word | Picovoice | Wake word detection |
-| Security | BANE | Custom security layer |
-| Desktop | Tauri | Native shell (optional) |
+| Layer      | Technology       | Purpose                  |
+| ---------- | ---------------- | ------------------------ |
+| Frontend   | Next.js 14+      | React framework with SSR |
+| UI Library | React 18+        | Component framework      |
+| Language   | TypeScript       | Type-safe development    |
+| Styling    | Tailwind CSS     | Utility-first styling    |
+| Auth       | Firebase Auth    | User authentication      |
+| Database   | Firestore        | Document database        |
+| Functions  | Cloud Functions  | Serverless compute       |
+| Storage    | Firebase Storage | File/media storage       |
+| Voice      | OpenAI Whisper   | Speech-to-text           |
+| Voice      | ElevenLabs       | Text-to-speech           |
+| Wake Word  | Picovoice        | Wake word detection      |
+| Security   | BANE             | Custom security layer    |
+| Desktop    | Tauri            | Native shell (optional)  |
 
 ---
 
 ## Integration Points
 
 ### External Services
+
 - **OpenAI**: GPT models for reasoning
 - **Anthropic**: Claude for analysis
 - **Firebase**: Backend infrastructure
@@ -234,6 +252,7 @@ See [FILE-EXTENSION.md](FILE-EXTENSION.md) for complete specification.
 - **Picovoice**: Wake word detection
 
 ### Device Adapters
+
 - **Cameras**: Photo/video capture
 - **Thermal**: FLIR integration
 - **Measurement**: Laser, moisture meters
@@ -246,6 +265,7 @@ See [FILE-EXTENSION.md](FILE-EXTENSION.md) for complete specification.
 ## Development Environment
 
 ### Local Setup
+
 ```bash
 # Install dependencies
 npm install
@@ -258,9 +278,11 @@ firebase emulators:start
 ```
 
 ### Environment Variables
+
 See `.env.example` for required configuration.
 
 ### Quality Gates
+
 - TypeScript type checking
 - ESLint code quality
 - Prettier formatting
@@ -271,19 +293,20 @@ See `.env.example` for required configuration.
 
 ## Performance Targets
 
-| Metric | Target | Current |
-|--------|--------|---------|
-| Voice Response Time | <2s | ~3s |
-| Page Load (FCP) | <1.5s | ~2s |
-| API Response | <500ms | ~800ms |
-| Uptime | 99.9% | 99.5% |
-| Concurrent Users | 10,000+ | 100 |
+| Metric              | Target  | Current |
+| ------------------- | ------- | ------- |
+| Voice Response Time | <2s     | ~3s     |
+| Page Load (FCP)     | <1.5s   | ~2s     |
+| API Response        | <500ms  | ~800ms  |
+| Uptime              | 99.9%   | 99.5%   |
+| Concurrent Users    | 10,000+ | 100     |
 
 ---
 
 ## Security Architecture
 
 ### Defense in Depth
+
 1. **Network**: TLS 1.3, DDoS protection
 2. **Application**: Input validation, CSRF protection
 3. **Data**: Encryption at rest and in transit
@@ -291,6 +314,7 @@ See `.env.example` for required configuration.
 5. **Monitoring**: Real-time threat detection
 
 ### Compliance
+
 - SOC 2 Type I (in progress)
 - SOC 2 Type II (planned Q4 2026)
 - GDPR compliant
@@ -301,18 +325,21 @@ See `.env.example` for required configuration.
 ## Monitoring & Observability
 
 ### Logging
+
 - Firebase Cloud Logging
 - Structured JSON logs
 - Correlation IDs
 - Log levels (debug, info, warn, error)
 
 ### Metrics
+
 - Firebase Performance Monitoring
 - Custom business metrics
 - User analytics
 - Error tracking
 
 ### Alerting
+
 - Critical error notifications
 - Performance degradation alerts
 - Security event alerts
@@ -323,17 +350,20 @@ See `.env.example` for required configuration.
 ## Future Architecture Evolution
 
 ### Q2 2026
+
 - Advanced LARI engine integration
 - Multi-jurisdictional code intelligence
 - Enhanced device adapter framework
 
 ### Q4 2026
+
 - Server depot migration planning
 - Kubernetes infrastructure
 - PostgreSQL database layer
 - Advanced caching strategy
 
 ### 2027+
+
 - Edge AI deployment
 - Blockchain audit trails
 - AR/VR integration
@@ -355,4 +385,4 @@ _For detailed architectural diagrams and technical specifications, see [../ARCHI
 
 ---
 
-*Built with Bona Fide Intelligence | © 2025 Inspection Systems Direct LLC*
+_Built with Bona Fide Intelligence | © 2025 Inspection Systems Direct LLC_

@@ -27,6 +27,7 @@ ScingOS provides two primary API interfaces:
 All APIs require authentication and follow the **Augmented Intelligence Protocol (AIP)** specification.
 
 **Base URLs**:
+
 - **Production**: `https://api.scingos.com/v1`
 - **Staging**: `https://api-staging.scingos.com/v1`
 - **Development**: `http://localhost:5001/scingos-dev/us-central1`
@@ -127,6 +128,7 @@ Authorization: Bearer <firebase-id-token>
 **Endpoint**: `GET /sessions`
 
 **Query Parameters**:
+
 - `limit` (number, default: 20, max: 100)
 - `offset` (number, default: 0)
 - `status` (string: "active" | "completed" | "archived")
@@ -310,10 +312,12 @@ const ws = new WebSocket('wss://api.scingos.com/v1/ws');
 
 ws.onopen = () => {
   // Send auth token
-  ws.send(JSON.stringify({
-    type: 'auth',
-    token: firebaseIdToken
-  }));
+  ws.send(
+    JSON.stringify({
+      type: 'auth',
+      token: firebaseIdToken,
+    })
+  );
 };
 
 ws.onmessage = (event) => {
@@ -433,15 +437,15 @@ See [AIP-PROTOCOL.md](./AIP-PROTOCOL.md) for full specification.
 
 ### Error Codes
 
-| Code | HTTP Status | Description |
-|------|-------------|-------------|
-| `UNAUTHORIZED` | 401 | Invalid or missing authentication |
-| `FORBIDDEN` | 403 | Insufficient permissions |
-| `NOT_FOUND` | 404 | Resource not found |
-| `INVALID_REQUEST` | 400 | Malformed request |
-| `RATE_LIMITED` | 429 | Too many requests |
-| `SERVER_ERROR` | 500 | Internal server error |
-| `SERVICE_UNAVAILABLE` | 503 | Service temporarily unavailable |
+| Code                  | HTTP Status | Description                       |
+| --------------------- | ----------- | --------------------------------- |
+| `UNAUTHORIZED`        | 401         | Invalid or missing authentication |
+| `FORBIDDEN`           | 403         | Insufficient permissions          |
+| `NOT_FOUND`           | 404         | Resource not found                |
+| `INVALID_REQUEST`     | 400         | Malformed request                 |
+| `RATE_LIMITED`        | 429         | Too many requests                 |
+| `SERVER_ERROR`        | 500         | Internal server error             |
+| `SERVICE_UNAVAILABLE` | 503         | Service temporarily unavailable   |
 
 ---
 
@@ -449,11 +453,11 @@ See [AIP-PROTOCOL.md](./AIP-PROTOCOL.md) for full specification.
 
 ### Limits
 
-| Tier | Requests/min | Burst | WebSocket Messages/min |
-|------|--------------|-------|------------------------|
-| Free | 60 | 10 | 120 |
-| Pro | 600 | 100 | 1200 |
-| Enterprise | Custom | Custom | Custom |
+| Tier       | Requests/min | Burst  | WebSocket Messages/min |
+| ---------- | ------------ | ------ | ---------------------- |
+| Free       | 60           | 10     | 120                    |
+| Pro        | 600          | 100    | 1200                   |
+| Enterprise | Custom       | Custom | Custom                 |
 
 ### Headers
 
@@ -490,11 +494,11 @@ import { ScingOS } from '@scingos/sdk';
 
 const client = new ScingOS({
   apiKey: process.env.SCINGOS_API_KEY,
-  environment: 'production'
+  environment: 'production',
 });
 
 const session = await client.sessions.create({
-  context: { location: '123 Main St' }
+  context: { location: '123 Main St' },
 });
 ```
 
@@ -522,4 +526,4 @@ session = client.sessions.create(context={'location': '123 Main St'})
 
 ---
 
-*Built with Bona Fide Intelligence | © 2025 Inspection Systems Direct LLC*
+_Built with Bona Fide Intelligence | © 2025 Inspection Systems Direct LLC_

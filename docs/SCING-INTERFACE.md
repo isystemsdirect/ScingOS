@@ -86,17 +86,17 @@ Audio Playback + Visual Display
 
 ### Component Responsibilities
 
-| Component | Responsibility | Technology |
-|-----------|---------------|------------|
-| Wake Word Detector | Listens for "Hey, Scing!" | Picovoice Porcupine |
-| Audio Capture | Records user speech | Web Audio API |
-| ASR | Converts speech to text | OpenAI Whisper |
-| NLU | Extracts intent and entities | Fine-tuned LLM |
-| Dialog Manager | Manages conversation state | Custom state machine |
-| Task Orchestrator | Routes requests to LARI/BANE | AIP Protocol |
-| NLG | Generates natural responses | GPT-4 |
-| TTS | Synthesizes speech | ElevenLabs |
-| Audio Playback | Plays response audio | Web Audio API |
+| Component          | Responsibility               | Technology           |
+| ------------------ | ---------------------------- | -------------------- |
+| Wake Word Detector | Listens for "Hey, Scing!"    | Picovoice Porcupine  |
+| Audio Capture      | Records user speech          | Web Audio API        |
+| ASR                | Converts speech to text      | OpenAI Whisper       |
+| NLU                | Extracts intent and entities | Fine-tuned LLM       |
+| Dialog Manager     | Manages conversation state   | Custom state machine |
+| Task Orchestrator  | Routes requests to LARI/BANE | AIP Protocol         |
+| NLG                | Generates natural responses  | GPT-4                |
+| TTS                | Synthesizes speech           | ElevenLabs           |
+| Audio Playback     | Plays response audio         | Web Audio API        |
 
 ---
 
@@ -143,6 +143,7 @@ await porcupine.start();
 ### ASR Provider: OpenAI Whisper
 
 **Why Whisper?**
+
 - State-of-the-art accuracy
 - Multilingual support (99 languages)
 - Robust to background noise
@@ -153,9 +154,7 @@ await porcupine.start();
 ```typescript
 import { Configuration, OpenAIApi } from 'openai';
 
-const openai = new OpenAIApi(
-  new Configuration({ apiKey: process.env.OPENAI_API_KEY })
-);
+const openai = new OpenAIApi(new Configuration({ apiKey: process.env.OPENAI_API_KEY }));
 
 async function transcribeAudio(audioBlob: Blob): Promise<string> {
   const formData = new FormData();
@@ -187,6 +186,7 @@ SCING uses a **fine-tuned GPT-4 model** to extract user intent:
 `"Start a roofing inspection for the Smith property"`
 
 **NLU Output**:
+
 ```json
 {
   "intent": "start_inspection",
@@ -227,8 +227,9 @@ Entities provide context for intents:
 SCING generates conversational responses using **GPT-4**:
 
 **System Prompt**:
+
 ```
-You are Scing, the voice assistant for ScingOS, an AI-powered inspection platform. 
+You are Scing, the voice assistant for ScingOS, an AI-powered inspection platform.
 You are helpful, concise, and professional. You speak in a friendly tone.
 Respond to the user based on the following context and task result.
 ```
@@ -236,6 +237,7 @@ Respond to the user based on the following context and task result.
 **Example**:
 
 **Context**:
+
 ```json
 {
   "user": "Inspector John",
@@ -265,6 +267,7 @@ Respond to the user based on the following context and task result.
 ### TTS Provider: ElevenLabs
 
 **Why ElevenLabs?**
+
 - Natural, expressive voices
 - Low latency (< 1 second)
 - Voice cloning capability
@@ -312,11 +315,11 @@ interface ConversationContext {
   user_id: string;
   started_at: Date;
   last_activity: Date;
-  
+
   // Current state
   current_inspection?: string;
   current_task?: string;
-  
+
   // History (last 5 turns)
   history: Array<{
     user_input: string;
@@ -324,7 +327,7 @@ interface ConversationContext {
     intent: string;
     timestamp: Date;
   }>;
-  
+
   // Extracted entities
   entities: {
     property?: string;
@@ -339,7 +342,7 @@ interface ConversationContext {
 SCING resolves ambiguous references:
 
 **User**: "Start a roofing inspection"  
-**Scing**: *remembers property from previous conversation*  
+**Scing**: _remembers property from previous conversation_  
 **Scing**: "Starting roofing inspection for the Johnson property on Main Street. Is that correct?"
 
 ---
@@ -349,12 +352,14 @@ SCING resolves ambiguous references:
 ### Voice Interaction Patterns
 
 #### Pattern 1: Simple Command
+
 ```
 User: "Hey, Scing, what's the code for handrail height?"
 Scing: "IBC Section 1014.8 requires handrails to be between 34 and 38 inches above the nosing."
 ```
 
 #### Pattern 2: Multi-Step Task
+
 ```
 User: "Hey, Scing, start an electrical inspection."
 Scing: "Electrical inspection started. First, let's check the main panel. Say 'capture' when ready."
@@ -363,6 +368,7 @@ Scing: "Photo captured. Analyzing... I see a 200-amp panel with no visible issue
 ```
 
 #### Pattern 3: Clarification
+
 ```
 User: "Hey, Scing, generate a report."
 Scing: "Which inspection would you like a report for? You have a roofing inspection and an electrical inspection in progress."
@@ -382,16 +388,19 @@ While voice is primary, visual cues enhance UX:
 ### Error Handling
 
 **Speech not recognized**:
+
 ```
 Scing: "Sorry, I didn't catch that. Could you repeat?"
 ```
 
 **Ambiguous request**:
+
 ```
 Scing: "I'm not sure what you mean by 'check it.' Could you be more specific?"
 ```
 
 **System error**:
+
 ```
 Scing: "I'm having trouble connecting to the server. Please try again in a moment."
 ```
@@ -466,10 +475,10 @@ SCING transforms ScingOS into a truly voice-first platform, enabling natural, ha
 
 ---
 
-*For code examples, see `/client/components/voice/`*
+_For code examples, see `/client/components/voice/`_
 
-*For voice model configuration, see `/docs/voice-models.md`*
+_For voice model configuration, see `/docs/voice-models.md`_
 
 ---
 
-*Built with Bona Fide Intelligence | © 2025 Inspection Systems Direct LLC*
+_Built with Bona Fide Intelligence | © 2025 Inspection Systems Direct LLC_

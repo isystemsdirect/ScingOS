@@ -3,6 +3,7 @@
 This folder contains visual assets, diagrams, and SVG illustrations used throughout the ScingOS UI/UX and Design System documentation.
 
 These assets include:
+
 - AI Sphere diagrams
 - Panel structure blueprints
 - Motion flow behavior
@@ -12,6 +13,7 @@ These assets include:
 - Workspace layout architecture
 
 Assets are lightweight SVG files to ensure:
+
 - Version control friendliness
 - Fast GitHub rendering
 - Easy scaling

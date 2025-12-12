@@ -61,7 +61,6 @@ For detailed setup instructions, see the [Quick Start Guide](QUICK-START.md).
   - TypeScript and JavaScript Language Features
   - Tailwind CSS IntelliSense
   - Firebase
-  
 - **Browser**: Chrome with React DevTools
 
 ### Environment Variables
@@ -88,11 +87,13 @@ ANTHROPIC_API_KEY=your_anthropic_key
 ### Running Locally
 
 **Option 1: Using development script (recommended)**
+
 ```bash
 npm run dev
 ```
 
 **Option 2: Manual start**
+
 ```bash
 # Terminal 1: Client
 cd client
@@ -104,6 +105,7 @@ npm run serve
 ```
 
 **Access Points:**
+
 - Client: http://localhost:3000
 - Firebase Emulator UI: http://localhost:4000
 - Functions: http://localhost:5001
@@ -174,6 +176,7 @@ ScingOS/
 - Avoid `any` type; use `unknown` when type is truly unknown
 
 **Example:**
+
 ```typescript
 // Good
 interface User {
@@ -202,6 +205,7 @@ async function getUser(userId) {
 - **Trailing commas** in multi-line objects/arrays
 
 Run formatting:
+
 ```bash
 npm run format        # Format all files
 npm run format:check  # Check formatting without changes
@@ -217,15 +221,16 @@ npm run format:check  # Check formatting without changes
 - **Types**: `PascalCase`
 
 **Example:**
+
 ```typescript
 // Component file: UserProfile.tsx
 export function UserProfile({ user }: UserProfileProps) {
   const MAX_RETRY_COUNT = 3;
-  
+
   function handleSubmit() {
     // ...
   }
-  
+
   return <div>...</div>;
 }
 
@@ -246,6 +251,7 @@ export type UserRole = 'admin' | 'inspector' | 'viewer';
 - **TODO comments** should include ticket references
 
 **Example:**
+
 ```typescript
 /**
  * Creates a new inspection session with the given parameters.
@@ -275,6 +281,7 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 ```
 
 **Types:**
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation changes
@@ -284,6 +291,7 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 - `chore`: Maintenance tasks
 
 **Examples:**
+
 ```bash
 feat(client): add voice wake word detection
 fix(bane): resolve capability token expiration issue
@@ -320,6 +328,7 @@ npm test -- path/to/test.spec.ts
 ### Writing Tests
 
 **Unit Test Example:**
+
 ```typescript
 // utils.spec.ts
 import { formatInspectionId } from './utils';
@@ -338,6 +347,7 @@ describe('formatInspectionId', () => {
 ```
 
 **Component Test Example:**
+
 ```typescript
 // UserProfile.spec.tsx
 import { render, screen } from '@testing-library/react';
@@ -347,7 +357,7 @@ describe('UserProfile', () => {
   it('should render user name', () => {
     const user = { id: '1', name: 'John Doe', email: 'john@example.com' };
     render(<UserProfile user={user} />);
-    
+
     expect(screen.getByText('John Doe')).toBeInTheDocument();
   });
 });
@@ -356,6 +366,7 @@ describe('UserProfile', () => {
 ### Test Coverage
 
 Maintain **>80% code coverage** for critical paths:
+
 - Authentication logic
 - BANE security checks
 - ISDC protocol handlers
@@ -418,6 +429,7 @@ touch new-page/page.tsx
 ```
 
 **Example page.tsx:**
+
 ```typescript
 export default function NewPage() {
   return (
@@ -440,7 +452,7 @@ export const myNewFunction = onCall(async (request) => {
   if (!request.auth) {
     throw new Error('Unauthorized');
   }
-  
+
   // Your logic here
   return { success: true };
 });
@@ -464,12 +476,14 @@ See [Device Integration Guide](device-integration.md) (coming soon)
 ### Common Issues
 
 **Port Already in Use**
+
 ```bash
 # Kill process on port 3000
 lsof -ti:3000 | xargs kill -9
 ```
 
 **Firebase Auth Errors**
+
 ```bash
 firebase logout
 firebase login
@@ -477,18 +491,21 @@ firebase use --add
 ```
 
 **Dependencies Out of Sync**
+
 ```bash
 rm -rf node_modules package-lock.json
 npm install
 ```
 
 **Type Errors After Update**
+
 ```bash
 # Restart TypeScript server in VSCode
 # Command Palette → TypeScript: Restart TS Server
 ```
 
 **Build Failures**
+
 ```bash
 # Clear Next.js cache
 rm -rf client/.next
@@ -500,6 +517,7 @@ rm -rf cloud/functions/lib
 ### Debug Mode
 
 Enable debug logging:
+
 ```bash
 # Client
 DEBUG=* npm run dev
@@ -540,4 +558,4 @@ CI/CD automatically runs these checks on pull requests.
 
 ---
 
-*Built with Bona Fide Intelligence | © 2025 Inspection Systems Direct LLC*
+_Built with Bona Fide Intelligence | © 2025 Inspection Systems Direct LLC_

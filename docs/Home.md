@@ -26,12 +26,14 @@ This wiki serves as the comprehensive documentation hub for ScingOS and the SCIN
 ## Table of Contents
 
 ### 🎯 Getting Started
+
 - [Quick Start Guide](QUICK-START.md) - Setup and first run
 - [Development Guide](API.md) - API and development workflows
 - [UX Guidelines](UX-GUIDELINES.md) - User experience principles
 - [Firebase Integration](Firebase-Doc-Links.md) - Backend setup
 
 ### 🏗️ Architecture & Core Systems
+
 - [System Architecture](ARCHITECTURE.md) - Overall system design
 - [AIP Protocol](AIP-PROTOCOL.md) - Communication protocol specification
 - [SCING Interface](SCING-INTERFACE.md) - Voice orchestrator design
@@ -39,21 +41,25 @@ This wiki serves as the comprehensive documentation hub for ScingOS and the SCIN
 - [ISDC Protocol 2025](ISDC-PROTOCOL-2025.md) - Inspection Systems Direct Communication Protocol
 
 ### 📦 File Systems & Data
+
 - [Proprietary File Extensions](FILE-EXTENSION.md) - SCINGULAR `.sg*` file formats
 - [Secrets Management](SECRETS-MANAGEMENT.md) - Secure credential handling
 - [The SCINGULAR Ecosystem](The_SCINGULAR_Ecosystem_Dynamic_Library.md) - Dynamic library system
 
 ### 🔒 Security & Legal
+
 - [BANE Security Framework](BANE-SECURITY.md) - Zero-trust security architecture
 - [Legal Framework](LEGAL-FRAMEWORK.md) - Compliance and legal documentation
 - [Secrets Management](SECRETS-MANAGEMENT.md) - Cryptographic key management
 
 ### 🧪 Development & Testing
+
 - [API Documentation](API.md) - Developer API reference
 - [Testing Guide](TESTING.md) - Testing strategies and tools
 - [UX Guidelines](UX-GUIDELINES.md) - Design principles
 
 ### 🎨 Design System
+
 - [Design System](design-system/) - UI/UX components and patterns
 
 ---
@@ -72,18 +78,21 @@ At the heart of ScingOS is **Bona Fide Intelligence**:
 ## Key Components
 
 ### 🎤 SCING - Voice Interface & Orchestrator
+
 - Natural language understanding and task routing
-- Voice-activated, hands-free operation  
+- Voice-activated, hands-free operation
 - Context-aware conversation management
 - Cross-platform UI coordination
 
 ### 🧠 LARI - Language and Reasoning Intelligence Engines
+
 - Perception and analysis engines
 - Standards lookup and code intelligence
 - Multi-jurisdictional compliance verification
 - Inspection workflow automation
 
 ### 🛡️ BANE - Backend Augmented Neural Engine
+
 - Zero-trust security framework
 - Capability-based authorization
 - Immutable audit trails (Security Decision Records)
@@ -91,11 +100,13 @@ At the heart of ScingOS is **Bona Fide Intelligence**:
 - Policy enforcement and data minimization
 
 ### 🔗 AIP Protocol - Augmented Intelligence Portal
+
 - Real-time communication between client and cloud
 - Secure, authenticated data channels
 - Task orchestration and result delivery
 
 ### 📡 ISDC Protocol 2025
+
 - Inspection Systems Direct Communication Protocol
 - Standardized inspection data exchange
 - Real-time synchronization and conflict resolution
@@ -141,7 +152,7 @@ ScingOS is developed by **[Inspection Systems Direct LLC](https://isystemsdirect
 
 ## Contributing
 
-We welcome contributions to both the codebase and documentation! 
+We welcome contributions to both the codebase and documentation!
 
 - Read [CONTRIBUTING.md](../CONTRIBUTING.md) for guidelines
 - Review [CODE_OF_CONDUCT.md](../CODE_OF_CONDUCT.md) for community standards
