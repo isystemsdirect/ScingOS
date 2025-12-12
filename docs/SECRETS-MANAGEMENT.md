@@ -70,6 +70,7 @@ DATABASE_URL=postgresql://...
 ### Setup
 
 1. **Copy environment template**:
+
    ```bash
    cp .env.example client/.env.local
    ```
@@ -119,22 +120,22 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 
 #### Required Secrets
 
-| Secret Name | Description | Where to Get |
-|-------------|-------------|--------------|
-| `FIREBASE_TOKEN` | Firebase CI token | Run `firebase login:ci` |
-| `FIREBASE_API_KEY` | Firebase API key | Firebase Console |
-| `FIREBASE_AUTH_DOMAIN` | Firebase auth domain | Firebase Console |
-| `FIREBASE_PROJECT_ID` | Firebase project ID | Firebase Console |
-| `FIREBASE_STORAGE_BUCKET` | Firebase storage bucket | Firebase Console |
-| `FIREBASE_MESSAGING_SENDER_ID` | Firebase messaging ID | Firebase Console |
-| `FIREBASE_APP_ID` | Firebase app ID | Firebase Console |
-| `VERCEL_TOKEN` | Vercel deployment token | Vercel Dashboard |
-| `VERCEL_ORG_ID` | Vercel organization ID | Run `vercel` locally |
-| `VERCEL_PROJECT_ID` | Vercel project ID | Run `vercel` locally |
-| `OPENAI_API_KEY` | OpenAI API key | OpenAI Dashboard |
-| `ELEVENLABS_API_KEY` | ElevenLabs API key | ElevenLabs Dashboard |
-| `PICOVOICE_API_KEY` | Picovoice API key | Picovoice Console |
-| `SNYK_TOKEN` | Snyk security token | Snyk Dashboard |
+| Secret Name                    | Description             | Where to Get            |
+| ------------------------------ | ----------------------- | ----------------------- |
+| `FIREBASE_TOKEN`               | Firebase CI token       | Run `firebase login:ci` |
+| `FIREBASE_API_KEY`             | Firebase API key        | Firebase Console        |
+| `FIREBASE_AUTH_DOMAIN`         | Firebase auth domain    | Firebase Console        |
+| `FIREBASE_PROJECT_ID`          | Firebase project ID     | Firebase Console        |
+| `FIREBASE_STORAGE_BUCKET`      | Firebase storage bucket | Firebase Console        |
+| `FIREBASE_MESSAGING_SENDER_ID` | Firebase messaging ID   | Firebase Console        |
+| `FIREBASE_APP_ID`              | Firebase app ID         | Firebase Console        |
+| `VERCEL_TOKEN`                 | Vercel deployment token | Vercel Dashboard        |
+| `VERCEL_ORG_ID`                | Vercel organization ID  | Run `vercel` locally    |
+| `VERCEL_PROJECT_ID`            | Vercel project ID       | Run `vercel` locally    |
+| `OPENAI_API_KEY`               | OpenAI API key          | OpenAI Dashboard        |
+| `ELEVENLABS_API_KEY`           | ElevenLabs API key      | ElevenLabs Dashboard    |
+| `PICOVOICE_API_KEY`            | Picovoice API key       | Picovoice Console       |
+| `SNYK_TOKEN`                   | Snyk security token     | Snyk Dashboard          |
 
 ### Getting Firebase CI Token
 
@@ -254,11 +255,13 @@ firebase deploy --project production
 ### When to Rotate
 
 **Immediately**:
+
 - Secret is compromised or suspected breach
 - Employee with access leaves
 - Public exposure (git commit, logs, etc.)
 
 **Regularly**:
+
 - Production secrets: Every 90 days
 - Development secrets: Every 180 days
 - Service account keys: Every 90 days
@@ -319,4 +322,4 @@ Before deploying:
 
 ---
 
-*Built with Bona Fide Intelligence | © 2025 Inspection Systems Direct LLC*
+_Built with Bona Fide Intelligence | © 2025 Inspection Systems Direct LLC_
