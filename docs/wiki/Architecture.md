@@ -128,6 +128,7 @@ ScingOS is a distributed, cloud-native operating system built on a three-layer a
 The cloud layer hosts all AI processing, business logic, and data persistence.
 
 **Responsibilities:**
+
 - Voice understanding and generation
 - AI inference and reasoning
 - Data storage and retrieval
@@ -136,6 +137,7 @@ The cloud layer hosts all AI processing, business logic, and data persistence.
 - Report generation
 
 **Key Services:**
+
 - **Google Cloud AI**: Gemini models for vision and language
 - **Firebase**: Backend as a service
 - **Cloud Functions**: Serverless compute
@@ -144,6 +146,7 @@ The cloud layer hosts all AI processing, business logic, and data persistence.
 - **Cloud Run**: Container hosting (future)
 
 **Scaling Strategy:**
+
 - Horizontal scaling via Firebase/Google Cloud auto-scaling
 - Regional deployment for low latency
 - CDN for static assets
@@ -154,6 +157,7 @@ The cloud layer hosts all AI processing, business logic, and data persistence.
 The AIP protocol layer handles all communication between client and cloud.
 
 **Characteristics:**
+
 - **Bidirectional**: Full duplex WebSocket communication
 - **Stateful**: Session-oriented with persistent context
 - **Secure**: TLS 1.3 encryption + capability tokens
@@ -161,6 +165,7 @@ The AIP protocol layer handles all communication between client and cloud.
 - **Extensible**: Protocol version negotiation
 
 **Message Categories:**
+
 1. **Authentication**: Login, token refresh, capability grant
 2. **Command/Control**: User commands, system control
 3. **Data Streaming**: Sensor data, media, telemetry
@@ -174,12 +179,14 @@ See [AIP Protocol Deep Dive](#aip-protocol-deep-dive) for details.
 The client layer provides user interface and local device integration.
 
 **Platform Support:**
+
 - **Web**: Next.js application (current)
 - **Desktop**: Tauri native app (current)
 - **Mobile**: iOS/Android (planned Q2 2026)
 - **Tablet**: Optimized tablet experience (planned)
 
 **Client Responsibilities:**
+
 - User interface rendering
 - Voice input/output
 - 3D neural environment
@@ -251,6 +258,7 @@ SCING is the conversational interface that coordinates all user interactions.
 ```
 
 **Data Flow:**
+
 1. User says "Hey, Scing!"
 2. Wake word model activates
 3. Audio stream sent to STT
@@ -308,6 +316,7 @@ LARI consists of specialized AI engines, each focused on specific capabilities.
 ```
 
 **Data Sources:**
+
 - ICC: International Building Code, Residential Code, etc.
 - NFPA: Fire and life safety codes
 - NEC: Electrical code standards
@@ -371,6 +380,7 @@ LARI consists of specialized AI engines, each focused on specific capabilities.
 ```
 
 **Supported Image Types:**
+
 - Standard photography (RGB)
 - Thermal/infrared imagery
 - Multispectral imaging
@@ -486,6 +496,7 @@ LARI consists of specialized AI engines, each focused on specific capabilities.
 **Purpose**: Monitoring, alerting, and predictive maintenance
 
 **Key Features:**
+
 - Real-time monitoring of inspection data
 - Anomaly detection algorithms
 - Predictive maintenance forecasting
@@ -497,6 +508,7 @@ LARI consists of specialized AI engines, each focused on specific capabilities.
 **Purpose**: Natural language report generation
 
 **Capabilities:**
+
 - Professional report templates
 - Natural language generation
 - Multi-format export (PDF, DOCX, HTML)
@@ -508,6 +520,7 @@ LARI consists of specialized AI engines, each focused on specific capabilities.
 **Purpose**: Community and collaboration features (future)
 
 **Planned Features:**
+
 - Content moderation AI
 - Sentiment analysis
 - Trust scoring
@@ -519,6 +532,7 @@ LARI consists of specialized AI engines, each focused on specific capabilities.
 **Purpose**: Billing intelligence and revenue optimization
 
 **Functions:**
+
 - Usage tracking and analytics
 - Subscription management
 - Revenue optimization
@@ -745,12 +759,12 @@ Client                            Server
 
 ```typescript
 interface AIPMessage {
-  type: string;                    // Message type
-  id: string;                      // Unique message ID
-  timestamp: string;               // ISO 8601 timestamp
-  session_id?: string;             // Session identifier
-  payload: any;                    // Type-specific payload
-  signature?: string;              // Optional cryptographic signature
+  type: string; // Message type
+  id: string; // Unique message ID
+  timestamp: string; // ISO 8601 timestamp
+  session_id?: string; // Session identifier
+  payload: any; // Type-specific payload
+  signature?: string; // Optional cryptographic signature
 }
 ```
 
@@ -818,11 +832,13 @@ interface AIPMessage {
 ### Security Features
 
 **End-to-End Encryption:**
+
 - TLS 1.3 for transport
 - Additional application-layer encryption for sensitive data
 - Perfect forward secrecy
 
 **Message Signing:**
+
 - Critical messages signed with Ed25519
 - Signature verification on receipt
 - Replay attack protection via timestamp + nonce
@@ -831,20 +847,21 @@ interface AIPMessage {
 
 **Error Code Catalog:**
 
-| Code | Category | Description |
-|------|----------|-------------|
-| 1000 | Auth | Authentication failed |
-| 1001 | Auth | Token expired |
-| 1002 | Auth | Insufficient capabilities |
-| 2000 | Protocol | Invalid message format |
+| Code | Category | Description                  |
+| ---- | -------- | ---------------------------- |
+| 1000 | Auth     | Authentication failed        |
+| 1001 | Auth     | Token expired                |
+| 1002 | Auth     | Insufficient capabilities    |
+| 2000 | Protocol | Invalid message format       |
 | 2001 | Protocol | Unsupported protocol version |
-| 3000 | Engine | LARI engine error |
-| 3001 | Engine | Timeout |
-| 4000 | Data | Invalid input data |
-| 4001 | Data | Data not found |
-| 5000 | System | Internal server error |
+| 3000 | Engine   | LARI engine error            |
+| 3001 | Engine   | Timeout                      |
+| 4000 | Data     | Invalid input data           |
+| 4001 | Data     | Data not found               |
+| 5000 | System   | Internal server error        |
 
 **Retry Logic:**
+
 - Exponential backoff: 1s, 2s, 4s, 8s, 16s
 - Maximum 5 retries
 - Permanent failures don't retry
@@ -869,6 +886,7 @@ interface AIPMessage {
 ```
 
 **Feature Detection:**
+
 - Clients declare supported features
 - Server enables compatible features
 - Graceful degradation for unsupported features
@@ -1005,13 +1023,10 @@ App
 
 ```typescript
 // Client subscribes to neural state
-const unsubscribe = onSnapshot(
-  doc(db, 'neural', 'current'),
-  (snapshot) => {
-    const state = snapshot.data();
-    updateNeuralVisuals(state);
-  }
-);
+const unsubscribe = onSnapshot(doc(db, 'neural', 'current'), (snapshot) => {
+  const state = snapshot.data();
+  updateNeuralVisuals(state);
+});
 ```
 
 ### Mock vs Live Neural State
@@ -1020,8 +1035,7 @@ const unsubscribe = onSnapshot(
 
 ```typescript
 // hooks/useNeuralVisualState.ts
-const useLiveNeuralState = 
-  process.env.NEXT_PUBLIC_USE_FIREBASE_NEURAL === 'true';
+const useLiveNeuralState = process.env.NEXT_PUBLIC_USE_FIREBASE_NEURAL === 'true';
 
 if (useLiveNeuralState) {
   // Subscribe to Firebase
@@ -1110,11 +1124,13 @@ User    Client         AIP          BANE         LARI         Firebase
 ### Encryption
 
 **At Rest:**
+
 - Firestore: AES-256 encryption (Google-managed keys)
 - Cloud Storage: AES-256 encryption
 - Secrets: Google Secret Manager
 
 **In Transit:**
+
 - TLS 1.3 for all connections
 - Perfect forward secrecy (PFS)
 - Certificate pinning on mobile (future)
@@ -1122,6 +1138,7 @@ User    Client         AIP          BANE         LARI         Firebase
 ### Audit Logging
 
 **Logged Events:**
+
 - Authentication attempts
 - Capability grants/denials
 - Data access
@@ -1130,6 +1147,7 @@ User    Client         AIP          BANE         LARI         Firebase
 - Security incidents
 
 **Log Retention:**
+
 - 7 years for compliance-related logs
 - 1 year for operational logs
 - Indefinite for security incidents
@@ -1138,22 +1156,22 @@ User    Client         AIP          BANE         LARI         Firebase
 
 ## File System Architecture
 
-### .sg* Proprietary Extensions Catalog
+### .sg\* Proprietary Extensions Catalog
 
-| Extension | Purpose | Use Case |
-|-----------|---------|----------|
-| `.sga` | Agent profile | UI agent manifests |
-| `.sgu` | User personalization | User preferences and keys |
-| `.sgt` | Task specification | Assignment and status tracking |
-| `.sgpck` | Installable package | Feature packages with licensing |
-| `.sguapp` | App installer | Application updates |
-| `.sgm` | AI model | Model configs and weights |
-| `.sgd` | Structured data | Report data and snapshots |
-| `.sgx` | Memory bundle | Session context and history |
-| `.sgn` | Data memory sidecar | Inspection data fragments |
-| `.sgk` | Legal/contract | Terms and licenses |
-| `.sge` | Entitlement artifact | Jurisdiction and export control |
-| `.sgi` | Sensitive artifact | Regulated data with policies |
+| Extension | Purpose              | Use Case                        |
+| --------- | -------------------- | ------------------------------- |
+| `.sga`    | Agent profile        | UI agent manifests              |
+| `.sgu`    | User personalization | User preferences and keys       |
+| `.sgt`    | Task specification   | Assignment and status tracking  |
+| `.sgpck`  | Installable package  | Feature packages with licensing |
+| `.sguapp` | App installer        | Application updates             |
+| `.sgm`    | AI model             | Model configs and weights       |
+| `.sgd`    | Structured data      | Report data and snapshots       |
+| `.sgx`    | Memory bundle        | Session context and history     |
+| `.sgn`    | Data memory sidecar  | Inspection data fragments       |
+| `.sgk`    | Legal/contract       | Terms and licenses              |
+| `.sge`    | Entitlement artifact | Jurisdiction and export control |
+| `.sgi`    | Sensitive artifact   | Regulated data with policies    |
 
 See [File Extension Documentation](../FILE-EXTENSION.md) for complete specifications.
 
@@ -1164,6 +1182,7 @@ See [File Extension Documentation](../FILE-EXTENSION.md) for complete specificat
 ### Cloud-Native (Current)
 
 **Architecture:**
+
 - Firebase Hosting for web client
 - Firebase Functions for backend logic
 - Firestore for database
@@ -1171,6 +1190,7 @@ See [File Extension Documentation](../FILE-EXTENSION.md) for complete specificat
 - Google Cloud AI for ML
 
 **Benefits:**
+
 - Zero infrastructure management
 - Auto-scaling
 - High availability
@@ -1180,12 +1200,14 @@ See [File Extension Documentation](../FILE-EXTENSION.md) for complete specificat
 ### Hybrid Deployment
 
 **Architecture:**
+
 - Cloud AI processing
 - On-premise data storage
 - VPN/private interconnect
 - Local caching
 
 **Use Cases:**
+
 - Data sovereignty requirements
 - Regulated industries
 - Cost optimization for large datasets
@@ -1193,12 +1215,14 @@ See [File Extension Documentation](../FILE-EXTENSION.md) for complete specificat
 ### Owned Infrastructure (Future)
 
 **Migration Path:**
+
 - Phase 1: Cloud-native (current)
 - Phase 2: Hybrid with data replication
 - Phase 3: Full migration to owned servers
 - Phase 4: Cloud as backup/DR
 
 **Target Architecture:**
+
 - Kubernetes cluster
 - Self-hosted databases
 - Private AI model hosting
@@ -1210,39 +1234,39 @@ See [File Extension Documentation](../FILE-EXTENSION.md) for complete specificat
 
 ### Cloud Layer
 
-| Component | Technology | Version |
-|-----------|------------|---------|
-| Authentication | Firebase Auth | Latest |
-| Database | Firestore | Latest |
-| Storage | Cloud Storage | Latest |
-| Functions | Cloud Functions | Node.js 20 |
-| AI/ML | Google Cloud AI | Gemini 1.5 |
-| Speech | Cloud Speech-to-Text | V2 |
-| TTS | Cloud Text-to-Speech | Latest |
-| Hosting | Firebase Hosting | Latest |
+| Component      | Technology           | Version    |
+| -------------- | -------------------- | ---------- |
+| Authentication | Firebase Auth        | Latest     |
+| Database       | Firestore            | Latest     |
+| Storage        | Cloud Storage        | Latest     |
+| Functions      | Cloud Functions      | Node.js 20 |
+| AI/ML          | Google Cloud AI      | Gemini 1.5 |
+| Speech         | Cloud Speech-to-Text | V2         |
+| TTS            | Cloud Text-to-Speech | Latest     |
+| Hosting        | Firebase Hosting     | Latest     |
 
 ### Client Layer
 
-| Component | Technology | Version |
-|-----------|------------|---------|
-| Framework | Next.js | 14.x |
-| UI Library | React | 18.x |
-| Language | TypeScript | 5.x |
-| 3D Graphics | React Three Fiber | 8.x |
-| 3D Engine | Three.js | 0.160+ |
-| State | React Context | - |
-| Styling | Tailwind CSS | 3.x |
-| Desktop | Tauri | 1.x |
+| Component   | Technology        | Version |
+| ----------- | ----------------- | ------- |
+| Framework   | Next.js           | 14.x    |
+| UI Library  | React             | 18.x    |
+| Language    | TypeScript        | 5.x     |
+| 3D Graphics | React Three Fiber | 8.x     |
+| 3D Engine   | Three.js          | 0.160+  |
+| State       | React Context     | -       |
+| Styling     | Tailwind CSS      | 3.x     |
+| Desktop     | Tauri             | 1.x     |
 
 ### Development Tools
 
-| Tool | Purpose |
-|------|---------|
-| ESLint | Code linting |
-| Prettier | Code formatting |
-| Jest | Unit testing |
-| Playwright | E2E testing |
-| Husky | Git hooks |
+| Tool       | Purpose                |
+| ---------- | ---------------------- |
+| ESLint     | Code linting           |
+| Prettier   | Code formatting        |
+| Jest       | Unit testing           |
+| Playwright | E2E testing            |
+| Husky      | Git hooks              |
 | Commitlint | Commit message linting |
 
 ---
@@ -1252,35 +1276,39 @@ See [File Extension Documentation](../FILE-EXTENSION.md) for complete specificat
 ### Horizontal Scaling
 
 **Firebase Auto-scaling:**
+
 - Cloud Functions scale automatically
 - Firestore scales to millions of operations
 - Cloud Storage handles petabytes
 - No manual configuration required
 
 **Load Distribution:**
+
 - Global CDN for static assets
 - Regional Cloud Functions deployment
 - Read replicas for Firestore (future)
 
 ### Performance Targets
 
-| Metric | Target | Current |
-|--------|--------|---------|
-| Voice command latency | < 500ms | ~800ms |
-| Image analysis | < 3s | ~5s |
-| Report generation | < 10s | ~15s |
-| 3D scene render | 60 FPS | 45-60 FPS |
-| AIP message latency | < 100ms | ~150ms |
+| Metric                | Target  | Current   |
+| --------------------- | ------- | --------- |
+| Voice command latency | < 500ms | ~800ms    |
+| Image analysis        | < 3s    | ~5s       |
+| Report generation     | < 10s   | ~15s      |
+| 3D scene render       | 60 FPS  | 45-60 FPS |
+| AIP message latency   | < 100ms | ~150ms    |
 
 ### Optimization Strategies
 
 **Client-side:**
+
 - Code splitting and lazy loading
 - Image optimization and compression
 - 3D model LOD (Level of Detail)
 - Service worker caching
 
 **Server-side:**
+
 - Database query optimization
 - Firestore index tuning
 - Cloud Function cold start reduction
@@ -1293,12 +1321,14 @@ See [File Extension Documentation](../FILE-EXTENSION.md) for complete specificat
 ### Firebase Services
 
 **Authentication:**
+
 - Email/password
 - Google OAuth
 - Custom tokens (for AIP)
 - Future: SAML, hardware keys
 
 **Firestore Collections:**
+
 ```
 users/
   {userId}/
@@ -1328,6 +1358,7 @@ audit_logs/
 ### Google Cloud AI
 
 **APIs Used:**
+
 - Gemini 1.5 Flash (vision and language)
 - Cloud Speech-to-Text (voice input)
 - Cloud Text-to-Speech (voice output)
@@ -1336,6 +1367,7 @@ audit_logs/
 ### Third-Party APIs
 
 **Planned Integrations:**
+
 - Weather APIs (environmental context)
 - Mapping services (location data)
 - Payment processors (Stripe)
@@ -1349,11 +1381,13 @@ audit_logs/
 ### Database Optimization
 
 **Firestore Indexes:**
+
 - Composite indexes for common queries
 - Single-field indexes on frequently filtered fields
 - TTL policies for temporary data
 
 **Query Patterns:**
+
 - Pagination for large result sets
 - Limit queries to 50-100 results
 - Use cursors for infinite scroll
@@ -1362,12 +1396,14 @@ audit_logs/
 ### Network Optimization
 
 **Compression:**
+
 - Gzip for text data
 - WebP for images
 - Opus for audio
 - H.264 for video
 
 **CDN Strategy:**
+
 - Cache static assets indefinitely
 - Cache API responses (where appropriate)
 - Regional edge locations
@@ -1376,12 +1412,14 @@ audit_logs/
 ### 3D Rendering Optimization
 
 **Level of Detail:**
+
 - Multiple LOD levels for complex models
 - Distance-based switching
 - Frustum culling
 - Occlusion culling (future)
 
 **Shader Optimization:**
+
 - Simplified shaders for mobile
 - Instanced rendering for particles
 - Texture atlasing
@@ -1394,12 +1432,14 @@ audit_logs/
 ### Backup Architecture
 
 **Firestore Backups:**
+
 - Automated daily backups
 - 30-day retention
 - Point-in-time recovery
 - Cross-region replication
 
 **Cloud Storage Backups:**
+
 - Versioning enabled
 - Lifecycle policies
 - Cross-region replication
@@ -1408,6 +1448,7 @@ audit_logs/
 ### Recovery Procedures
 
 **Database Recovery:**
+
 1. Identify backup point
 2. Create new Firestore database
 3. Restore from backup
@@ -1421,12 +1462,14 @@ audit_logs/
 ### Business Continuity
 
 **Service Redundancy:**
+
 - Multi-region deployment
 - Automatic failover
 - Health monitoring
 - Incident response plan
 
 **Communication Plan:**
+
 - Status page for service updates
 - Email notifications
 - In-app messaging
@@ -1439,6 +1482,7 @@ audit_logs/
 The ScingOS architecture is designed for scalability, security, and extensibility. The three-layer design (Cloud, Protocol, Client) provides clear separation of concerns while maintaining tight integration through the AIP protocol.
 
 Key architectural strengths:
+
 - **Zero-trust security** via BANE
 - **Real-time communication** via AIP
 - **Modular AI engines** via LARI
@@ -1447,6 +1491,7 @@ Key architectural strengths:
 - **Observable systems** for monitoring and debugging
 
 For more details on specific components, see:
+
 - [AIP Protocol Specification](AIP-Protocol.md)
 - [BANE Security Framework](BANE-Security.md)
 - [LARI Engines Documentation](LARI-Engines.md)

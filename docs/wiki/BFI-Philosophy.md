@@ -27,6 +27,7 @@
 **Bona Fide Intelligence (BFI)** is a philosophical framework and practical approach to artificial intelligence systems that prioritizes **genuine augmentation of human capability** over automation or replacement of human judgment.
 
 **Etymology:**
+
 - **Bona Fide** (Latin): "in good faith" or "genuine"
 - **Intelligence**: The capacity for learning, reasoning, understanding, and applying knowledge
 
@@ -36,20 +37,21 @@ Together, Bona Fide Intelligence means "**genuine intelligence**" - systems that
 
 The term "Artificial Intelligence" has historically carried connotations that diverge from our vision:
 
-| Aspect | Artificial Intelligence | Bona Fide Intelligence |
-|--------|------------------------|------------------------|
-| **Goal** | Replicate/replace human intelligence | Augment human capability |
-| **Role** | Independent decision-maker | Decision support system |
-| **Transparency** | Often "black box" | Always explainable |
-| **Control** | AI-driven automation | Human-retained agency |
-| **Trust Model** | "Trust the AI" | "Verify the AI" |
-| **Design Priority** | Efficiency and accuracy | Transparency and alignment |
+| Aspect              | Artificial Intelligence              | Bona Fide Intelligence     |
+| ------------------- | ------------------------------------ | -------------------------- |
+| **Goal**            | Replicate/replace human intelligence | Augment human capability   |
+| **Role**            | Independent decision-maker           | Decision support system    |
+| **Transparency**    | Often "black box"                    | Always explainable         |
+| **Control**         | AI-driven automation                 | Human-retained agency      |
+| **Trust Model**     | "Trust the AI"                       | "Verify the AI"            |
+| **Design Priority** | Efficiency and accuracy              | Transparency and alignment |
 
 ### Core Principle: AI = Augmented Intelligence
 
 In the BFI framework, **AI stands for Augmented Intelligence**, not Artificial Intelligence. This distinction is fundamental:
 
 **Augmented Intelligence:**
+
 - Enhances human perception and analysis
 - Provides insights humans might miss
 - Accelerates research and data processing
@@ -57,6 +59,7 @@ In the BFI framework, **AI stands for Augmented Intelligence**, not Artificial I
 - Maintains human final decision-making
 
 **Not Artificial Intelligence:**
+
 - Does not replace human judgment
 - Does not make autonomous critical decisions
 - Does not obscure its reasoning process
@@ -81,6 +84,7 @@ The BFI philosophy holds that the value of intelligence—whether human or machi
 **Philosophical Grounding:**
 
 This principle draws from:
+
 - **Kantian ethics**: Treating humans as ends, not means
 - **Capability approach** (Sen, Nussbaum): Technology expands human capabilities
 - **Democratic principles**: Individual autonomy and informed consent
@@ -101,6 +105,7 @@ True intelligence cannot be divorced from understanding. BFI systems must:
 **Against Black Boxes:**
 
 The BFI philosophy rejects the notion that AI systems should be inscrutable "black boxes." Even sophisticated machine learning models must provide:
+
 - Feature importance explanations
 - Confidence intervals
 - Decision trees or logic flows
@@ -120,13 +125,13 @@ In the BFI framework, trust is built on:
 
 **Authentic vs. Performative AI:**
 
-| Authentic AI (BFI) | Performative AI |
-|-------------------|----------------|
-| Admits uncertainty | Projects false confidence |
-| Shows reasoning | Hides processes |
-| Invites oversight | Resists scrutiny |
-| Prioritizes user goals | Optimizes opaque metrics |
-| Degrades gracefully | Fails catastrophically |
+| Authentic AI (BFI)     | Performative AI           |
+| ---------------------- | ------------------------- |
+| Admits uncertainty     | Projects false confidence |
+| Shows reasoning        | Hides processes           |
+| Invites oversight      | Resists scrutiny          |
+| Prioritizes user goals | Optimizes opaque metrics  |
+| Degrades gracefully    | Fails catastrophically    |
 
 ### Ethical AI Principles
 
@@ -178,21 +183,25 @@ Scing, the voice interface of ScingOS, exemplifies BFI principles:
 Each LARI (Language and Reasoning Intelligence) engine provides analysis and recommendations but never makes final decisions:
 
 **LARI-Language Engine:**
+
 - **What it does**: Searches code databases, highlights relevant regulations
 - **What it doesn't do**: Determine compliance (human inspector makes final call)
 - **BFI principle**: Expert systems enhance expert judgment
 
 **LARI-Vision Engine:**
+
 - **What it does**: Detects potential defects, flags anomalies, provides confidence scores
 - **What it doesn't do**: Declare something "definitely" defective without human verification
 - **BFI principle**: Computer vision augments human vision, not replaces it
 
 **LARI-Reasoning Engine:**
+
 - **What it does**: Analyzes data, identifies patterns, suggests priorities
 - **What it doesn't do**: Make final risk determinations or recommendations
 - **BFI principle**: Data analysis informs decisions, doesn't make them
 
 **LARI-Narrator Engine:**
+
 - **What it does**: Generates draft reports from inspection data
 - **What it doesn't do**: Finalize reports without human review and approval
 - **BFI principle**: Automation accelerates work, not eliminates oversight
@@ -202,24 +211,28 @@ Each LARI (Language and Reasoning Intelligence) engine provides analysis and rec
 BANE (Backend Augmented Neural Engine) embodies BFI principles through its security and governance framework:
 
 **Transparency Through Audit:**
+
 - Every AI decision logged in Security Decision Records (SDR)
 - Cryptographically signed and immutable
 - Queryable for compliance and review
 - Example: "Show me all instances where LARI-Vision flagged structural issues in the past month"
 
 **Accountability Through Attribution:**
+
 - All actions traced to specific users and AI components
 - Clear chain of responsibility
 - No "the AI did it" escapes
 - Example: Reports show "Analysis by LARI-Vision v2.1, reviewed and approved by [Inspector Name]"
 
 **Trust Through Verification:**
+
 - Capability-based authorization ensures AI only acts within granted permissions
 - Zero-trust model: every action requires explicit authorization
 - Users can audit what capabilities AI systems have
 - Example: "Scing has permission to analyze images but not to finalize reports"
 
 **Human-in-the-Loop Enforcement:**
+
 - Critical decisions require human approval (enforced by BANE)
 - AI cannot self-elevate permissions
 - Approval gates for consequential actions
@@ -236,6 +249,7 @@ BANE (Backend Augmented Neural Engine) embodies BFI principles through its secur
 **Implementation in ScingOS:**
 
 1. **Multi-Stage Approval Process**
+
    ```
    Data Collection (AI-assisted)
    ↓
@@ -273,9 +287,10 @@ BANE (Backend Augmented Neural Engine) embodies BFI principles through its secur
    - Uncertainty visualization in UI
 
 2. **Reasoning Chains**
+
    ```
    Output: "Potential code violation ICC 505.2"
-   
+
    Reasoning:
    1. Image analysis detected stair riser height of 8.5 inches
    2. ICC 505.2 specifies maximum riser height of 7.75 inches
@@ -336,6 +351,7 @@ BANE (Backend Augmented Neural Engine) embodies BFI principles through its secur
    - **Low confidence (<70%)**: Flag for human analysis, don't auto-suggest
 
 2. **Escalation Pathways**
+
    ```
    AI Analysis
    ↓
@@ -518,6 +534,7 @@ BANE (Backend Augmented Neural Engine) embodies BFI principles through its secur
 ```
 
 **Audit Capabilities:**
+
 - Query all AI decisions for an inspection
 - Filter by confidence level, model version
 - Track which AI decisions were overridden
@@ -532,39 +549,39 @@ BANE (Backend Augmented Neural Engine) embodies BFI principles through its secur
 ```typescript
 // Confidence threshold configuration
 const CONFIDENCE_THRESHOLDS = {
-  AUTO_ACCEPT: 0.95,       // Automatically accept as high confidence
-  RECOMMEND: 0.80,          // Present as recommendation
-  SUGGEST: 0.65,            // Suggest with caveat
-  FLAG_UNCERTAIN: 0.50,     // Flag for human review
-  REJECT_LOW: 0.50          // Reject, too uncertain
+  AUTO_ACCEPT: 0.95, // Automatically accept as high confidence
+  RECOMMEND: 0.8, // Present as recommendation
+  SUGGEST: 0.65, // Suggest with caveat
+  FLAG_UNCERTAIN: 0.5, // Flag for human review
+  REJECT_LOW: 0.5, // Reject, too uncertain
 };
 
 // AI decision handling
 function handleAIDecision(result) {
   if (result.confidence >= CONFIDENCE_THRESHOLDS.AUTO_ACCEPT) {
     return {
-      action: "present_as_finding",
-      ui_treatment: "high_confidence",
-      requires_review: false
+      action: 'present_as_finding',
+      ui_treatment: 'high_confidence',
+      requires_review: false,
     };
   } else if (result.confidence >= CONFIDENCE_THRESHOLDS.RECOMMEND) {
     return {
-      action: "present_as_recommendation",
-      ui_treatment: "medium_confidence",
-      requires_review: true
+      action: 'present_as_recommendation',
+      ui_treatment: 'medium_confidence',
+      requires_review: true,
     };
   } else if (result.confidence >= CONFIDENCE_THRESHOLDS.FLAG_UNCERTAIN) {
     return {
-      action: "flag_for_review",
-      ui_treatment: "low_confidence",
+      action: 'flag_for_review',
+      ui_treatment: 'low_confidence',
       requires_review: true,
-      escalate_to_expert: true
+      escalate_to_expert: true,
     };
   } else {
     return {
-      action: "discard",
-      ui_treatment: "too_uncertain",
-      log_for_improvement: true
+      action: 'discard',
+      ui_treatment: 'too_uncertain',
+      log_for_improvement: true,
     };
   }
 }
@@ -581,47 +598,47 @@ function handleAIDecision(result) {
 const APPROVAL_GATES = {
   report_finalization: {
     required: true,
-    approver_role: "inspector",
-    approval_method: "explicit_signature"
+    approver_role: 'inspector',
+    approval_method: 'explicit_signature',
   },
   high_severity_finding: {
     required: true,
-    threshold: 8,  // Severity >= 8 requires approval
-    approver_role: "senior_inspector"
+    threshold: 8, // Severity >= 8 requires approval
+    approver_role: 'senior_inspector',
   },
   code_interpretation: {
-    required: false,  // Suggestions only
-    review_recommended: true
-  }
+    required: false, // Suggestions only
+    review_recommended: true,
+  },
 };
 
 // Approval gate enforcement
 async function finalizeReport(reportId, userId) {
   const report = await getReport(reportId);
   const gate = APPROVAL_GATES.report_finalization;
-  
+
   if (gate.required) {
     const approval = await requestApproval({
       reportId,
       approverId: userId,
       requiredRole: gate.approver_role,
-      method: gate.approval_method
+      method: gate.approval_method,
     });
-    
+
     if (!approval.granted) {
-      throw new Error("Report finalization requires approval");
+      throw new Error('Report finalization requires approval');
     }
-    
+
     // Log approval in SDR
     await createSDR({
-      action: "report_approved",
+      action: 'report_approved',
       actor: userId,
       resource: reportId,
-      result: "granted",
-      signature: approval.signature
+      result: 'granted',
+      signature: approval.signature,
     });
   }
-  
+
   // Proceed with finalization
   await publishReport(reportId);
 }
@@ -733,34 +750,36 @@ async function finalizeReport(reportId, userId) {
 
 ### Comparison Table
 
-| Dimension | Traditional AI | Bona Fide Intelligence (BFI) |
-|-----------|----------------|------------------------------|
-| **Primary Goal** | Automate tasks | Augment human capability |
-| **Decision Authority** | AI makes decisions | Humans make decisions with AI support |
-| **Transparency** | Often opaque ("black box") | Always explainable |
-| **User Interaction** | Minimal (automation) | Collaborative (dialogue) |
-| **Error Handling** | Retry or fail silently | Escalate to human |
-| **Confidence** | Projects certainty | Communicates uncertainty |
-| **Accountability** | Ambiguous | Clear human accountability |
-| **Training Focus** | Accuracy optimization | Alignment with human values |
-| **Deployment** | Ship and iterate | Ship with human oversight |
-| **Feedback Loop** | Automated metrics | Human-in-the-loop feedback |
-| **Risk Approach** | Move fast, break things | Precautionary principle |
-| **User Trust** | "Trust the AI" | "Verify the AI" |
-| **Example Failure** | Autonomous vehicle accident | Co-pilot alert ignored by human |
-| **Who's Responsible?** | Unclear (AI? Vendor? User?) | Clear (Human operator) |
+| Dimension              | Traditional AI              | Bona Fide Intelligence (BFI)          |
+| ---------------------- | --------------------------- | ------------------------------------- |
+| **Primary Goal**       | Automate tasks              | Augment human capability              |
+| **Decision Authority** | AI makes decisions          | Humans make decisions with AI support |
+| **Transparency**       | Often opaque ("black box")  | Always explainable                    |
+| **User Interaction**   | Minimal (automation)        | Collaborative (dialogue)              |
+| **Error Handling**     | Retry or fail silently      | Escalate to human                     |
+| **Confidence**         | Projects certainty          | Communicates uncertainty              |
+| **Accountability**     | Ambiguous                   | Clear human accountability            |
+| **Training Focus**     | Accuracy optimization       | Alignment with human values           |
+| **Deployment**         | Ship and iterate            | Ship with human oversight             |
+| **Feedback Loop**      | Automated metrics           | Human-in-the-loop feedback            |
+| **Risk Approach**      | Move fast, break things     | Precautionary principle               |
+| **User Trust**         | "Trust the AI"              | "Verify the AI"                       |
+| **Example Failure**    | Autonomous vehicle accident | Co-pilot alert ignored by human       |
+| **Who's Responsible?** | Unclear (AI? Vendor? User?) | Clear (Human operator)                |
 
 ### Philosophy in Practice
 
 **Scenario: Code Violation Detection**
 
 **Traditional AI Approach:**
+
 1. AI scans image
 2. AI declares: "Code violation detected"
 3. System automatically flags property as non-compliant
 4. Inspector expected to accept AI judgment
 
 **BFI Approach (ScingOS):**
+
 1. LARI-Vision analyzes image
 2. System presents: "Potential code violation detected (82% confidence)"
 3. Shows reasoning: "Stair riser appears to exceed 7.75" maximum (ICC 505.2)"
@@ -781,6 +800,7 @@ async function finalizeReport(reportId, userId) {
 **Scenario:** LARI-Vision achieved 95% accuracy in detecting water damage.
 
 **Traditional AI Outcome:**
+
 - Ship model as-is
 - High accuracy considered "good enough"
 - 5% false positive rate accepted
@@ -788,6 +808,7 @@ async function finalizeReport(reportId, userId) {
 - Trust in system declines over time
 
 **BFI Outcome (ScingOS):**
+
 - Ship model with confidence scores
 - High confidence (>90%) flagged clearly
 - Medium confidence (75-90%) flagged as "possible"
@@ -803,6 +824,7 @@ async function finalizeReport(reportId, userId) {
 **Scenario:** LARI-Language provides code lookup across jurisdictions.
 
 **Traditional AI Outcome:**
+
 - AI returns "most likely" code citation
 - Doesn't indicate which jurisdiction
 - Assumes user context
@@ -810,6 +832,7 @@ async function finalizeReport(reportId, userId) {
 - Inspectors lose trust, stop using feature
 
 **BFI Outcome (ScingOS):**
+
 - AI asks: "Which jurisdiction applies?" (if ambiguous)
 - Returns citations with jurisdiction clearly marked
 - Shows confidence per jurisdiction
@@ -823,6 +846,7 @@ async function finalizeReport(reportId, userId) {
 **Scenario:** LARI-Narrator generates inspection reports.
 
 **Traditional AI Outcome:**
+
 - AI generates complete report
 - Sent directly to client
 - Professional language but occasionally misses nuance
@@ -830,6 +854,7 @@ async function finalizeReport(reportId, userId) {
 - Professional reputation risk
 
 **BFI Outcome (ScingOS):**
+
 - AI generates draft report
 - Inspector reviews, edits
 - Inspector adds professional judgment and context
@@ -846,18 +871,21 @@ async function finalizeReport(reportId, userId) {
 ### Evolution of Bona Fide Intelligence at Inspection Systems Direct
 
 **Near-term (2025-2026):**
+
 - Expand BFI principles to all LARI engines
 - Develop industry-wide BFI certification program
 - Open-source BFI design patterns and tooling
 - Publish BFI whitepaper and research
 
 **Mid-term (2027-2028):**
+
 - BFI as industry standard for inspection AI
 - Third-party BFI auditing and certification
 - Integration with regulatory frameworks
 - Educational programs on BFI for inspectors
 
 **Long-term (2029+):**
+
 - BFI principles adopted beyond inspection industry
 - Contributions to AI ethics standards bodies
 - Academic partnerships for BFI research
@@ -946,6 +974,7 @@ Bona Fide Intelligence is more than a marketing term—it's a comprehensive phil
 **The BFI Promise:**
 
 In ScingOS and SCINGULAR AI, we commit to building intelligence systems that:
+
 - **Preserve human agency** while expanding human capability
 - **Earn trust through transparency**, not demand it through opacity
 - **Accept accountability** for every decision and recommendation
@@ -957,6 +986,7 @@ This is the path to **genuine intelligence**—intelligence that is **bona fide*
 ---
 
 **For more information:**
+
 - [BANE Security Framework](BANE-Security.md) - How security enforces BFI principles
 - [SCING Interface Guide](SCING-Interface.md) - BFI in voice interaction
 - [LARI Engines Documentation](LARI-Engines.md) - BFI in AI engines

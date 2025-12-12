@@ -16,16 +16,16 @@ Unlike traditional operating systems, ScingOS functions as a **Scing-centric gat
 
 ### Core Documentation
 
-| Category | Description | Key Documents |
-|----------|-------------|---------------|
-| **Getting Started** | Begin your ScingOS journey | [Quick Start](#quick-start) • [Development Guide](Development-Guide.md) |
-| **Architecture** | System design and components | [Architecture Deep Dive](Architecture.md) • [AIP Protocol](AIP-Protocol.md) |
-| **Voice Interface** | Scing interaction guide | [SCING Interface](SCING-Interface.md) • [Neural 3D Environment](Neural-3D-Environment.md) |
-| **AI Engines** | LARI intelligence systems | [LARI Engines](LARI-Engines.md) • [BFI Philosophy](BFI-Philosophy.md) |
-| **Security** | Zero-trust framework | [BANE Security](BANE-Security.md) • [Legal Framework](Legal-Framework.md) |
-| **Development** | Building with ScingOS | [Development Guide](Development-Guide.md) • [API Reference](API-Reference.md) |
-| **Deployment** | Production deployment | [Deployment Guide](Deployment.md) • [Firebase Integration](Firebase-Integration.md) |
-| **Roadmap** | Future plans | [Product Roadmap](Roadmap.md) • [Hardware Adapters](Hardware-Adapters.md) |
+| Category            | Description                  | Key Documents                                                                             |
+| ------------------- | ---------------------------- | ----------------------------------------------------------------------------------------- |
+| **Getting Started** | Begin your ScingOS journey   | [Quick Start](#quick-start) • [Development Guide](Development-Guide.md)                   |
+| **Architecture**    | System design and components | [Architecture Deep Dive](Architecture.md) • [AIP Protocol](AIP-Protocol.md)               |
+| **Voice Interface** | Scing interaction guide      | [SCING Interface](SCING-Interface.md) • [Neural 3D Environment](Neural-3D-Environment.md) |
+| **AI Engines**      | LARI intelligence systems    | [LARI Engines](LARI-Engines.md) • [BFI Philosophy](BFI-Philosophy.md)                     |
+| **Security**        | Zero-trust framework         | [BANE Security](BANE-Security.md) • [Legal Framework](Legal-Framework.md)                 |
+| **Development**     | Building with ScingOS        | [Development Guide](Development-Guide.md) • [API Reference](API-Reference.md)             |
+| **Deployment**      | Production deployment        | [Deployment Guide](Deployment.md) • [Firebase Integration](Firebase-Integration.md)       |
+| **Roadmap**         | Future plans                 | [Product Roadmap](Roadmap.md) • [Hardware Adapters](Hardware-Adapters.md)                 |
 
 ### By Audience
 
@@ -33,11 +33,13 @@ Unlike traditional operating systems, ScingOS functions as a **Scing-centric gat
 <summary><b>👤 End Users</b> - Using ScingOS for inspections and compliance</summary>
 
 **Start here:**
+
 1. [Quick Start](#quick-start) - Get up and running in 5 minutes
 2. [SCING Interface Guide](SCING-Interface.md) - Master voice commands
 3. [Neural 3D Environment](Neural-3D-Environment.md) - Understanding the interface
 
 **Key features for you:**
+
 - Voice-first operation with "Hey, Scing!" activation
 - Cross-device synchronization
 - Automated compliance checking
@@ -48,11 +50,13 @@ Unlike traditional operating systems, ScingOS functions as a **Scing-centric gat
 <summary><b>💻 Developers</b> - Building applications on ScingOS</summary>
 
 **Start here:**
+
 1. [Development Guide](Development-Guide.md) - Setup your environment
 2. [Architecture Deep Dive](Architecture.md) - Understand the system
 3. [API Reference](API-Reference.md) - Integration endpoints
 
 **Essential reading:**
+
 - [AIP Protocol Specification](AIP-Protocol.md)
 - [BANE Security Framework](BANE-Security.md)
 - [Firebase Integration](Firebase-Integration.md)
@@ -62,11 +66,13 @@ Unlike traditional operating systems, ScingOS functions as a **Scing-centric gat
 <summary><b>🏢 Enterprise Customers</b> - Deploying at scale</summary>
 
 **Start here:**
+
 1. [Deployment Guide](Deployment.md) - Production setup
 2. [BANE Security](BANE-Security.md) - Security architecture
 3. [Legal Framework](Legal-Framework.md) - Compliance and governance
 
 **Critical topics:**
+
 - Zero-trust security model
 - SOC 2 Type II compliance roadmap
 - Multi-jurisdictional support
@@ -77,11 +83,13 @@ Unlike traditional operating systems, ScingOS functions as a **Scing-centric gat
 <summary><b>🤝 Partners</b> - Integrating with ScingOS ecosystem</summary>
 
 **Start here:**
+
 1. [Hardware Adapters](Hardware-Adapters.md) - Device integration
 2. [API Reference](API-Reference.md) - Integration APIs
 3. [Roadmap](Roadmap.md) - Partnership opportunities
 
 **Integration points:**
+
 - Device adapter framework
 - AIP protocol integration
 - Third-party API connections
@@ -162,7 +170,7 @@ At the heart of ScingOS lies a fundamental philosophical shift in how we think a
 
 ### AI = Augmented Intelligence, Not Artificial Intelligence
 
-The term "Bona Fide Intelligence" represents our commitment to **genuine, trustworthy intelligence** that augments human capability rather than replacing it. 
+The term "Bona Fide Intelligence" represents our commitment to **genuine, trustworthy intelligence** that augments human capability rather than replacing it.
 
 **Bona Fide** means "genuine" or "authentic" in Latin. We believe intelligence systems should be:
 
@@ -204,11 +212,13 @@ Get up and running with ScingOS in just a few steps:
 ### 1. Access ScingOS
 
 **For End Users:**
+
 - Navigate to your organization's ScingOS web portal
 - Sign in with your provided credentials
 - Grant microphone permissions when prompted
 
 **For Developers:**
+
 ```bash
 # Clone the repository
 git clone https://github.com/isystemsdirect/ScingOS.git
@@ -236,6 +246,7 @@ You should see visual feedback in the Neural 3D Environment and hear Scing's ack
 ### 3. Start a Conversation
 
 Try these example commands:
+
 - "Start a new inspection session"
 - "What ICC codes apply to this building type?"
 - "Analyze this thermal image for anomalies"
@@ -251,6 +262,7 @@ Try these example commands:
 ### 5. Learn Advanced Features
 
 Once comfortable with basics, explore:
+
 - [Full Autonomy Mode](SCING-Interface.md#full-autonomy-mode) for hands-free operation
 - [Device Integration](Hardware-Adapters.md) for cameras and sensors
 - [Report Customization](LARI-Engines.md#lari-narrator-engine) for branded outputs
@@ -356,6 +368,7 @@ Once comfortable with basics, explore:
 ### Core Components
 
 **SCING** - Voice Interface & Orchestrator
+
 - Natural language understanding
 - Wake word detection ("Hey, Scing!")
 - Multi-turn conversation management
@@ -363,6 +376,7 @@ Once comfortable with basics, explore:
 - Voice synthesis and audio feedback
 
 **LARI** - Language and Reasoning Intelligence
+
 - **LARI-Language**: Code intelligence and NLP
 - **LARI-Vision**: Image analysis and defect detection
 - **LARI-Mapper**: 3D spatial processing
@@ -373,6 +387,7 @@ Once comfortable with basics, explore:
 - **LARI-Fi**: Billing intelligence
 
 **BANE** - Backend Augmented Neural Engine
+
 - Zero-trust security framework
 - Capability-based authorization
 - Security Decision Records (SDR)
@@ -393,6 +408,7 @@ For comprehensive technical details, see [Architecture Deep Dive](Architecture.m
 ScingOS transforms how you conduct inspections. Instead of juggling multiple tools, apps, and reference materials, you have a single conversational interface that understands your work.
 
 **Your typical workflow:**
+
 1. **Arrive on site** → Activate Scing with your voice
 2. **Describe the property** → Scing pulls relevant codes and standards
 3. **Capture findings** → Speak observations, snap photos, record videos
@@ -401,6 +417,7 @@ ScingOS transforms how you conduct inspections. Instead of juggling multiple too
 6. **Deliver to client** → Cryptographically signed, verifiable report
 
 **Key benefits:**
+
 - Hands-free operation allows you to focus on inspection
 - Instant access to multi-jurisdictional codes
 - AI-assisted defect detection improves accuracy
@@ -414,6 +431,7 @@ ScingOS transforms how you conduct inspections. Instead of juggling multiple too
 A powerful platform for building inspection and compliance applications with built-in AI, security, and infrastructure.
 
 **Development workflow:**
+
 1. **Clone repository** → Full source code access
 2. **Configure Firebase** → Backend as a service
 3. **Extend LARI engines** → Add custom AI capabilities
@@ -421,6 +439,7 @@ A powerful platform for building inspection and compliance applications with bui
 5. **Deploy via CI/CD** → Automated deployment pipeline
 
 **Technical stack:**
+
 - **Frontend**: Next.js, React, TypeScript, Three.js
 - **Backend**: Firebase (Auth, Firestore, Functions, Storage)
 - **AI**: Google Cloud AI, Gemini models
@@ -428,6 +447,7 @@ A powerful platform for building inspection and compliance applications with bui
 - **Security**: BANE capability framework
 
 **Extension points:**
+
 - Custom LARI engines for domain-specific analysis
 - Device adapters for new hardware
 - Report templates and generators
@@ -441,11 +461,13 @@ A powerful platform for building inspection and compliance applications with bui
 Enterprise-grade inspection platform with security, compliance, and scalability built-in.
 
 **Deployment options:**
+
 - **Cloud-native**: Fully managed Firebase/Google Cloud
 - **Hybrid**: Cloud AI with on-premise data storage
 - **Owned infrastructure**: Migration path for full control
 
 **Security & compliance:**
+
 - SOC 2 Type II compliance roadmap
 - GDPR and CCPA ready
 - Industry-specific requirements (OSHA, ICC, NFPA)
@@ -453,6 +475,7 @@ Enterprise-grade inspection platform with security, compliance, and scalability 
 - Data residency options
 
 **Enterprise features:**
+
 - Single sign-on (SSO) integration
 - Multi-tenant architecture
 - Role-based access control
@@ -464,17 +487,20 @@ Enterprise-grade inspection platform with security, compliance, and scalability 
 **Partnership models:**
 
 **Hardware manufacturers:**
+
 - Device adapter certification program
 - Co-marketing opportunities
 - Technical integration support
 
 **Software integrations:**
+
 - API access for data exchange
 - Webhook notifications
 - SSO integration
 - White-label options
 
 **Service providers:**
+
 - Reseller agreements
 - Training and certification
 - Custom deployment services
@@ -489,6 +515,7 @@ Enterprise-grade inspection platform with security, compliance, and scalability 
 **Release Date**: December 2025
 
 **Phase 0 (Foundation) - Completed ✅**
+
 - Core architecture established
 - Firebase backend integrated
 - Voice interface prototype operational
@@ -500,6 +527,7 @@ Enterprise-grade inspection platform with security, compliance, and scalability 
 Current completion: **~65%**
 
 Completed:
+
 - ✅ AIP protocol specification
 - ✅ BANE security foundation
 - ✅ Firebase integration
@@ -507,12 +535,14 @@ Completed:
 - ✅ Basic voice interface
 
 In Progress:
+
 - 🔄 LARI engine suite (70% complete)
 - 🔄 Device adapter framework (40% complete)
 - 🔄 Report generation system (50% complete)
 - 🔄 Documentation (80% complete)
 
 Upcoming:
+
 - ⏳ Closed beta testing
 - ⏳ Performance optimization
 - ⏳ Mobile app development
@@ -537,6 +567,7 @@ Upcoming:
 ### Feedback Welcome
 
 As an alpha release, we're actively seeking feedback:
+
 - Bug reports and issues
 - Feature requests
 - Integration requirements
@@ -551,11 +582,13 @@ See [CONTRIBUTING.md](../../CONTRIBUTING.md) for how to provide feedback.
 ### For Users
 
 **Join the Beta Program**
+
 - Sign up at: [isystemsdirect.com/scingos-beta](https://isystemsdirect.com)
 - Requirements: Inspection background, willingness to provide feedback
 - Benefits: Early access, influence product direction, discounted pricing
 
 **Community**
+
 - Follow development updates
 - Share use cases and success stories
 - Request features and integrations
@@ -563,6 +596,7 @@ See [CONTRIBUTING.md](../../CONTRIBUTING.md) for how to provide feedback.
 ### For Developers
 
 **Contribute Code**
+
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
@@ -571,12 +605,14 @@ See [CONTRIBUTING.md](../../CONTRIBUTING.md) for how to provide feedback.
 See [Development Guide](Development-Guide.md) for detailed contribution process.
 
 **Report Bugs**
+
 - Use GitHub Issues
 - Include reproduction steps
 - Provide system information
 - Attach relevant logs
 
 **Improve Documentation**
+
 - Fix typos and errors
 - Add examples and tutorials
 - Translate to other languages
@@ -585,11 +621,13 @@ See [Development Guide](Development-Guide.md) for detailed contribution process.
 ### For Partners
 
 **Device Integration**
+
 - Submit adapter proposals
 - Provide test hardware
 - Co-develop integration
 
 **Enterprise Deployment**
+
 - Pilot program opportunities
 - Custom integration support
 - Training and onboarding
@@ -627,6 +665,7 @@ See [Development Guide](Development-Guide.md) for detailed contribution process.
 **Copyright**: © 2025 Inspection Systems Direct LLC. All rights reserved.
 
 **Key Legal Documents:**
+
 - [End User License Agreement](../../legal/EULA.md)
 - [Privacy Policy](../../legal/PRIVACY_POLICY.md)
 - [Terms of Use](../../legal/TERMS_OF_USE.md)
@@ -646,6 +685,7 @@ See complete [Legal Framework](Legal-Framework.md) documentation.
 **Technology**: SCINGULAR AI platform
 
 **Core Products:**
+
 - **ScingOS**: Voice-first inspection operating system
 - **SCINGULAR AI**: Cloud intelligence platform
 - **ISDCProtocol2025**: Inspection data communication standard
@@ -686,18 +726,21 @@ See complete [Product Roadmap](Roadmap.md) for detailed timeline.
 ## Quick Links
 
 ### Essential Reading
+
 - [Architecture Deep Dive](Architecture.md)
 - [AIP Protocol Specification](AIP-Protocol.md)
 - [SCING Interface Guide](SCING-Interface.md)
 - [BANE Security Framework](BANE-Security.md)
 
 ### Developer Resources
+
 - [Development Guide](Development-Guide.md)
 - [API Reference](API-Reference.md)
 - [Firebase Integration](Firebase-Integration.md)
 - [Hardware Adapters](Hardware-Adapters.md)
 
 ### Business & Legal
+
 - [BFI Philosophy](BFI-Philosophy.md)
 - [Legal Framework](Legal-Framework.md)
 - [Product Roadmap](Roadmap.md)
@@ -708,6 +751,7 @@ See complete [Product Roadmap](Roadmap.md) for detailed timeline.
 ## Updates & Changelog
 
 **Latest**: v0.1.0-alpha (December 2025)
+
 - Initial alpha release
 - Core architecture complete
 - Voice interface functional
