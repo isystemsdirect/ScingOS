@@ -37,7 +37,7 @@ ScingOS will become the premier voice-first, Bona Fide Intelligence gateway for 
 - [x] ISDC Protocol 2025 specification
 - [x] SCINGULAR Canon established
 - [x] Quality gates (typecheck/lint/canon/format) + CI
-- [x] Proprietary file extension specification (.sg* formats)
+- [x] Proprietary file extension specification (.sg\* formats)
 - [x] Legal framework and documentation
 
 ---
