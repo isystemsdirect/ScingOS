@@ -2,14 +2,14 @@
 setlocal enabledelayedexpansion
 
 REM ============================================================
-REM   SCINGULAR — VISUAL STUDIO CODE MAIN PROJECT INITIALIZER
-REM   One-file automation for project setup, sync, and CI prep
+REM   SCINGULAR — VISUAL STUDIO CODE MAIN PROJECT BOOTSTRAP
+REM   Full setup, sync scripts, tasks, and CI workflow installer
 REM ============================================================
 
-echo Initializing environment...
+echo Initializing SCINGULAR project environment...
 
 REM ------------------------------------------------------------
-REM  Ensure directory structure
+REM   Ensure directory structure
 REM ------------------------------------------------------------
 if not exist ".vscode" mkdir .vscode
 if not exist "scripts" mkdir scripts
@@ -18,7 +18,7 @@ if not exist ".github" mkdir .github
 if not exist ".github\workflows" mkdir .github\workflows
 
 REM ------------------------------------------------------------
-REM  WRITE VS CODE TASKS
+REM   VS Code Tasks
 REM ------------------------------------------------------------
 > .vscode\tasks.json (
 echo {
@@ -41,7 +41,7 @@ echo }
 )
 
 REM ------------------------------------------------------------
-REM  SCRIPT: DOCS → WIKI
+REM   DOCS → WIKI SYNC SCRIPT
 REM ------------------------------------------------------------
 > scripts\syncDocsToWiki.js (
 echo import { execSync } from "node:child_process";
@@ -54,7 +54,7 @@ echo
 echo function sh(cmd) { execSync(cmd, { stdio: "inherit" }); }
 echo
 echo if ^(!fs.existsSync(SOURCE)^) {
-echo   console.error("Dynamic Library document is missing.");
+echo   console.error("Dynamic Library document missing.");
 echo   process.exit(1);
 echo }
 echo
@@ -73,7 +73,7 @@ echo console.log("Docs → Wiki sync complete.");
 )
 
 REM ------------------------------------------------------------
-REM  SCRIPT: WIKI → DOCS
+REM   WIKI → DOCS SYNC SCRIPT
 REM ------------------------------------------------------------
 > scripts\syncWikiToDocs.js (
 echo import { execSync } from "node:child_process";
@@ -96,10 +96,10 @@ echo console.log("Wiki → Docs sync complete.");
 )
 
 REM ------------------------------------------------------------
-REM  CI WORKFLOW WRITER
+REM   CI WORKFLOW
 REM ------------------------------------------------------------
-> .github\workflows\vs-main-pipeline.yml (
-echo name: VSCode Main Project Pipeline
+> .github\workflows\scing-vscode-pipeline.yml (
+echo name: VSCode Project Pipeline
 echo
 echo on:
 echo   push:
@@ -110,7 +110,7 @@ echo permissions:
 echo   contents: write
 echo
 echo jobs:
-echo   sync-operation:
+echo   sync-docs:
 echo     runs-on: ubuntu-latest
 echo     steps:
 echo       - uses: actions/checkout@v4
@@ -120,17 +120,36 @@ echo         env:
 echo           GH_PAT: ${{ secrets.GH_PAT }}
 echo         run: git clone https://x-access-token:${GH_PAT}@github.com/isystemsdirect/ScingOS.wiki.git
 echo
-echo       - name: Sync Docs to Wiki
+echo       - name: Copy docs to wiki
 echo         run: cp docs/The_SCINGULAR_Ecosystem_Dynamic_Library.md ScingOS.wiki/The-SCINGULAR-Ecosystem-Dynamic-Library.md
 echo
-echo       - name: Commit and Push
+echo       - name: Commit and push
 echo         env:
 echo           GH_PAT: ${{ secrets.GH_PAT }}
 echo         run: ^|
-echo           cd ScingOS.w
-)
+echo           cd ScingOS.wiki
+echo           git add .
+echo           git commit -m "Auto-sync Dynamic Library" ^|^| exit 0
+echo           git push https://x-access-token:${GH_PAT}@github.com/isystemsdirect/ScingOS.wiki.git HEAD:main
+echo )
 
-echo Done. The bootstrap file has written tasks, scripts, and workflow files.
+REM ------------------------------------------------------------
+REM   Editor Configuration
+REM ------------------------------------------------------------
+> .editorconfig (
+echo root = true
+echo [*]
+echo indent_style = space
+echo indent_size = 2
+echo charset = utf-8
+echo end_of_line = lf
+echo insert_final_newline = true
+echo )
+
+echo.
+echo ========== VISUAL STUDIO CODE PROJECT INITIALIZED ==========
+echo.
+pause
 
 endlocal
 

@@ -1,0 +1,32 @@
+name: VSCode Project Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Clone wiki
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: git clone https://x-access-token:${GH_PAT}@github.com/isystemsdirect/ScingOS.wiki.git
+
+      - name: Copy docs to wiki
+        run: cp docs/The_SCINGULAR_Ecosystem_Dynamic_Library.md ScingOS.wiki/The-SCINGULAR-Ecosystem-Dynamic-Library.md
+
+      - name: Commit and push
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: |
+          cd ScingOS.wiki
+          git add .
+          git commit -m "Auto-sync Dynamic Library" || true
+          git push https://x-access-token:${GH_PAT}@github.com/isystemsdirect/ScingOS.wiki.git HEAD:main
