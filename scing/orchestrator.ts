@@ -1,8 +1,6 @@
 import { runLariEdl, LariEdlTask } from './engines/lariEdl';
 
-export type OrchestratorTask =
-  | { kind: 'lari-edl'; payload: LariEdlTask }
-  | { kind: 'noop' };
+export type OrchestratorTask = { kind: 'lari-edl'; payload: LariEdlTask } | { kind: 'noop' };
 
 export async function runOrchestrator(task: OrchestratorTask): Promise<string> {
   switch (task.kind) {

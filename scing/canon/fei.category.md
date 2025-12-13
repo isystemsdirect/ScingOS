@@ -14,6 +14,7 @@ FEI systems are not defined by outputs alone. They are defined by **presence**.
 ## What FEI Is Not
 
 FEI is **not**:
+
 - Federated Learning
 - Multi-agent orchestration
 - Digital humans or avatars

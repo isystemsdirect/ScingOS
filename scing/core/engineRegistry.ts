@@ -1,15 +1,11 @@
-export type EngineFamily =
-  | 'orchestrator'
-  | 'cognition'
-  | 'expression'
-  | 'subengine'
+export type EngineFamily = 'orchestrator' | 'cognition' | 'expression' | 'subengine';
 
 export type EngineRecord = {
-  id: string
-  family: EngineFamily
-  description: string
-  enabled: boolean
-}
+  id: string;
+  family: EngineFamily;
+  description: string;
+  enabled: boolean;
+};
 
 export const engineRegistry: EngineRecord[] = [
   {
@@ -18,4 +14,4 @@ export const engineRegistry: EngineRecord[] = [
     description: 'SRT federation + influence field + motif constraints',
     enabled: true,
   },
-]
+];

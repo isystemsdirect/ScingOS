@@ -4,7 +4,7 @@
  * This is a gate, not a mode.
  */
 export function orderAndFocus(influence: number[]): boolean {
-  if (!influence?.length) return false
-  const meanAbs = influence.reduce((a, b) => a + Math.abs(b), 0) / influence.length
-  return meanAbs < 0.75
+  if (!influence?.length) return false;
+  const meanAbs = influence.reduce((a, b) => a + Math.abs(b), 0) / influence.length;
+  return meanAbs < 0.75;
 }
