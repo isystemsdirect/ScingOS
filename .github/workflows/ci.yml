@@ -33,6 +33,11 @@ jobs:
         run: |
           ROOT="${{ github.workspace }}"
           echo "Root workspace: $ROOT"
+          if [ ! -f "$ROOT/package.json" ]; then
+            echo "No root package.json found at $ROOT — skipping root dev dependency install"
+            exit 0
+          fi
+
           if [ -f "$ROOT/package-lock.json" ]; then
             npm ci --prefix "$ROOT"
           else
