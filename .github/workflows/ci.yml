@@ -29,7 +29,11 @@ jobs:
           cache: 'npm'
           cache-dependency-path: client/package-lock.json
       
-      - name: Install dependencies
+      - name: Install root dev dependencies
+        run: npm ci
+        working-directory: ..
+
+      - name: Install client dependencies
         run: npm ci
       
       - name: Run linter
