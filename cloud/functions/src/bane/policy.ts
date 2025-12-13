@@ -3,7 +3,7 @@ import * as admin from 'firebase-admin';
 export async function checkPolicy(
   userId: string,
   action: string,
-  resource?: any
+  _resource?: any
 ): Promise<boolean> {
   const userDoc = await admin.firestore().collection('users').doc(userId).get();
   
