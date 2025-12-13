@@ -26,6 +26,7 @@ export const handleMessage = functions.https.onCall(async (data, context) => {
 });
 
 async function handleTaskRequest(payload: any, userId: string) {
+  // Extract only the action - params will be accessed from payload when routing is implemented
   const { action } = payload;
 
   console.log(`Task request from ${userId}: ${action}`);
