@@ -31,6 +31,7 @@ chmod +x scripts/*.sh
 ```
 
 This will:
+
 - Check Node.js version
 - Install Firebase CLI
 - Install all dependencies
@@ -128,12 +129,14 @@ This starts both client and Firebase emulators in parallel.
 ### Option B: Manual start
 
 Terminal 1 - Client:
+
 ```bash
 cd client
 npm run dev
 ```
 
 Terminal 2 - Firebase Emulators:
+
 ```bash
 cd cloud/functions
 npm run serve
@@ -197,6 +200,7 @@ vercel
 ### Port Already in Use
 
 Kill process:
+
 ```bash
 # macOS/Linux
 lsof -ti:3000 | xargs kill -9
@@ -273,4 +277,4 @@ firebase firestore:data
 
 ---
 
-*Built with Bona Fide Intelligence | © 2025 Inspection Systems Direct LLC*
+_Built with Bona Fide Intelligence | © 2025 Inspection Systems Direct LLC_

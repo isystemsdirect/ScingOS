@@ -29,15 +29,17 @@ ScingOS is designed as a **voice-first** operating system where voice is the pri
 **Principle**: Users should be able to complete tasks entirely through voice, with visual elements providing context and confirmation.
 
 **Guidelines**:
+
 - All core functionality must be accessible via voice
 - Visual elements should reinforce, not replace, voice interactions
 - Screen should show current state, not require constant attention
 - Assume user is hands-free and may not be looking at screen
 
 **Example**:
+
 ```
 ✅ GOOD:
-Scing: "Roofing inspection started. First, let's check the shingles. 
+Scing: "Roofing inspection started. First, let's check the shingles.
        Say 'capture' when ready for a photo."
 Screen: Shows current inspection step visually
 
@@ -53,12 +55,14 @@ Screen: Shows complex menu requiring visual navigation
 **Principle**: Users speak naturally, not memorized commands.
 
 **Guidelines**:
+
 - Accept varied phrasings for same intent
 - Handle incomplete or ambiguous requests gracefully
 - Never require exact command syntax
 - Ask clarifying questions when needed
 
 **Example**:
+
 ```
 All of these should work:
 - "Start a roofing inspection"
@@ -74,12 +78,14 @@ All of these should work:
 **Principle**: System remembers context and uses it to minimize user effort.
 
 **Guidelines**:
+
 - Remember previous interactions in session
 - Infer context from current task
 - Don't ask for information already known
 - Proactively suggest next steps
 
 **Example**:
+
 ```
 User: "Start a roofing inspection"
 Scing: "Starting roofing inspection. Is this for the Johnson property on Main Street?"
@@ -95,14 +101,16 @@ Scing: "Great. Let's begin with the shingles."
 **Principle**: Users always know what the system is doing and why.
 
 **Guidelines**:
+
 - Announce actions before taking them
 - Explain reasoning when making suggestions
 - Admit uncertainty explicitly
 - Provide confidence scores when relevant
 
 **Example**:
+
 ```
-Scing: "I detected a crack in the foundation. Confidence: 87%. 
+Scing: "I detected a crack in the foundation. Confidence: 87%.
        This appears to be a linear crack about 6mm wide.
        IBC Section 1807.1.6 requires evaluation for cracks over 5mm.
        Would you like me to add this to the report?"
@@ -122,6 +130,7 @@ User speaks → [Scing processes] → Scing responds
 ```
 
 **Visual indicators**:
+
 - 🎤 Listening (mic icon pulsing)
 - ⏳ Processing (spinner)
 - 💬 Speaking (waveform animation)
@@ -131,11 +140,13 @@ User speaks → [Scing processes] → Scing responds
 ### Prompts
 
 **Good prompts are**:
+
 - **Specific**: "Say 'capture' to take a photo"
 - **Actionable**: "Would you like me to add this to the report?"
 - **Concise**: 1-2 sentences maximum
 
 **Bad prompts are**:
+
 - Vague: "What would you like to do?"
 - Open-ended without guidance: "Tell me about the roof"
 - Too long: Multiple paragraphs
@@ -145,11 +156,13 @@ User speaks → [Scing processes] → Scing responds
 ### Confirmations
 
 **Always confirm**:
+
 - Destructive actions (delete, finalize)
 - Actions with significant consequences (publish, send)
 - Ambiguous user requests
 
 **Example**:
+
 ```
 User: "Delete that finding"
 Scing: "You want to delete the foundation crack finding? Say 'yes' to confirm."
@@ -170,6 +183,7 @@ Scing: "Going back to shingles. What would you like to check?"
 ```
 
 **Guidelines**:
+
 - Always allow interruptions
 - Stop speaking immediately
 - Don't penalize user for interrupting
@@ -184,6 +198,7 @@ Scing: "Going back to shingles. What would you like to check?"
 **Principle**: Screen shows only what's necessary, no clutter.
 
 **Layout**:
+
 ```
 ┌─────────────────────────────────────┐
 │         ScingOS                     │ ← Minimal header
@@ -212,6 +227,7 @@ Scing: "Going back to shingles. What would you like to check?"
 ### Color System
 
 **Primary Palette**:
+
 - **Primary Blue**: `#0ea5e9` - Trust, technology
 - **Success Green**: `#10b981` - Confirmations, success
 - **Warning Amber**: `#f59e0b` - Cautions, needs attention
@@ -219,6 +235,7 @@ Scing: "Going back to shingles. What would you like to check?"
 - **Neutral Gray**: `#6b7280` - Secondary text
 
 **Voice State Colors**:
+
 - **Listening**: Pulsing blue
 - **Processing**: Animated cyan
 - **Speaking**: Waveform green
@@ -231,12 +248,14 @@ Scing: "Going back to shingles. What would you like to check?"
 **Purpose**: Provide feedback, maintain engagement
 
 **Types**:
+
 - **Pulse**: Listening state
 - **Spin**: Processing/loading
 - **Waveform**: Speaking
 - **Fade**: Transitions
 
 **Timing**:
+
 - Fast: 150ms (micro-interactions)
 - Medium: 300ms (transitions)
 - Slow: 500ms (major state changes)
@@ -287,7 +306,7 @@ Scing: "I'm having trouble understanding. You can also type your request or tap 
 **Pattern**: Apologize, explain, offer solution
 
 ```
-Scing: "I'm sorry, I'm having trouble connecting to the server. 
+Scing: "I'm sorry, I'm having trouble connecting to the server.
        Your data is saved locally and will sync when connection is restored.
        You can continue working offline."
 ```
@@ -300,7 +319,7 @@ Scing: "I'm sorry, I'm having trouble connecting to the server.
 
 ```
 User: "Send report to everyone"
-Scing: "I need an email address to send the report. 
+Scing: "I need an email address to send the report.
        Who would you like to send it to?"
 ```
 
@@ -310,12 +329,12 @@ Scing: "I need an email address to send the report.
 
 ### Response Times
 
-| Action | Target | Acceptable | Poor |
-|--------|--------|------------|------|
-| Wake word detection | <500ms | <1s | >1s |
-| Speech recognition | <1s | <2s | >2s |
-| Voice response start | <1s | <2s | >2s |
-| Action execution | <2s | <5s | >5s |
+| Action               | Target | Acceptable | Poor |
+| -------------------- | ------ | ---------- | ---- |
+| Wake word detection  | <500ms | <1s        | >1s  |
+| Speech recognition   | <1s    | <2s        | >2s  |
+| Voice response start | <1s    | <2s        | >2s  |
+| Action execution     | <2s    | <5s        | >5s  |
 
 ### Optimization Strategies
 
@@ -330,6 +349,7 @@ Scing: "I need an email address to send the report.
 ## Best Practices Summary
 
 ✅ **DO**:
+
 - Make voice the primary interaction method
 - Speak conversationally and naturally
 - Remember context across conversation
@@ -340,6 +360,7 @@ Scing: "I need an email address to send the report.
 - Keep visual interface minimal
 
 ❌ **DON'T**:
+
 - Require memorized commands
 - Assume user is looking at screen
 - Ask for known information repeatedly
@@ -351,4 +372,4 @@ Scing: "I need an email address to send the report.
 
 ---
 
-*Built with Bona Fide Intelligence | © 2025 Inspection Systems Direct LLC*
+_Built with Bona Fide Intelligence | © 2025 Inspection Systems Direct LLC_
