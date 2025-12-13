@@ -5,7 +5,7 @@ const importPlugin = require('eslint-plugin-import');
 module.exports = [
   {
     files: ['**/*.js', '**/*.ts'],
-    ignores: ['.eslintrc.js', 'eslint.config.cjs', 'node_modules/**', '/lib/**'],
+    ignores: ['.eslintrc.js', 'eslint.config.cjs', 'node_modules/**', 'lib/**', '**/lib/**'],
     languageOptions: {
       parser: tsParser,
       parserOptions: {

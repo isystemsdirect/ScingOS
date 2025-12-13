@@ -1,0 +1,8 @@
+.next/
+out/
+coverage/
+lib/
+**/lib/
+dist/
+**/dist/
+node_modules/
