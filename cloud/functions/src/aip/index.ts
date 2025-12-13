@@ -14,19 +14,19 @@ export const handleMessage = functions.https.onCall(async (data, context) => {
   const { type, payload } = data;
 
   switch (type) {
-    case 'task.request':
-      return await handleTaskRequest(payload, context.auth.uid);
+  case 'task.request':
+    return await handleTaskRequest(payload, context.auth.uid);
     
-    case 'context.update':
-      return await handleContextUpdate(payload, context.auth.uid);
+  case 'context.update':
+    return await handleContextUpdate(payload, context.auth.uid);
     
-    default:
-      throw new functions.https.HttpsError('invalid-argument', `Unknown message type: ${type}`);
+  default:
+    throw new functions.https.HttpsError('invalid-argument', `Unknown message type: ${type}`);
   }
 });
 
 async function handleTaskRequest(payload: any, userId: string) {
-  const { action, params } = payload;
+  const { action } = payload;
 
   console.log(`Task request from ${userId}: ${action}`);
 
