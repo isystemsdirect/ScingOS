@@ -28,7 +28,7 @@ jobs:
       - name: Build Static Site
         run: |
           mkdir -p _site
-          cp -R docs/* _site/
+          cp -R docs/. _site/
           # Swap out these steps for Jekyll if you add it to your workflow:
           # bundle install
           # bundle exec jekyll build

@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import {requestCapability} from '../bane/capability';
-import {createSDR} from '../bane/sdr';
+import { requestCapability } from '../bane/capability';
+import { createSDR } from '../bane/sdr';
 import {
   ISDCMessage,
   ISDCMessageType,
