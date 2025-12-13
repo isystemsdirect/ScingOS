@@ -31,13 +31,13 @@ jobs:
       
       - name: Install root dev dependencies
         run: |
-          if [ -f $GITHUB_WORKSPACE/package-lock.json ]; then
-            npm ci --prefix "$GITHUB_WORKSPACE"
+          ROOT="${{ github.workspace }}"
+          echo "Root workspace: $ROOT"
+          if [ -f "$ROOT/package-lock.json" ]; then
+            npm ci --prefix "$ROOT"
           else
-            npm install --prefix "$GITHUB_WORKSPACE" --no-audit --no-fund
+            npm install --prefix "$ROOT" --no-audit --no-fund
           fi
-        env:
-          GITHUB_WORKSPACE: ${{ github.workspace }}
 
       - name: Install client dependencies
         run: npm ci
