@@ -30,7 +30,12 @@ jobs:
           cache-dependency-path: client/package-lock.json
       
       - name: Install root dev dependencies
-        run: npm ci
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install --no-audit --no-fund
+          fi
         working-directory: ..
 
       - name: Install client dependencies
