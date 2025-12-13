@@ -1,3 +1,7 @@
 [submodule "ScingOSEnvironment"]
 	path = ScingOSEnvironment
 	url = https://github.com/isystemsdirect/ScingOSEnvironment.git
+
+[submodule "ScingOS.wiki"]
+	path = ScingOS.wiki
+	url = https://github.com/isystemsdirect/ScingOS.wiki.git
