@@ -7,7 +7,7 @@
   },
   "main": "lib/index.js",
   "scripts": {
-    "lint": "eslint --ext .js,.ts .",
+    "lint": "eslint . --config .eslintrc.js",
     "build": "tsc",
     "build:watch": "tsc --watch",
     "serve": "npm run build && firebase emulators:start --only functions",
