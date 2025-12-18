@@ -6,9 +6,10 @@ import { EffectComposer, Bloom, ChromaticAberration, Vignette } from '@react-thr
 
 import { FlameMaterial } from './FlameMaterial'
 import type { FlameMaterialImpl } from './FlameMaterial'
-import { AVATAR_CENTER_Y, AVATAR_RADIUS_UNITS, FLOOR_Y } from './scale'
-import DeterministicStarfield from './DeterministicStarfield'
-import FloorEcho from './FloorEcho'
+import { LAYER_AVATAR } from './layers'
+import { AVATAR_RADIUS_UNITS, FLOOR_Y } from './scale'
+import Starfield from './Starfield'
+import Floor from './Floor'
 import { useDevOptionsStore } from '../dev/useDevOptionsStore'
 import { setRenderStats } from '../influence/renderStats'
 
@@ -29,7 +30,15 @@ function pseudoNoise(t: number): number {
 
 export default function Scene3D() {
   const { gl } = useThree()
+  const { camera } = useThree()
   const opt = useDevOptionsStore()
+
+  useEffect(() => {
+    // Render avatar layer on the main camera (so avatar-only lighting/reflection layers cannot hide it).
+    camera.layers.enable(LAYER_AVATAR)
+  }, [camera])
+
+  const avatarCenterY = FLOOR_Y + AVATAR_RADIUS_UNITS + opt.reflectionHeight
 
   const forceFailsafeRef = useRef(false)
   useEffect(() => {
@@ -111,11 +120,11 @@ export default function Scene3D() {
       m.uniforms.entropy.value = uRef.current.entropy
       m.uniforms.focus.value = uRef.current.focus
 
-      // V2.0 material control plane
-      m.uniforms.specIntensity.value = opt.specIntensity
-      m.uniforms.veinIntensity.value = opt.veinIntensity
-      m.uniforms.glassThickness.value = opt.glassThickness
-      m.uniforms.filamentStrength.value = opt.filamentStrength
+      // Material control plane (dev options)
+      m.uniforms.rimStrength.value = opt.rimStrength
+      m.uniforms.chromaEnabled.value = opt.chromaWorkstationEnabled ? 1.0 : 0.0
+      m.uniforms.chromaIntensity.value = opt.chromaWorkstationIntensity
+      m.uniforms.chromaPalette.value = opt.chromaWorkstationPalette === 'NeonGlassBulbs' ? 1.0 : 0.0
 
       // Liquid metal flame controls (bounded)
       m.uniforms.metalness.value = 0.95
@@ -152,7 +161,7 @@ export default function Scene3D() {
     }
     healthRef.current.avatarDrawOk = avatarDrawOk
     const failsafeForced = import.meta.env.DEV && forceFailsafeRef.current
-    const failsafeOn = opt.avatarVisible && (!avatarDrawOk || failsafeForced)
+    const failsafeOn = opt.showAvatar && (!avatarDrawOk || failsafeForced)
 
     if (failsafeMeshRef.current) {
       failsafeMeshRef.current.visible = failsafeOn
@@ -173,26 +182,30 @@ export default function Scene3D() {
 
   return (
     <>
-      {opt.starfieldVisible ? <DeterministicStarfield seed={1337} count={3500} radius={70} size={0.012} /> : null}
+      {opt.showStarfield ? <Starfield /> : null}
 
       {/* Depth cue: subtle studio fog (big depth upgrade) */}
       <fog attach="fog" args={['#05020b', 2.8, 10.5]} />
 
       {/* Avatar group */}
-      {opt.avatarVisible && (
-        <group position={[0, AVATAR_CENTER_Y, 0]}>
+      {opt.showAvatar && (
+        <group position={[0, avatarCenterY, 0]}>
           {/* CORE */}
-          <mesh geometry={geometry} scale={1.0}>
+          {opt.showMesh ? (
+            <mesh geometry={geometry} scale={1.0} layers={LAYER_AVATAR}>
             <flameMaterial ref={coreRef} />
-          </mesh>
+            </mesh>
+          ) : null}
 
           {/* SKIN (slightly larger) */}
-          <mesh geometry={geometry} scale={1.03}>
-            <flameMaterial ref={skinRef} />
-          </mesh>
+          {opt.showMesh ? (
+            <mesh geometry={geometry} scale={1.03} layers={LAYER_AVATAR}>
+              <flameMaterial ref={skinRef} />
+            </mesh>
+          ) : null}
 
           {/* FAILSAFE: deterministic visible mesh if shader pipeline isn't healthy */}
-          <mesh ref={failsafeMeshRef} geometry={geometry} scale={1.005} visible={false}>
+          <mesh ref={failsafeMeshRef} geometry={geometry} scale={1.005} visible={false} layers={LAYER_AVATAR}>
             <meshStandardMaterial
               color="#d1ccff"
               emissive="#6b3dff"
@@ -203,36 +216,43 @@ export default function Scene3D() {
           </mesh>
 
           {/* WIREFRAME OVERLAY (definition aid) */}
-          {opt.meshWireVisible && (
-            <mesh geometry={geometry} scale={1.035}>
+          {opt.showWireframe && (
+            <mesh geometry={geometry} scale={1.035} layers={LAYER_AVATAR}>
               <meshBasicMaterial wireframe opacity={0.18} transparent color="#8a5cff" />
             </mesh>
           )}
         </group>
       )}
 
-      <FloorEcho floorY={FLOOR_Y} size={18} />
+      <Floor floorY={FLOOR_Y} size={18} />
 
       {/* Post: cinematic presence */}
       <EffectComposer>
-        <Bloom intensity={0.75} luminanceThreshold={0.35} luminanceSmoothing={0.85} />
-        <ChromaticAberration offset={[0.0025, 0.0016]} radialModulation />
+        <Bloom intensity={opt.bloomIntensity} luminanceThreshold={0.35} luminanceSmoothing={0.85} />
+        {opt.chromaWorkstationEnabled ? (
+          <ChromaticAberration
+            offset={[0.001 + 0.0025 * opt.chromaWorkstationIntensity, 0.0006 + 0.0016 * opt.chromaWorkstationIntensity]}
+            radialModulation
+          />
+        ) : null}
         <Vignette offset={0.22} darkness={0.68} />
       </EffectComposer>
 
       {/* Camera controls: NO focus lock, fully manual */}
-      <OrbitControls
-        makeDefault
-        enablePan
-        enableZoom
-        enableRotate
-        target={[0, AVATAR_CENTER_Y, 0]}
-        minDistance={0.9}
-        maxDistance={800.0}
-        enableDamping
-        dampingFactor={0.08}
-        autoRotate={false}
-      />
+      {opt.allowCameraControls ? (
+        <OrbitControls
+          makeDefault
+          enablePan
+          enableZoom
+          enableRotate
+          target={[0, avatarCenterY, 0]}
+          minDistance={0.9}
+          maxDistance={800.0}
+          enableDamping
+          dampingFactor={0.08}
+          autoRotate={opt.autorotateCamera}
+        />
+      ) : null}
     </>
   )
 }

@@ -1,45 +1,35 @@
 type Subscriber = () => void
 
 export type DevOptions = {
-  // overlays
-  devPanelVisible: boolean
-  hudVisible: boolean
+  showAvatar: boolean
+  showHud: boolean
+  showDevPanel: boolean
+  showWireframe: boolean
+  showMesh: boolean
+  showStarfield: boolean
 
-  // visibility toggles
-  avatarVisible: boolean
-  meshWireVisible: boolean
-  starfieldVisible: boolean
+  enableMic: boolean
+  enableCamera: boolean
 
-  // sensors
-  micEnabled: boolean
-  cameraEnabled: boolean
+  allowCameraControls: boolean
+  autorotateCamera: boolean
 
-  // floor echo
-  floorEchoEnabled: boolean
-  floorEchoStrength: number // 0..1
-  floorEchoBlur: number // 0..1
-  floorEchoSquash: number // 0..1
-  floorEchoRadius: number // 0..1
+  reflectionEnabled: boolean
+  reflectionStrength: number // 0..1
+  reflectionBlur: number // 0..1
+  reflectionHeight: number // 0..1
+  floorRoughness: number // 0..1
+  floorMetalness: number // 0..1
 
-  // material
-  specIntensity: number // 0..2
-  veinIntensity: number // 0..2
-  glassThickness: number // 0..1
-  filamentStrength: number // 0..1
+  bloomIntensity: number // 0..2
+  rimStrength: number // 0..1
 
-  // contour lights (avatar-only)
-  keyLightIntensity: number // 0..1
-  rimLightIntensity: number // 0..1
-  fillLightIntensity: number // 0..1
+  studioLightsEnabled: boolean
+  studioLightsAffectOnlyAvatar: boolean
 
-  // chroma workstation (no device calls in this CB)
   chromaWorkstationEnabled: boolean
-  chromaHost: string
-  chromaPort: number
-  chromaUpdateHz: number
-  chromaMapArousalToBrightness: boolean
-  chromaMapFocusToBlue: boolean
-  chromaValenceHueShift: number
+  chromaWorkstationIntensity: number // 0..1
+  chromaWorkstationPalette: 'SpectraFlameDarkV2' | 'NeonGlassBulbs'
 }
 
 const LS_KEY = 'scing_avatar_env_dev_options_store_v2'
@@ -59,47 +49,44 @@ function safeParse(raw: string | null): Partial<DevOptions> | null {
 }
 
 const DEFAULTS: DevOptions = {
-  devPanelVisible: true,
-  hudVisible: true,
+  showAvatar: true,
+  showHud: true,
+  showDevPanel: true,
+  showWireframe: false,
+  showMesh: true,
+  showStarfield: true,
 
-  avatarVisible: true,
-  meshWireVisible: false,
-  starfieldVisible: true,
+  enableMic: true,
+  enableCamera: false,
 
-  micEnabled: true,
-  cameraEnabled: true,
+  allowCameraControls: true,
+  autorotateCamera: false,
 
-  floorEchoEnabled: true,
-  floorEchoStrength: 0.18,
-  floorEchoBlur: 0.65,
-  floorEchoSquash: 0.55,
-  floorEchoRadius: 0.7,
+  reflectionEnabled: true,
+  reflectionStrength: 0.18,
+  reflectionBlur: 0.55,
+  reflectionHeight: 0.33,
+  floorRoughness: 0.65,
+  floorMetalness: 0.15,
 
-  specIntensity: 1.0,
-  veinIntensity: 1.0,
-  glassThickness: 0.55,
-  filamentStrength: 0.45,
+  bloomIntensity: 0.85,
+  rimStrength: 0.22,
 
-  keyLightIntensity: 0.55,
-  rimLightIntensity: 0.75,
-  fillLightIntensity: 0.25,
+  studioLightsEnabled: true,
+  studioLightsAffectOnlyAvatar: true,
 
   chromaWorkstationEnabled: false,
-  chromaHost: '127.0.0.1',
-  chromaPort: 6742,
-  chromaUpdateHz: 20,
-  chromaMapArousalToBrightness: true,
-  chromaMapFocusToBlue: true,
-  chromaValenceHueShift: 0.15,
+  chromaWorkstationIntensity: 0.35,
+  chromaWorkstationPalette: 'SpectraFlameDarkV2',
 }
 
 function sanitize(next: DevOptions): DevOptions {
-  // Avoid persisting a completely empty scene (common "I see nothing" foot-gun).
-  // If the user turned everything off, keep at least the avatar visible.
-  if (!next.avatarVisible && !next.starfieldVisible && !next.meshWireVisible) {
-    return { ...next, avatarVisible: true }
-  }
-  return next
+  // Boot-safe: never allow a "nothing visible" boot.
+  // If the user persisted "avatar off" or "hud off", force them on at boot.
+  const bootSafe = { ...next }
+  if (!bootSafe.showAvatar) bootSafe.showAvatar = true
+  if (!bootSafe.showHud) bootSafe.showHud = true
+  return bootSafe
 }
 
 function load(): DevOptions {
@@ -142,23 +129,16 @@ function notify() {
 export function setDevOptions(patch: Partial<DevOptions>) {
   const next: DevOptions = { ...state, ...patch }
 
-  next.floorEchoStrength = clamp(next.floorEchoStrength, 0, 1)
-  next.floorEchoBlur = clamp(next.floorEchoBlur, 0, 1)
-  next.floorEchoSquash = clamp(next.floorEchoSquash, 0, 1)
-  next.floorEchoRadius = clamp(next.floorEchoRadius, 0, 1)
+  next.reflectionStrength = clamp(next.reflectionStrength, 0, 1)
+  next.reflectionBlur = clamp(next.reflectionBlur, 0, 1)
+  next.reflectionHeight = clamp(next.reflectionHeight, 0, 1)
+  next.floorRoughness = clamp(next.floorRoughness, 0, 1)
+  next.floorMetalness = clamp(next.floorMetalness, 0, 1)
 
-  next.specIntensity = clamp(next.specIntensity, 0, 2)
-  next.veinIntensity = clamp(next.veinIntensity, 0, 2)
-  next.glassThickness = clamp(next.glassThickness, 0, 1)
-  next.filamentStrength = clamp(next.filamentStrength, 0, 1)
+  next.bloomIntensity = clamp(next.bloomIntensity, 0, 2)
+  next.rimStrength = clamp(next.rimStrength, 0, 1)
 
-  next.keyLightIntensity = clamp(next.keyLightIntensity, 0, 1)
-  next.rimLightIntensity = clamp(next.rimLightIntensity, 0, 1)
-  next.fillLightIntensity = clamp(next.fillLightIntensity, 0, 1)
-
-  next.chromaPort = Math.floor(clamp(next.chromaPort, 1, 65535))
-  next.chromaUpdateHz = Math.floor(clamp(next.chromaUpdateHz, 5, 60))
-  next.chromaValenceHueShift = clamp(next.chromaValenceHueShift, -1, 1)
+  next.chromaWorkstationIntensity = clamp(next.chromaWorkstationIntensity, 0, 1)
 
   state = sanitize(next)
   notify()

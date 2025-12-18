@@ -5,12 +5,12 @@ import { getDevOptions, subscribeDevOptions } from '../dev/devOptionsStore'
 
 const clamp01Local = (v: number) => Math.max(0, Math.min(1, v))
 
-let micEnabled = getDevOptions().micEnabled
-let camEnabled = getDevOptions().cameraEnabled
+let micEnabled = getDevOptions().enableMic
+let camEnabled = getDevOptions().enableCamera
 subscribeDevOptions(() => {
   const opt = getDevOptions()
-  micEnabled = opt.micEnabled
-  camEnabled = opt.cameraEnabled
+  micEnabled = opt.enableMic
+  camEnabled = opt.enableCamera
 })
 
 type RunState = {
@@ -60,8 +60,8 @@ export async function startMediaSensors() {
   // --- MIC + CAMERA ---
   let stream: MediaStream
   try {
-    const wantAudio = getDevOptions().micEnabled
-    const wantVideo = getDevOptions().cameraEnabled
+    const wantAudio = getDevOptions().enableMic
+    const wantVideo = getDevOptions().enableCamera
 
     stream = await navigator.mediaDevices.getUserMedia({
       audio: wantAudio ? true : false,
@@ -156,20 +156,21 @@ export async function startMediaSensors() {
     // CONSOLIDATED: mic → state (bounded, deterministic)
     const e = clamp01(micEnergy) // micEnergy must be smoothed 0..1
 
+    const camLoad = camEnabled ? load : 0
+
     // Presence baseline so silence still breathes (no dead state)
-    const arousal = clamp01(0.28 + e * 0.92);
+    // Camera motion nudges arousal/rhythm modestly (bounded).
+    const arousal = clamp01(0.28 + e * 0.92 + camLoad * 0.12)
 
     // Rhythm rises with voice but stays bounded (prevents “buzz”)
-    const rhythm = clamp01(0.35 + Math.pow(e, 0.75) * 0.85);
-
-    const camLoad = camEnabled ? load : 0
+    const rhythm = clamp01(0.35 + Math.pow(e, 0.75) * 0.85 + camLoad * 0.10)
 
     // Focus + cognitiveLoad respond to camera load (deterministic, visible)
     const focus = clamp01Local(0.55 + camLoad * 0.35)
     const cognitiveLoad = clamp01Local(0.45 + camLoad * 0.30)
 
     // Valence: keep neutral for now (we’ll wire prosody/pitch later)
-    const valence = 0.0;
+    const valence = 0.0
 
     setAvatarState({
       arousal,
@@ -178,7 +179,7 @@ export async function startMediaSensors() {
       cognitiveLoad,
       valence,
       entropy: 0.04, // base target; integrator adds micro-entropy deterministically
-    });
+    })
 
     // MIC pitch proxy (for HUD only right now)
     let freq = 0

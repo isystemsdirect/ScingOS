@@ -10,6 +10,10 @@ export type FlameUniforms = {
   rhythm: number;
   focus: number;
   layer: number; // 0 = inner core, 1 = outer skin
+  rimStrength: number;
+  chromaEnabled: number;
+  chromaIntensity: number;
+  chromaPalette: number;
   specIntensity: number;
   veinIntensity: number;
   glassThickness: number;
@@ -36,6 +40,10 @@ const FlameMaterial = shaderMaterial(
     rhythm: 0,
     focus: 0,
     layer: 0,
+    rimStrength: 0.62,
+    chromaEnabled: 0.0,
+    chromaIntensity: 0.65,
+    chromaPalette: 1.0,
     specIntensity: 1.0,
     veinIntensity: 1.0,
     glassThickness: 0.55,
@@ -167,6 +175,10 @@ uniform float cognitiveLoad;
 uniform float rhythm;
 uniform float focus;
 uniform float layer;
+uniform float rimStrength;
+uniform float chromaEnabled;
+uniform float chromaIntensity;
+uniform float chromaPalette;
 
 uniform float specIntensity;
 uniform float veinIntensity;
@@ -219,6 +231,18 @@ vec3 neonCyan(){ return vec3(0.00, 0.85, 1.00); }
 vec3 neonMagenta(){ return vec3(1.00, 0.00, 0.85); }
 vec3 violetShear(){ return vec3(0.55, 0.10, 0.95); }
 
+// palette 0: classic cyan/magenta/violet
+// palette 1: neon glass-bulb bias (cooler blue + hotter pink)
+vec3 palCyan(){
+  return mix(neonCyan(), vec3(0.10, 0.65, 1.00), sat(chromaPalette));
+}
+vec3 palMagenta(){
+  return mix(neonMagenta(), vec3(1.00, 0.10, 0.55), sat(chromaPalette));
+}
+vec3 palViolet(){
+  return mix(violetShear(), vec3(0.70, 0.20, 1.00), sat(chromaPalette));
+}
+
 void main(){
 vec3 N = normalize(vN);
 vec3 V = normalize(vec3(0.0, 0.0, 1.0)); // stable view proxy for consistent chrome
@@ -267,8 +291,8 @@ vec3 base = mix(chromeBase, steelTint, edgeLift * 0.55);
 
 // --- color advection (used only as “oil-slick” accent, very restrained) ---
 float flow = 0.5 + 0.5 * sin(time + vPos.y * 3.0);
-vec3 accent = mix(neonCyan(), neonMagenta(), flow);
-accent += violetShear() * (0.15 * sat(valence * 0.5 + 0.5));
+vec3 accent = mix(palCyan(), palMagenta(), flow);
+accent += palViolet() * (0.15 * sat(valence * 0.5 + 0.5));
 float vein = clamp(veinIntensity, 0.0, 2.0);
 float accentAmt = (0.05 + 0.09 * sat(arousal * 0.7)) * mix(0.6, 1.4, vein * 0.5); // still restrained
 base += accent * accentAmt;
@@ -290,13 +314,23 @@ emissGain *= clamp(filamentStrength, 0.0, 1.0);
 
 vec3 emissive = accent * filament * emissGain;
 
+// --- neon glass-bulb underlayer (deterministic, subtle) ---
+// Creates tiny interior "bulbs" that bloom nicely without washing the chrome.
+float bulbs = noise(vPos * 18.0 + vec3(time * 0.18, -time * 0.12, time * 0.10));
+bulbs = smoothstep(0.72, 0.92, bulbs);
+bulbs *= (layer < 0.5) ? 1.0 : 0.65;
+float bulbGain = (chromaEnabled > 0.5) ? sat(chromaIntensity) : 0.0;
+vec3 bulbCol = mix(palCyan(), palMagenta(), noise(vPos * 3.0 + time * 0.05));
+bulbCol += palViolet() * 0.35;
+emissive += bulbCol * bulbs * (0.18 + 0.55 * bulbGain) * (0.6 + 0.5 * sat(arousal));
+
 // --- final shading ---
 // keep base dark; add spec as reflective highlight (not bloom-only)
 vec3 color = base + (vec3(1.0) * spec * metal);
 
 // rim lift (subtle, still not “fully lit”)
 float rim = pow(1.0 - sat(dot(Nm, V)), 2.2);
-color += rim * 0.14 * (0.6 + focus * 0.6) * mix(0.9, 1.15, sat(glassThickness));
+color += rim * (0.04 + 0.22 * sat(rimStrength)) * (0.6 + focus * 0.6) * mix(0.9, 1.15, sat(glassThickness));
 
 // add emissive filaments (these are what bloom should catch)
 color += emissive;

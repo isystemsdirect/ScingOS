@@ -9,7 +9,8 @@ function fmt(n: number) {
 }
 
 export default function HudCard(props: { mode?: 'fixed' | 'stack' }) {
-  useDevOptionsStore()
+  const opt = useDevOptionsStore()
+  if (!opt.showHud) return null
 
   const [tick, setTick] = useState(0)
   useEffect(() => {
@@ -58,6 +59,10 @@ export default function HudCard(props: { mode?: 'fixed' | 'stack' }) {
       <div style={{ display: 'grid', gap: 4 }}>
         <div>BOOT: OK</div>
           <div>AVATAR DRAW: {avatarDrawLine}</div>
+        <div>MIC: {opt.enableMic ? 'ON' : 'OFF'}</div>
+        <div>CAM: {opt.enableCamera ? 'ON' : 'OFF'}</div>
+        <div>STARFIELD: {opt.showStarfield ? 'ON' : 'OFF'}</div>
+        <div>REFLECTION: {opt.reflectionEnabled ? 'ON' : 'OFF'}</div>
         <div>tick: {tick}</div>
         <div>arousal: {fmt(s.arousal)}</div>
         <div>focus: {fmt(s.focus)}</div>
