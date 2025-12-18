@@ -1,17 +1,17 @@
 import * as THREE from 'three'
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { extend, useFrame, useThree } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
-import { EffectComposer, Bloom, ChromaticAberration, Vignette } from '@react-three/postprocessing'
 
 import { FlameMaterial } from './FlameMaterial'
 import type { FlameMaterialImpl } from './FlameMaterial'
 import { LAYER_AVATAR } from './layers'
 import { AVATAR_RADIUS_UNITS, FLOOR_Y } from './scale'
 import Starfield from './Starfield'
-import Floor from './Floor'
 import { useDevOptionsStore } from '../dev/useDevOptionsStore'
 import { setRenderStats } from '../influence/renderStats'
+import AvatarReflectionTarget, { type AvatarReflectionTargetResult } from './reflection/AvatarReflectionTarget'
+import FloorReflectionPlane from './reflection/FloorReflectionPlane'
 
 extend({ FlameMaterial })
 
@@ -33,6 +33,8 @@ export default function Scene3D() {
   const { camera } = useThree()
   const opt = useDevOptionsStore()
 
+  const [reflection, setReflection] = useState<AvatarReflectionTargetResult | null>(null)
+
   const setAvatarLayer = (o: THREE.Object3D) => {
     o.layers.set(LAYER_AVATAR)
   }
@@ -42,7 +44,9 @@ export default function Scene3D() {
     camera.layers.enable(LAYER_AVATAR)
   }, [camera])
 
-  const avatarCenterY = FLOOR_Y + AVATAR_RADIUS_UNITS + 0.33
+  // Stage 2 hover theory (locked): clearance = 0.33 * radius.
+  const hoverHeight = 0.33 * AVATAR_RADIUS_UNITS
+  const avatarCenterY = FLOOR_Y + AVATAR_RADIUS_UNITS + hoverHeight
 
   const forceFailsafeRef = useRef(false)
   useEffect(() => {
@@ -124,28 +128,7 @@ export default function Scene3D() {
       m.uniforms.entropy.value = uRef.current.entropy
       m.uniforms.focus.value = uRef.current.focus
 
-      // Material control plane (dev options)
-      m.uniforms.rimStrength.value = opt.rimStrength
-      m.uniforms.chromaEnabled.value = opt.chromaWorkstationEnabled ? 1.0 : 0.0
-      m.uniforms.chromaIntensity.value = opt.chromaWorkstationIntensity
-      m.uniforms.chromaPalette.value = opt.chromaWorkstationPalette === 'NeonGlassBulbs' ? 1.0 : 0.0
-
-      // Liquid metal flame controls (bounded)
-      m.uniforms.metalness.value = 0.95
-      if (layer < 0.5) {
-        m.uniforms.roughness.value = 0.18
-        m.uniforms.highlightBoost.value = 1.25
-        m.uniforms.lightning.value = 0.45
-        m.uniforms.lightningSpeed.value = 0.85
-        m.uniforms.lightningWidth.value = 0.55
-      } else {
-        m.uniforms.roughness.value = 0.22
-        m.uniforms.highlightBoost.value = 1.15
-        m.uniforms.lightning.value = 0.32
-        m.uniforms.lightningSpeed.value = 0.85
-        m.uniforms.lightningWidth.value = 0.55
-      }
-
+      // Stage 2: keep controls stable and non-overbearing.
       m.uniforms.layer.value = layer
     }
 
@@ -188,8 +171,44 @@ export default function Scene3D() {
     <>
       {opt.starfieldVisible ? <Starfield /> : null}
 
-      {/* Depth cue: subtle studio fog (big depth upgrade) */}
-      <fog attach="fog" args={['#05020b', 2.8, 10.5]} />
+      {/* Avatar-only capture target (used by the floor reflection plane) */}
+      <AvatarReflectionTarget
+        enabled={opt.floorReflectionEnabled}
+        size={1024}
+        planeY={FLOOR_Y}
+        onReady={setReflection}
+      />
+
+      {/* Floor: black plane with subtle avatar-only reflection */}
+      <FloorReflectionPlane
+        enabled={opt.floorReflectionEnabled}
+        texture={reflection?.texture ?? null}
+        targetSize={reflection?.size ?? 1024}
+        size={18}
+        strength={opt.floorReflectionStrength}
+        blur={opt.floorReflectionBlur}
+        height={opt.floorReflectionHeight}
+      />
+
+      {/* Contour lighting (avatar-only): keep minimal, never "room-like" */}
+      <directionalLight
+        intensity={0.55}
+        position={[2.2, 2.8, 2.4]}
+        color={'#ffffff'}
+        onUpdate={(o) => o.layers.set(LAYER_AVATAR)}
+      />
+      <directionalLight
+        intensity={0.22}
+        position={[-2.8, 1.3, 1.8]}
+        color={'#b7c6ff'}
+        onUpdate={(o) => o.layers.set(LAYER_AVATAR)}
+      />
+      <directionalLight
+        intensity={0.30}
+        position={[-2.6, 3.2, -2.2]}
+        color={'#d9b8ff'}
+        onUpdate={(o) => o.layers.set(LAYER_AVATAR)}
+      />
 
       {/* Avatar group */}
       {opt.avatarVisible && (
@@ -210,13 +229,8 @@ export default function Scene3D() {
 
           {/* FAILSAFE: deterministic visible mesh if shader pipeline isn't healthy */}
           <mesh ref={failsafeMeshRef} geometry={geometry} scale={1.005} visible={false} onUpdate={setAvatarLayer}>
-            <meshStandardMaterial
-              color="#d1ccff"
-              emissive="#6b3dff"
-              emissiveIntensity={1.25}
-              metalness={0.0}
-              roughness={0.35}
-            />
+            {/* Unlit failsafe so reflection capture stays avatar-only (no lighting contamination). */}
+            <meshBasicMaterial color="#d1ccff" />
           </mesh>
 
           {/* WIREFRAME OVERLAY (meshVisible toggle) */}
@@ -227,14 +241,6 @@ export default function Scene3D() {
           ) : null}
         </group>
       )}
-
-      <Floor floorY={FLOOR_Y} size={18} />
-
-      {/* Post: cinematic presence */}
-      <EffectComposer>
-        <Bloom intensity={0.85} luminanceThreshold={0.35} luminanceSmoothing={0.85} />
-        <Vignette offset={0.22} darkness={0.68} />
-      </EffectComposer>
 
       {/* Camera controls: NO focus lock, fully manual */}
       {opt.cameraEnabled ? (

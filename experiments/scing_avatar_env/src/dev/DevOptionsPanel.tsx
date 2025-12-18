@@ -111,13 +111,19 @@ export default function DevOptionsPanel() {
 
         <div style={{ height: 1, background: 'rgba(255,255,255,0.08)', margin: '6px 0' }} />
 
+        <Row
+          label="Floor Reflection Enabled"
+          checked={opt.floorReflectionEnabled}
+          onChange={(v) => setDevOptions({ floorReflectionEnabled: v })}
+        />
+
         <SliderRow
           label="Floor Reflection Strength"
           value={opt.floorReflectionStrength}
           min={0}
           max={0.8}
           step={0.01}
-          disabled={true}
+          disabled={false}
           onChange={(v) => setDevOptions({ floorReflectionStrength: v })}
         />
         <SliderRow
@@ -126,8 +132,18 @@ export default function DevOptionsPanel() {
           min={0}
           max={1}
           step={0.01}
-          disabled={true}
+          disabled={false}
           onChange={(v) => setDevOptions({ floorReflectionBlur: v })}
+        />
+
+        <SliderRow
+          label="Floor Reflection Height"
+          value={opt.floorReflectionHeight}
+          min={0}
+          max={1}
+          step={0.01}
+          disabled={false}
+          onChange={(v) => setDevOptions({ floorReflectionHeight: v })}
         />
         <SliderRow
           label="Chroma Intensity"
