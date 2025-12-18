@@ -258,8 +258,9 @@ spec *= clamp(specIntensity, 0.0, 2.0);
 spec *= mix(0.65, 1.25, sat(arousal + focus * 0.6)); // reacts to voice/focus
 
 // --- dark chrome base (NOT lit up) ---
-vec3 chromeBase = vec3(0.035, 0.038, 0.045); // near-black metal
-vec3 steelTint  = vec3(0.11, 0.12, 0.14);    // subtle lift in highlights
+// NOTE: keep it "dark", but not so close to the background that the avatar disappears.
+vec3 chromeBase = vec3(0.055, 0.058, 0.066); // dark metal baseline (visibility-safe)
+vec3 steelTint  = vec3(0.14, 0.15, 0.17);    // subtle lift in highlights
 
 float metal = clamp(metalness, 0.75, 1.0);
 vec3 base = mix(chromeBase, steelTint, edgeLift * 0.55);
@@ -295,7 +296,7 @@ vec3 color = base + (vec3(1.0) * spec * metal);
 
 // rim lift (subtle, still not “fully lit”)
 float rim = pow(1.0 - sat(dot(Nm, V)), 2.2);
-color += rim * 0.08 * (0.6 + focus * 0.6) * mix(0.9, 1.15, sat(glassThickness));
+color += rim * 0.14 * (0.6 + focus * 0.6) * mix(0.9, 1.15, sat(glassThickness));
 
 // add emissive filaments (these are what bloom should catch)
 color += emissive;

@@ -10,6 +10,18 @@ let currentAvatarState: AvatarStateVector = {
   focus: 0.5,
 }
 
+export function resetAvatarStateToDefaults(): void {
+  // Boot-safe defaults (runtime only; no persistence).
+  currentAvatarState = {
+    arousal: 0.55,
+    cognitiveLoad: 0.45,
+    rhythm: 0.5,
+    focus: 0.55,
+    valence: 0.2,
+    entropy: 0.04,
+  }
+}
+
 export function setAvatarState(patch: Partial<AvatarStateVector>): AvatarStateVector {
   currentAvatarState = {
     arousal: clamp01(patch.arousal ?? currentAvatarState.arousal),

@@ -3,6 +3,7 @@ import { getAvatarState } from './influence/InfluenceBridge'
 import { getMediaSensorsMetrics, getMediaSensorsStatus } from './sensors/mediaSensors'
 import { getQualityMode, toggleQualityMode } from './visual/qualityMode'
 import { getDevOptions, subscribeDevOptions } from './dev/devOptions'
+import { getRenderStats } from './influence/renderStats';
 
 function fmt(n: number) {
   return (Math.round(n * 1000) / 1000).toFixed(3)
@@ -30,6 +31,7 @@ export default function Hud() {
   const s = getAvatarState()
   const media = getMediaSensorsStatus()
   const m = getMediaSensorsMetrics()
+  const rs = getRenderStats();
 
   return (
     <div
@@ -60,6 +62,9 @@ export default function Hud() {
       <div style={{ fontWeight: 700, marginBottom: 6 }}>SCING AVATAR-LIVE HUD</div>
       <div>tick: {tick}</div>
       <div>quality(Q): {getQualityMode() ? 'QHD+ (2048)' : 'FAST (1024)'}</div>
+      <div style={{ opacity: 0.85, fontSize: 12 }}>
+        render: {rs.calls} calls · {rs.triangles} tris
+      </div>
       <div>arousal: {fmt(s.arousal)}</div>
       <div>focus: {fmt(s.focus)}</div>
       <div>cognitiveLoad: {fmt(s.cognitiveLoad)}</div>

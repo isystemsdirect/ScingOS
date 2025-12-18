@@ -1,27 +1,30 @@
 import type { CSSProperties, ReactNode } from 'react'
 
 type Side = 'left' | 'right'
+type Mode = 'fixed' | 'stack'
 
 export default function DevCard(props: {
   title?: string
   children: ReactNode
   side?: Side // default: left
   top?: number // default: 14
+  mode?: Mode // default: fixed
 }) {
   const side: Side = props.side ?? 'left'
   const top = props.top ?? 14
+  const mode: Mode = props.mode ?? 'fixed'
 
   const base: CSSProperties = {
-    position: 'fixed',
+    position: mode === 'fixed' ? 'fixed' : 'relative',
     zIndex: 9999,
-    top,
+    top: mode === 'fixed' ? top : undefined,
     // WIDTH POLICY: <= 20% viewport (but not crazy narrow/wide)
-    width: 'min(20vw, 360px)',
-    minWidth: 220,
-    maxWidth: 420,
+    width: mode === 'fixed' ? 'min(20vw, 360px)' : '100%',
+    minWidth: mode === 'fixed' ? 220 : undefined,
+    maxWidth: mode === 'fixed' ? 420 : undefined,
     // HEIGHT POLICY: never obscure the scene; scroll if taller
-    maxHeight: 'calc(100vh - 2 * 14px)',
-    overflow: 'auto',
+    maxHeight: mode === 'fixed' ? 'calc(100vh - 2 * 14px)' : undefined,
+    overflow: mode === 'fixed' ? 'auto' : 'visible',
 
     padding: 12,
     borderRadius: 12,
@@ -37,7 +40,8 @@ export default function DevCard(props: {
     pointerEvents: 'auto',
   }
 
-  const pos: CSSProperties = side === 'right' ? { right: 14 } : { left: 14 }
+  const pos: CSSProperties =
+    mode === 'fixed' ? (side === 'right' ? { right: 14 } : { left: 14 }) : {}
 
   return (
     <div style={{ ...base, ...pos }}>

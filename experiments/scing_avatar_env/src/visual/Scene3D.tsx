@@ -6,11 +6,11 @@ import { EffectComposer, Bloom, ChromaticAberration, Vignette } from '@react-thr
 
 import { FlameMaterial } from './FlameMaterial'
 import type { FlameMaterialImpl } from './FlameMaterial'
-import { LAYER_AVATAR } from './layers'
 import { AVATAR_CENTER_Y, AVATAR_RADIUS_UNITS, FLOOR_Y } from './scale'
 import DeterministicStarfield from './DeterministicStarfield'
 import FloorEcho from './FloorEcho'
 import { useDevOptionsStore } from '../dev/useDevOptionsStore'
+import { setRenderStats } from '../influence/renderStats'
 
 extend({ FlameMaterial })
 
@@ -28,13 +28,22 @@ function pseudoNoise(t: number): number {
 }
 
 export default function Scene3D() {
-  const { camera } = useThree()
+  const { gl } = useThree()
   const opt = useDevOptionsStore()
 
+  const forceFailsafeRef = useRef(false)
   useEffect(() => {
-    // Render both env + avatar layers on the main camera
-    camera.layers.enable(LAYER_AVATAR)
-  }, [camera])
+    // TEMP (experiments-only): deterministic failsafe proof toggle.
+    if (!import.meta.env.DEV) return
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key.toLowerCase() !== 'f') return
+      forceFailsafeRef.current = !forceFailsafeRef.current
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [])
 
   const geometry = useMemo(() => {
     // Always render something: public/models may be empty in this sandbox.
@@ -44,7 +53,10 @@ export default function Scene3D() {
   // Two-layer material (core + skin)
   const coreRef = useRef<FlameMaterialImpl>(null!)
   const skinRef = useRef<FlameMaterialImpl>(null!)
+  const failsafeMeshRef = useRef<THREE.Mesh>(null)
   const toneMapFixedRef = useRef(false)
+
+  const healthRef = useRef({ frames: 0, avatarDrawOk: true })
 
   // local unified time/state
   const tRef = useRef(0)
@@ -60,6 +72,8 @@ export default function Scene3D() {
   useFrame((_, dt) => {
     tRef.current += dt
     const t = tRef.current
+
+    healthRef.current.frames += 1
 
     if (!toneMapFixedRef.current) {
       // Ensure reflection reads true emissive/silhouette (not tonemapped away)
@@ -124,6 +138,37 @@ export default function Scene3D() {
 
     applyUniforms(coreRef.current, 0)
     applyUniforms(skinRef.current, 1)
+
+    // Deterministic health check + failsafe policy:
+    // - During the first few frames, assume OK to avoid boot flicker.
+    // - After warmup, consider OK only if both materials exist and their time uniform is sane.
+    let avatarDrawOk = true
+    if (healthRef.current.frames > 8) {
+      const core = coreRef.current
+      const skin = skinRef.current
+      const coreTime = core?.uniforms?.time?.value
+      const skinTime = skin?.uniforms?.time?.value
+      avatarDrawOk = !!core && !!skin && Number.isFinite(coreTime) && Number.isFinite(skinTime) && Number.isFinite(t)
+    }
+    healthRef.current.avatarDrawOk = avatarDrawOk
+    const failsafeForced = import.meta.env.DEV && forceFailsafeRef.current
+    const failsafeOn = opt.avatarVisible && (!avatarDrawOk || failsafeForced)
+
+    if (failsafeMeshRef.current) {
+      failsafeMeshRef.current.visible = failsafeOn
+    }
+
+    // Renderer stats proof-of-draw (no external deps; deterministic)
+    const info = gl.info
+    setRenderStats({
+      calls: info.render.calls,
+      triangles: info.render.triangles,
+      lines: info.render.lines,
+      points: info.render.points,
+      avatarDrawOk,
+      failsafeOn,
+      failsafeForced,
+    })
   })
 
   return (
@@ -137,18 +182,29 @@ export default function Scene3D() {
       {opt.avatarVisible && (
         <group position={[0, AVATAR_CENTER_Y, 0]}>
           {/* CORE */}
-          <mesh geometry={geometry} scale={1.0} layers={LAYER_AVATAR}>
+          <mesh geometry={geometry} scale={1.0}>
             <flameMaterial ref={coreRef} />
           </mesh>
 
           {/* SKIN (slightly larger) */}
-          <mesh geometry={geometry} scale={1.03} layers={LAYER_AVATAR}>
+          <mesh geometry={geometry} scale={1.03}>
             <flameMaterial ref={skinRef} />
+          </mesh>
+
+          {/* FAILSAFE: deterministic visible mesh if shader pipeline isn't healthy */}
+          <mesh ref={failsafeMeshRef} geometry={geometry} scale={1.005} visible={false}>
+            <meshStandardMaterial
+              color="#d1ccff"
+              emissive="#6b3dff"
+              emissiveIntensity={1.25}
+              metalness={0.0}
+              roughness={0.35}
+            />
           </mesh>
 
           {/* WIREFRAME OVERLAY (definition aid) */}
           {opt.meshWireVisible && (
-            <mesh geometry={geometry} scale={1.035} layers={LAYER_AVATAR}>
+            <mesh geometry={geometry} scale={1.035}>
               <meshBasicMaterial wireframe opacity={0.18} transparent color="#8a5cff" />
             </mesh>
           )}

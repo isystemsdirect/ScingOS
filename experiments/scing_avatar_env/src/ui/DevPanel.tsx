@@ -157,7 +157,7 @@ function withPatch(p: Partial<DevOptions>) {
   setDevOptions(p)
 }
 
-export default function DevPanel() {
+export default function DevPanel(props: { mode?: 'fixed' | 'stack' }) {
   const opt = useDevOptionsStore()
   const [materialOpen, setMaterialOpen] = useState(true)
   const [floorOpen, setFloorOpen] = useState(true)
@@ -438,7 +438,7 @@ export default function DevPanel() {
   ])
 
   return (
-    <DevCard title="DEV PANEL" side="right" top={14}>
+    <DevCard title="DEV PANEL" side="right" top={14} mode={props.mode ?? 'fixed'}>
       {content}
     </DevCard>
   )

@@ -1,14 +1,14 @@
 import { Canvas } from '@react-three/fiber'
 import { Suspense, useEffect, useState } from 'react'
 import Scene3D from './visual/Scene3D'
-import { LAYER_AVATAR } from './visual/layers'
 import { AVATAR_CENTER_Y, CAMERA_Z } from './visual/scale'
 
-import DevPanel from './ui/DevPanel'
+import RightStack from './ui/RightStack'
 import HudCard from './ui/HudCard'
 
-import { getDevOptions, subscribeDevOptions } from './dev/devOptionsStore'
+import { getDevOptions, setDevOptions, subscribeDevOptions } from './dev/devOptionsStore'
 import { startMediaSensors, stopMediaSensors } from './sensors/mediaSensors'
+import { resetAvatarStateToDefaults } from './influence/InfluenceBridge'
 
 function StudioRig() {
   const [opt, setOpt] = useState(() => getDevOptions())
@@ -21,33 +21,24 @@ function StudioRig() {
   return (
     <>
       {/* Low ambient just to keep shadows readable */}
-      <ambientLight intensity={0.18} ref={(l) => { if (l) l.layers.set(LAYER_AVATAR) }} />
+      <ambientLight intensity={0.18} />
 
       <directionalLight
         position={[4.0, AVATAR_CENTER_Y + 2.0, 6.0]}
         intensity={keyI}
         color="#e9d7ff"
-        ref={(l) => {
-          if (l) l.layers.set(LAYER_AVATAR)
-        }}
       />
 
       <directionalLight
         position={[-5.0, AVATAR_CENTER_Y + 1.0, 8.0]}
         intensity={fillI}
         color="#9fd7ff"
-        ref={(l) => {
-          if (l) l.layers.set(LAYER_AVATAR)
-        }}
       />
 
       <directionalLight
         position={[0.0, AVATAR_CENTER_Y + 4.5, -6.0]}
         intensity={rimI}
         color="#c06bff"
-        ref={(l) => {
-          if (l) l.layers.set(LAYER_AVATAR)
-        }}
       />
     </>
   )
@@ -57,6 +48,13 @@ function StudioRig() {
 // This CB does not force sensors on/off; it focuses on visual definition.
 
 export default function App() {
+  useEffect(() => {
+    // Hard reset runtime state to known-visible defaults (runtime only; no persistence).
+    resetAvatarStateToDefaults()
+    // Prevent persisted "avatar off" from blanking the scene on boot (boot-only enforcement).
+    setDevOptions({ avatarVisible: true })
+  }, [])
+
   useEffect(() => {
     let disposed = false
     let lastKey = ''
@@ -89,9 +87,11 @@ export default function App() {
 
   return (
     <>
-      {/* Dev overlay(s) */}
-      <DevPanel />
+      {/* HUD: locked top-left */}
       <HudCard />
+
+      {/* Dev overlay(s) */}
+      <RightStack />
 
       <Canvas
         camera={{ position: [0, AVATAR_CENTER_Y, CAMERA_Z], fov: 38, near: 0.05, far: 5000 }}

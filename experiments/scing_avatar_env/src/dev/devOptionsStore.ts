@@ -93,10 +93,24 @@ const DEFAULTS: DevOptions = {
   chromaValenceHueShift: 0.15,
 }
 
+function sanitize(next: DevOptions): DevOptions {
+  // Avoid persisting a completely empty scene (common "I see nothing" foot-gun).
+  // If the user turned everything off, keep at least the avatar visible.
+  if (!next.avatarVisible && !next.starfieldVisible && !next.meshWireVisible) {
+    return { ...next, avatarVisible: true }
+  }
+  return next
+}
+
 function load(): DevOptions {
   if (typeof window === 'undefined') return { ...DEFAULTS }
-  const parsed = safeParse(window.localStorage.getItem(LS_KEY))
-  return { ...DEFAULTS, ...(parsed ?? {}) }
+  try {
+    const parsed = safeParse(window.localStorage.getItem(LS_KEY))
+    return sanitize({ ...DEFAULTS, ...(parsed ?? {}) })
+  } catch {
+    // If storage is blocked/disabled, fall back safely.
+    return { ...DEFAULTS }
+  }
 }
 
 function persist(next: DevOptions) {
@@ -146,7 +160,7 @@ export function setDevOptions(patch: Partial<DevOptions>) {
   next.chromaUpdateHz = Math.floor(clamp(next.chromaUpdateHz, 5, 60))
   next.chromaValenceHueShift = clamp(next.chromaValenceHueShift, -1, 1)
 
-  state = next
+  state = sanitize(next)
   notify()
 }
 
