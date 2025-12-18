@@ -145,6 +145,19 @@ export default function DevOptionsPanel() {
           disabled={false}
           onChange={(v) => setDevOptions({ floorReflectionHeight: v })}
         />
+
+        <div style={{ height: 1, background: 'rgba(255,255,255,0.08)', margin: '6px 0' }} />
+
+        <Row label="Light Rig" checked={opt.lightRigEnabled} onChange={(v) => setDevOptions({ lightRigEnabled: v })} />
+        <SliderRow
+          label="Light Rig Intensity"
+          value={opt.lightRigIntensity}
+          min={0.25}
+          max={1.75}
+          step={0.01}
+          disabled={!opt.lightRigEnabled}
+          onChange={(v) => setDevOptions({ lightRigIntensity: v })}
+        />
         <SliderRow
           label="Chroma Intensity"
           value={opt.chromaIntensity}

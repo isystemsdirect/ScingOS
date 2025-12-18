@@ -190,26 +190,6 @@ export default function Scene3D() {
         height={opt.floorReflectionHeight}
       />
 
-      {/* Contour lighting (avatar-only): keep minimal, never "room-like" */}
-      <directionalLight
-        intensity={0.55}
-        position={[2.2, 2.8, 2.4]}
-        color={'#ffffff'}
-        onUpdate={(o) => o.layers.set(LAYER_AVATAR)}
-      />
-      <directionalLight
-        intensity={0.22}
-        position={[-2.8, 1.3, 1.8]}
-        color={'#b7c6ff'}
-        onUpdate={(o) => o.layers.set(LAYER_AVATAR)}
-      />
-      <directionalLight
-        intensity={0.30}
-        position={[-2.6, 3.2, -2.2]}
-        color={'#d9b8ff'}
-        onUpdate={(o) => o.layers.set(LAYER_AVATAR)}
-      />
-
       {/* Avatar group */}
       {opt.avatarVisible && (
         <group position={[0, avatarCenterY, 0]}>

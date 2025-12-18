@@ -17,6 +17,10 @@ export type DevOptions = {
   floorReflectionBlur: number
   floorReflectionHeight: number
 
+  // Stage 3 lighting rig
+  lightRigEnabled: boolean
+  lightRigIntensity: number
+
   // Stage 3 placeholders
   chromaWorkstationEnabled: boolean
   chromaIntensity: number
@@ -55,6 +59,9 @@ const DEFAULTS: DevOptions = {
   floorReflectionStrength: 0.28,
   floorReflectionBlur: 0.62,
   floorReflectionHeight: 0.33,
+
+  lightRigEnabled: true,
+  lightRigIntensity: 1.0,
 
   chromaWorkstationEnabled: false,
   chromaIntensity: 0.75,
@@ -114,6 +121,8 @@ export function setDevOptions(patch: Partial<DevOptions>) {
   next.floorReflectionStrength = clamp(next.floorReflectionStrength, 0, 0.8)
   next.floorReflectionBlur = clamp(next.floorReflectionBlur, 0, 1)
   next.floorReflectionHeight = clamp(next.floorReflectionHeight, 0, 1)
+
+  next.lightRigIntensity = clamp(next.lightRigIntensity, 0.25, 1.75)
 
   next.chromaIntensity = clamp(next.chromaIntensity, 0, 1)
   next.chromaUpdateHz = Math.max(1, Math.min(120, Math.floor(next.chromaUpdateHz)))
