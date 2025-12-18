@@ -9,8 +9,12 @@ export default function Floor(props: { floorY: number; size?: number }) {
   const opt = useDevOptionsStore()
   const size = props.size ?? 18
 
+  const setEnvLayer = (o: THREE.Object3D) => {
+    o.layers.set(LAYER_ENV)
+  }
+
   // Avatar-only capture (mirror cam renders avatar layer only)
-  const tex = useAvatarReflectionCapture({ floorY: props.floorY, resolution: 2048 })
+  const tex = useAvatarReflectionCapture({ floorY: props.floorY, resolution: 1024 })
 
   const echoMat = useMemo(() => {
     const m = new THREE.ShaderMaterial({
@@ -116,7 +120,7 @@ void main(){
 
   return (
     <group>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, props.floorY, 0]} layers={LAYER_ENV} receiveShadow>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, props.floorY, 0]} onUpdate={setEnvLayer} receiveShadow>
         <planeGeometry args={[size, size]} />
         <meshStandardMaterial
           color={'#05020b'}
@@ -126,7 +130,7 @@ void main(){
       </mesh>
 
       {/* avatar-only reflection pass (subtle) */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, props.floorY + 0.001, 0]} layers={LAYER_ENV}>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, props.floorY + 0.001, 0]} onUpdate={setEnvLayer}>
         <planeGeometry args={[size, size]} />
         <primitive object={echoMat} attach="material" />
       </mesh>

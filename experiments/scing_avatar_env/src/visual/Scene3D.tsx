@@ -33,6 +33,10 @@ export default function Scene3D() {
   const { camera } = useThree()
   const opt = useDevOptionsStore()
 
+  const setAvatarLayer = (o: THREE.Object3D) => {
+    o.layers.set(LAYER_AVATAR)
+  }
+
   useEffect(() => {
     // Render avatar layer on the main camera (so avatar-only lighting/reflection layers cannot hide it).
     camera.layers.enable(LAYER_AVATAR)
@@ -192,20 +196,20 @@ export default function Scene3D() {
         <group position={[0, avatarCenterY, 0]}>
           {/* CORE */}
           {opt.showMesh ? (
-            <mesh geometry={geometry} scale={1.0} layers={LAYER_AVATAR}>
-            <flameMaterial ref={coreRef} />
+            <mesh geometry={geometry} scale={1.0} onUpdate={setAvatarLayer}>
+              <flameMaterial ref={coreRef} />
             </mesh>
           ) : null}
 
           {/* SKIN (slightly larger) */}
           {opt.showMesh ? (
-            <mesh geometry={geometry} scale={1.03} layers={LAYER_AVATAR}>
+            <mesh geometry={geometry} scale={1.03} onUpdate={setAvatarLayer}>
               <flameMaterial ref={skinRef} />
             </mesh>
           ) : null}
 
           {/* FAILSAFE: deterministic visible mesh if shader pipeline isn't healthy */}
-          <mesh ref={failsafeMeshRef} geometry={geometry} scale={1.005} visible={false} layers={LAYER_AVATAR}>
+          <mesh ref={failsafeMeshRef} geometry={geometry} scale={1.005} visible={false} onUpdate={setAvatarLayer}>
             <meshStandardMaterial
               color="#d1ccff"
               emissive="#6b3dff"
@@ -217,7 +221,7 @@ export default function Scene3D() {
 
           {/* WIREFRAME OVERLAY (definition aid) */}
           {opt.showWireframe && (
-            <mesh geometry={geometry} scale={1.035} layers={LAYER_AVATAR}>
+            <mesh geometry={geometry} scale={1.035} onUpdate={setAvatarLayer}>
               <meshBasicMaterial wireframe opacity={0.18} transparent color="#8a5cff" />
             </mesh>
           )}
