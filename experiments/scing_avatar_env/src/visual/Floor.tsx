@@ -112,10 +112,10 @@ void main(){
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime()
     echoMat.uniforms.time.value = t
-    echoMat.uniforms.enabled.value = opt.reflectionEnabled ? 1 : 0
-    echoMat.uniforms.strength.value = opt.reflectionStrength
-    echoMat.uniforms.blur.value = opt.reflectionBlur
-    echoMat.uniforms.height.value = opt.reflectionHeight
+    echoMat.uniforms.enabled.value = opt.floorReflectionEnabled ? 1 : 0
+    echoMat.uniforms.strength.value = opt.floorReflectionStrength
+    echoMat.uniforms.blur.value = opt.floorReflectionBlur
+    echoMat.uniforms.height.value = 0.33
   })
 
   return (

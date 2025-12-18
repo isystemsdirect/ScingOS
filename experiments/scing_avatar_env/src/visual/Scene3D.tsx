@@ -42,7 +42,7 @@ export default function Scene3D() {
     camera.layers.enable(LAYER_AVATAR)
   }, [camera])
 
-  const avatarCenterY = FLOOR_Y + AVATAR_RADIUS_UNITS + opt.reflectionHeight
+  const avatarCenterY = FLOOR_Y + AVATAR_RADIUS_UNITS + 0.33
 
   const forceFailsafeRef = useRef(false)
   useEffect(() => {
@@ -165,7 +165,7 @@ export default function Scene3D() {
     }
     healthRef.current.avatarDrawOk = avatarDrawOk
     const failsafeForced = import.meta.env.DEV && forceFailsafeRef.current
-    const failsafeOn = opt.showAvatar && (!avatarDrawOk || failsafeForced)
+    const failsafeOn = opt.avatarVisible && (!avatarDrawOk || failsafeForced)
 
     if (failsafeMeshRef.current) {
       failsafeMeshRef.current.visible = failsafeOn
@@ -186,27 +186,27 @@ export default function Scene3D() {
 
   return (
     <>
-      {opt.showStarfield ? <Starfield /> : null}
+      {opt.starfieldVisible ? <Starfield /> : null}
 
       {/* Depth cue: subtle studio fog (big depth upgrade) */}
       <fog attach="fog" args={['#05020b', 2.8, 10.5]} />
 
       {/* Avatar group */}
-      {opt.showAvatar && (
+      {opt.avatarVisible && (
         <group position={[0, avatarCenterY, 0]}>
           {/* CORE */}
-          {opt.showMesh ? (
+          {/* Solid avatar mesh always renders when avatarVisible is ON */}
+          {
             <mesh geometry={geometry} scale={1.0} onUpdate={setAvatarLayer}>
               <flameMaterial ref={coreRef} />
             </mesh>
-          ) : null}
+          }
 
-          {/* SKIN (slightly larger) */}
-          {opt.showMesh ? (
+          {
             <mesh geometry={geometry} scale={1.03} onUpdate={setAvatarLayer}>
               <flameMaterial ref={skinRef} />
             </mesh>
-          ) : null}
+          }
 
           {/* FAILSAFE: deterministic visible mesh if shader pipeline isn't healthy */}
           <mesh ref={failsafeMeshRef} geometry={geometry} scale={1.005} visible={false} onUpdate={setAvatarLayer}>
@@ -219,12 +219,12 @@ export default function Scene3D() {
             />
           </mesh>
 
-          {/* WIREFRAME OVERLAY (definition aid) */}
-          {opt.showWireframe && (
+          {/* WIREFRAME OVERLAY (meshVisible toggle) */}
+          {opt.meshVisible ? (
             <mesh geometry={geometry} scale={1.035} onUpdate={setAvatarLayer}>
               <meshBasicMaterial wireframe opacity={0.18} transparent color="#8a5cff" />
             </mesh>
-          )}
+          ) : null}
         </group>
       )}
 
@@ -232,18 +232,12 @@ export default function Scene3D() {
 
       {/* Post: cinematic presence */}
       <EffectComposer>
-        <Bloom intensity={opt.bloomIntensity} luminanceThreshold={0.35} luminanceSmoothing={0.85} />
-        {opt.chromaWorkstationEnabled ? (
-          <ChromaticAberration
-            offset={[0.001 + 0.0025 * opt.chromaWorkstationIntensity, 0.0006 + 0.0016 * opt.chromaWorkstationIntensity]}
-            radialModulation
-          />
-        ) : null}
+        <Bloom intensity={0.85} luminanceThreshold={0.35} luminanceSmoothing={0.85} />
         <Vignette offset={0.22} darkness={0.68} />
       </EffectComposer>
 
       {/* Camera controls: NO focus lock, fully manual */}
-      {opt.allowCameraControls ? (
+      {opt.cameraEnabled ? (
         <OrbitControls
           makeDefault
           enablePan
@@ -254,7 +248,7 @@ export default function Scene3D() {
           maxDistance={800.0}
           enableDamping
           dampingFactor={0.08}
-          autoRotate={opt.autorotateCamera}
+          autoRotate={false}
         />
       ) : null}
     </>

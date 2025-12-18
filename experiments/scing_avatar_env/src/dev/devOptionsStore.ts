@@ -1,38 +1,29 @@
 type Subscriber = () => void
 
 export type DevOptions = {
-  showAvatar: boolean
-  showHud: boolean
-  showDevPanel: boolean
-  showWireframe: boolean
-  showMesh: boolean
-  showStarfield: boolean
+  hudVisible: boolean
+  devPanelVisible: boolean
 
-  enableMic: boolean
-  enableCamera: boolean
+  avatarVisible: boolean
+  meshVisible: boolean
+  starfieldVisible: boolean
 
-  allowCameraControls: boolean
-  autorotateCamera: boolean
+  micEnabled: boolean
+  cameraEnabled: boolean
 
-  reflectionEnabled: boolean
-  reflectionStrength: number // 0..1
-  reflectionBlur: number // 0..1
-  reflectionHeight: number // 0..1
-  floorRoughness: number // 0..1
-  floorMetalness: number // 0..1
+  // Stage 2 placeholders (implemented later)
+  floorReflectionEnabled: boolean
+  floorReflectionStrength: number
+  floorReflectionBlur: number
 
-  bloomIntensity: number // 0..2
-  rimStrength: number // 0..1
-
-  studioLightsEnabled: boolean
-  studioLightsAffectOnlyAvatar: boolean
-
+  // Stage 3 placeholders
   chromaWorkstationEnabled: boolean
-  chromaWorkstationIntensity: number // 0..1
-  chromaWorkstationPalette: 'SpectraFlameDarkV2' | 'NeonGlassBulbs'
+  chromaIntensity: number
+  chromaUpdateHz: number
+  chromaDevice: 'openrgb' | 'razer' | 'logitech' | 'none'
 }
 
-const LS_KEY = 'scing_avatar_env_dev_options_store_v2'
+const LS_KEY = 'scing_avatar_env_dev_options_store_stage1_v1'
 
 function clamp(v: number, lo: number, hi: number) {
   return Math.max(lo, Math.min(hi, v))
@@ -49,43 +40,32 @@ function safeParse(raw: string | null): Partial<DevOptions> | null {
 }
 
 const DEFAULTS: DevOptions = {
-  showAvatar: true,
-  showHud: true,
-  showDevPanel: true,
-  showWireframe: false,
-  showMesh: true,
-  showStarfield: true,
+  hudVisible: true,
+  devPanelVisible: true,
 
-  enableMic: true,
-  enableCamera: false,
+  avatarVisible: true,
+  meshVisible: false,
+  starfieldVisible: true,
 
-  allowCameraControls: true,
-  autorotateCamera: false,
+  micEnabled: true,
+  cameraEnabled: true,
 
-  reflectionEnabled: true,
-  reflectionStrength: 0.18,
-  reflectionBlur: 0.55,
-  reflectionHeight: 0.33,
-  floorRoughness: 0.65,
-  floorMetalness: 0.15,
-
-  bloomIntensity: 0.85,
-  rimStrength: 0.22,
-
-  studioLightsEnabled: true,
-  studioLightsAffectOnlyAvatar: true,
+  floorReflectionEnabled: true,
+  floorReflectionStrength: 0.35,
+  floorReflectionBlur: 0.55,
 
   chromaWorkstationEnabled: false,
-  chromaWorkstationIntensity: 0.35,
-  chromaWorkstationPalette: 'SpectraFlameDarkV2',
+  chromaIntensity: 0.75,
+  chromaUpdateHz: 20,
+  chromaDevice: 'none',
 }
 
 function sanitize(next: DevOptions): DevOptions {
   // Boot-safe: never allow a "nothing visible" boot.
   // If the user persisted "avatar off" or "hud off", force them on at boot.
   const bootSafe = { ...next }
-  if (!bootSafe.showAvatar) bootSafe.showAvatar = true
-  if (!bootSafe.showHud) bootSafe.showHud = true
+  if (!bootSafe.avatarVisible) bootSafe.avatarVisible = true
+  if (!bootSafe.hudVisible) bootSafe.hudVisible = true
   return bootSafe
 }
 
@@ -129,16 +109,11 @@ function notify() {
 export function setDevOptions(patch: Partial<DevOptions>) {
   const next: DevOptions = { ...state, ...patch }
 
-  next.reflectionStrength = clamp(next.reflectionStrength, 0, 1)
-  next.reflectionBlur = clamp(next.reflectionBlur, 0, 1)
-  next.reflectionHeight = clamp(next.reflectionHeight, 0, 1)
-  next.floorRoughness = clamp(next.floorRoughness, 0, 1)
-  next.floorMetalness = clamp(next.floorMetalness, 0, 1)
+  next.floorReflectionStrength = clamp(next.floorReflectionStrength, 0, 0.8)
+  next.floorReflectionBlur = clamp(next.floorReflectionBlur, 0, 1)
 
-  next.bloomIntensity = clamp(next.bloomIntensity, 0, 2)
-  next.rimStrength = clamp(next.rimStrength, 0, 1)
-
-  next.chromaWorkstationIntensity = clamp(next.chromaWorkstationIntensity, 0, 1)
+  next.chromaIntensity = clamp(next.chromaIntensity, 0, 1)
+  next.chromaUpdateHz = Math.max(1, Math.min(120, Math.floor(next.chromaUpdateHz)))
 
   state = sanitize(next)
   notify()
@@ -151,4 +126,8 @@ export function toggle<K extends keyof DevOptions>(key: K) {
 export function resetDevOptions() {
   state = { ...DEFAULTS }
   notify()
+}
+
+export function resetDefaults() {
+  resetDevOptions()
 }
