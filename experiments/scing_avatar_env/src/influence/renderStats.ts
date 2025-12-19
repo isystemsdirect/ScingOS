@@ -21,7 +21,12 @@ let stats: RenderStats = {
 };
 
 export function setRenderStats(next: RenderStats) {
-  stats = next;
+  // Merge to avoid runtime crashes if any caller omits new fields.
+  // (Experiments-only: prioritize stability over strictness.)
+  const merged = { ...stats, ...(next as Partial<RenderStats>) } as RenderStats
+  // Defensive numeric sanity.
+  if (!Number.isFinite(merged.floorStrength)) merged.floorStrength = 0
+  stats = merged
 }
 
 export function getRenderStats(): RenderStats {

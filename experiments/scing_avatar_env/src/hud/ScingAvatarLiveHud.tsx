@@ -74,7 +74,10 @@ export default function ScingAvatarLiveHud() {
       <div>clarity: {media.pitchClarity.toFixed(2)}</div>
       <div>camMotion: {media.camMotion.toFixed(2)}</div>
 
-      <div>FLOOR: {stats.floorStrength.toFixed(3)}</div>
+      <div>
+        FLOOR:{' '}
+        {Number.isFinite(stats.floorStrength) ? stats.floorStrength.toFixed(3) : '—'}
+      </div>
 
       {hasError ? <div style={{ marginTop: 8, color: 'rgba(255,110,110,0.95)' }}>{media.error}</div> : null}
     </div>
