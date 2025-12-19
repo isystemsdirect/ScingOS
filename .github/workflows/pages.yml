@@ -10,11 +10,6 @@ on:
 
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 concurrency:
   group: github-pages-deploy
   cancel-in-progress: true
@@ -22,31 +17,9 @@ concurrency:
 jobs:
   build-site:
     runs-on: ubuntu-latest
-    outputs:
-      pages_enabled: ${{ steps.pagescheck.outputs.enabled }}
     steps:
       - name: Check Out Repository Code
         uses: actions/checkout@v5
-
-      - name: Check GitHub Pages enabled
-        id: pagescheck
-        shell: bash
-        run: |
-          set -euo pipefail
-          api_url="https://api.github.com/repos/${GITHUB_REPOSITORY}/pages"
-          status="$(curl -s -o /dev/null -w "%{http_code}" \
-            -H "Authorization: Bearer ${GITHUB_TOKEN}" \
-            -H "Accept: application/vnd.github+json" \
-            "$api_url")"
-
-          if [ "$status" = "200" ]; then
-            echo "enabled=true" >> "$GITHUB_OUTPUT"
-            echo "GitHub Pages is enabled; deploy job will run."
-          else
-            echo "enabled=false" >> "$GITHUB_OUTPUT"
-            echo "GitHub Pages not enabled yet (HTTP $status)." >&2
-            echo "Enable: Settings -> Pages -> Source = GitHub Actions, then re-run this workflow." >&2
-          fi
 
       - name: Build Static Site
         run: |
@@ -63,11 +36,10 @@ jobs:
 
   deploy-site:
     needs: build-site
-    if: needs.build-site.outputs.pages_enabled == 'true'
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
     steps:
       - name: Deploy Built Pages to GitHub Pages
         id: deployment
