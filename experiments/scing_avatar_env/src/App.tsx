@@ -332,8 +332,16 @@ export default function App() {
 
   return (
     <>
-      {/* HUD: locked top-left (toggleable) */}
-      <ScingAvatarLiveHud />
+      <ErrorBoundary
+        onError={(message, detail) => {
+          const c: RuntimeCrash = { kind: 'error', message, detail, ts: Date.now() }
+          tryPersistCrash(c)
+          setCrash(c)
+        }}
+      >
+        {/* HUD: locked top-left (toggleable) */}
+        <ScingAvatarLiveHud />
+      </ErrorBoundary>
 
       {crash ? (
         <div
@@ -389,8 +397,16 @@ export default function App() {
         </div>
       ) : null}
 
-      {/* Dev panel: locked top-right (<= 20% viewport) */}
-      <DevOptionsPanel />
+      <ErrorBoundary
+        onError={(message, detail) => {
+          const c: RuntimeCrash = { kind: 'error', message, detail, ts: Date.now() }
+          tryPersistCrash(c)
+          setCrash(c)
+        }}
+      >
+        {/* Dev panel: locked top-right (<= 20% viewport) */}
+        <DevOptionsPanel />
+      </ErrorBoundary>
 
       <ErrorBoundary
         onError={(message, detail) => {
