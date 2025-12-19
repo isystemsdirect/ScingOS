@@ -59,6 +59,9 @@ let micSmoothedRms = 0
 let lastMicEnableMs = 0
 let lastCamEnableMs = 0
 
+let visibilityHandlerAttached = false
+let visibilityHandler: (() => void) | null = null
+
 function nowMs() {
   return typeof performance !== 'undefined' ? performance.now() : Date.now()
 }
@@ -88,6 +91,54 @@ function attachResumeOnGesture() {
   }
 
   window.addEventListener('pointerdown', onGesture, { passive: true, once: true, capture: true })
+}
+
+function attachVisibilityHandler() {
+  if (visibilityHandlerAttached) return
+  visibilityHandlerAttached = true
+
+  visibilityHandler = () => {
+    if (!enabled.mic) return
+    if (!audioCtx) return
+
+    // When the tab is hidden, suspend processing to reduce power.
+    // When it returns, best-effort resume (some browsers require a gesture).
+    if (document.visibilityState === 'hidden') {
+      if (audioCtx.state === 'running') {
+        audioCtx
+          .suspend()
+          .then(() => {
+            status = { ...status, audioState: audioCtx?.state ?? 'unknown' }
+          })
+          .catch(() => {
+            // ignore
+          })
+      }
+      return
+    }
+
+    if (audioCtx.state === 'suspended') {
+      audioCtx
+        .resume()
+        .then(() => {
+          status = { ...status, audioState: audioCtx?.state ?? 'unknown' }
+        })
+        .catch(() => {
+          attachResumeOnGesture()
+        })
+    }
+  }
+
+  document.addEventListener('visibilitychange', visibilityHandler, { passive: true })
+}
+
+function detachVisibilityHandler() {
+  if (!visibilityHandlerAttached) return
+  visibilityHandlerAttached = false
+  if (visibilityHandler) {
+    document.removeEventListener('visibilitychange', visibilityHandler)
+  }
+  visibilityHandler = null
 }
 
 async function loadPitchy(): Promise<PitchyModule | null> {
@@ -140,6 +191,8 @@ async function startMic(): Promise<void> {
   try {
     audioCtx = new AudioContext()
     status = { ...status, audioState: audioCtx.state }
+
+    attachVisibilityHandler()
 
     if (audioCtx.state !== 'running') {
       attachResumeOnGesture()
@@ -207,6 +260,7 @@ function stopMic() {
   }
   audioCtx = null
   resumeHandlerAttached = false
+  detachVisibilityHandler()
 
   micSmoothedRms = 0
   status = {
@@ -333,7 +387,8 @@ function stopCam() {
   camStream = null
 
   try {
-    if (videoEl && videoEl.parentElement) videoEl.parentElement.removeChild(videoEl)
+    const parent = videoEl?.parentNode
+    if (parent) parent.removeChild(videoEl as Node)
   } catch {
     // ignore
   }
@@ -438,10 +493,10 @@ export function getMediaStatus(): MediaStatus {
   return { ...status }
 }
 
+export async function startMediaSensors(): Promise<void>
+export async function startMediaSensors(opts?: { mic: boolean; cam: boolean }): Promise<void>
 export async function startMediaSensors(opts?: { mic: boolean; cam: boolean }): Promise<void> {
-  if (opts) {
-    enabled = { mic: !!opts.mic, cam: !!opts.cam }
-  }
+  if (opts) enabled = { mic: !!opts.mic, cam: !!opts.cam }
 
   ensureWatchdog()
 

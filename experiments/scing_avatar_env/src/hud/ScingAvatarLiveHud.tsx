@@ -18,10 +18,10 @@ export default function ScingAvatarLiveHud() {
     return () => window.clearInterval(id)
   }, [])
 
-  if (!opt.hudVisible) return null
+  if (!opt.ui.hudVisible) return null
 
   const hasError = Boolean(media.error)
-  const micState = !opt.micEnabled
+  const micState = !opt.sensors.mic.enabled
     ? 'OFF'
     : media.error && media.error.toUpperCase().includes('MIC')
       ? 'ERROR'
@@ -29,7 +29,7 @@ export default function ScingAvatarLiveHud() {
         ? 'LIVE'
         : 'OFF'
 
-  const camState = !opt.camEnabled
+  const camState = !opt.sensors.cam.enabled
     ? 'OFF'
     : media.error && media.error.toUpperCase().includes('CAM')
       ? 'ERROR'
@@ -38,7 +38,7 @@ export default function ScingAvatarLiveHud() {
         : 'OFF'
 
   const audioState = media.audioState || 'unknown'
-  const needsClick = opt.micEnabled && audioState !== 'running'
+  const needsClick = opt.sensors.mic.enabled && audioState !== 'running'
 
   return (
     <div
@@ -61,7 +61,7 @@ export default function ScingAvatarLiveHud() {
     >
       <div style={{ fontWeight: 700, letterSpacing: 0.3, marginBottom: 8 }}>SCING AVATAR-LIVE HUD</div>
       <div>BOOT: OK</div>
-      <div>AVATAR: {opt.avatarVisible ? 'ON' : 'OFF'}</div>
+      <div>AVATAR: {opt.avatar.enabled ? 'ON' : 'OFF'}</div>
 
       <div>MIC: {micState}</div>
       <div>CAM: {camState}</div>

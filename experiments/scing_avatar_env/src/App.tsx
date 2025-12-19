@@ -1,23 +1,243 @@
-import { Canvas } from '@react-three/fiber'
+import { Canvas, useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
-import { Suspense, useEffect, useMemo, useState } from 'react'
+import { Component, Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import Scene3D from './visual/Scene3D'
 import { AVATAR_CENTER_Y, CAMERA_Z } from './visual/scale'
 import ScingAvatarLiveHud from './hud/ScingAvatarLiveHud'
 import DevOptionsPanel from './dev/DevOptionsPanel'
 
+import './styles.css'
+import './ui/devpanel.css'
+
 import { getDevOptions, setDevOptions, subscribeDevOptions, type DevOptions } from './dev/devOptionsStore'
 import { LAYER_AVATAR } from './visual/layers'
 import { getMediaStatus, setMediaEnabled, startMediaSensors, stopMediaSensors } from './sensors/mediaSensors'
 import { resetAvatarStateToDefaults, setAvatarState } from './influence/InfluenceBridge'
+import Floor from './visual/Floor'
+import { FloorShine } from './visual/FloorShine'
 
 // If you already have sensor start logic elsewhere, keep it.
 // This CB does not force sensors on/off; it focuses on visual definition.
 
+type RuntimeCrash = {
+  kind: 'error' | 'unhandledrejection' | 'webglcontextlost' | 'webglcontextrestored'
+  message: string
+  detail?: string
+  ts: number
+}
+
+const LAST_CRASH_KEY = 'scing_avatar_env_last_crash_v1'
+
+function tryPersistCrash(c: RuntimeCrash | null) {
+  if (!c) return
+  try {
+    window.localStorage.setItem(LAST_CRASH_KEY, JSON.stringify(c))
+  } catch {
+    // ignore
+  }
+}
+
+function tryLoadLastCrash(): RuntimeCrash | null {
+  try {
+    const raw = window.localStorage.getItem(LAST_CRASH_KEY)
+    if (!raw) return null
+    const parsed = JSON.parse(raw) as Partial<RuntimeCrash>
+    if (!parsed || typeof parsed !== 'object') return null
+    if (typeof parsed.kind !== 'string' || typeof parsed.message !== 'string' || typeof parsed.ts !== 'number') return null
+    const kind = parsed.kind as RuntimeCrash['kind']
+    if (!['error', 'unhandledrejection', 'webglcontextlost', 'webglcontextrestored'].includes(kind)) return null
+    return {
+      kind,
+      message: parsed.message,
+      detail: typeof parsed.detail === 'string' ? parsed.detail : undefined,
+      ts: parsed.ts,
+    }
+  } catch {
+    return null
+  }
+}
+
+class ErrorBoundary extends Component<
+  { onError: (message: string, detail?: string) => void; children: any },
+  { hasError: boolean }
+> {
+  state = { hasError: false }
+
+  static getDerivedStateFromError() {
+    return { hasError: true }
+  }
+
+  componentDidCatch(error: any) {
+    const message = error && typeof error.message === 'string' ? error.message : 'Render error'
+    const detail = error && typeof error.stack === 'string' ? error.stack : undefined
+    this.props.onError(message, detail)
+  }
+
+  render() {
+    return this.props.children
+  }
+}
+
+function RotatingLightRig(props: { opt: DevOptions; lightTarget: THREE.Object3D }) {
+  const { opt, lightTarget } = props
+
+  const lightRefs = [
+    useRef<THREE.SpotLight>(null),
+    useRef<THREE.SpotLight>(null),
+    useRef<THREE.SpotLight>(null),
+    useRef<THREE.SpotLight>(null),
+  ] as const
+
+  const targets = useMemo(() => {
+    return [new THREE.Object3D(), new THREE.Object3D(), new THREE.Object3D(), new THREE.Object3D()] as const
+  }, [])
+
+  const tmpV = useMemo(() => new THREE.Vector3(), [])
+  const tmpAxis = useMemo(() => new THREE.Vector3(), [])
+  const tmpQuat = useMemo(() => new THREE.Quaternion(), [])
+
+  useFrame(({ clock }) => {
+    const t = clock.getElapsedTime()
+
+    for (let i = 0; i < 4; i++) {
+      const s = opt.lights.spots[i]
+      const ref = lightRefs[i].current
+      const tgt = targets[i]
+
+      // Update per-light target object position.
+      tgt.position.set(s.target[0], s.target[1], s.target[2])
+      tgt.updateMatrixWorld()
+
+      if (!ref) continue
+
+      // Layers: avatar-only or global.
+      if (s.layerAvatarOnly) {
+        ref.layers.set(LAYER_AVATAR)
+      } else {
+        ref.layers.enableAll()
+      }
+
+      // Apply rotation about the target along selected axis.
+      const basePos = tmpV.set(s.position[0], s.position[1], s.position[2])
+      if (s.rotationEnabled && s.rotationRate !== 0) {
+        tmpAxis.set(0, 0, 0)
+        if (s.rotationAxis === 'x') tmpAxis.set(1, 0, 0)
+        if (s.rotationAxis === 'y') tmpAxis.set(0, 1, 0)
+        if (s.rotationAxis === 'z') tmpAxis.set(0, 0, 1)
+
+        tmpQuat.setFromAxisAngle(tmpAxis, s.rotationRate * t)
+        basePos.sub(tgt.position).applyQuaternion(tmpQuat).add(tgt.position)
+      }
+
+      ref.position.copy(basePos)
+      ref.target = tgt
+      ref.updateMatrixWorld()
+    }
+  })
+
+  return (
+    <>
+      {/* Per-light targets */}
+      {targets.map((t, i) => (
+        <primitive key={i} object={t} />
+      ))}
+
+      {/* 4-spot rig with full per-light controls */}
+      {opt.lights.spots.map((s, i) => (
+        <spotLight
+          // eslint-disable-next-line react/no-array-index-key
+          key={i}
+          ref={lightRefs[i]}
+          color={s.color}
+          position={[s.position[0], s.position[1], s.position[2]]}
+          target={targets[i]}
+          intensity={opt.lights.enabled && s.enabled ? s.intensity : 0}
+          distance={s.distance}
+          angle={s.angle}
+          penumbra={s.penumbra}
+          decay={s.decay}
+          castShadow={s.castShadow}
+          onUpdate={(o) => {
+            if (s.layerAvatarOnly) o.layers.set(LAYER_AVATAR)
+            else o.layers.enableAll()
+          }}
+        />
+      ))}
+    </>
+  )
+}
+
 export default function App() {
   const [opt, setOpt] = useState<DevOptions>(() => getDevOptions())
+  const [crash, setCrash] = useState<RuntimeCrash | null>(null)
+  const [glCanvas, setGlCanvas] = useState<HTMLCanvasElement | null>(null)
 
   useEffect(() => subscribeDevOptions(() => setOpt(getDevOptions())), [])
+
+  useEffect(() => {
+    // Restore last crash (survives reload), so we can diagnose even if the app dies quickly.
+    const last = tryLoadLastCrash()
+    if (last) setCrash(last)
+  }, [])
+
+  useEffect(() => {
+    const onError = (e: ErrorEvent) => {
+      const detail = (e.error && typeof (e.error as any).stack === 'string') ? (e.error as any).stack : undefined
+      const c: RuntimeCrash = { kind: 'error', message: e.message || 'Unknown error', detail, ts: Date.now() }
+      tryPersistCrash(c)
+      setCrash(c)
+    }
+
+    const onRejection = (e: PromiseRejectionEvent) => {
+      const reason = e.reason
+      const message =
+        typeof reason === 'string'
+          ? reason
+          : reason && typeof reason?.message === 'string'
+            ? reason.message
+            : 'Unhandled promise rejection'
+      const detail = reason && typeof reason?.stack === 'string' ? reason.stack : undefined
+      const c: RuntimeCrash = { kind: 'unhandledrejection', message, detail, ts: Date.now() }
+      tryPersistCrash(c)
+      setCrash(c)
+    }
+
+    window.addEventListener('error', onError)
+    window.addEventListener('unhandledrejection', onRejection)
+    return () => {
+      window.removeEventListener('error', onError)
+      window.removeEventListener('unhandledrejection', onRejection)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!glCanvas) return
+
+    const onLost = (e: Event) => {
+      // Prevent default so we can at least display a message.
+      try {
+        ;(e as any).preventDefault?.()
+      } catch {
+        // ignore
+      }
+      const c: RuntimeCrash = { kind: 'webglcontextlost', message: 'WebGL context lost', ts: Date.now() }
+      tryPersistCrash(c)
+      setCrash(c)
+    }
+
+    const onRestored = () => {
+      const c: RuntimeCrash = { kind: 'webglcontextrestored', message: 'WebGL context restored', ts: Date.now() }
+      tryPersistCrash(c)
+      setCrash(c)
+    }
+
+    glCanvas.addEventListener('webglcontextlost', onLost as any, false)
+    glCanvas.addEventListener('webglcontextrestored', onRestored as any, false)
+    return () => {
+      glCanvas.removeEventListener('webglcontextlost', onLost as any)
+      glCanvas.removeEventListener('webglcontextrestored', onRestored as any)
+    }
+  }, [glCanvas])
 
   const lightTarget = useMemo(() => {
     const o = new THREE.Object3D()
@@ -25,40 +245,42 @@ export default function App() {
     return o
   }, [])
 
+  const floorShineCenter = useMemo(() => new THREE.Vector3(0, 0, 0), [])
+
   useEffect(() => {
     // Hard reset runtime state to known-visible defaults (runtime only; no persistence).
     resetAvatarStateToDefaults()
     // Prevent persisted "avatar off" from blanking the scene on boot (boot-only enforcement).
-    setDevOptions({ avatarVisible: true, hudVisible: true })
+    setDevOptions({ avatar: { enabled: true }, ui: { hudVisible: true } } as any)
   }, [])
 
   useEffect(() => {
-    let lastMic = getDevOptions().micEnabled
-    let lastCam = getDevOptions().camEnabled
+    let lastMic = getDevOptions().sensors.mic.enabled
+    let lastCam = getDevOptions().sensors.cam.enabled
 
     // Start sensors on boot using dev toggles.
     setMediaEnabled({ mic: lastMic, cam: lastCam })
-    void startMediaSensors({ mic: lastMic, cam: lastCam })
+    void startMediaSensors()
 
     const unsub = subscribeDevOptions(() => {
       const o = getDevOptions()
-      if (o.micEnabled === lastMic && o.camEnabled === lastCam) return
+      if (o.sensors.mic.enabled === lastMic && o.sensors.cam.enabled === lastCam) return
 
       // Apply desired state immediately.
-      setMediaEnabled({ mic: o.micEnabled, cam: o.camEnabled })
+      setMediaEnabled({ mic: o.sensors.mic.enabled, cam: o.sensors.cam.enabled })
 
       // If enabling, start streams (exact request set determined by the current toggles).
-      if ((o.micEnabled && !lastMic) || (o.camEnabled && !lastCam)) {
-        void startMediaSensors({ mic: o.micEnabled, cam: o.camEnabled })
+      if ((o.sensors.mic.enabled && !lastMic) || (o.sensors.cam.enabled && !lastCam)) {
+        void startMediaSensors()
       }
 
       // If disabling both, fully stop.
-      if (!o.micEnabled && !o.camEnabled) {
+      if (!o.sensors.mic.enabled && !o.sensors.cam.enabled) {
         stopMediaSensors()
       }
 
-      lastMic = o.micEnabled
-      lastCam = o.camEnabled
+      lastMic = o.sensors.mic.enabled
+      lastCam = o.sensors.cam.enabled
     })
 
     return () => {
@@ -111,85 +333,124 @@ export default function App() {
       {/* HUD: locked top-left (toggleable) */}
       <ScingAvatarLiveHud />
 
+      {crash ? (
+        <div
+          style={{
+            position: 'fixed',
+            left: 12,
+            bottom: 12,
+            zIndex: 1000,
+            maxWidth: 'min(760px, calc(100vw - 24px))',
+            background: 'rgba(8, 6, 14, 0.92)',
+            border: '1px solid rgba(255,255,255,0.14)',
+            borderRadius: 12,
+            padding: 12,
+            color: 'rgba(255,255,255,0.92)',
+            fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+            fontSize: 12,
+            lineHeight: 1.35,
+            pointerEvents: 'auto',
+            whiteSpace: 'pre-wrap',
+          }}
+        >
+          <div style={{ fontWeight: 800, marginBottom: 6 }}>RUNTIME CRASH CAPTURE</div>
+          <div style={{ opacity: 0.9, marginBottom: 8 }}>
+            {crash.kind}: {crash.message}
+          </div>
+          <div style={{ opacity: 0.7, marginBottom: 8 }}>
+            ts: {new Date(crash.ts).toISOString()}
+          </div>
+          {crash.detail ? <div style={{ opacity: 0.85 }}>{crash.detail}</div> : null}
+          <div style={{ display: 'flex', gap: 10, marginTop: 10 }}>
+            <button
+              type="button"
+              onClick={() => {
+                try {
+                  window.localStorage.removeItem(LAST_CRASH_KEY)
+                } catch {
+                  // ignore
+                }
+                setCrash(null)
+              }}
+              style={{
+                padding: '6px 10px',
+                borderRadius: 10,
+                border: '1px solid rgba(255,255,255,0.18)',
+                background: 'rgba(255,255,255,0.06)',
+                color: 'rgba(255,255,255,0.92)',
+                cursor: 'pointer',
+              }}
+            >
+              Dismiss + Clear
+            </button>
+          </div>
+        </div>
+      ) : null}
+
       {/* Dev panel: locked top-right (<= 20% viewport) */}
       <DevOptionsPanel />
 
-      <Canvas
-        camera={{ position: [0, AVATAR_CENTER_Y, CAMERA_Z], fov: 38, near: 0.05, far: 5000 }}
-        dpr={[1, 2]}
-        gl={{ antialias: true, preserveDrawingBuffer: false, powerPreference: 'high-performance' }}
-        onCreated={({ camera }) => {
-          camera.lookAt(0, AVATAR_CENTER_Y, 0)
-          camera.updateMatrixWorld()
+      <ErrorBoundary
+        onError={(message, detail) => {
+          const c: RuntimeCrash = { kind: 'error', message, detail, ts: Date.now() }
+          tryPersistCrash(c)
+          setCrash(c)
         }}
       >
-        {/* Background: deep studio black-purple */}
-        <color attach="background" args={['#05020b']} />
+        <Canvas
+          camera={{ position: [0, AVATAR_CENTER_Y, CAMERA_Z], fov: 38, near: 0.05, far: 5000 }}
+          dpr={1}
+          gl={{
+            antialias: false,
+            preserveDrawingBuffer: false,
+            powerPreference: 'low-power',
+            failIfMajorPerformanceCaveat: true,
+          }}
+          onCreated={({ camera, gl }) => {
+            camera.lookAt(0, AVATAR_CENTER_Y, 0)
+            camera.updateMatrixWorld()
 
-        {/* Ambient must stay extremely low to preserve contrast */}
-        <ambientLight intensity={0.06} />
+            // Capture context-loss events (for crash diagnosis without console access).
+            try {
+              setGlCanvas(gl.domElement as HTMLCanvasElement)
+            } catch {
+              // ignore
+            }
+          }}
+        >
+          {/* Background: deep studio black-purple */}
+          <color attach="background" args={['#05020b']} />
 
-        {/* Shared spotlight target at avatar center (hover height accounted for) */}
-        <primitive object={lightTarget} />
+          {/* Ambient must stay extremely low to preserve contrast */}
+          <ambientLight intensity={opt.lights.ambientEnabled ? opt.lights.ambientIntensity : 0} />
 
-        {/* Stage 3: Cinematic 4-spot light rig (single source of truth) */}
-        <spotLight
-          // A) GOLDEN KEY (primary contour)
-          color={'#ffcc3a'}
-          position={[3.8, 2.6, 2.8]}
-          target={lightTarget}
-          intensity={opt.lightRigEnabled ? 45 * opt.lightRigIntensity : 0}
-          distance={18}
-          angle={0.42}
-          penumbra={0.85}
-          decay={2}
-          castShadow={false}
-          onUpdate={(o) => o.layers.set(LAYER_AVATAR)}
-        />
+          {/* Shared spotlight target at avatar center (hover height accounted for) */}
+          <primitive object={lightTarget} />
 
-        <spotLight
-          // B) VIOLET RIM (back/side rim)
-          color={'#7a2cff'}
-          position={[-4.2, 3.1, -1.8]}
-          target={lightTarget}
-          intensity={opt.lightRigEnabled ? 32 * opt.lightRigIntensity : 0}
-          distance={18}
-          angle={0.48}
-          penumbra={0.95}
-          decay={2}
-          onUpdate={(o) => o.layers.set(LAYER_AVATAR)}
-        />
+          <RotatingLightRig opt={opt} lightTarget={lightTarget} />
 
-        <spotLight
-          // C) MAGENTA SHEAR (lateral color break)
-          color={'#ff2dbd'}
-          position={[-1.2, 1.9, 4.4]}
-          target={lightTarget}
-          intensity={opt.lightRigEnabled ? 28 * opt.lightRigIntensity : 0}
-          distance={16}
-          angle={0.5}
-          penumbra={0.9}
-          decay={2}
-          onUpdate={(o) => o.layers.set(LAYER_AVATAR)}
-        />
+          {/* Infinite floor + reflection plane (reflection independent from floor visibility) */}
+          <Floor floorY={opt.floor.floorY} size={18} />
 
-        <spotLight
-          // D) SOFT WHITE FILL (support only; not dominant)
-          color={'#ffffff'}
-          position={[1.6, 4.6, -4.6]}
-          target={lightTarget}
-          intensity={opt.lightRigEnabled ? 10 * opt.lightRigIntensity : 0}
-          distance={22}
-          angle={0.55}
-          penumbra={1.0}
-          decay={2}
-          onUpdate={(o) => o.layers.set(LAYER_AVATAR)}
-        />
+          {/* Separate floor shine system (condensed hotspot) */}
+          <FloorShine
+            enabled={opt.floorShine.floorShineEnabled}
+            floorY={opt.floor.floorY}
+            followWorldPoint={opt.floorShine.floorShineFollowAvatar ? floorShineCenter : null}
+            radius={opt.floorShine.floorShineRadius}
+            intensity={opt.floorShine.floorShineIntensity}
+            falloff={opt.floorShine.floorShineFalloff}
+            radiusScale={
+              opt.lights.spots.reduce((acc, s) => (s.enabled ? acc + s.radiusHint : acc), 0) /
+              Math.max(1, opt.lights.spots.filter((s) => s.enabled).length)
+            }
+          />
 
-        <Suspense fallback={null}>
-          <Scene3D />
-        </Suspense>
-      </Canvas>
+          <Suspense fallback={null}>
+            <Scene3D />
+          </Suspense>
+        </Canvas>
+      </ErrorBoundary>
     </>
   )
 }

@@ -10,11 +10,12 @@ import { AVATAR_RADIUS_UNITS, FLOOR_Y } from './scale'
 import Starfield from './Starfield'
 import { useDevOptionsStore } from '../dev/useDevOptionsStore'
 import { setRenderStats } from '../influence/renderStats'
-import FloorReflection from './FloorReflection'
 import { getAvatarState, getPhaseSignal } from '../influence/InfluenceBridge'
-import { getPalette, phaseABFromSignal } from '../influence/phasePalettes'
+import { getPalette, phaseABFromSignal, type PhaseChannel } from '../influence/phasePalettes'
+import AvatarFlares3D from './AvatarFlares3D'
+import { HaloShellMaterial, type HaloShellMaterialImpl } from './HaloShellMaterial'
 
-extend({ FlameMaterial })
+extend({ FlameMaterial, HaloShellMaterial })
 
 // deterministic smooth (no tweens)
 function smoothDamp(current: number, target: number, smoothing: number, dt: number): number {
@@ -84,12 +85,10 @@ export default function Scene3D() {
   const hoverHeight = 0.33 * AVATAR_RADIUS_UNITS
   const avatarCenterY = FLOOR_Y + AVATAR_RADIUS_UNITS + hoverHeight
 
-  const floorEnabled = !!opt.floorReflectEnabled
-  const floorY = 0
-  const floorIntensity = opt.floorReflectIntensity
-  const floorRadius = opt.floorReflectRadius
-  const floorSharpness = opt.floorReflectSharpness
-  const floorSize = 1.4
+  // Floor placement is now fully user-controlled.
+  const floorY = opt.floor.floorY
+  const reflectionEnabled = opt.reflection.reflectionEnabled
+  const floorIntensity = opt.reflection.reflectionIntensity
 
   useEffect(() => {
     // Ensure the avatar starts centered even before OrbitControls runs.
@@ -119,8 +118,11 @@ export default function Scene3D() {
   // Two-layer material (core + skin)
   const coreRef = useRef<FlameMaterialImpl>(null!)
   const skinRef = useRef<FlameMaterialImpl>(null!)
+  const haloRef = useRef<HaloShellMaterialImpl>(null!)
+  const avatarGroupRef = useRef<THREE.Group>(null)
   const failsafeMeshRef = useRef<THREE.Mesh>(null)
   const toneMapFixedRef = useRef(false)
+  const haloMatFixedRef = useRef(false)
 
   const healthRef = useRef({ frames: 0, avatarDrawOk: true })
 
@@ -143,6 +145,10 @@ export default function Scene3D() {
 
   const floorStrengthRef = useRef(0)
 
+  const avatarPosRef = useRef<[number, number, number]>([0, 0, 0])
+  const avatarVelRef = useRef<[number, number, number]>([0, 0, 0])
+  const lastPosRef = useRef<[number, number, number]>([0, 0, 0])
+
   useFrame((_, dt) => {
     tRef.current += dt
     const t = tRef.current
@@ -156,6 +162,14 @@ export default function Scene3D() {
       toneMapFixedRef.current = true
     }
 
+    if (!haloMatFixedRef.current && haloRef.current) {
+      // Ensure halo behaves like a soft shell (no depth-writing so it doesn't hard-cut).
+      haloRef.current.transparent = true
+      haloRef.current.depthWrite = false
+      haloRef.current.toneMapped = false
+      haloMatFixedRef.current = true
+    }
+
     // Drive visuals from the live avatar state (sensor-driven via App.tsx).
     const s = getAvatarState()
     uRef.current.arousal = smoothDamp(uRef.current.arousal, s.arousal, 12, dt)
@@ -165,17 +179,13 @@ export default function Scene3D() {
     uRef.current.valence = smoothDamp(uRef.current.valence, s.valence, 8, dt)
     uRef.current.entropy = smoothDamp(uRef.current.entropy, s.entropy, 6, dt)
 
-    // Phase selection derived from state + dev override (with smoothing).
-    const chromaEnabled = opt.chromaEnabled
-    const channel = (chromaEnabled ? opt.chromaChannel : opt.paletteMode)
+    // Phase selection derived from state vector + canonical palette selector.
+    const chromaEnabled = opt.chroma.enabled
+    const raw = (opt.material.colorPhaseMode === 'Custom' ? 'SCING' : opt.material.colorPhaseMode)
+    const channel: PhaseChannel = raw === 'LARI' || raw === 'BANE' ? raw : 'SCING'
     const palette = getPalette(channel)
 
     let phaseSignal = getPhaseSignal()
-    if (chromaEnabled) {
-      const rate = opt.chromaRate
-      const bias = opt.chromaPhaseBias
-      phaseSignal = 0.5 + 0.5 * Math.sin(t * rate + bias)
-    }
     uRef.current.phaseSignal = smoothDamp(uRef.current.phaseSignal, phaseSignal, 8, dt)
 
     const phases = phaseABFromSignal(palette, uRef.current.phaseSignal)
@@ -194,10 +204,32 @@ export default function Scene3D() {
         0.20 * uRef.current.rhythm,
     )
     const reflectionEps = 0.025
-    const reflectionStrength = floorEnabled
+    const reflectionStrength = reflectionEnabled
       ? Math.max(reflectionEps, clamp01Local(floorIntensity) * (0.35 + 0.65 * energy))
       : 0.0
     floorStrengthRef.current = reflectionStrength
+
+    // Avatar motion tracking (deterministic)
+    const g = avatarGroupRef.current
+    if (g) {
+      const p = g.position
+      const cur = avatarPosRef.current
+      const last = lastPosRef.current
+      const vel = avatarVelRef.current
+
+      cur[0] = p.x
+      cur[1] = p.y
+      cur[2] = p.z
+
+      const invDt = 1 / Math.max(dt, 1e-4)
+      vel[0] = (cur[0] - last[0]) * invDt
+      vel[1] = (cur[1] - last[1]) * invDt
+      vel[2] = (cur[2] - last[2]) * invDt
+
+      last[0] = cur[0]
+      last[1] = cur[1]
+      last[2] = cur[2]
+    }
 
     applyUniforms(coreRef.current, {
       time: t,
@@ -215,7 +247,7 @@ export default function Scene3D() {
     setU((coreRef.current as any)?.uniforms, 'phaseB', phaseB)
     setU((coreRef.current as any)?.uniforms, 'phaseMix', phases.phaseMix)
     setU((coreRef.current as any)?.uniforms, 'chromaEnabled', chromaEnabled ? 1.0 : 0.0)
-    setU((coreRef.current as any)?.uniforms, 'chromaIntensity', opt.chromaIntensity)
+    setU((coreRef.current as any)?.uniforms, 'chromaIntensity', opt.chroma.intensity)
 
     applyUniforms(skinRef.current, {
       time: t,
@@ -228,11 +260,20 @@ export default function Scene3D() {
       focus: uRef.current.focus,
     })
 
+    // Halo shell uniforms (CB)
+    if (haloRef.current?.uniforms) {
+      haloRef.current.uniforms.time.value = t
+      // Intensity is currently fixed in Stage 1 canonical options.
+      haloRef.current.uniforms.arousal.value = uRef.current.arousal
+      haloRef.current.uniforms.focus.value = uRef.current.focus
+      haloRef.current.uniforms.phaseBias.value = 0.37
+    }
+
     setU((skinRef.current as any)?.uniforms, 'phaseA', phaseA)
     setU((skinRef.current as any)?.uniforms, 'phaseB', phaseB)
     setU((skinRef.current as any)?.uniforms, 'phaseMix', phases.phaseMix)
     setU((skinRef.current as any)?.uniforms, 'chromaEnabled', chromaEnabled ? 1.0 : 0.0)
-    setU((skinRef.current as any)?.uniforms, 'chromaIntensity', opt.chromaIntensity)
+    setU((skinRef.current as any)?.uniforms, 'chromaIntensity', opt.chroma.intensity)
 
     // Deterministic health check + failsafe policy:
     // - During the first few frames, assume OK to avoid boot flicker.
@@ -247,7 +288,7 @@ export default function Scene3D() {
     }
     healthRef.current.avatarDrawOk = avatarDrawOk
     const failsafeForced = import.meta.env.DEV && forceFailsafeRef.current
-    const failsafeOn = opt.avatarVisible && (!avatarDrawOk || failsafeForced)
+    const failsafeOn = opt.avatar.enabled && (!avatarDrawOk || failsafeForced)
 
     if (failsafeMeshRef.current) {
       failsafeMeshRef.current.visible = failsafeOn
@@ -269,24 +310,18 @@ export default function Scene3D() {
 
   return (
     <>
-      {opt.starfieldEnabled ? <Starfield /> : null}
-
-      {/* Condensed avatar-emission-only floor reflection (ignores room lights entirely) */}
-      <FloorReflection
-        enabled={floorEnabled}
-        y={floorY}
-        size={floorSize}
-        avatarColor={phaseColor}
-        avatarIntensityRef={floorStrengthRef}
-        avatarIntensity={0}
-        hoverHeight={hoverHeight}
-        radius={floorRadius}
-        sharpness={floorSharpness}
-      />
+      {opt.avatar.starfieldEnabled ? <Starfield /> : null}
 
       {/* Avatar group */}
-      {opt.avatarVisible && (
-        <group position={[0, avatarCenterY, 0]}>
+      {opt.avatar.enabled && (
+        <group ref={avatarGroupRef} position={[0, avatarCenterY, 0]}>
+          {/* CB: TRUE 3D FLARES (AVATAR-SPACE ONLY) */}
+          {opt.avatar.flaresEnabled ? (
+            <group position={[0, 0, 0]}>
+              <AvatarFlares3D intensity={1.0} />
+            </group>
+          ) : null}
+
           {/* CORE */}
           {/* Solid avatar mesh always renders when avatarVisible is ON */}
           {
@@ -308,9 +343,16 @@ export default function Scene3D() {
           </mesh>
 
           {/* WIREFRAME OVERLAY (meshVisible toggle) */}
-          {opt.meshVisible ? (
+          {opt.avatar.meshVisible ? (
             <mesh geometry={geometry} scale={1.035} onUpdate={setAvatarLayer}>
               <meshBasicMaterial wireframe opacity={0.18} transparent color="#8a5cff" />
+            </mesh>
+          ) : null}
+
+          {/* CB: HALO SHELL (AVATAR-EMANATING WRAP) */}
+          {opt.avatar.haloEnabled ? (
+            <mesh geometry={geometry} scale={1.06} onUpdate={setAvatarLayer}>
+              <haloShellMaterial ref={haloRef} />
             </mesh>
           ) : null}
         </group>

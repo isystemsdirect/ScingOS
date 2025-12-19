@@ -8,6 +8,39 @@ type State = {
   error?: string
 }
 
+const LAST_CRASH_KEY = 'scing_avatar_env_last_crash_v1'
+
+function persist(details: string) {
+  try {
+    const c = {
+      kind: 'error',
+      message: 'Runtime Error',
+      detail: details,
+      ts: Date.now(),
+    }
+    window.localStorage.setItem(LAST_CRASH_KEY, JSON.stringify(c))
+  } catch {
+    // ignore
+  }
+}
+
+function restore(): string | undefined {
+  try {
+    const raw = window.localStorage.getItem(LAST_CRASH_KEY)
+    if (!raw) return undefined
+    const parsed = JSON.parse(raw) as any
+    const detail = parsed && typeof parsed.detail === 'string' ? parsed.detail : undefined
+    const message = parsed && typeof parsed.message === 'string' ? parsed.message : undefined
+    const kind = parsed && typeof parsed.kind === 'string' ? parsed.kind : undefined
+    if (!detail && !message) return undefined
+    const head = kind || 'error'
+    const msg = message || 'Restored crash'
+    return `${head}: ${msg}\n\n${detail || ''}`.trim()
+  } catch {
+    return undefined
+  }
+}
+
 function fmtUnknown(e: unknown) {
   if (e instanceof Error) return `${e.name}: ${e.message}\n${e.stack ?? ''}`
   try {
@@ -22,14 +55,19 @@ export class ErrorOverlay extends React.Component<Props, State> {
 
   private onWindowError = (event: ErrorEvent) => {
     const details = event.error ? fmtUnknown(event.error) : `${event.message}\n${event.filename}:${event.lineno}:${event.colno}`
+    persist(details)
     this.setState({ error: details })
   }
 
   private onUnhandledRejection = (event: PromiseRejectionEvent) => {
-    this.setState({ error: fmtUnknown(event.reason) })
+    const details = fmtUnknown(event.reason)
+    persist(details)
+    this.setState({ error: details })
   }
 
   componentDidMount() {
+    const prior = restore()
+    if (prior && !this.state.error) this.setState({ error: prior })
     window.addEventListener('error', this.onWindowError)
     window.addEventListener('unhandledrejection', this.onUnhandledRejection)
   }
@@ -40,7 +78,9 @@ export class ErrorOverlay extends React.Component<Props, State> {
   }
 
   static getDerivedStateFromError(error: unknown): State {
-    return { error: fmtUnknown(error) }
+    const details = fmtUnknown(error)
+    persist(details)
+    return { error: details }
   }
 
   componentDidCatch() {

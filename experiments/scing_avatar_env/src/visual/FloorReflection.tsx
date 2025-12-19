@@ -1,12 +1,9 @@
 import * as THREE from 'three'
 import { useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { LAYER_ENV } from './layers'
 
 export default function FloorReflection(props: {
   enabled: boolean
-  y: number
-  size: number
   avatarColor: THREE.Color
   avatarIntensity: number
   avatarIntensityRef?: React.RefObject<number>
@@ -14,14 +11,10 @@ export default function FloorReflection(props: {
   radius: number
   sharpness: number
 }) {
-  const setEnvLayer = (o: THREE.Object3D) => {
-    o.layers.set(LAYER_ENV)
-  }
-
   const mat = useMemo(() => {
     const m = new THREE.ShaderMaterial({
-      transparent: false,
-      depthWrite: true,
+      transparent: true,
+      depthWrite: false,
       uniforms: {
         time: { value: 0 },
         enabled: { value: 1 },
@@ -68,10 +61,8 @@ export default function FloorReflection(props: {
         }
 
         void main(){
-          // Deep studio base (no ambient/lighting contribution)
-          vec3 base = vec3(0.010, 0.010, 0.015);
           if (enabled < 0.5) {
-            gl_FragColor = vec4(base, 1.0);
+            gl_FragColor = vec4(0.0);
             return;
           }
 
@@ -93,12 +84,10 @@ export default function FloorReflection(props: {
           core *= (1.0 + shimmer * sat(1.0 - x));
 
           float k = sat(avatarIntensity) * core;
-          vec3 col = base + avatarColor * k;
-
-          // never overbearing
-          col = min(col, vec3(1.15));
-
-          gl_FragColor = vec4(col, 1.0);
+          // Reflection/contact light only. No base floor color.
+          vec3 col = avatarColor * k;
+          float a = sat(k * 1.25);
+          gl_FragColor = vec4(col, a);
         }
       `,
     })
@@ -118,17 +107,5 @@ export default function FloorReflection(props: {
     mat.uniforms.sharpness.value = props.sharpness
   })
 
-  return (
-    <mesh
-      rotation={[-Math.PI / 2, 0, 0]}
-      position={[0, props.y, 0]}
-      onUpdate={setEnvLayer}
-      receiveShadow={false}
-      frustumCulled={false}
-      renderOrder={-5}
-    >
-      <planeGeometry args={[props.size, props.size]} />
-      <primitive object={mat} attach="material" />
-    </mesh>
-  )
+  return <primitive object={mat} attach="material" />
 }

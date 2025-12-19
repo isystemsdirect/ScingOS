@@ -1,24 +1,33 @@
-import { useMemo } from 'react'
+import { useMemo, useRef } from 'react'
 import * as THREE from 'three'
-import { useFrame } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 import { useDevOptionsStore } from '../dev/useDevOptionsStore'
 import { useAvatarReflectionCapture } from './AvatarReflectionCapture'
 import { LAYER_ENV } from './layers'
 
 export default function Floor(props: { floorY: number; size?: number }) {
   const opt = useDevOptionsStore()
+  const { camera } = useThree()
   const size = props.size ?? 18
+
+  const reflectionMeshRef = useRef<THREE.Mesh>(null)
 
   const setEnvLayer = (o: THREE.Object3D) => {
     o.layers.set(LAYER_ENV)
   }
 
   // Avatar-only capture (mirror cam renders avatar layer only)
-  const tex = useAvatarReflectionCapture({ floorY: props.floorY, resolution: 1024 })
+  const tex = useAvatarReflectionCapture({
+    floorY: opt.reflection.reflectionGroundY,
+    resolution: opt.reflection.reflectionResolution,
+    enabled: opt.reflection.reflectionEnabled && opt.reflection.reflectionIntensity > 0,
+    clipBias: opt.reflection.reflectionClipBias,
+  })
 
   const echoMat = useMemo(() => {
     const m = new THREE.ShaderMaterial({
-      transparent: false,
+      transparent: true,
+      depthWrite: false,
       uniforms: {
         tCapture: { value: tex },
         time: { value: 0 },
@@ -26,22 +35,38 @@ export default function Floor(props: { floorY: number; size?: number }) {
         strength: { value: 0.18 },
         blur: { value: 0.55 },
         height: { value: 0.33 },
+        fadeStart: { value: 0.0 },
+        fadeEnd: { value: 18.0 },
+        maxDistance: { value: 20.0 },
+        roughness: { value: 0.25 },
+        distortion: { value: 0.12 },
+        avatarXZ: { value: new THREE.Vector2(0, 0) },
       },
       vertexShader: /* glsl */ `
 varying vec2 vUv;
+varying vec3 vWorld;
 void main(){
   vUv = uv;
+  vec4 wp = modelMatrix * vec4(position, 1.0);
+  vWorld = wp.xyz;
   gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
 }
       `,
       fragmentShader: /* glsl */ `
 varying vec2 vUv;
+varying vec3 vWorld;
 uniform sampler2D tCapture;
 uniform float time;
 uniform float enabled;
 uniform float strength;
 uniform float blur;
 uniform float height;
+uniform float fadeStart;
+uniform float fadeEnd;
+uniform float maxDistance;
+uniform float roughness;
+uniform float distortion;
+uniform vec2 avatarXZ;
 
 float hash(vec2 p){
   return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453);
@@ -72,9 +97,10 @@ vec3 blur9(vec2 uv, float r){
 }
 
 void main(){
-  vec3 base = vec3(0.01, 0.01, 0.015);
-  if (enabled < 0.5) {
-    gl_FragColor = vec4(base, 1.0);
+  // Keep reflection independent from the cosmetic floor.
+  // When disabled/intensity=0, render fully transparent.
+  if (enabled < 0.5 || strength <= 0.0001) {
+    gl_FragColor = vec4(0.0);
     return;
   }
 
@@ -87,20 +113,26 @@ void main(){
 
   // organic smear (deterministic)
   float n = noise(vUv * 6.0 + vec2(time * 0.10, time * 0.07));
-  vec2 wobble = (n - 0.5) * 0.02 * blur;
+  vec2 wobble = (n - 0.5) * (0.006 + 0.018 * distortion) * blur;
 
   float r = mix(0.0006, 0.0042, blur);
   vec3 echo = blur9(uv + wobble, r);
 
-  // falloff: keep it under the avatar footprint
-  float d = length(vUv - vec2(0.5));
-  float maxR = mix(0.18, 0.62, 1.0 - height);
-  float mask = 1.0 - smoothstep(maxR, maxR + 0.10, d);
+  // World-space falloff around avatar position (prevents drift when plane recenters).
+  float worldDist = distance(vWorld.xz, avatarXZ);
+  float maxD = max(maxDistance, 0.0001);
+  float endD = min(max(fadeEnd, fadeStart + 0.001), maxD);
+  float mask = 1.0 - smoothstep(0.0, 0.65 * maxD, worldDist);
+  float fade = 1.0 - smoothstep(fadeStart, endD, worldDist);
+
+  // Roughness makes the reflection less direct.
+  float rough = clamp(roughness, 0.0, 1.0);
+  echo *= mix(1.0, 0.55, rough);
 
   // subtle, organic mirror (never dominant)
-  float k = strength * mask;
-  vec3 outCol = base + echo * k;
-  gl_FragColor = vec4(outCol, 1.0);
+  float k = strength * mask * fade;
+  vec3 outCol = echo * k;
+  gl_FragColor = vec4(outCol, k);
 }
       `,
     })
@@ -112,26 +144,50 @@ void main(){
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime()
     echoMat.uniforms.time.value = t
-    echoMat.uniforms.enabled.value = opt.floorReflectionEnabled ? 1 : 0
-    echoMat.uniforms.strength.value = opt.floorReflectionStrength
-    echoMat.uniforms.blur.value = opt.floorReflectionBlur
+    echoMat.uniforms.enabled.value = opt.reflection.reflectionEnabled ? 1 : 0
+    // Keep legacy scale (~0.18) but make intensity user-controlled.
+    echoMat.uniforms.strength.value = 0.18 * opt.reflection.reflectionIntensity
+    // Map blur/sharpness explicitly.
+    echoMat.uniforms.blur.value = THREE.MathUtils.clamp(opt.reflection.reflectionBlur + (1 - opt.reflection.reflectionSharpness) * 0.6, 0, 1)
     echoMat.uniforms.height.value = 0.33
+    echoMat.uniforms.fadeStart.value = opt.reflection.reflectionFadeStart
+    echoMat.uniforms.fadeEnd.value = Math.max(opt.reflection.reflectionFadeEnd, opt.reflection.reflectionFadeStart + 0.001)
+    echoMat.uniforms.maxDistance.value = opt.reflection.reflectionMaxDistance
+    echoMat.uniforms.roughness.value = opt.reflection.reflectionRoughness
+    echoMat.uniforms.distortion.value = opt.reflection.reflectionDistortion
+
+    // Avatar is currently centered in Scene3D; keep as a uniform for future motion.
+    ;(echoMat.uniforms.avatarXZ.value as THREE.Vector2).set(0, 0)
+
+    // "Infinite practical plane": huge, always mounted, camera-centered.
+    if (reflectionMeshRef.current) {
+      reflectionMeshRef.current.position.set(camera.position.x, opt.reflection.reflectionGroundY + 0.001, camera.position.z)
+    }
   })
 
   return (
     <group>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, props.floorY, 0]} onUpdate={setEnvLayer} receiveShadow>
+      {/* Cosmetic floor mesh (can be hidden independently from reflection). */}
+      <mesh
+        rotation={[-Math.PI / 2, 0, 0]}
+        position={[0, opt.floor.floorY, 0]}
+        onUpdate={setEnvLayer}
+        receiveShadow
+        visible={opt.floor.floorVisible}
+      >
         <planeGeometry args={[size, size]} />
-        <meshStandardMaterial
-          color={'#05020b'}
-          roughness={0.92}
-          metalness={0.0}
-        />
+        <meshStandardMaterial color={'#05020b'} roughness={0.92} metalness={0.0} />
       </mesh>
 
-      {/* avatar-only reflection pass (subtle) */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, props.floorY + 0.001, 0]} onUpdate={setEnvLayer}>
-        <planeGeometry args={[size, size]} />
+      {/* Infinite reflection plane: huge, camera-centered, always mounted when enabled. */}
+      <mesh
+        ref={reflectionMeshRef}
+        frustumCulled={false}
+        rotation={[-Math.PI / 2, 0, 0]}
+        position={[camera.position.x, opt.reflection.reflectionGroundY + 0.001, camera.position.z]}
+        onUpdate={setEnvLayer}
+      >
+        <planeGeometry args={[2000, 2000]} />
         <primitive object={echoMat} attach="material" />
       </mesh>
     </group>

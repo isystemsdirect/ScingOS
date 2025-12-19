@@ -1,24 +1,55 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { useFrame, useThree } from '@react-three/fiber'
-import { useFBO } from '@react-three/drei'
 import { LAYER_AVATAR } from './layers'
 
-export function useAvatarReflectionCapture(props: { floorY: number; resolution?: number }) {
+export function useAvatarReflectionCapture(props: {
+  floorY: number
+  resolution?: number
+  enabled?: boolean
+  clipBias?: number
+}) {
   const { gl, scene, camera } = useThree()
   const resolution = props.resolution ?? 2048
+  const enabled = props.enabled ?? true
+  const clipBias = props.clipBias ?? 0
 
-  const fbo = useFBO(resolution, resolution, {
-    depthBuffer: true,
-    stencilBuffer: false,
-    type: THREE.HalfFloatType,
-  })
+  const fboRef = useRef<THREE.WebGLRenderTarget | null>(null)
+  const tmpDir = useMemo(() => new THREE.Vector3(), [])
+  const tmpTarget = useMemo(() => new THREE.Vector3(), [])
+  const tmpClear = useMemo(() => new THREE.Color(), [])
 
   const mirrorCam = useMemo(() => new THREE.PerspectiveCamera(), [])
 
+  if (!fboRef.current) {
+    fboRef.current = new THREE.WebGLRenderTarget(resolution, resolution, {
+      depthBuffer: true,
+      stencilBuffer: false,
+      type: THREE.HalfFloatType,
+    })
+    fboRef.current.texture.name = 'avatar-reflection-capture'
+  }
+
+  useEffect(() => {
+    if (!fboRef.current) return
+    fboRef.current.setSize(resolution, resolution)
+  }, [resolution])
+
+  useEffect(() => {
+    const fbo = fboRef.current
+    return () => {
+      if (fbo) fbo.dispose()
+      fboRef.current = null
+    }
+  }, [])
+
   useFrame(() => {
+    if (!enabled) return
+    const fbo = fboRef.current
+    if (!fbo) return
+
     const mainCam = camera as THREE.PerspectiveCamera
-    const y = props.floorY
+    const y = props.floorY + clipBias
 
     mirrorCam.fov = mainCam.fov
     mirrorCam.aspect = mainCam.aspect
@@ -29,20 +60,18 @@ export function useAvatarReflectionCapture(props: { floorY: number; resolution?:
     mirrorCam.position.copy(mainCam.position)
     mirrorCam.position.y = y - (mainCam.position.y - y)
 
-    const dir = new THREE.Vector3()
-    mainCam.getWorldDirection(dir)
-    dir.y = -dir.y
+    mainCam.getWorldDirection(tmpDir)
+    tmpDir.y = -tmpDir.y
 
-    const target = new THREE.Vector3().copy(mirrorCam.position).add(dir)
+    tmpTarget.copy(mirrorCam.position).add(tmpDir)
     mirrorCam.up.set(0, 1, 0)
-    mirrorCam.lookAt(target)
+    mirrorCam.lookAt(tmpTarget)
     mirrorCam.updateMatrixWorld()
 
     const prevTarget = gl.getRenderTarget()
     const prevAutoClear = gl.autoClear
 
-    const prevClear = new THREE.Color()
-    gl.getClearColor(prevClear)
+    gl.getClearColor(tmpClear)
     const prevAlpha = gl.getClearAlpha()
 
     gl.autoClear = true
@@ -54,9 +83,9 @@ export function useAvatarReflectionCapture(props: { floorY: number; resolution?:
     gl.render(scene, mirrorCam)
     gl.setRenderTarget(prevTarget)
 
-    gl.setClearColor(prevClear, prevAlpha)
+    gl.setClearColor(tmpClear, prevAlpha)
     gl.autoClear = prevAutoClear
   })
 
-  return fbo.texture
+  return fboRef.current.texture
 }
