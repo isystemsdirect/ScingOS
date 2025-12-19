@@ -74,6 +74,8 @@ class ErrorBoundary extends Component<
   }
 
   render() {
+    // Avoid an infinite error loop that can lead to a blank page.
+    if (this.state.hasError) return null
     return this.props.children
   }
 }
@@ -404,7 +406,6 @@ export default function App() {
             antialias: false,
             preserveDrawingBuffer: false,
             powerPreference: 'low-power',
-            failIfMajorPerformanceCaveat: true,
           }}
           onCreated={({ camera, gl }) => {
             camera.lookAt(0, AVATAR_CENTER_Y, 0)
