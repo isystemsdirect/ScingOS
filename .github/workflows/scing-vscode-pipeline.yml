@@ -16,7 +16,7 @@ jobs:
 
       - name: Clone wiki
         env:
-          GH_PAT: ${{ secrets.GH_PAT }}
+          GH_PAT: ${{ secrets.GH_PAT || github.token }}
         run: git clone https://x-access-token:${GH_PAT}@github.com/isystemsdirect/ScingOS.wiki.git
 
       - name: Copy docs to wiki
@@ -24,7 +24,7 @@ jobs:
 
       - name: Commit and push
         env:
-          GH_PAT: ${{ secrets.GH_PAT }}
+          GH_PAT: ${{ secrets.GH_PAT || github.token }}
         run: |
           cd ScingOS.wiki
           git add .
