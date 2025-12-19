@@ -1,5 +1,6 @@
 import type { AvatarStateVector } from './AvatarStateVector'
 import { clamp01, clampEntropy, clampValence } from './AvatarStateVector'
+import { phaseSignalFromState } from './phasePalettes'
 
 let currentAvatarState: AvatarStateVector = {
   arousal: 0,
@@ -37,4 +38,12 @@ export function setAvatarState(patch: Partial<AvatarStateVector>): AvatarStateVe
 
 export function getAvatarState(): AvatarStateVector {
   return currentAvatarState
+}
+
+/**
+ * Deterministic 0..1 phase driver derived from the current avatar state.
+ * Used for phase palette switching.
+ */
+export function getPhaseSignal(): number {
+  return phaseSignalFromState(currentAvatarState)
 }

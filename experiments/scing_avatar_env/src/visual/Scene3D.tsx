@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { extend, useFrame, useThree } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 
@@ -10,8 +10,9 @@ import { AVATAR_RADIUS_UNITS, FLOOR_Y } from './scale'
 import Starfield from './Starfield'
 import { useDevOptionsStore } from '../dev/useDevOptionsStore'
 import { setRenderStats } from '../influence/renderStats'
-import AvatarReflectionTarget, { type AvatarReflectionTargetResult } from './reflection/AvatarReflectionTarget'
-import FloorReflectionPlane from './reflection/FloorReflectionPlane'
+import FloorReflection from './FloorReflection'
+import { getAvatarState, getPhaseSignal } from '../influence/InfluenceBridge'
+import { getPalette, phaseABFromSignal } from '../influence/phasePalettes'
 
 extend({ FlameMaterial })
 
@@ -21,19 +22,54 @@ function smoothDamp(current: number, target: number, smoothing: number, dt: numb
   return current + (target - current) * k
 }
 
-// deterministic micro-entropy (no Math.random)
-function pseudoNoise(t: number): number {
-  const a = Math.sin(t * 12.9898) * 43758.5453
-  const f = a - Math.floor(a)
-  return f * 2 - 1 // [-1, 1]
+type AnyUniforms = Record<string, { value: unknown } | undefined>
+
+function setU(uniforms: AnyUniforms | undefined, key: string, v: unknown) {
+  const u = uniforms?.[key]
+  if (!u) return
+  u.value = v
+}
+
+function applyUniforms(
+  mat: any,
+  payload: {
+    time: number
+    layer?: number
+    arousal: number
+    valence: number
+    cognitiveLoad: number
+    rhythm: number
+    entropy: number
+    focus: number
+    // optional textures if present:
+    albedoTex?: any
+    normalTex?: any
+  },
+) {
+  const uniforms: AnyUniforms | undefined = mat?.uniforms
+
+  // Core required (guarded)
+  setU(uniforms, 'time', payload.time)
+  setU(uniforms, 'arousal', payload.arousal)
+  setU(uniforms, 'valence', payload.valence)
+  setU(uniforms, 'cognitiveLoad', payload.cognitiveLoad)
+  setU(uniforms, 'rhythm', payload.rhythm)
+  setU(uniforms, 'entropy', payload.entropy)
+  setU(uniforms, 'focus', payload.focus)
+
+  // Optional (guarded)
+  if (payload.layer !== undefined) setU(uniforms, 'layer', payload.layer)
+  if (payload.albedoTex) setU(uniforms, 'albedoTex', payload.albedoTex)
+  if (payload.normalTex) setU(uniforms, 'normalTex', payload.normalTex)
+
+  // Palette mode support (if/when present)
+  // setU(uniforms, 'paletteMode', paletteModeInt)
 }
 
 export default function Scene3D() {
   const { gl } = useThree()
   const { camera } = useThree()
   const opt = useDevOptionsStore()
-
-  const [reflection, setReflection] = useState<AvatarReflectionTargetResult | null>(null)
 
   const setAvatarLayer = (o: THREE.Object3D) => {
     o.layers.set(LAYER_AVATAR)
@@ -47,6 +83,19 @@ export default function Scene3D() {
   // Stage 2 hover theory (locked): clearance = 0.33 * radius.
   const hoverHeight = 0.33 * AVATAR_RADIUS_UNITS
   const avatarCenterY = FLOOR_Y + AVATAR_RADIUS_UNITS + hoverHeight
+
+  const floorEnabled = !!opt.floorReflectEnabled
+  const floorY = 0
+  const floorIntensity = opt.floorReflectIntensity
+  const floorRadius = opt.floorReflectRadius
+  const floorSharpness = opt.floorReflectSharpness
+  const floorSize = 1.4
+
+  useEffect(() => {
+    // Ensure the avatar starts centered even before OrbitControls runs.
+    camera.lookAt(0, avatarCenterY, 0)
+    camera.updateMatrixWorld()
+  }, [camera, avatarCenterY])
 
   const forceFailsafeRef = useRef(false)
   useEffect(() => {
@@ -84,7 +133,13 @@ export default function Scene3D() {
     rhythm: 0.55,
     entropy: 0.04,
     focus: 0.55,
+    phaseSignal: 0.5,
   })
+
+  const phaseA = useMemo(() => new THREE.Vector3(), [])
+  const phaseB = useMemo(() => new THREE.Vector3(), [])
+  const phaseColor = useMemo(() => new THREE.Color(), [])
+  const phaseColorTmp = useMemo(() => new THREE.Color(), [])
 
   useFrame((_, dt) => {
     tRef.current += dt
@@ -99,41 +154,69 @@ export default function Scene3D() {
       toneMapFixedRef.current = true
     }
 
-    // Demo drive (deterministic): strong, obvious breathing + presence
-    // Replace later with real sensor bridge; for now, VISUAL UPGRADE is primary.
-    let driveArousal = 0.62 + 0.28 * Math.sin(t * 0.85)
-    const driveFocus = 0.58 + 0.22 * Math.sin(t * 0.31 + 2.1)
-    let driveRhythm = 0.52 + 0.28 * Math.sin(t * 0.95 + 0.4)
-    const driveLoad = 0.42 + 0.22 * Math.sin(t * 0.23 + 1.4)
-    let driveVal = 0.32 * Math.sin(t * 0.14)
+    // Drive visuals from the live avatar state (sensor-driven via App.tsx).
+    const s = getAvatarState()
+    uRef.current.arousal = smoothDamp(uRef.current.arousal, s.arousal, 12, dt)
+    uRef.current.focus = smoothDamp(uRef.current.focus, s.focus, 12, dt)
+    uRef.current.rhythm = smoothDamp(uRef.current.rhythm, s.rhythm, 12, dt)
+    uRef.current.cognitiveLoad = smoothDamp(uRef.current.cognitiveLoad, s.cognitiveLoad, 12, dt)
+    uRef.current.valence = smoothDamp(uRef.current.valence, s.valence, 8, dt)
+    uRef.current.entropy = smoothDamp(uRef.current.entropy, s.entropy, 6, dt)
 
-    uRef.current.arousal = smoothDamp(uRef.current.arousal, driveArousal, 10, dt)
-    uRef.current.focus = smoothDamp(uRef.current.focus, driveFocus, 10, dt)
-    uRef.current.rhythm = smoothDamp(uRef.current.rhythm, driveRhythm, 10, dt)
-    uRef.current.cognitiveLoad = smoothDamp(uRef.current.cognitiveLoad, driveLoad, 10, dt)
-    uRef.current.valence = smoothDamp(uRef.current.valence, driveVal, 10, dt)
+    // Phase selection derived from state + dev override (with smoothing).
+    const chromaEnabled = opt.chromaEnabled
+    const channel = (chromaEnabled ? opt.chromaChannel : opt.paletteMode)
+    const palette = getPalette(channel)
 
-    // deterministic micro-entropy injection, bounded
-    const eBase = smoothDamp(uRef.current.entropy, 0.04, 6, dt)
-    const ePerturb = pseudoNoise(t * 0.7) * 0.001
-    uRef.current.entropy = Math.max(0.02, Math.min(0.08, eBase + ePerturb))
-
-    const applyUniforms = (m: FlameMaterialImpl | null, layer: number) => {
-      if (!m) return
-      m.uniforms.time.value = t
-      m.uniforms.arousal.value = uRef.current.arousal
-      m.uniforms.valence.value = uRef.current.valence
-      m.uniforms.cognitiveLoad.value = uRef.current.cognitiveLoad
-      m.uniforms.rhythm.value = uRef.current.rhythm
-      m.uniforms.entropy.value = uRef.current.entropy
-      m.uniforms.focus.value = uRef.current.focus
-
-      // Stage 2: keep controls stable and non-overbearing.
-      m.uniforms.layer.value = layer
+    let phaseSignal = getPhaseSignal()
+    if (chromaEnabled) {
+      const rate = opt.chromaRate
+      const bias = opt.chromaPhaseBias
+      phaseSignal = 0.5 + 0.5 * Math.sin(t * rate + bias)
     }
+    uRef.current.phaseSignal = smoothDamp(uRef.current.phaseSignal, phaseSignal, 8, dt)
 
-    applyUniforms(coreRef.current, 0)
-    applyUniforms(skinRef.current, 1)
+    const phases = phaseABFromSignal(palette, uRef.current.phaseSignal)
+    phaseA.set(phases.phaseA[0], phases.phaseA[1], phases.phaseA[2])
+    phaseB.set(phases.phaseB[0], phases.phaseB[1], phases.phaseB[2])
+    phaseColor.setRGB(phases.phaseA[0], phases.phaseA[1], phases.phaseA[2])
+    phaseColorTmp.setRGB(phases.phaseB[0], phases.phaseB[1], phases.phaseB[2])
+    phaseColor.lerp(phaseColorTmp, phases.phaseMix)
+
+    applyUniforms(coreRef.current, {
+      time: t,
+      layer: 0,
+      arousal: uRef.current.arousal,
+      valence: uRef.current.valence,
+      cognitiveLoad: uRef.current.cognitiveLoad,
+      rhythm: uRef.current.rhythm,
+      entropy: uRef.current.entropy,
+      focus: uRef.current.focus,
+    })
+
+    // Phase uniforms (CB-required)
+    setU((coreRef.current as any)?.uniforms, 'phaseA', phaseA)
+    setU((coreRef.current as any)?.uniforms, 'phaseB', phaseB)
+    setU((coreRef.current as any)?.uniforms, 'phaseMix', phases.phaseMix)
+    setU((coreRef.current as any)?.uniforms, 'chromaEnabled', chromaEnabled ? 1.0 : 0.0)
+    setU((coreRef.current as any)?.uniforms, 'chromaIntensity', opt.chromaIntensity)
+
+    applyUniforms(skinRef.current, {
+      time: t,
+      layer: 1,
+      arousal: uRef.current.arousal,
+      valence: uRef.current.valence,
+      cognitiveLoad: uRef.current.cognitiveLoad,
+      rhythm: uRef.current.rhythm,
+      entropy: uRef.current.entropy,
+      focus: uRef.current.focus,
+    })
+
+    setU((skinRef.current as any)?.uniforms, 'phaseA', phaseA)
+    setU((skinRef.current as any)?.uniforms, 'phaseB', phaseB)
+    setU((skinRef.current as any)?.uniforms, 'phaseMix', phases.phaseMix)
+    setU((skinRef.current as any)?.uniforms, 'chromaEnabled', chromaEnabled ? 1.0 : 0.0)
+    setU((skinRef.current as any)?.uniforms, 'chromaIntensity', opt.chromaIntensity)
 
     // Deterministic health check + failsafe policy:
     // - During the first few frames, assume OK to avoid boot flicker.
@@ -169,25 +252,18 @@ export default function Scene3D() {
 
   return (
     <>
-      {opt.starfieldVisible ? <Starfield /> : null}
+      {opt.starfieldEnabled ? <Starfield /> : null}
 
-      {/* Avatar-only capture target (used by the floor reflection plane) */}
-      <AvatarReflectionTarget
-        enabled={opt.floorReflectionEnabled}
-        size={1024}
-        planeY={FLOOR_Y}
-        onReady={setReflection}
-      />
-
-      {/* Floor: black plane with subtle avatar-only reflection */}
-      <FloorReflectionPlane
-        enabled={opt.floorReflectionEnabled}
-        texture={reflection?.texture ?? null}
-        targetSize={reflection?.size ?? 1024}
-        size={18}
-        strength={opt.floorReflectionStrength}
-        blur={opt.floorReflectionBlur}
-        height={opt.floorReflectionHeight}
+      {/* Condensed avatar-emission-only floor reflection (ignores room lights entirely) */}
+      <FloorReflection
+        enabled={floorEnabled}
+        y={floorY}
+        size={floorSize}
+        avatarColor={phaseColor}
+        avatarIntensity={Math.max(0, Math.min(1, uRef.current.arousal)) * floorIntensity}
+        hoverHeight={hoverHeight}
+        radius={floorRadius}
+        sharpness={floorSharpness}
       />
 
       {/* Avatar group */}
@@ -223,20 +299,18 @@ export default function Scene3D() {
       )}
 
       {/* Camera controls: NO focus lock, fully manual */}
-      {opt.cameraEnabled ? (
-        <OrbitControls
-          makeDefault
-          enablePan
-          enableZoom
-          enableRotate
-          target={[0, avatarCenterY, 0]}
-          minDistance={0.9}
-          maxDistance={800.0}
-          enableDamping
-          dampingFactor={0.08}
-          autoRotate={false}
-        />
-      ) : null}
+      <OrbitControls
+        makeDefault
+        enablePan
+        enableZoom
+        enableRotate
+        target={[0, avatarCenterY, 0]}
+        minDistance={0.9}
+        maxDistance={800.0}
+        enableDamping
+        dampingFactor={0.08}
+        autoRotate={false}
+      />
     </>
   )
 }

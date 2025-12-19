@@ -1,12 +1,39 @@
 import { useEffect, useState } from 'react'
 import { getDevOptions, subscribeDevOptions } from '../dev/devOptionsStore'
+import { getMediaStatus, type MediaStatus } from '../sensors/mediaSensors'
 
 export default function ScingAvatarLiveHud() {
   const [opt, setOpt] = useState(() => getDevOptions())
+  const [media, setMedia] = useState<MediaStatus>(() => getMediaStatus())
 
   useEffect(() => subscribeDevOptions(() => setOpt(getDevOptions())), [])
 
+  useEffect(() => {
+    const id = window.setInterval(() => setMedia(getMediaStatus()), 100)
+    return () => window.clearInterval(id)
+  }, [])
+
   if (!opt.hudVisible) return null
+
+  const hasError = Boolean(media.error)
+  const micState = !opt.micEnabled
+    ? 'OFF'
+    : media.error && media.error.toUpperCase().includes('MIC')
+      ? 'ERROR'
+      : media.micRunning
+        ? 'LIVE'
+        : 'OFF'
+
+  const camState = !opt.camEnabled
+    ? 'OFF'
+    : media.error && media.error.toUpperCase().includes('CAM')
+      ? 'ERROR'
+      : media.camRunning
+        ? 'LIVE'
+        : 'OFF'
+
+  const audioState = media.audioState || 'unknown'
+  const needsClick = opt.micEnabled && audioState !== 'running'
 
   return (
     <div
@@ -30,8 +57,19 @@ export default function ScingAvatarLiveHud() {
       <div style={{ fontWeight: 700, letterSpacing: 0.3, marginBottom: 8 }}>SCING AVATAR-LIVE HUD</div>
       <div>BOOT: OK</div>
       <div>AVATAR: {opt.avatarVisible ? 'ON' : 'OFF'}</div>
-      <div>MIC: {opt.micEnabled ? 'ON' : 'OFF'}</div>
-      <div>CAM: {opt.cameraEnabled ? 'ON' : 'OFF'}</div>
+
+      <div>MIC: {micState}</div>
+      <div>CAM: {camState}</div>
+
+      <div>Audio: {audioState}</div>
+      {needsClick ? <div style={{ color: 'rgba(255,220,140,0.95)' }}>CLICK CANVAS ONCE</div> : null}
+
+      <div>micRms: {media.micRms.toFixed(3)}</div>
+      <div>pitchHz: {Math.round(media.pitchHz || 0)}</div>
+      <div>clarity: {media.pitchClarity.toFixed(2)}</div>
+      <div>camMotion: {media.camMotion.toFixed(2)}</div>
+
+      {hasError ? <div style={{ marginTop: 8, color: 'rgba(255,110,110,0.95)' }}>{media.error}</div> : null}
     </div>
   )
 }

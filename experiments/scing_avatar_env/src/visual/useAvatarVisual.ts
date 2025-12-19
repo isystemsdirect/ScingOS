@@ -36,12 +36,12 @@ export function useAvatarVisual(materialRef: MaterialRef): void {
     const entropyTarget = integrateEntropy(state.entropy, t.current)
     s.entropy = smoothDamp(s.entropy, entropyTarget, smoothing, delta)
 
-    material.time = t.current
-    material.arousal = s.arousal
-    material.valence = s.valence
-    material.cognitiveLoad = s.cognitiveLoad
-    material.rhythm = s.rhythm
-    material.entropy = s.entropy
-    material.focus = s.focus
+    material.uniforms.time.value = t.current
+    material.uniforms.arousal.value = s.arousal
+    material.uniforms.valence.value = s.valence
+    material.uniforms.cognitiveLoad.value = s.cognitiveLoad
+    material.uniforms.rhythm.value = s.rhythm
+    material.uniforms.entropy.value = s.entropy
+    material.uniforms.focus.value = s.focus
   })
 }

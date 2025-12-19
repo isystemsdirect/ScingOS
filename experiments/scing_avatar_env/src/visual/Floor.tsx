@@ -124,8 +124,8 @@ void main(){
         <planeGeometry args={[size, size]} />
         <meshStandardMaterial
           color={'#05020b'}
-          roughness={opt.floorRoughness}
-          metalness={opt.floorMetalness}
+          roughness={0.92}
+          metalness={0.0}
         />
       </mesh>
 

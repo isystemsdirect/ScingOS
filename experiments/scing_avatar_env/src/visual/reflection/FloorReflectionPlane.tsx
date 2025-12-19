@@ -14,11 +14,13 @@ export default function FloorReflectionPlane(props: {
   targetSize: number
   size?: number
   strength: number
+  radius: number
+  falloff: number
   blur: number
-  height: number
+  y: number
 }) {
   const enabled = props.enabled
-  const size = props.size ?? 18
+  const size = props.size ?? 2.5
 
   const matRef = useRef<THREE.ShaderMaterial>(null!)
 
@@ -30,10 +32,12 @@ export default function FloorReflectionPlane(props: {
         tReflect: { value: props.texture },
         hasTex: { value: props.texture ? 1.0 : 0.0 },
         strength: { value: 0.0 },
+        radius: { value: 0.38 },
+        falloff: { value: 3.25 },
         blur: { value: 0.0 },
-        height: { value: 0.33 },
         time: { value: 0.0 },
         texel: { value: new THREE.Vector2(1 / Math.max(1, props.targetSize), 1 / Math.max(1, props.targetSize)) },
+        planeSize: { value: size },
       },
       vertexShader: /* glsl */ `
         varying vec2 vUv;
@@ -48,10 +52,12 @@ export default function FloorReflectionPlane(props: {
         uniform sampler2D tReflect;
         uniform float hasTex;
         uniform float strength;
+        uniform float radius;
+        uniform float falloff;
         uniform float blur;
-        uniform float height;
         uniform float time;
         uniform vec2 texel;
+        uniform float planeSize;
 
         float hash(vec2 p){
           return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453123);
@@ -90,20 +96,14 @@ export default function FloorReflectionPlane(props: {
           // Mirror Y for reflection.
           vec2 uv = vec2(vUv.x, 1.0 - vUv.y);
 
-          // Organic distortion (deterministic).
+          // Organic distortion (deterministic), scaled by blur (default off).
           float n = noise(vUv * 6.0 + vec2(time * 0.12, time * 0.09));
-          vec2 wobble = (n - 0.5) * (0.010 + 0.020 * blur) * vec2(1.0, 0.6);
+          vec2 wobble = (n - 0.5) * (0.004 + 0.012 * blur) * vec2(1.0, 0.6);
 
-          // Height shapes falloff: higher -> longer reflection reach.
-          float h = max(0.05, height);
-          float yFade = smoothstep(0.0, 1.0, (1.0 - vUv.y) / h);
-
-          // Radial falloff to keep it subtle and non-room-like.
-          vec2 p = vUv - 0.5;
-          float r = length(p);
-          float rFade = smoothstep(0.60, 0.10, r);
-
-          float fade = yFade * rFade;
+          // Tight decal mask: world-space-ish distance from center, normalized by radius.
+          vec2 p = (vUv - 0.5) * planeSize;
+          float d = length(p) / max(0.001, radius);
+          float fade = exp(-pow(d, max(1.0, falloff)));
 
           vec3 refl = sampleBlur(tReflect, uv + wobble, blur);
 
@@ -123,23 +123,26 @@ export default function FloorReflectionPlane(props: {
   useFrame(({ clock }) => {
     if (!matRef.current) return
 
-    const strength = clamp01(props.strength)
-    const blur = clamp01(props.blur)
-    const height = clamp01(props.height)
+    const strength = Math.max(0, props.strength)
+    const blur = Math.max(0, Math.min(0.35, props.blur))
+    const radius = Math.max(0.1, props.radius)
+    const falloff = Math.max(1.0, props.falloff)
 
     matRef.current.uniforms.time.value = clock.getElapsedTime()
     matRef.current.uniforms.tReflect.value = props.texture
     matRef.current.uniforms.hasTex.value = props.texture ? 1.0 : 0.0
     matRef.current.uniforms.strength.value = enabled ? strength : 0
+    matRef.current.uniforms.radius.value = radius
+    matRef.current.uniforms.falloff.value = falloff
     matRef.current.uniforms.blur.value = blur
-    matRef.current.uniforms.height.value = height
     matRef.current.uniforms.texel.value.set(1 / Math.max(1, props.targetSize), 1 / Math.max(1, props.targetSize))
+    matRef.current.uniforms.planeSize.value = size
   })
 
   return (
     <mesh
       rotation={[-Math.PI / 2, 0, 0]}
-      position={[0, 0, 0]}
+      position={[0, props.y, 0]}
       onUpdate={(o) => o.layers.set(LAYER_ENV)}
     >
       <planeGeometry args={[size, size]} />

@@ -8,8 +8,8 @@ import DevOptionsPanel from './dev/DevOptionsPanel'
 
 import { getDevOptions, setDevOptions, subscribeDevOptions, type DevOptions } from './dev/devOptionsStore'
 import { LAYER_AVATAR } from './visual/layers'
-import { startMediaSensors, stopMediaSensors } from './sensors/mediaSensors'
-import { resetAvatarStateToDefaults } from './influence/InfluenceBridge'
+import { getMediaStatus, setMediaEnabled, startMediaSensors, stopMediaSensors } from './sensors/mediaSensors'
+import { resetAvatarStateToDefaults, setAvatarState } from './influence/InfluenceBridge'
 
 // If you already have sensor start logic elsewhere, keep it.
 // This CB does not force sensors on/off; it focuses on visual definition.
@@ -33,33 +33,77 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    let disposed = false
-    let lastKey = ''
+    let lastMic = getDevOptions().micEnabled
+    let lastCam = getDevOptions().camEnabled
 
-    const reconcile = () => {
-      const opt = getDevOptions()
-      const wantAudio = opt.micEnabled
-      const wantVideo = opt.cameraEnabled
-      const nextKey = `${wantAudio ? 'a' : '-'}${wantVideo ? 'v' : '-'}`
-      if (nextKey === lastKey) return
-      lastKey = nextKey
+    // Start sensors on boot using dev toggles.
+    setMediaEnabled({ mic: lastMic, cam: lastCam })
+    void startMediaSensors({ mic: lastMic, cam: lastCam })
 
-      stopMediaSensors()
-      if (!disposed && (wantAudio || wantVideo)) {
-        startMediaSensors().catch(() => {
-          // status is exposed in HUD via getMediaSensorsStatus
-        })
+    const unsub = subscribeDevOptions(() => {
+      const o = getDevOptions()
+      if (o.micEnabled === lastMic && o.camEnabled === lastCam) return
+
+      // Apply desired state immediately.
+      setMediaEnabled({ mic: o.micEnabled, cam: o.camEnabled })
+
+      // If enabling, start streams (exact request set determined by the current toggles).
+      if ((o.micEnabled && !lastMic) || (o.camEnabled && !lastCam)) {
+        void startMediaSensors({ mic: o.micEnabled, cam: o.camEnabled })
       }
-    }
 
-    reconcile()
-    const unsub = subscribeDevOptions(reconcile)
+      // If disabling both, fully stop.
+      if (!o.micEnabled && !o.camEnabled) {
+        stopMediaSensors()
+      }
+
+      lastMic = o.micEnabled
+      lastCam = o.camEnabled
+    })
 
     return () => {
-      disposed = true
       unsub()
       stopMediaSensors()
     }
+  }, [])
+
+  useEffect(() => {
+    // Sensor-driven avatar state driver (deterministic; no Math.random).
+    const id = window.setInterval(() => {
+      const s = getMediaStatus()
+      const t = performance.now() * 0.001
+
+      const clamp01 = (v: number) => Math.max(0, Math.min(1, v))
+
+      const mic = clamp01(s.micRms)
+      const camMotion = clamp01(s.camMotion)
+
+      const arousal = clamp01(mic * 1.35)
+
+      // Rhythm rises with voice and gets a tiny deterministic phase nudge from pitch.
+      let rhythm = clamp01(mic * 1.1)
+      if (s.pitchHz > 0 && s.pitchClarity > 0) {
+        const phase = Math.sin(t * 1.9 + s.pitchHz * 0.01)
+        rhythm = clamp01(rhythm + phase * 0.05 * clamp01(s.pitchClarity))
+      }
+
+      const focus = clamp01(0.55 + 0.35 * (1 - camMotion))
+      const cognitiveLoad = clamp01(0.35 + 0.65 * camMotion)
+
+      // Small bounded oscillation from pitch clarity (no randomness).
+      const valence = clamp01(s.pitchClarity) * 0.22 * Math.sin(t * 0.33)
+
+      setAvatarState({
+        arousal,
+        rhythm,
+        focus,
+        cognitiveLoad,
+        valence,
+        entropy: 0.04,
+      })
+    }, 50)
+
+    return () => window.clearInterval(id)
   }, [])
 
   return (
@@ -74,6 +118,10 @@ export default function App() {
         camera={{ position: [0, AVATAR_CENTER_Y, CAMERA_Z], fov: 38, near: 0.05, far: 5000 }}
         dpr={[1, 2]}
         gl={{ antialias: true, preserveDrawingBuffer: false, powerPreference: 'high-performance' }}
+        onCreated={({ camera }) => {
+          camera.lookAt(0, AVATAR_CENTER_Y, 0)
+          camera.updateMatrixWorld()
+        }}
       >
         {/* Background: deep studio black-purple */}
         <color attach="background" args={['#05020b']} />

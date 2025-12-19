@@ -10,6 +10,10 @@ export type FlameUniforms = {
   rhythm: number;
   focus: number;
   layer: number; // 0 = inner core, 1 = outer skin
+  paletteMode: number; // 0=SCING, 1=LARI, 2=BANE
+  phaseA: THREE.Vector3;
+  phaseB: THREE.Vector3;
+  phaseMix: number;
   rimStrength: number;
   chromaEnabled: number;
   chromaIntensity: number;
@@ -40,6 +44,10 @@ const FlameMaterial = shaderMaterial(
     rhythm: 0,
     focus: 0,
     layer: 0,
+    paletteMode: 0,
+    phaseA: new THREE.Vector3(0.0, 0.65, 1.0),
+    phaseB: new THREE.Vector3(0.55, 0.15, 1.0),
+    phaseMix: 0.0,
     rimStrength: 0.62,
     chromaEnabled: 0.0,
     chromaIntensity: 0.65,
@@ -175,6 +183,10 @@ uniform float cognitiveLoad;
 uniform float rhythm;
 uniform float focus;
 uniform float layer;
+uniform float paletteMode;
+uniform vec3 phaseA;
+uniform vec3 phaseB;
+uniform float phaseMix;
 uniform float rimStrength;
 uniform float chromaEnabled;
 uniform float chromaIntensity;
@@ -243,6 +255,64 @@ vec3 palViolet(){
   return mix(violetShear(), vec3(0.70, 0.20, 1.00), sat(chromaPalette));
 }
 
+// --- Canon phase palettes ---
+vec3 scingA(){ return vec3(0.00, 0.65, 1.00); } // electric blue
+vec3 scingB(){ return vec3(0.55, 0.15, 1.00); } // violet
+vec3 scingC(){ return vec3(1.00, 0.00, 0.75); } // magenta
+
+vec3 lariA(){ return vec3(1.00, 0.70, 0.05); } // golden yellow
+vec3 lariB(){ return vec3(1.00, 1.00, 0.10); } // neon yellow
+vec3 lariC(){ return vec3(1.00, 0.35, 0.00); } // neon orange
+vec3 lariD(){ return vec3(0.55, 1.00, 0.10); } // neon lime
+
+vec3 baneA(){ return vec3(0.90, 0.00, 0.05); } // red
+vec3 baneB(){ return vec3(1.00, 0.10, 0.10); } // neon red
+vec3 baneC(){ return vec3(0.70, 0.10, 1.00); } // neon purple
+vec3 baneD(){ return vec3(1.00, 1.00, 1.00); } // white (soft)
+
+vec3 lariPhase(float p){
+  float x = fract(p) * 4.0;
+  float seg = floor(x);
+  float f = fract(x);
+  vec3 a = lariA();
+  vec3 b = lariB();
+  vec3 c = lariC();
+  vec3 d = lariD();
+  if (seg < 1.0) return mix(a, b, f);
+  if (seg < 2.0) return mix(b, c, f);
+  if (seg < 3.0) return mix(c, d, f);
+  return mix(d, a, f);
+}
+
+vec3 sampleCanonPalette(float mode, float flow, float t){
+  // flow: 0..1. Use it as the primary phase driver.
+  if (mode < 0.5) {
+    // SCING: mix(A,B,flow) with magenta bias oscillator
+    vec3 ab = mix(scingA(), scingB(), sat(flow));
+    float magBias = 0.5 + 0.5 * sin(t * 0.85 + vPos.x * 2.2 + vPos.y * 1.4);
+    return mix(ab, scingC(), 0.18 + 0.32 * magBias);
+  }
+  if (mode < 1.5) {
+    // LARI: phase through 4 anchors A→B→C→D→A
+    float p = fract(flow + 0.12 * sin(t * 0.35 + vPos.y * 2.1));
+    return lariPhase(p);
+  }
+
+  // BANE: dominant reds with occasional purple/white punctuations
+  vec3 redBase = mix(baneA(), baneB(), 0.35 + 0.65 * sat(flow));
+  float purpleGate = smoothstep(0.62, 0.90, focus);
+  float purplePulse = purpleGate * (0.25 + 0.75 * sat(sin(t * 0.55 + vPos.y * 4.0) * 0.5 + 0.5));
+  vec3 withPurple = mix(redBase, baneC(), 0.10 * purplePulse);
+
+  float whiteGate = smoothstep(0.74, 0.98, arousal);
+  float whitePulse = whiteGate * smoothstep(0.86, 0.98, noise(vPos * 3.0 + t * 0.22));
+  return mix(withPurple, baneD(), 0.06 * whitePulse);
+}
+
+vec3 phaseColor(){
+  return mix(phaseA, phaseB, sat(phaseMix));
+}
+
 void main(){
 vec3 N = normalize(vN);
 vec3 V = normalize(vec3(0.0, 0.0, 1.0)); // stable view proxy for consistent chrome
@@ -291,8 +361,18 @@ vec3 base = mix(chromeBase, steelTint, edgeLift * 0.55);
 
 // --- color advection (used only as “oil-slick” accent, very restrained) ---
 float flow = 0.5 + 0.5 * sin(time + vPos.y * 3.0);
-vec3 accent = mix(palCyan(), palMagenta(), flow);
-accent += palViolet() * (0.15 * sat(valence * 0.5 + 0.5));
+// Prefer CB phase uniforms (phaseA/phaseB/phaseMix). Keep paletteMode path as fallback.
+vec3 canon = phaseColor();
+if (length(canon) < 0.0001) {
+  canon = sampleCanonPalette(paletteMode, flow, time);
+}
+
+// Keep baseline chrome intact; palette participates primarily through emissive/accent.
+float emissionMix = clamp(0.18 + 0.37 * sat(arousal), 0.18, 0.55);
+
+// Small, restrained accent to preserve dark chrome.
+vec3 accent = canon;
+accent += canon * (0.08 * sat(valence * 0.5 + 0.5));
 float vein = clamp(veinIntensity, 0.0, 2.0);
 float accentAmt = (0.05 + 0.09 * sat(arousal * 0.7)) * mix(0.6, 1.4, vein * 0.5); // still restrained
 base += accent * accentAmt;
@@ -312,6 +392,9 @@ float layerGain = (layer < 0.5) ? 1.0 : 0.55;
 float emissGain = lightning * layerGain;
 emissGain *= clamp(filamentStrength, 0.0, 1.0);
 
+// Bound emissive contribution; increases with arousal (no constant full-light).
+emissGain *= emissionMix;
+
 vec3 emissive = accent * filament * emissGain;
 
 // --- neon glass-bulb underlayer (deterministic, subtle) ---
@@ -320,9 +403,9 @@ float bulbs = noise(vPos * 18.0 + vec3(time * 0.18, -time * 0.12, time * 0.10));
 bulbs = smoothstep(0.72, 0.92, bulbs);
 bulbs *= (layer < 0.5) ? 1.0 : 0.65;
 float bulbGain = (chromaEnabled > 0.5) ? sat(chromaIntensity) : 0.0;
-vec3 bulbCol = mix(palCyan(), palMagenta(), noise(vPos * 3.0 + time * 0.05));
-bulbCol += palViolet() * 0.35;
-emissive += bulbCol * bulbs * (0.18 + 0.55 * bulbGain) * (0.6 + 0.5 * sat(arousal));
+float flow2 = fract(flow + 0.33 + 0.25 * sin(time * 0.11 + vPos.z * 2.3));
+vec3 bulbCol = sampleCanonPalette(paletteMode, flow2, time);
+emissive += bulbCol * bulbs * (0.18 + 0.55 * bulbGain) * (0.6 + 0.5 * sat(arousal)) * emissionMix;
 
 // --- final shading ---
 // keep base dark; add spec as reflective highlight (not bloom-only)

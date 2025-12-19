@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { getDevOptions, setDevOptions, subscribeDevOptions, type DevOptions } from './devOptionsStore'
+import { setMediaEnabled, startMediaSensors, stopMediaSensors } from '../sensors/mediaSensors'
 
 function Row(props: {
   label: string
@@ -94,59 +95,157 @@ export default function DevOptionsPanel() {
           onChange={(v) => setDevOptions({ meshVisible: v })}
         />
         <Row
-          label="Starfield Visible"
-          checked={opt.starfieldVisible}
-          onChange={(v) => setDevOptions({ starfieldVisible: v })}
+          label="Starfield"
+          checked={opt.starfieldEnabled}
+          onChange={(v) => setDevOptions({ starfieldEnabled: v })}
         />
         <Row
           label="Mic Input"
           checked={opt.micEnabled}
-          onChange={(v) => setDevOptions({ micEnabled: v })}
+          onChange={(v) => {
+            setDevOptions({ micEnabled: v })
+            setMediaEnabled({ mic: v })
+            if (!v) {
+              if (!getDevOptions().camEnabled) stopMediaSensors()
+              return
+            }
+            void startMediaSensors({ mic: true, cam: getDevOptions().camEnabled })
+          }}
         />
         <Row
           label="Camera Input"
-          checked={opt.cameraEnabled}
-          onChange={(v) => setDevOptions({ cameraEnabled: v })}
+          checked={opt.camEnabled}
+          onChange={(v) => {
+            setDevOptions({ camEnabled: v })
+            setMediaEnabled({ cam: v })
+            if (!v) {
+              if (!getDevOptions().micEnabled) stopMediaSensors()
+              return
+            }
+            void startMediaSensors({ mic: getDevOptions().micEnabled, cam: true })
+          }}
         />
 
         <div style={{ height: 1, background: 'rgba(255,255,255,0.08)', margin: '6px 0' }} />
 
+        <div style={{ fontSize: 12, fontWeight: 700, opacity: 0.95 }}>Floor Reflection</div>
         <Row
-          label="Floor Reflection Enabled"
-          checked={opt.floorReflectionEnabled}
-          onChange={(v) => setDevOptions({ floorReflectionEnabled: v })}
-        />
-
-        <SliderRow
-          label="Floor Reflection Strength"
-          value={opt.floorReflectionStrength}
-          min={0}
-          max={0.8}
-          step={0.01}
-          disabled={false}
-          onChange={(v) => setDevOptions({ floorReflectionStrength: v })}
+          label="Floor Reflection"
+          checked={opt.floorReflectEnabled}
+          onChange={(v) => setDevOptions({ floorReflectEnabled: v })}
         />
         <SliderRow
-          label="Floor Reflection Blur"
-          value={opt.floorReflectionBlur}
-          min={0}
-          max={1}
+          label="Intensity"
+          value={opt.floorReflectIntensity}
+          min={0.0}
+          max={1.0}
           step={0.01}
-          disabled={false}
-          onChange={(v) => setDevOptions({ floorReflectionBlur: v })}
+          disabled={!opt.floorReflectEnabled}
+          onChange={(v) => setDevOptions({ floorReflectIntensity: v })}
         />
-
         <SliderRow
-          label="Floor Reflection Height"
-          value={opt.floorReflectionHeight}
-          min={0}
-          max={1}
+          label="Radius (tightness)"
+          value={opt.floorReflectRadius}
+          min={0.1}
+          max={0.9}
           step={0.01}
-          disabled={false}
-          onChange={(v) => setDevOptions({ floorReflectionHeight: v })}
+          disabled={!opt.floorReflectEnabled}
+          onChange={(v) => setDevOptions({ floorReflectRadius: v })}
         />
+        <SliderRow
+          label="Sharpness"
+          value={opt.floorReflectSharpness}
+          min={1.0}
+          max={6.0}
+          step={0.01}
+          disabled={!opt.floorReflectEnabled}
+          onChange={(v) => setDevOptions({ floorReflectSharpness: v })}
+        />
+        <div style={{ fontSize: 11, opacity: 0.72, lineHeight: 1.25 }}>
+          Tighter radius + higher sharpness = condensed reflection
+        </div>
 
         <div style={{ height: 1, background: 'rgba(255,255,255,0.08)', margin: '6px 0' }} />
+
+        <div style={{ display: 'grid', gap: 6 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
+            <span style={{ fontSize: 12, opacity: 0.92 }}>Active Phase Palette</span>
+          </div>
+          <select
+            value={opt.paletteMode}
+            onChange={(e) => setDevOptions({ paletteMode: e.currentTarget.value as DevOptions['paletteMode'] })}
+            disabled={opt.chromaEnabled}
+            style={{
+              width: '100%',
+              padding: '6px 8px',
+              borderRadius: 8,
+              border: '1px solid rgba(255,255,255,0.10)',
+              background: 'rgba(8, 6, 14, 0.65)',
+              color: 'rgba(255,255,255,0.92)',
+              fontSize: 12,
+              opacity: opt.chromaEnabled ? 0.6 : 1,
+            }}
+          >
+            <option value="SCING">SCING</option>
+            <option value="LARI">LARI</option>
+            <option value="BANE">BANE</option>
+          </select>
+        </div>
+
+        <div style={{ height: 1, background: 'rgba(255,255,255,0.08)', margin: '6px 0' }} />
+
+        <div style={{ fontSize: 12, fontWeight: 700, opacity: 0.95 }}>Chroma Workstation</div>
+        <Row label="Chroma Enabled" checked={opt.chromaEnabled} onChange={(v) => setDevOptions({ chromaEnabled: v })} />
+        <div style={{ display: 'grid', gap: 6, opacity: opt.chromaEnabled ? 1 : 0.55 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
+            <span style={{ fontSize: 12, opacity: 0.92 }}>Chroma Channel</span>
+          </div>
+          <select
+            value={opt.chromaChannel}
+            disabled={!opt.chromaEnabled}
+            onChange={(e) => setDevOptions({ chromaChannel: e.currentTarget.value as DevOptions['chromaChannel'] })}
+            style={{
+              width: '100%',
+              padding: '6px 8px',
+              borderRadius: 8,
+              border: '1px solid rgba(255,255,255,0.10)',
+              background: 'rgba(8, 6, 14, 0.65)',
+              color: 'rgba(255,255,255,0.92)',
+              fontSize: 12,
+            }}
+          >
+            <option value="SCING">SCING</option>
+            <option value="LARI">LARI</option>
+            <option value="BANE">BANE</option>
+          </select>
+        </div>
+        <SliderRow
+          label="Chroma Rate"
+          value={opt.chromaRate}
+          min={0.2}
+          max={2.5}
+          step={0.01}
+          disabled={!opt.chromaEnabled}
+          onChange={(v) => setDevOptions({ chromaRate: v })}
+        />
+        <SliderRow
+          label="Chroma Intensity"
+          value={opt.chromaIntensity}
+          min={0.2}
+          max={1.8}
+          step={0.01}
+          disabled={!opt.chromaEnabled}
+          onChange={(v) => setDevOptions({ chromaIntensity: v })}
+        />
+        <SliderRow
+          label="Chroma Phase Bias"
+          value={opt.chromaPhaseBias}
+          min={-1.0}
+          max={1.0}
+          step={0.01}
+          disabled={!opt.chromaEnabled}
+          onChange={(v) => setDevOptions({ chromaPhaseBias: v })}
+        />
 
         <Row label="Light Rig" checked={opt.lightRigEnabled} onChange={(v) => setDevOptions({ lightRigEnabled: v })} />
         <SliderRow
@@ -157,15 +256,6 @@ export default function DevOptionsPanel() {
           step={0.01}
           disabled={!opt.lightRigEnabled}
           onChange={(v) => setDevOptions({ lightRigIntensity: v })}
-        />
-        <SliderRow
-          label="Chroma Intensity"
-          value={opt.chromaIntensity}
-          min={0}
-          max={1}
-          step={0.01}
-          disabled={true}
-          onChange={(v) => setDevOptions({ chromaIntensity: v })}
         />
       </div>
     </div>

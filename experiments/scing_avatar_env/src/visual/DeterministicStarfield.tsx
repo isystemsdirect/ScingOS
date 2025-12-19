@@ -17,11 +17,13 @@ export default function DeterministicStarfield(props: {
   count?: number
   radius?: number
   size?: number
+  opacity?: number
 }) {
   const seed = props.seed ?? 1337
   const count = props.count ?? 3500
   const radius = props.radius ?? 70
   const size = props.size ?? 0.012
+  const opacity = props.opacity ?? 0.18
 
   const { positions, colors } = useMemo(() => {
     const rand = xorshift32(seed)
@@ -67,7 +69,7 @@ export default function DeterministicStarfield(props: {
         size={size}
         sizeAttenuation
         transparent
-        opacity={0.9}
+        opacity={opacity}
         vertexColors
         depthWrite={false}
         blending={THREE.AdditiveBlending}

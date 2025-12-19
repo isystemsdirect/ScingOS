@@ -1,6 +1,7 @@
 export {
-  getMediaSensorsMetrics,
-  getMediaSensorsStatus,
+  getMediaStatus,
+  setMediaEnabled,
   startMediaSensors,
   stopMediaSensors,
-} from '../influence/mediaSensors'
+  type MediaStatus,
+} from '../media/mediaSensors'

@@ -5,12 +5,12 @@ import { getDevOptions, subscribeDevOptions } from '../dev/devOptionsStore'
 
 const clamp01Local = (v: number) => Math.max(0, Math.min(1, v))
 
-let micEnabled = getDevOptions().enableMic
-let camEnabled = getDevOptions().enableCamera
+let micEnabled = getDevOptions().micEnabled
+let camEnabled = getDevOptions().camEnabled
 subscribeDevOptions(() => {
   const opt = getDevOptions()
-  micEnabled = opt.enableMic
-  camEnabled = opt.enableCamera
+  micEnabled = opt.micEnabled
+  camEnabled = opt.camEnabled
 })
 
 type RunState = {
@@ -60,8 +60,8 @@ export async function startMediaSensors() {
   // --- MIC + CAMERA ---
   let stream: MediaStream
   try {
-    const wantAudio = getDevOptions().enableMic
-    const wantVideo = getDevOptions().enableCamera
+    const wantAudio = getDevOptions().micEnabled
+    const wantVideo = getDevOptions().camEnabled
 
     stream = await navigator.mediaDevices.getUserMedia({
       audio: wantAudio ? true : false,
