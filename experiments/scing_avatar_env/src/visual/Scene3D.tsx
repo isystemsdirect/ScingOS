@@ -141,6 +141,8 @@ export default function Scene3D() {
   const phaseColor = useMemo(() => new THREE.Color(), [])
   const phaseColorTmp = useMemo(() => new THREE.Color(), [])
 
+  const floorStrengthRef = useRef(0)
+
   useFrame((_, dt) => {
     tRef.current += dt
     const t = tRef.current
@@ -182,6 +184,20 @@ export default function Scene3D() {
     phaseColor.setRGB(phases.phaseA[0], phases.phaseA[1], phases.phaseA[2])
     phaseColorTmp.setRGB(phases.phaseB[0], phases.phaseB[1], phases.phaseB[2])
     phaseColor.lerp(phaseColorTmp, phases.phaseMix)
+
+    // Floor reflection strength is NON-DECAYING (no warmup/time curves).
+    // When enabled, it cannot silently collapse to ~0.
+    const clamp01Local = (v: number) => Math.max(0, Math.min(1, v))
+    const energy = clamp01Local(
+      0.55 * uRef.current.arousal +
+        0.25 * uRef.current.focus +
+        0.20 * uRef.current.rhythm,
+    )
+    const reflectionEps = 0.025
+    const reflectionStrength = floorEnabled
+      ? Math.max(reflectionEps, clamp01Local(floorIntensity) * (0.35 + 0.65 * energy))
+      : 0.0
+    floorStrengthRef.current = reflectionStrength
 
     applyUniforms(coreRef.current, {
       time: t,
@@ -247,6 +263,7 @@ export default function Scene3D() {
       avatarDrawOk,
       failsafeOn,
       failsafeForced,
+      floorStrength: reflectionStrength,
     })
   })
 
@@ -260,7 +277,8 @@ export default function Scene3D() {
         y={floorY}
         size={floorSize}
         avatarColor={phaseColor}
-        avatarIntensity={Math.max(0, Math.min(1, uRef.current.arousal)) * floorIntensity}
+        avatarIntensityRef={floorStrengthRef}
+        avatarIntensity={0}
         hoverHeight={hoverHeight}
         radius={floorRadius}
         sharpness={floorSharpness}

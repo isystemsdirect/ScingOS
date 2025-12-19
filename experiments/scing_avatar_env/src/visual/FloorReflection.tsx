@@ -9,6 +9,7 @@ export default function FloorReflection(props: {
   size: number
   avatarColor: THREE.Color
   avatarIntensity: number
+  avatarIntensityRef?: React.RefObject<number>
   hoverHeight: number
   radius: number
   sharpness: number
@@ -111,7 +112,7 @@ export default function FloorReflection(props: {
     mat.uniforms.time.value = t
     mat.uniforms.enabled.value = props.enabled ? 1 : 0
     ;(mat.uniforms.avatarColor.value as THREE.Color).copy(props.avatarColor)
-    mat.uniforms.avatarIntensity.value = props.avatarIntensity
+    mat.uniforms.avatarIntensity.value = props.avatarIntensityRef?.current ?? props.avatarIntensity
     mat.uniforms.hoverHeight.value = props.hoverHeight
     mat.uniforms.radius.value = props.radius
     mat.uniforms.sharpness.value = props.sharpness
@@ -123,6 +124,8 @@ export default function FloorReflection(props: {
       position={[0, props.y, 0]}
       onUpdate={setEnvLayer}
       receiveShadow={false}
+      frustumCulled={false}
+      renderOrder={-5}
     >
       <planeGeometry args={[props.size, props.size]} />
       <primitive object={mat} attach="material" />

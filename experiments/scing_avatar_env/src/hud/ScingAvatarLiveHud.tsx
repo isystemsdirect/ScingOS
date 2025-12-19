@@ -1,15 +1,20 @@
 import { useEffect, useState } from 'react'
 import { getDevOptions, subscribeDevOptions } from '../dev/devOptionsStore'
 import { getMediaStatus, type MediaStatus } from '../sensors/mediaSensors'
+import { getRenderStats, type RenderStats } from '../influence/renderStats'
 
 export default function ScingAvatarLiveHud() {
   const [opt, setOpt] = useState(() => getDevOptions())
   const [media, setMedia] = useState<MediaStatus>(() => getMediaStatus())
+  const [stats, setStats] = useState<RenderStats>(() => getRenderStats())
 
   useEffect(() => subscribeDevOptions(() => setOpt(getDevOptions())), [])
 
   useEffect(() => {
-    const id = window.setInterval(() => setMedia(getMediaStatus()), 100)
+    const id = window.setInterval(() => {
+      setMedia(getMediaStatus())
+      setStats(getRenderStats())
+    }, 100)
     return () => window.clearInterval(id)
   }, [])
 
@@ -68,6 +73,8 @@ export default function ScingAvatarLiveHud() {
       <div>pitchHz: {Math.round(media.pitchHz || 0)}</div>
       <div>clarity: {media.pitchClarity.toFixed(2)}</div>
       <div>camMotion: {media.camMotion.toFixed(2)}</div>
+
+      <div>FLOOR: {stats.floorStrength.toFixed(3)}</div>
 
       {hasError ? <div style={{ marginTop: 8, color: 'rgba(255,110,110,0.95)' }}>{media.error}</div> : null}
     </div>

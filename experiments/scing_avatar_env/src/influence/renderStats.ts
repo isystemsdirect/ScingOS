@@ -6,6 +6,7 @@ export type RenderStats = {
   avatarDrawOk: boolean;
   failsafeOn: boolean;
   failsafeForced: boolean;
+  floorStrength: number;
 };
 
 let stats: RenderStats = {
@@ -16,6 +17,7 @@ let stats: RenderStats = {
   avatarDrawOk: false,
   failsafeOn: false,
   failsafeForced: false,
+  floorStrength: 0,
 };
 
 export function setRenderStats(next: RenderStats) {
