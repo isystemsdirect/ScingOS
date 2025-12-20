@@ -99,11 +99,7 @@ export function mobiusGate<TSignal>(
   // 6) semantic flow
   // normal: pass-through (a=0)
   // inverted: blend toward dual with bounded amplitude * band factor
-  const aApplied =
-    aClamped *
-    (invertedLatchedNext ? 1 : 0) *
-    (invertedLatchedNext ? Math.max(invFlagSmoothed, 0.15) : 0);
-  // Note: floor of 0.15 inside inverted prevents “inversion disappears” away from boundary; set to 0 if you want boundary-only.
+  const aApplied = invertedLatchedNext ? aClamped * invFlagSmoothed : 0;
 
   const dualSig = dual(state.signal);
   const signalNext = invertedLatchedNext
