@@ -6,6 +6,10 @@ export type HaloUniforms = {
   arousal: number
   focus: number
   phaseBias: number
+  mobiusR: number
+  mobiusG: number
+  mobiusB: number
+  mobiusStrength: number
 }
 
 const HaloShellMaterial = shaderMaterial(
@@ -14,6 +18,10 @@ const HaloShellMaterial = shaderMaterial(
     arousal: 0,
     focus: 0,
     phaseBias: 0,
+    mobiusR: 0,
+    mobiusG: 0,
+    mobiusB: 0,
+    mobiusStrength: 0,
   } satisfies HaloUniforms,
 
   /* glsl */ `
@@ -25,6 +33,11 @@ const HaloShellMaterial = shaderMaterial(
     uniform float arousal;
     uniform float focus;
     uniform float phaseBias;
+
+    uniform float mobiusR;
+    uniform float mobiusG;
+    uniform float mobiusB;
+    uniform float mobiusStrength;
 
     float hash(vec3 p){
       p = fract(p*0.3183099 + vec3(0.1,0.2,0.3));
@@ -80,6 +93,11 @@ const HaloShellMaterial = shaderMaterial(
     uniform float focus;
     uniform float phaseBias;
 
+    uniform float mobiusR;
+    uniform float mobiusG;
+    uniform float mobiusB;
+    uniform float mobiusStrength;
+
     // Scing hue family (blue/violet/magenta)
     vec3 scingBlue(){ return vec3(0.00, 0.78, 1.00); }
     vec3 scingViolet(){ return vec3(0.42, 0.10, 0.95); }
@@ -99,7 +117,12 @@ const HaloShellMaterial = shaderMaterial(
       vec3 col = mix(scingBlue(), scingViolet(), smoothstep(0.15, 0.85, ph));
       col = mix(col, scingMagenta(), smoothstep(0.55, 0.95, ph));
 
+      float ms = clamp(mobiusStrength, 0.0, 1.0);
+      vec3 mob = vec3(mobiusR, mobiusG, mobiusB);
+      col = mix(col, mob, ms);
+
       float alpha = fres * (0.14 + 0.22*arousal) * pulse * (0.75 + 0.25*focus);
+      alpha *= (0.85 + 0.65 * ms);
 
       // Keep halo “soft smoke”, not a hard ring
       alpha *= smoothstep(0.0, 0.9, fres);

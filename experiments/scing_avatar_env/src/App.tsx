@@ -12,9 +12,28 @@ import './ui/devpanel.css'
 import { getDevOptions, setDevOptions, subscribeDevOptions, type DevOptions } from './dev/devOptionsStore'
 import { LAYER_AVATAR } from './visual/layers'
 import { getMediaStatus, setMediaEnabled, startMediaSensors, stopMediaSensors } from './sensors/mediaSensors'
-import { resetAvatarStateToDefaults, setAvatarState } from './influence/InfluenceBridge'
+import { resetAvatarStateToDefaults, setAvatarState, setMobiusTelemetry } from './influence/InfluenceBridge'
 import Floor from './visual/Floor'
 import { FloorShine } from './visual/FloorShine'
+
+import type { MobiusState } from '../../../mobius/types'
+import type { NeuralSignal } from '../../../mobius/signal'
+import { tickMobius } from '../../../mobius/runtime'
+
+const mobiusInitial: MobiusState<NeuralSignal> = {
+  signal: { role: 'propose', content: {}, tags: [], annotations: {} },
+  phase: 0,
+  invertedLatched: false,
+  inversionAmplitude: 0,
+}
+
+const mobiusParams = {
+  k: 1.0,
+  eps: 0.05 * Math.PI,
+  aMax: 1.0,
+  w1: 0.65,
+  w2: 0.55,
+}
 
 // If you already have sensor start logic elsewhere, keep it.
 // This CB does not force sensors on/off; it focuses on visual definition.
@@ -174,6 +193,9 @@ export default function App() {
   const [crash, setCrash] = useState<RuntimeCrash | null>(null)
   const [glCanvas, setGlCanvas] = useState<HTMLCanvasElement | null>(null)
 
+  const mobiusRef = useRef<MobiusState<NeuralSignal>>(mobiusInitial)
+  const lastMobiusTRef = useRef<number>(performance.now() * 0.001)
+
   useEffect(() => subscribeDevOptions(() => setOpt(getDevOptions())), [])
 
   useEffect(() => {
@@ -297,6 +319,9 @@ export default function App() {
       const s = getMediaStatus()
       const t = performance.now() * 0.001
 
+      const dt = Math.max(0, t - lastMobiusTRef.current)
+      lastMobiusTRef.current = t
+
       const clamp01 = (v: number) => Math.max(0, Math.min(1, v))
 
       const mic = clamp01(s.micRms)
@@ -325,6 +350,19 @@ export default function App() {
         valence,
         entropy: 0.04,
       })
+
+      const r = tickMobius(
+        mobiusRef.current,
+        {
+          rhythm,
+          cognitiveLoad,
+          focus,
+          dt,
+        },
+        mobiusParams,
+      )
+      mobiusRef.current = r.state
+      setMobiusTelemetry(r.telem)
     }, 50)
 
     return () => window.clearInterval(id)

@@ -1,6 +1,7 @@
 import type { AvatarStateVector } from './AvatarStateVector'
 import { clamp01, clampEntropy, clampValence } from './AvatarStateVector'
 import { phaseSignalFromState } from './phasePalettes'
+import type { MobiusTelemetry } from '../../../../mobius/runtime'
 
 let currentAvatarState: AvatarStateVector = {
   arousal: 0,
@@ -10,6 +11,8 @@ let currentAvatarState: AvatarStateVector = {
   entropy: 0.04,
   focus: 0.5,
 }
+
+let currentMobiusTelemetry: MobiusTelemetry | null = null
 
 export function resetAvatarStateToDefaults(): void {
   // Boot-safe defaults (runtime only; no persistence).
@@ -38,6 +41,14 @@ export function setAvatarState(patch: Partial<AvatarStateVector>): AvatarStateVe
 
 export function getAvatarState(): AvatarStateVector {
   return currentAvatarState
+}
+
+export function setMobiusTelemetry(telem: MobiusTelemetry | null): void {
+  currentMobiusTelemetry = telem
+}
+
+export function getMobiusTelemetry(): MobiusTelemetry | null {
+  return currentMobiusTelemetry
 }
 
 /**

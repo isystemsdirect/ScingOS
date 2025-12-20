@@ -3,7 +3,7 @@ import { Billboard } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { useMemo, useRef } from 'react'
 import type { Group, Sprite } from 'three'
-import { getAvatarState } from '../influence/InfluenceBridge'
+import { getAvatarState, getMobiusTelemetry } from '../influence/InfluenceBridge'
 
 // Deterministic “flare anchor” generator (no Math.random)
 function hash1(i: number) {
@@ -80,6 +80,7 @@ export default function AvatarFlares3D(props: { intensity: number }) {
 
   useFrame(() => {
     const s = getAvatarState()
+    const telem = getMobiusTelemetry()
     const t = performance.now() * 0.001
 
     // Pulse & intensity are avatar-driven, deterministic
@@ -91,6 +92,10 @@ export default function AvatarFlares3D(props: { intensity: number }) {
       const sp = sprites.current[i]
       const m = mats[i]
       if (!sp) return
+
+      if (telem) {
+        m.color.setRGB(telem.emissiveColor.r, telem.emissiveColor.g, telem.emissiveColor.b)
+      }
 
       const w = 0.55 + 0.35 * s.arousal
       const a = h.a + t * w * (i % 2 === 0 ? 1 : -1) * 0.35
@@ -107,7 +112,9 @@ export default function AvatarFlares3D(props: { intensity: number }) {
 
       // Opacity pulses; keeps flares tied to avatar illumination (not floor)
       const k = Math.max(0, Math.min(1.5, props.intensity))
-      m.opacity = Math.min(0.85, 0.10 + base * 0.75 * k)
+      const amp = telem ? Math.max(0, Math.min(1, telem.inversionAmplitude)) : 0
+      const mobiusBoost = 0.85 + 0.85 * amp
+      m.opacity = Math.min(0.85, (0.10 + base * 0.75 * k) * mobiusBoost)
     })
   })
 

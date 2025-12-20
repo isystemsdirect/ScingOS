@@ -10,7 +10,7 @@ import { AVATAR_RADIUS_UNITS, FLOOR_Y } from './scale'
 import Starfield from './Starfield'
 import { useDevOptionsStore } from '../dev/useDevOptionsStore'
 import { setRenderStats } from '../influence/renderStats'
-import { getAvatarState, getPhaseSignal } from '../influence/InfluenceBridge'
+import { getAvatarState, getMobiusTelemetry, getPhaseSignal } from '../influence/InfluenceBridge'
 import { getPalette, phaseABFromSignal, type PhaseChannel } from '../influence/phasePalettes'
 import AvatarFlares3D from './AvatarFlares3D'
 import { HaloShellMaterial, type HaloShellMaterialImpl } from './HaloShellMaterial'
@@ -267,6 +267,19 @@ export default function Scene3D() {
       haloRef.current.uniforms.arousal.value = uRef.current.arousal
       haloRef.current.uniforms.focus.value = uRef.current.focus
       haloRef.current.uniforms.phaseBias.value = 0.37
+
+      const telem = getMobiusTelemetry()
+      if (telem) {
+        haloRef.current.uniforms.mobiusR.value = telem.emissiveColor.r
+        haloRef.current.uniforms.mobiusG.value = telem.emissiveColor.g
+        haloRef.current.uniforms.mobiusB.value = telem.emissiveColor.b
+        haloRef.current.uniforms.mobiusStrength.value = Math.max(0, Math.min(1, telem.inversionAmplitude))
+      } else {
+        haloRef.current.uniforms.mobiusR.value = 0
+        haloRef.current.uniforms.mobiusG.value = 0
+        haloRef.current.uniforms.mobiusB.value = 0
+        haloRef.current.uniforms.mobiusStrength.value = 0
+      }
     }
 
     setU((skinRef.current as any)?.uniforms, 'phaseA', phaseA)
