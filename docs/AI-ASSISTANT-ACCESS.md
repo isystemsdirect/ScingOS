@@ -178,7 +178,7 @@ For repositories with complex codebases:
 
 1. **Export Repository Structure**
    ```bash
-   tree -L 3 -I 'node_modules|.git' > repo-structure.txt
+   tree -L 3 -I 'node_modules|.git|dist|build|.next|out' > repo-structure.txt
    ```
 
 2. **Share with ChatGPT**

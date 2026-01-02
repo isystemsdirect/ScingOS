@@ -32,7 +32,7 @@ Simply share this URL with ChatGPT:
 ## Important Notes
 
 - The repository is **public** - no special access needed
-- ChatGPT cannot be added as a GitHub collaborator (it's an AI, not a GitHub user)
+- ChatGPT cannot be added as a GitHub collaborator (AI assistants don't have GitHub accounts)
 - Always review AI-generated code before committing
 - Never share secrets or API keys with ChatGPT
 
