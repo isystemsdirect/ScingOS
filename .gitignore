@@ -126,3 +126,11 @@ credentials/
 # Miscellaneous
 .vercel
 .turbo
+
+# --- Emulator artifacts (local-only) ---
+emulator/
+**/emulator/
+.emulator/
+**/.emulator/
+*.log
+*.tmp
