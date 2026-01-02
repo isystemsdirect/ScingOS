@@ -305,6 +305,15 @@ Before contributing:
 - Review our [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
 - Sign the [Contributor License Agreement](legal/CONTRIBUTOR_LICENSE_AGREEMENT.md)
 
+### Using AI Assistants (ChatGPT, GitHub Copilot, etc.)
+
+Want to use ChatGPT or other AI assistants with this repository? See our **[AI Assistant Access Guide](docs/AI-ASSISTANT-ACCESS.md)** for:
+
+- Repository URL for sharing with ChatGPT: `https://github.com/isystemsdirect/ScingOS`
+- How to provide context to AI assistants
+- Best practices for AI-assisted development
+- Security considerations
+
 ---
 
 ## Documentation
@@ -319,6 +328,7 @@ Comprehensive documentation is available in the `/docs` directory:
 - **[Firebase Integration](docs/FIREBASE-INTEGRATION.md)** - Backend setup
 - **[BFI Philosophy](docs/BFI-PHILOSOPHY.md)** - Bona Fide Intelligence principles
 - **[Deployment Guide](docs/DEPLOYMENT.md)** - Production deployment
+- **[AI Assistant Access](docs/AI-ASSISTANT-ACCESS.md)** - Guide for using ChatGPT and other AI assistants with this repository
 
 ---
 
