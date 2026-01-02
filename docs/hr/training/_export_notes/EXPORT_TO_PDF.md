@@ -7,3 +7,7 @@ Target PDFs:
 - 02_Training_Course_Catalog_and_Syllabi_v1.0.pdf
 - 03_Investor_Board_Training_Framework_Summary_v1.0.pdf
 - 04_Audit_Regulatory_Training_Governance_Pack_v1.0.pdf
+
+## Canon Rule
+- Markdown is the canonical source.
+- PDFs are derived outputs and must be regenerated whenever the corresponding Markdown changes.

@@ -1,0 +1,22 @@
+name: Docs - Training PDF Sync
+
+on:
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  training-pdf-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check training PDF sync (warning only)
+        run: |
+          bash scripts/check-training-pdf-sync.sh origin/main || {
+            echo "::warning title=Training PDFs may be stale::Training Markdown changed without corresponding PDF updates. Regenerate PDFs in docs/hr/training/_attachments/."
+            exit 0
+          }
