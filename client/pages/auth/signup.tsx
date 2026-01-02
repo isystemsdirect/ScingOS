@@ -33,6 +33,9 @@ export default function SignUp() {
     setLoading(true);
 
     try {
+      if (!auth || !firestore) {
+        throw new Error('Sign up is not configured (missing/invalid Firebase config).');
+      }
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 

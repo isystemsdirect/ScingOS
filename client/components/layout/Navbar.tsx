@@ -8,6 +8,7 @@ export function Navbar() {
 
   const handleSignOut = async () => {
     try {
+      if (!auth) return;
       await signOut(auth);
     } catch (error) {
       console.error('Sign out error:', error);

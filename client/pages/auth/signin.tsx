@@ -19,6 +19,9 @@ export default function SignIn() {
     setLoading(true);
 
     try {
+      if (!auth) {
+        throw new Error('Authentication is not configured (missing/invalid Firebase config).');
+      }
       await signInWithEmailAndPassword(auth, email, password);
       router.push('/dashboard');
     } catch (err: any) {
@@ -33,6 +36,9 @@ export default function SignIn() {
     setLoading(true);
 
     try {
+      if (!auth) {
+        throw new Error('Authentication is not configured (missing/invalid Firebase config).');
+      }
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
       router.push('/dashboard');

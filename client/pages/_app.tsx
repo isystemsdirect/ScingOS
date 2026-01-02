@@ -9,10 +9,8 @@ export default function App({ Component, pageProps }: AppProps) {
   const setUser = useAuthStore((state) => state.setUser);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-    });
-
+    if (!auth) return;
+    const unsubscribe = onAuthStateChanged(auth, (user) => setUser(user));
     return () => unsubscribe();
   }, [setUser]);
 

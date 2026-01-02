@@ -33,6 +33,11 @@ export default function Dashboard() {
 
   const fetchSessions = async () => {
     if (!user) return;
+    if (!firestore) {
+      console.error('Firestore is not configured (missing/invalid Firebase config).');
+      setLoadingSessions(false);
+      return;
+    }
 
     try {
       const q = query(
