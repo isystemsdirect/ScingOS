@@ -1,4 +1,4 @@
-import DevOptionsPanel from '../dev/DevOptionsPanel'
+import DevOptionsPanel from './DevOptionsPanel'
 
 /**
  * Legacy alias.

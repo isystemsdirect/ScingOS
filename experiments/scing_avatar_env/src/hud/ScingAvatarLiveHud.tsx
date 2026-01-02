@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getDevOptions, subscribeDevOptions } from '../dev/devOptionsStore'
+import { getDevOptions, subscribeDevOptions } from '../state/devOptionsStore'
 import { getMediaStatus, type MediaStatus } from '../sensors/mediaSensors'
 import { getRenderStats, type RenderStats } from '../influence/renderStats'
 

@@ -12,8 +12,10 @@ import { useDevOptionsStore } from '../dev/useDevOptionsStore'
 import { setRenderStats } from '../influence/renderStats'
 import { getAvatarState, getMobiusTelemetry, getPhaseSignal } from '../influence/InfluenceBridge'
 import { getPalette, phaseABFromSignal, type PhaseChannel } from '../influence/phasePalettes'
-import AvatarFlares3D from './AvatarFlares3D'
-import { HaloShellMaterial, type HaloShellMaterialImpl } from './HaloShellMaterial'
+import AvatarFlares3D from './flares/AvatarFlares3D'
+import { HaloShellMaterial, type HaloShellMaterialImpl } from './halo/HaloShellMaterial'
+import HaloShell from './halo/HaloShell'
+import HaloSmokeShell from './HaloSmokeShell'
 
 extend({ FlameMaterial, HaloShellMaterial })
 
@@ -72,6 +74,8 @@ export default function Scene3D() {
   const { camera } = useThree()
   const opt = useDevOptionsStore()
 
+  const controlsRef = useRef<any>(null)
+
   const setAvatarLayer = (o: THREE.Object3D) => {
     o.layers.set(LAYER_AVATAR)
   }
@@ -95,6 +99,26 @@ export default function Scene3D() {
     camera.lookAt(0, avatarCenterY, 0)
     camera.updateMatrixWorld()
   }, [camera, avatarCenterY])
+
+  useEffect(() => {
+    const cam = camera as unknown as THREE.PerspectiveCamera
+    if (typeof cam.fov !== 'number' || typeof cam.updateProjectionMatrix !== 'function') return
+    cam.fov = opt.camera.cameraFov
+    cam.updateProjectionMatrix()
+  }, [camera, opt.camera.cameraFov])
+
+  useEffect(() => {
+    // Reset to canonical view (deterministic).
+    const c = controlsRef.current
+    if (!c) return
+    try {
+      c.reset?.()
+    } catch {
+      // ignore
+    }
+    camera.lookAt(0, avatarCenterY, 0)
+    camera.updateMatrixWorld()
+  }, [camera, avatarCenterY, opt.camera.cameraReset])
 
   const forceFailsafeRef = useRef(false)
   useEffect(() => {
@@ -260,25 +284,30 @@ export default function Scene3D() {
       focus: uRef.current.focus,
     })
 
-    // Halo shell uniforms (CB)
-    if (haloRef.current?.uniforms) {
-      haloRef.current.uniforms.time.value = t
-      // Intensity is currently fixed in Stage 1 canonical options.
-      haloRef.current.uniforms.arousal.value = uRef.current.arousal
-      haloRef.current.uniforms.focus.value = uRef.current.focus
-      haloRef.current.uniforms.phaseBias.value = 0.37
+    // Halo shell uniforms (Stage 5 guarded writes)
+    const haloUniforms: AnyUniforms | undefined = (haloRef.current as any)?.uniforms
+    if (haloUniforms) {
+      setU(haloUniforms, 'time', t)
+      setU(haloUniforms, 'arousal', uRef.current.arousal)
+      setU(haloUniforms, 'focus', uRef.current.focus)
+      setU(haloUniforms, 'phaseBias', 0.37)
+
+      setU(haloUniforms, 'haloSoftness', opt.haloFlares.haloSoftness)
+      setU(haloUniforms, 'haloNoiseScale', opt.haloFlares.haloNoiseScale)
+      setU(haloUniforms, 'haloDissipation', opt.haloFlares.haloDissipation)
+      setU(haloUniforms, 'haloIntensity', opt.haloFlares.haloIntensity)
 
       const telem = getMobiusTelemetry()
       if (telem) {
-        haloRef.current.uniforms.mobiusR.value = telem.emissiveColor.r
-        haloRef.current.uniforms.mobiusG.value = telem.emissiveColor.g
-        haloRef.current.uniforms.mobiusB.value = telem.emissiveColor.b
-        haloRef.current.uniforms.mobiusStrength.value = Math.max(0, Math.min(1, telem.inversionAmplitude))
+        setU(haloUniforms, 'mobiusR', telem.emissiveColor.r)
+        setU(haloUniforms, 'mobiusG', telem.emissiveColor.g)
+        setU(haloUniforms, 'mobiusB', telem.emissiveColor.b)
+        setU(haloUniforms, 'mobiusStrength', Math.max(0, Math.min(1, telem.inversionAmplitude)))
       } else {
-        haloRef.current.uniforms.mobiusR.value = 0
-        haloRef.current.uniforms.mobiusG.value = 0
-        haloRef.current.uniforms.mobiusB.value = 0
-        haloRef.current.uniforms.mobiusStrength.value = 0
+        setU(haloUniforms, 'mobiusR', 0)
+        setU(haloUniforms, 'mobiusG', 0)
+        setU(haloUniforms, 'mobiusB', 0)
+        setU(haloUniforms, 'mobiusStrength', 0)
       }
     }
 
@@ -328,10 +357,26 @@ export default function Scene3D() {
       {/* Avatar group */}
       {opt.avatar.enabled && (
         <group ref={avatarGroupRef} position={[0, avatarCenterY, 0]}>
+          {/* Premium smoky halo (avatar-bound; deterministic) */}
+          <HaloSmokeShell
+            radius={opt.haloFlares.haloRadius}
+            density={opt.haloFlares.haloDissipation}
+            intensity={opt.haloFlares.haloIntensity}
+            advectionSpeed={opt.haloFlares.haloNoiseScale * 0.06}
+            noiseScale={2.2 + opt.haloFlares.haloNoiseScale * 2.6}
+          />
           {/* CB: TRUE 3D FLARES (AVATAR-SPACE ONLY) */}
-          {opt.avatar.flaresEnabled ? (
+          {opt.haloFlares.flareEnabled ? (
             <group position={[0, 0, 0]}>
-              <AvatarFlares3D intensity={1.0} />
+              <AvatarFlares3D
+                intensity={opt.haloFlares.flareIntensity}
+                count={opt.haloFlares.flareCount}
+                size={opt.haloFlares.flareSize}
+                pulseRate={opt.haloFlares.flarePulseRate}
+                depthBias={opt.haloFlares.flareDepthBias}
+                followStrength={opt.haloFlares.flareFollowStrength}
+                parallaxScale={opt.haloFlares.flareParallaxScale}
+              />
             </group>
           ) : null}
 
@@ -363,26 +408,28 @@ export default function Scene3D() {
           ) : null}
 
           {/* CB: HALO SHELL (AVATAR-EMANATING WRAP) */}
-          {opt.avatar.haloEnabled ? (
-            <mesh geometry={geometry} scale={1.06} onUpdate={setAvatarLayer}>
-              <haloShellMaterial ref={haloRef} />
-            </mesh>
+          {opt.haloFlares.haloEnabled ? (
+            <HaloShell geometry={geometry} scale={1.0 + opt.haloFlares.haloRadius} onUpdate={setAvatarLayer} materialRef={haloRef} />
           ) : null}
         </group>
       )}
 
       {/* Camera controls: NO focus lock, fully manual */}
       <OrbitControls
+        ref={controlsRef}
         makeDefault
-        enablePan
-        enableZoom
-        enableRotate
+        enabled={opt.camera.orbitEnabled}
+        enablePan={opt.camera.orbitPanEnabled}
+        enableZoom={opt.camera.orbitZoomEnabled}
+        enableRotate={opt.camera.orbitEnabled}
         target={[0, avatarCenterY, 0]}
-        minDistance={0.9}
-        maxDistance={800.0}
+        minDistance={opt.camera.orbitMinDistance}
+        maxDistance={opt.camera.orbitMaxDistance}
         enableDamping
         dampingFactor={0.08}
-        autoRotate={false}
+        autoRotate={opt.camera.orbitAutoRotate}
+        autoRotateSpeed={opt.camera.orbitRotateSpeed}
+        rotateSpeed={opt.camera.orbitRotateSpeed}
       />
     </>
   )

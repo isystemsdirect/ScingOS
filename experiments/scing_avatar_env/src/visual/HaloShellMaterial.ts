@@ -10,6 +10,11 @@ export type HaloUniforms = {
   mobiusG: number
   mobiusB: number
   mobiusStrength: number
+
+  haloSoftness: number
+  haloNoiseScale: number
+  haloDissipation: number
+  haloIntensity: number
 }
 
 const HaloShellMaterial = shaderMaterial(
@@ -22,6 +27,11 @@ const HaloShellMaterial = shaderMaterial(
     mobiusG: 0,
     mobiusB: 0,
     mobiusStrength: 0,
+
+    haloSoftness: 0.65,
+    haloNoiseScale: 1.0,
+    haloDissipation: 0.7,
+    haloIntensity: 1.0,
   } satisfies HaloUniforms,
 
   /* glsl */ `
@@ -38,6 +48,11 @@ const HaloShellMaterial = shaderMaterial(
     uniform float mobiusG;
     uniform float mobiusB;
     uniform float mobiusStrength;
+
+    uniform float haloSoftness;
+    uniform float haloNoiseScale;
+    uniform float haloDissipation;
+    uniform float haloIntensity;
 
     float hash(vec3 p){
       p = fract(p*0.3183099 + vec3(0.1,0.2,0.3));
@@ -75,8 +90,15 @@ const HaloShellMaterial = shaderMaterial(
 
       // Soft “smoke” displacement (bounded, emanates from surface)
       float t = time * (0.55 + 0.35 * arousal) + phaseBias;
-      float n = noise(position * 2.1 + vec3(0.0, t*0.6, t*0.25)) - 0.5;
+      float ns = max(0.1, haloNoiseScale);
+      float n = noise(position * (2.1 * ns) + vec3(0.0, t*0.6, t*0.25)) - 0.5;
       float puff = n * (0.055 + 0.06 * arousal) * (0.65 + 0.35 * focus);
+
+      // Intensity provides a bounded displacement multiplier.
+      puff *= (0.55 + 0.75 * clamp(haloIntensity, 0.0, 3.0));
+
+      // Dissipation dampens displacement slightly for softer “falloff”.
+      puff *= (1.0 - 0.35 * clamp(haloDissipation, 0.0, 1.0));
 
       vec3 displaced = position + normal * puff;
 
@@ -98,6 +120,11 @@ const HaloShellMaterial = shaderMaterial(
     uniform float mobiusB;
     uniform float mobiusStrength;
 
+    uniform float haloSoftness;
+    uniform float haloNoiseScale;
+    uniform float haloDissipation;
+    uniform float haloIntensity;
+
     // Scing hue family (blue/violet/magenta)
     vec3 scingBlue(){ return vec3(0.00, 0.78, 1.00); }
     vec3 scingViolet(){ return vec3(0.42, 0.10, 0.95); }
@@ -107,7 +134,8 @@ const HaloShellMaterial = shaderMaterial(
       // Fresnel halo shell (emanates from avatar silhouette)
       vec3 N = normalize(vN);
       vec3 V = normalize(vec3(0.0, 0.0, 1.0));
-      float fres = pow(1.0 - max(dot(N, V), 0.0), 2.2);
+      float sp = mix(3.2, 1.6, clamp(haloSoftness, 0.0, 1.0));
+      float fres = pow(1.0 - max(dot(N, V), 0.0), sp);
 
       float t = time * (0.7 + 0.5*arousal) + phaseBias;
       float pulse = 0.6 + 0.4 * (0.5 + 0.5 * sin(t));
@@ -123,6 +151,11 @@ const HaloShellMaterial = shaderMaterial(
 
       float alpha = fres * (0.14 + 0.22*arousal) * pulse * (0.75 + 0.25*focus);
       alpha *= (0.85 + 0.65 * ms);
+
+      alpha *= clamp(haloIntensity, 0.0, 3.0);
+
+      // Dissipation reduces overall alpha (smokier, less persistent).
+      alpha *= (1.0 - 0.65 * clamp(haloDissipation, 0.0, 1.0));
 
       // Keep halo “soft smoke”, not a hard ring
       alpha *= smoothstep(0.0, 0.9, fres);

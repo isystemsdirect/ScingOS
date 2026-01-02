@@ -19,9 +19,41 @@ type PitchyModule = {
   }
 }
 
+// Safe DOM remove: never throws, never double-removes.
+export function safeRemoveNode(node: Node | null | undefined) {
+  if (!node) return
+  const p = node.parentNode
+  if (!p) return
+  try {
+    if (p.contains(node)) p.removeChild(node)
+  } catch {
+    // swallow: React may be deleting same node in the same commit
+  }
+}
+
+function getSensorMount(): HTMLElement {
+  const id = 'scing-sensors-mount'
+  let el = document.getElementById(id) as HTMLElement | null
+  if (!el) {
+    el = document.createElement('div')
+    el.id = id
+    el.style.position = 'fixed'
+    el.style.left = '-99999px'
+    el.style.top = '0'
+    el.style.width = '1px'
+    el.style.height = '1px'
+    el.style.overflow = 'hidden'
+    document.body.appendChild(el)
+  }
+  return el
+}
+
 const clamp01 = (v: number) => Math.max(0, Math.min(1, v))
 
 let enabled: MediaEnabled = { mic: true, cam: true }
+
+// Idempotent lifecycle: prevents double-stop/double-unmount issues.
+let running = false
 
 let status: MediaStatus = {
   micRunning: false,
@@ -58,6 +90,10 @@ let camPrev: Uint8ClampedArray | null = null
 let micSmoothedRms = 0
 let lastMicEnableMs = 0
 let lastCamEnableMs = 0
+
+// Cancellation tokens to prevent async start() races (start finishing after stop).
+let micStartToken = 0
+let camStartToken = 0
 
 let visibilityHandlerAttached = false
 let visibilityHandler: (() => void) | null = null
@@ -170,6 +206,8 @@ async function startMic(): Promise<void> {
   if (!enabled.mic) return
   if (micStream && trackLive(micStream, 'audio')) return
 
+  const token = ++micStartToken
+
   lastMicEnableMs = nowMs()
   setError(undefined)
 
@@ -184,6 +222,17 @@ async function startMic(): Promise<void> {
     })
   } catch (e) {
     setError(`MIC ERROR: ${e instanceof Error ? e.message : String(e)}`)
+    micStream = null
+    return
+  }
+
+  // If we were disabled while awaiting permissions, immediately tear down.
+  if (!enabled.mic || token !== micStartToken) {
+    try {
+      micStream?.getTracks().forEach((t) => t.stop())
+    } catch {
+      // ignore
+    }
     micStream = null
     return
   }
@@ -227,6 +276,7 @@ async function startMic(): Promise<void> {
 }
 
 function stopMic() {
+  micStartToken++
   if (micTimer != null) {
     window.clearInterval(micTimer)
     micTimer = null
@@ -328,6 +378,8 @@ async function startCam(): Promise<void> {
   if (!enabled.cam) return
   if (camStream && trackLive(camStream, 'video')) return
 
+  const token = ++camStartToken
+
   lastCamEnableMs = nowMs()
   setError(undefined)
 
@@ -335,6 +387,17 @@ async function startCam(): Promise<void> {
     camStream = await navigator.mediaDevices.getUserMedia({ audio: false, video: true })
   } catch (e) {
     setError(`CAM ERROR: ${e instanceof Error ? e.message : String(e)}`)
+    camStream = null
+    return
+  }
+
+  // If we were disabled while awaiting permissions, immediately tear down.
+  if (!enabled.cam || token !== camStartToken) {
+    try {
+      camStream?.getTracks().forEach((t) => t.stop())
+    } catch {
+      // ignore
+    }
     camStream = null
     return
   }
@@ -352,7 +415,15 @@ async function startCam(): Promise<void> {
     videoEl.style.top = '-99999px'
     videoEl.style.width = '1px'
     videoEl.style.height = '1px'
-    document.body.appendChild(videoEl)
+    // Dedicated mount is never owned/managed by React.
+    const mount = getSensorMount()
+    mount.appendChild(videoEl)
+
+    // If we were disabled while setting up DOM nodes, immediately tear down.
+    if (!enabled.cam || token !== camStartToken) {
+      stopCam()
+      return
+    }
 
     try {
       await videoEl.play()
@@ -374,6 +445,7 @@ async function startCam(): Promise<void> {
 }
 
 function stopCam() {
+  camStartToken++
   if (camTimer != null) {
     window.clearInterval(camTimer)
     camTimer = null
@@ -387,11 +459,17 @@ function stopCam() {
   camStream = null
 
   try {
-    const parent = videoEl?.parentNode
-    if (parent) parent.removeChild(videoEl as Node)
+    if (videoEl) {
+      videoEl.pause?.()
+      ;(videoEl as any).srcObject = null
+      videoEl.removeAttribute('src')
+      videoEl.load?.()
+    }
   } catch {
     // ignore
   }
+
+  safeRemoveNode(videoEl)
 
   videoEl = null
   camCanvas = null
@@ -496,6 +574,8 @@ export function getMediaStatus(): MediaStatus {
 export async function startMediaSensors(): Promise<void>
 export async function startMediaSensors(opts?: { mic: boolean; cam: boolean }): Promise<void>
 export async function startMediaSensors(opts?: { mic: boolean; cam: boolean }): Promise<void> {
+  if (running) return
+  running = true
   if (opts) enabled = { mic: !!opts.mic, cam: !!opts.cam }
 
   ensureWatchdog()
@@ -508,9 +588,14 @@ export async function startMediaSensors(opts?: { mic: boolean; cam: boolean }): 
   else stopCam()
 
   maybeStopWatchdog()
+
+  // If nothing is enabled, consider sensors not running.
+  if (!enabled.mic && !enabled.cam) running = false
 }
 
 export function stopMediaSensors(): void {
+  if (!running && !enabled.mic && !enabled.cam) return
+  running = false
   enabled = { mic: false, cam: false }
   stopMic()
   stopCam()
@@ -538,6 +623,8 @@ export function setMediaEnabled(v: { mic?: boolean; cam?: boolean }): void {
   const camChanged = next.cam !== enabled.cam
 
   enabled = next
+
+  running = enabled.mic || enabled.cam
 
   if (enabled.mic && micChanged) {
     void startMic()

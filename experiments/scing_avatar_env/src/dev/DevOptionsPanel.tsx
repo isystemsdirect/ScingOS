@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { getDevOptions, resetDevOptionsToDefaults, setDevOptions, subscribeDevOptions } from './devOptionsStore'
 import type { DevOptions } from './devOptionsStore'
-import * as legacy from './devOptions'
 
 function Row(props: { label: string; children: React.ReactNode }) {
   return (
@@ -25,6 +24,29 @@ function Toggle(props: { checked: boolean; onChange: (v: boolean) => void }) {
 
 function isHexColor(s: unknown): s is string {
   return typeof s === 'string' && /^#[0-9a-fA-F]{6}$/.test(s)
+}
+
+function ColorRow(props: { label: string; value: string; onChange: (v: string) => void; disabled?: boolean }) {
+  const wrapStyle = props.disabled ? { opacity: 0.45, pointerEvents: 'none' as const } : undefined
+  const v = isHexColor(props.value) ? props.value : '#ffffff'
+  return (
+    <Row label={props.label}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, ...(wrapStyle ?? {}) }}>
+        <input
+          type="color"
+          value={v}
+          onChange={(e) => props.onChange(e.target.value)}
+          style={{ width: 28, height: 22, border: 'none', padding: 0, background: 'transparent' }}
+        />
+        <input
+          type="text"
+          value={props.value}
+          onChange={(e) => props.onChange(e.target.value)}
+          style={{ width: 160 }}
+        />
+      </div>
+    </Row>
+  )
 }
 
 function labelizeKey(key: string) {
@@ -86,22 +108,17 @@ function isVec3(v: unknown): v is readonly [number, number, number] {
 export default function DevOptionsPanel() {
   const [opt, setOpt] = useState<DevOptions>(() => getDevOptions())
 
-  const [legacyOpt, setLegacyOpt] = useState<legacy.DevOptions>(() => legacy.getDevOptions())
-
   useEffect(() => subscribeDevOptions(() => setOpt(getDevOptions())), [])
-  useEffect(() => legacy.subscribeDevOptions(() => setLegacyOpt(legacy.getDevOptions())), [])
 
   if (!opt.ui.devPanelVisible) return null
 
-  const dockRight = opt.ui.devPanelDock !== 'left'
-  const maxWidth = Math.max(0, Math.min(20, opt.ui.panelsMaxWidthPct))
+  const maxWidth = Math.max(10, Math.min(20, opt.ui.panelsMaxWidthPct))
 
   const shell = useMemo(
     () => ({
       position: 'fixed' as const,
       top: 10,
-      right: dockRight ? 10 : undefined,
-      left: dockRight ? undefined : 10,
+      right: 10,
       width: `min(${maxWidth}vw, 360px)`,
       maxWidth: '20vw',
       zIndex: 99999,
@@ -109,7 +126,7 @@ export default function DevOptionsPanel() {
       fontFamily:
         'ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"',
     }),
-    [dockRight, maxWidth],
+    [maxWidth],
   )
 
   const setAtPath = useCallback(
@@ -396,156 +413,236 @@ export default function DevOptionsPanel() {
       <div style={{ fontWeight: 900, fontSize: 12, marginBottom: 8 }}>SCING AVATAR ENVIRONMENT DEV OPTIONS</div>
 
       <div>
-        {/* CB: explicit full-control sections (arrays must be editable). */}
-        <Section title="Floor (full control)">
-          <Row label="Floor visible">
+        <Section title="Visibility">
+          <Row label="devPanelVisible">
+            <Toggle checked={opt.ui.devPanelVisible} onChange={(v) => setAtPath(['ui', 'devPanelVisible'], v)} />
+          </Row>
+          <Row label="hudVisible (SCING AVATAR-LIVE)">
+            <Toggle checked={opt.ui.hudVisible} onChange={(v) => setAtPath(['ui', 'hudVisible'], v)} />
+          </Row>
+          <Row label="avatarVisible">
+            <Toggle checked={opt.avatar.enabled} onChange={(v) => setAtPath(['avatar', 'enabled'], v)} />
+          </Row>
+          <Row label="environmentFloorVisible">
             <Toggle checked={opt.floor.floorVisible} onChange={(v) => setAtPath(['floor', 'floorVisible'], v)} />
           </Row>
-          <NumberRow label="Floor Y" path={['floor', 'floorY']} value={opt.floor.floorY} step={0.01} />
-          <Row label="Floor infinite">
-            <div style={controlStyles.disabledWrap}>
-              <Toggle checked={true} onChange={() => {}} />
-            </div>
-          </Row>
-        </Section>
-
-        <Section title="Reflection (full control)">
-          <Row label="Reflection enabled">
+          <Row label="reflectionsVisible">
             <Toggle checked={opt.reflection.reflectionEnabled} onChange={(v) => setAtPath(['reflection', 'reflectionEnabled'], v)} />
           </Row>
-          <NumberRow label="Intensity" path={['reflection', 'reflectionIntensity']} value={opt.reflection.reflectionIntensity} step={0.01} />
-          <NumberRow label="Max distance" path={['reflection', 'reflectionMaxDistance']} value={opt.reflection.reflectionMaxDistance} step={0.1} />
-          <SelectRow
-            label="Resolution"
-            path={['reflection', 'reflectionResolution']}
-            value={String(opt.reflection.reflectionResolution)}
-            options={[
-              { label: '256', value: '256' },
-              { label: '512', value: '512' },
-              { label: '1024', value: '1024' },
-              { label: '2048', value: '2048' },
-            ]}
-          />
-          <NumberRow label="Blur" path={['reflection', 'reflectionBlur']} value={opt.reflection.reflectionBlur} step={0.01} />
-          <NumberRow label="Sharpness" path={['reflection', 'reflectionSharpness']} value={opt.reflection.reflectionSharpness} step={0.01} />
-          <NumberRow label="Roughness" path={['reflection', 'reflectionRoughness']} value={opt.reflection.reflectionRoughness} step={0.01} />
-          <NumberRow label="Distortion" path={['reflection', 'reflectionDistortion']} value={opt.reflection.reflectionDistortion} step={0.01} />
-          <NumberRow label="Normal strength" path={['reflection', 'reflectionNormalStrength']} value={opt.reflection.reflectionNormalStrength} step={0.01} />
-          <NumberRow label="Fade start" path={['reflection', 'reflectionFadeStart']} value={opt.reflection.reflectionFadeStart} step={0.1} />
-          <NumberRow label="Fade end" path={['reflection', 'reflectionFadeEnd']} value={opt.reflection.reflectionFadeEnd} step={0.1} />
-          <NumberRow label="Ground Y" path={['reflection', 'reflectionGroundY']} value={opt.reflection.reflectionGroundY} step={0.01} />
-          <NumberRow label="Clip bias" path={['reflection', 'reflectionClipBias']} value={opt.reflection.reflectionClipBias} step={0.0005} />
+          <Row label="starfieldVisible">
+            <Toggle checked={opt.avatar.starfieldEnabled} onChange={(v) => setAtPath(['avatar', 'starfieldEnabled'], v)} />
+          </Row>
+          <NumberRow label="devPanelWidthPct (<=20%)" path={['ui', 'panelsMaxWidthPct']} value={opt.ui.panelsMaxWidthPct} step={1} min={10} max={20} />
         </Section>
 
-        <Section title="Lights (4-spot full control)">
-          <Row label="Rig enabled">
+        <Section title="Camera">
+          <Row label="orbitEnabled">
+            <Toggle checked={opt.camera.orbitEnabled} onChange={(v) => setAtPath(['camera', 'orbitEnabled'], v)} />
+          </Row>
+          <Row label="orbitAutoRotate">
+            <Toggle checked={opt.camera.orbitAutoRotate} onChange={(v) => setAtPath(['camera', 'orbitAutoRotate'], v)} />
+          </Row>
+          <NumberRow label="orbitRotateSpeed" path={['camera', 'orbitRotateSpeed']} value={opt.camera.orbitRotateSpeed} step={0.01} min={-5} max={5} />
+          <Row label="orbitZoomEnabled">
+            <Toggle checked={opt.camera.orbitZoomEnabled} onChange={(v) => setAtPath(['camera', 'orbitZoomEnabled'], v)} />
+          </Row>
+          <Row label="orbitPanEnabled">
+            <Toggle checked={opt.camera.orbitPanEnabled} onChange={(v) => setAtPath(['camera', 'orbitPanEnabled'], v)} />
+          </Row>
+          <NumberRow label="orbitMinDistance" path={['camera', 'orbitMinDistance']} value={opt.camera.orbitMinDistance} step={0.01} min={0.1} max={50} />
+          <NumberRow label="orbitMaxDistance" path={['camera', 'orbitMaxDistance']} value={opt.camera.orbitMaxDistance} step={0.1} min={0.2} max={800} />
+          <NumberRow label="cameraFov" path={['camera', 'cameraFov']} value={opt.camera.cameraFov} step={1} min={15} max={90} />
+          <Row label="resetCamera">
+            <button type="button" onClick={() => setAtPath(['camera', 'cameraReset'], opt.camera.cameraReset + 1)} style={{ fontSize: 12 }}>
+              Reset
+            </button>
+          </Row>
+        </Section>
+
+        <Section title="Sensors">
+          <SelectRow
+            label="sensorSource"
+            path={['sensors', 'source']}
+            value={opt.sensors.source}
+            options={[
+              { label: 'live', value: 'live' },
+              { label: 'sim', value: 'sim' },
+            ]}
+          />
+          <Row label="micEnabled">
+            <Toggle checked={opt.sensors.mic.enabled} onChange={(v) => setAtPath(['sensors', 'mic', 'enabled'], v)} />
+          </Row>
+          <NumberRow label="micGain" path={['sensors', 'mic', 'gain']} value={opt.sensors.mic.gain} step={0.01} min={0} max={5} />
+          <Row label="pitchDetect">
+            <Toggle checked={opt.sensors.mic.pitchDetect} onChange={(v) => setAtPath(['sensors', 'mic', 'pitchDetect'], v)} />
+          </Row>
+          <NumberRow label="pitchSensitivity" path={['sensors', 'pitchSensitivity']} value={opt.sensors.pitchSensitivity} step={0.01} min={0} max={3} />
+          <Row label="camEnabled">
+            <Toggle checked={opt.sensors.cam.enabled} onChange={(v) => setAtPath(['sensors', 'cam', 'enabled'], v)} />
+          </Row>
+          <NumberRow
+            label="camMotionSensitivity"
+            path={['sensors', 'cam', 'motionSensitivity']}
+            value={opt.sensors.cam.motionSensitivity}
+            step={0.01}
+            min={0}
+            max={5}
+          />
+          <NumberRow label="sensorSmoothing" path={['sensors', 'sensorSmoothing']} value={opt.sensors.sensorSmoothing} step={0.01} min={0} max={1} />
+        </Section>
+
+        <Section title="Möbius Telemetry">
+          <Row label="mobiusEnabled">
+            <Toggle checked={opt.mobius.mobiusEnabled} onChange={(v) => setAtPath(['mobius', 'mobiusEnabled'], v)} />
+          </Row>
+          <NumberRow label="phaseSpeed (k)" path={['mobius', 'phaseSpeed']} value={opt.mobius.phaseSpeed} step={0.01} min={0} max={5} />
+          <NumberRow label="epsBand" path={['mobius', 'epsBand']} value={opt.mobius.epsBand} step={0.001} min={0.0001} max={Math.PI} />
+          <NumberRow label="aMax" path={['mobius', 'aMax']} value={opt.mobius.aMax} step={0.01} min={0} max={1} />
+          <NumberRow label="w1" path={['mobius', 'w1']} value={opt.mobius.w1} step={0.01} min={0} max={1.5} />
+          <NumberRow label="w2" path={['mobius', 'w2']} value={opt.mobius.w2} step={0.01} min={0} max={1.5} />
+          <SelectRow
+            label="paletteMode"
+            path={['mobius', 'paletteMode']}
+            value={opt.mobius.paletteMode}
+            options={[
+              { label: 'auto', value: 'auto' },
+              { label: 'forceSCING', value: 'forceSCING' },
+              { label: 'forceLARI', value: 'forceLARI' },
+              { label: 'forceBANE', value: 'forceBANE' },
+            ]}
+          />
+          <SelectRow
+            label="emissiveFrom"
+            path={['mobius', 'emissiveFrom']}
+            value={opt.mobius.emissiveFrom}
+            options={[
+              { label: 'baseColor', value: 'baseColor' },
+              { label: 'emissiveColor', value: 'emissiveColor' },
+            ]}
+          />
+        </Section>
+
+        <Section title="Halo + Flares">
+          <Row label="haloEnabled">
+            <Toggle checked={opt.haloFlares.haloEnabled} onChange={(v) => setAtPath(['haloFlares', 'haloEnabled'], v)} />
+          </Row>
+          <NumberRow label="haloRadius" path={['haloFlares', 'haloRadius']} value={opt.haloFlares.haloRadius} step={0.001} min={0} max={0.2} />
+          <NumberRow label="haloSoftness" path={['haloFlares', 'haloSoftness']} value={opt.haloFlares.haloSoftness} step={0.01} min={0} max={1} />
+          <NumberRow label="haloNoiseScale" path={['haloFlares', 'haloNoiseScale']} value={opt.haloFlares.haloNoiseScale} step={0.01} min={0.1} max={5} />
+          <NumberRow label="haloDissipation" path={['haloFlares', 'haloDissipation']} value={opt.haloFlares.haloDissipation} step={0.01} min={0} max={1} />
+          <NumberRow label="haloIntensity" path={['haloFlares', 'haloIntensity']} value={opt.haloFlares.haloIntensity} step={0.01} min={0} max={3} />
+          <Row label="flareEnabled">
+            <Toggle checked={opt.haloFlares.flareEnabled} onChange={(v) => setAtPath(['haloFlares', 'flareEnabled'], v)} />
+          </Row>
+          <NumberRow label="flareCount" path={['haloFlares', 'flareCount']} value={opt.haloFlares.flareCount} step={1} min={0} max={24} />
+          <NumberRow label="flareSize" path={['haloFlares', 'flareSize']} value={opt.haloFlares.flareSize} step={0.01} min={0.02} max={1} />
+          <NumberRow label="flareIntensity" path={['haloFlares', 'flareIntensity']} value={opt.haloFlares.flareIntensity} step={0.01} min={0} max={3} />
+          <NumberRow label="flarePulseRate" path={['haloFlares', 'flarePulseRate']} value={opt.haloFlares.flarePulseRate} step={0.01} min={0} max={10} />
+          <NumberRow label="flareDepthBias" path={['haloFlares', 'flareDepthBias']} value={opt.haloFlares.flareDepthBias} step={0.01} min={0} max={5} />
+          <NumberRow label="flareFollowStrength" path={['haloFlares', 'flareFollowStrength']} value={opt.haloFlares.flareFollowStrength} step={0.01} min={0} max={1} />
+          <NumberRow label="flareParallaxScale" path={['haloFlares', 'flareParallaxScale']} value={opt.haloFlares.flareParallaxScale} step={0.01} min={0} max={5} />
+        </Section>
+
+        <Section title="Lighting">
+          <Row label="lightsEnabled">
             <Toggle checked={opt.lights.enabled} onChange={(v) => setAtPath(['lights', 'enabled'], v)} />
           </Row>
-          <Row label="Ambient enabled">
+          <Row label="lightRigRotateEnabled">
+            <Toggle checked={opt.lights.rigRotateEnabled} onChange={(v) => setAtPath(['lights', 'rigRotateEnabled'], v)} />
+          </Row>
+          <NumberRow label="lightRigRotateSpeed" path={['lights', 'rigRotateSpeed']} value={opt.lights.rigRotateSpeed} step={0.01} min={-5} max={5} />
+          <Row label="ambientEnabled">
             <Toggle checked={opt.lights.ambientEnabled} onChange={(v) => setAtPath(['lights', 'ambientEnabled'], v)} />
           </Row>
-          <NumberRow label="Ambient intensity" path={['lights', 'ambientIntensity']} value={opt.lights.ambientIntensity} step={0.01} />
+          <NumberRow label="ambientIntensity (hard-capped)" path={['lights', 'ambientIntensity']} value={opt.lights.ambientIntensity} step={0.005} min={0} max={0.25} />
+          <div style={{ opacity: 0.75, fontSize: 11, marginTop: 6 }}>Avatar-only lighting is enforced (non-toggle).</div>
+        </Section>
 
-          {opt.lights.spots.map((s, idx) => (
-            <div key={idx} style={{ borderTop: '1px solid rgba(255,255,255,0.10)', paddingTop: 10, marginTop: 10 }}>
-              <div style={{ fontWeight: 800, fontSize: 12, marginBottom: 8 }}>{`Spot ${idx + 1}`}</div>
+        <Section title="Lighting — Spots">
+          {opt.lights.spots.map((s, i) => (
+            <div key={i} style={{ borderTop: i === 0 ? 'none' : '1px solid rgba(138,92,255,0.14)', paddingTop: i === 0 ? 0 : 10, marginTop: i === 0 ? 0 : 10 }}>
+              <div style={{ fontWeight: 800, fontSize: 12, marginBottom: 6 }}>Spot {i + 1}</div>
 
-              <Row label="Enabled">
-                <Toggle checked={s.enabled} onChange={(v) => setAtPath(['lights', 'spots', idx, 'enabled'], v)} />
+              <Row label="enabled">
+                <Toggle checked={s.enabled} onChange={(v) => setAtPath(['lights', 'spots', i, 'enabled'], v)} />
               </Row>
 
-              {/* color */}
-              <Row label="Color">
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <input
-                    type="color"
-                    value={s.color}
-                    onChange={(e) => setAtPath(['lights', 'spots', idx, 'color'], e.target.value)}
-                    style={{ width: 28, height: 22, border: 'none', padding: 0, background: 'transparent' }}
-                  />
-                  <input
-                    type="text"
-                    value={s.color}
-                    onChange={(e) => setAtPath(['lights', 'spots', idx, 'color'], e.target.value)}
-                    style={controlStyles.inputMid}
-                  />
-                </div>
+              <ColorRow label="color" value={s.color} onChange={(v) => setAtPath(['lights', 'spots', i, 'color'], v)} />
+
+              <NumberRow label="intensity" path={['lights', 'spots', i, 'intensity']} value={s.intensity} step={0.5} min={0} max={100} />
+              <NumberRow label="distance" path={['lights', 'spots', i, 'distance']} value={s.distance} step={0.5} min={0} max={200} />
+              <NumberRow label="decay" path={['lights', 'spots', i, 'decay']} value={s.decay} step={0.1} min={0} max={4} />
+              <NumberRow label="angle" path={['lights', 'spots', i, 'angle']} value={s.angle} step={0.01} min={0.01} max={Math.PI / 2} />
+              <NumberRow label="penumbra" path={['lights', 'spots', i, 'penumbra']} value={s.penumbra} step={0.01} min={0} max={1} />
+
+              <Row label="castShadow">
+                <Toggle checked={s.castShadow} onChange={(v) => setAtPath(['lights', 'spots', i, 'castShadow'], v)} />
               </Row>
 
-              <NumberRow label="Intensity" path={['lights', 'spots', idx, 'intensity']} value={s.intensity} step={0.1} />
-              <NumberRow label="Distance" path={['lights', 'spots', idx, 'distance']} value={s.distance} step={0.1} />
-              <NumberRow label="Decay" path={['lights', 'spots', idx, 'decay']} value={s.decay} step={0.1} />
-              <NumberRow label="Angle" path={['lights', 'spots', idx, 'angle']} value={s.angle} step={0.01} />
-              <NumberRow label="Penumbra" path={['lights', 'spots', idx, 'penumbra']} value={s.penumbra} step={0.01} />
+              <Vec3Row label="position" path={['lights', 'spots', i, 'position']} value={s.position} />
+              <Vec3Row label="target" path={['lights', 'spots', i, 'target']} value={s.target} />
 
-              <Vec3Row label="Position" path={['lights', 'spots', idx, 'position']} value={s.position} />
-              <Vec3Row label="Target" path={['lights', 'spots', idx, 'target']} value={s.target} />
-
-              <Row label="Cast shadow">
-                <Toggle checked={s.castShadow} onChange={(v) => setAtPath(['lights', 'spots', idx, 'castShadow'], v)} />
-              </Row>
-              <Row label="Avatar-only layer">
-                <Toggle checked={s.layerAvatarOnly} onChange={(v) => setAtPath(['lights', 'spots', idx, 'layerAvatarOnly'], v)} />
-              </Row>
-
-              <Row label="Rotation enabled">
-                <Toggle checked={s.rotationEnabled} onChange={(v) => setAtPath(['lights', 'spots', idx, 'rotationEnabled'], v)} />
+              <div style={{ opacity: 0.8, fontSize: 11, margin: '8px 0 4px' }}>Orbit (counter-rotates by index)</div>
+              <Row label="orbitEnabled">
+                <Toggle checked={(s as any).orbitEnabled} onChange={(v) => setAtPath(['lights', 'spots', i, 'orbitEnabled'], v)} />
               </Row>
               <SelectRow
-                label="Rotation axis"
-                path={['lights', 'spots', idx, 'rotationAxis']}
-                value={s.rotationAxis}
+                label="orbitAxis"
+                path={['lights', 'spots', i, 'orbitAxis']}
+                value={String((s as any).orbitAxis ?? 'y')}
                 options={[
-                  { label: 'X', value: 'x' },
-                  { label: 'Y', value: 'y' },
-                  { label: 'Z', value: 'z' },
+                  { label: 'x', value: 'x' },
+                  { label: 'y', value: 'y' },
+                  { label: 'z', value: 'z' },
                 ]}
               />
-              <NumberRow label="Rotation rate (rad/s)" path={['lights', 'spots', idx, 'rotationRate']} value={s.rotationRate} step={0.01} />
-              <NumberRow label="Radius hint" path={['lights', 'spots', idx, 'radiusHint']} value={s.radiusHint} step={0.01} />
+              <NumberRow label="orbitSpeed" path={['lights', 'spots', i, 'orbitSpeed']} value={Number((s as any).orbitSpeed ?? 0)} step={0.01} min={-5} max={5} />
+              <NumberRow label="orbitRadius" path={['lights', 'spots', i, 'orbitRadius']} value={Number((s as any).orbitRadius ?? 0)} step={0.05} min={0} max={50} />
+              <NumberRow label="orbitPhase" path={['lights', 'spots', i, 'orbitPhase']} value={Number((s as any).orbitPhase ?? 0)} step={0.05} min={-50} max={50} />
+
+              <NumberRow label="radiusHint" path={['lights', 'spots', i, 'radiusHint']} value={s.radiusHint} step={0.01} min={0.05} max={3} />
             </div>
           ))}
         </Section>
 
-        <Section title="Floor shine (separate system)">
-          <Row label="Enabled">
-            <Toggle checked={opt.floorShine.floorShineEnabled} onChange={(v) => setAtPath(['floorShine', 'floorShineEnabled'], v)} />
+        <Section title="Reflections">
+          <Row label="reflectionEnabled">
+            <Toggle checked={opt.reflection.reflectionEnabled} onChange={(v) => setAtPath(['reflection', 'reflectionEnabled'], v)} />
           </Row>
-          <Row label="Follow avatar">
-            <Toggle checked={opt.floorShine.floorShineFollowAvatar} onChange={(v) => setAtPath(['floorShine', 'floorShineFollowAvatar'], v)} />
-          </Row>
-          <NumberRow label="Radius" path={['floorShine', 'floorShineRadius']} value={opt.floorShine.floorShineRadius} step={0.01} />
-          <NumberRow label="Intensity" path={['floorShine', 'floorShineIntensity']} value={opt.floorShine.floorShineIntensity} step={0.01} />
-          <NumberRow label="Falloff" path={['floorShine', 'floorShineFalloff']} value={opt.floorShine.floorShineFalloff} step={0.1} />
+          <div style={{ opacity: 0.75, fontSize: 11, marginTop: 6 }}>Avatar-only reflection is enforced (non-toggle).</div>
+          <NumberRow label="reflectionIntensity" path={['reflection', 'reflectionIntensity']} value={opt.reflection.reflectionIntensity} step={0.01} min={0} max={5} />
+          <NumberRow label="reflectionRadius" path={['reflection', 'reflectionRadius']} value={opt.reflection.reflectionRadius} step={0.1} min={0.5} max={80} />
+          <NumberRow label="reflectionFade" path={['reflection', 'reflectionFade']} value={opt.reflection.reflectionFade} step={0.01} min={0} max={1} />
+          <NumberRow label="reflectionExtent" path={['reflection', 'reflectionExtent']} value={opt.reflection.reflectionExtent} step={10} min={200} max={8000} />
+          <NumberRow label="reflectionMaxDistance" path={['reflection', 'reflectionMaxDistance']} value={opt.reflection.reflectionMaxDistance} step={0.1} min={0} max={200} />
+          <NumberRow label="reflectionFalloff" path={['reflection', 'reflectionFalloff']} value={opt.reflection.reflectionFalloff} step={0.01} min={0.05} max={2} />
+          <NumberRow label="reflectionNoiseAmount" path={['reflection', 'reflectionNoiseAmount']} value={opt.reflection.reflectionNoiseAmount} step={0.01} min={0} max={1} />
+          <NumberRow label="reflectionBlur" path={['reflection', 'reflectionBlur']} value={opt.reflection.reflectionBlur} step={0.01} min={0} max={1} />
+          <NumberRow label="reflectionSharpness" path={['reflection', 'reflectionSharpness']} value={opt.reflection.reflectionSharpness} step={0.01} min={0} max={1} />
+          <NumberRow label="reflectionRoughness" path={['reflection', 'reflectionRoughness']} value={opt.reflection.reflectionRoughness} step={0.01} min={0} max={1} />
+          <NumberRow label="reflectionDistortion" path={['reflection', 'reflectionDistortion']} value={opt.reflection.reflectionDistortion} step={0.01} min={0} max={1} />
+          <NumberRow
+            label="reflectionNormalStrength"
+            path={['reflection', 'reflectionNormalStrength']}
+            value={opt.reflection.reflectionNormalStrength}
+            step={0.01}
+            min={0}
+            max={2}
+          />
         </Section>
 
-        {/* Render the full canonical options tree (never hide fields). */}
-        {renderAny('UI', opt.ui, ['ui'], false)}
-        {renderAny('Avatar', opt.avatar, ['avatar'], false)}
-        {renderAny('Material', opt.material, ['material'], false)}
-        {renderAny('Motion', opt.motion, ['motion'], false)}
-        {renderAny('State', opt.state, ['state'], false)}
-        {renderAny('Sensors', opt.sensors, ['sensors'], false)}
-        {renderAny('Lights (raw)', opt.lights, ['lights'], false)}
-        {renderAny('Floor (raw)', opt.floor, ['floor'], false)}
-        {renderAny('Reflection (raw)', opt.reflection, ['reflection'], false)}
-        {renderAny('Floor shine (raw)', opt.floorShine, ['floorShine'], false)}
-        {renderAny('Post', opt.post, ['post'], false)}
-        {renderAny('Performance', opt.perf, ['perf'], false)}
-        {renderAny('Chroma', opt.chroma, ['chroma'], false)}
-        {renderAny('Log', opt.log, ['log'], false)}
-        {renderAny('Security', opt.security, ['security'], false)}
-
-        {/* Legacy options: preserved in UI (greyed) so nothing “disappears” during migration. */}
-        {renderAny('Legacy (not wired yet)', legacyOpt, ['legacy'], true)}
+        <Section title="Chroma Workstation">
+          <Row label="chromaKeyEnabled">
+            <Toggle checked={opt.chroma.enabled} onChange={(v) => setAtPath(['chroma', 'enabled'], v)} />
+          </Row>
+          <NumberRow label="similarity" path={['chroma', 'similarity']} value={opt.chroma.similarity} step={0.01} min={0} max={1} />
+          <NumberRow label="smoothness" path={['chroma', 'smoothness']} value={opt.chroma.smoothness} step={0.01} min={0} max={1} />
+          <NumberRow label="spill" path={['chroma', 'spill']} value={opt.chroma.spill} step={0.01} min={0} max={1} />
+        </Section>
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 12, gap: 8 }}>
-        <button
-          type="button"
-          onClick={() => resetDevOptionsToDefaults()}
-          style={{ fontSize: 12 }}
-        >
+        <button type="button" onClick={() => resetDevOptionsToDefaults()} style={{ fontSize: 12 }}>
           Reset Defaults
         </button>
       </div>

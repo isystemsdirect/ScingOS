@@ -1,5 +1,6 @@
 export {
   getMediaStatus,
+  safeRemoveNode,
   setMediaEnabled,
   startMediaSensors,
   stopMediaSensors,

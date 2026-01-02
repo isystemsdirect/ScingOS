@@ -1,7 +1,7 @@
 import { setAvatarState } from './InfluenceBridge'
 import { clamp01, clampRange } from './AvatarStateVector'
 import { PitchDetector } from 'pitchy'
-import { getDevOptions, subscribeDevOptions } from '../dev/devOptionsStore'
+import { getDevOptions, subscribeDevOptions } from '../state/devOptionsStore'
 
 const clamp01Local = (v: number) => Math.max(0, Math.min(1, v))
 

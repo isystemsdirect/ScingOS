@@ -42,3 +42,9 @@ body {
   background: #02030a;
   overflow: hidden;
 }
+
+/* If WebGL stalls or context is lost, keep the page non-white. */
+canvas {
+  display: block;
+  background: #05020b;
+}

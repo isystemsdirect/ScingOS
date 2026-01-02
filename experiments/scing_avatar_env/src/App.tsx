@@ -4,35 +4,29 @@ import { Component, Suspense, useEffect, useMemo, useRef, useState } from 'react
 import Scene3D from './visual/Scene3D'
 import { AVATAR_CENTER_Y, CAMERA_Z } from './visual/scale'
 import ScingAvatarLiveHud from './hud/ScingAvatarLiveHud'
-import DevOptionsPanel from './dev/DevOptionsPanel'
+import DevOptionsPanel from './ui/DevOptionsPanel'
 
 import './styles.css'
-import './ui/devpanel.css'
+import './ui/devPanelTheme.css'
 
-import { getDevOptions, setDevOptions, subscribeDevOptions, type DevOptions } from './dev/devOptionsStore'
+import { getDevOptions, subscribeDevOptions, type DevOptions } from './state/devOptionsStore'
 import { LAYER_AVATAR } from './visual/layers'
 import { getMediaStatus, setMediaEnabled, startMediaSensors, stopMediaSensors } from './sensors/mediaSensors'
 import { resetAvatarStateToDefaults, setAvatarState, setMobiusTelemetry } from './influence/InfluenceBridge'
 import Floor from './visual/Floor'
 import { FloorShine } from './visual/FloorShine'
+import { useLightRig } from './visual/lightRig/useLightRig'
 
 import type { MobiusState } from '../../../mobius/types'
 import type { NeuralSignal } from '../../../mobius/signal'
 import { tickMobius } from '../../../mobius/runtime'
+import { applyIntensity, colorFromPhase } from '../../../mobius/palettes'
 
 const mobiusInitial: MobiusState<NeuralSignal> = {
   signal: { role: 'propose', content: {}, tags: [], annotations: {} },
   phase: 0,
   invertedLatched: false,
   inversionAmplitude: 0,
-}
-
-const mobiusParams = {
-  k: 1.0,
-  eps: 0.05 * Math.PI,
-  aMax: 1.0,
-  w1: 0.65,
-  w2: 0.55,
 }
 
 // If you already have sensor start logic elsewhere, keep it.
@@ -43,6 +37,17 @@ type RuntimeCrash = {
   message: string
   detail?: string
   ts: number
+}
+
+function FrameHeartbeat() {
+  useFrame(() => {
+    try {
+      window.__scing_avatar_env_last_frame_ms = performance.now()
+    } catch {
+      // ignore
+    }
+  })
+  return null
 }
 
 const LAST_CRASH_KEY = 'scing_avatar_env_last_crash_v1'
@@ -77,7 +82,7 @@ function tryLoadLastCrash(): RuntimeCrash | null {
 }
 
 class ErrorBoundary extends Component<
-  { onError: (message: string, detail?: string) => void; children: any },
+  { onError: (message: string, detail?: string) => void; children: any; fallback?: React.ReactNode },
   { hasError: boolean }
 > {
   state = { hasError: false }
@@ -94,76 +99,21 @@ class ErrorBoundary extends Component<
 
   render() {
     // Avoid an infinite error loop that can lead to a blank page.
-    if (this.state.hasError) return null
+    if (this.state.hasError) return this.props.fallback ?? null
     return this.props.children
   }
 }
 
-function RotatingLightRig(props: { opt: DevOptions; lightTarget: THREE.Object3D }) {
-  const { opt, lightTarget } = props
-
-  const lightRefs = [
-    useRef<THREE.SpotLight>(null),
-    useRef<THREE.SpotLight>(null),
-    useRef<THREE.SpotLight>(null),
-    useRef<THREE.SpotLight>(null),
-  ] as const
-
-  const targets = useMemo(() => {
-    return [new THREE.Object3D(), new THREE.Object3D(), new THREE.Object3D(), new THREE.Object3D()] as const
-  }, [])
-
-  const tmpV = useMemo(() => new THREE.Vector3(), [])
-  const tmpAxis = useMemo(() => new THREE.Vector3(), [])
-  const tmpQuat = useMemo(() => new THREE.Quaternion(), [])
-
-  useFrame(({ clock }) => {
-    const t = clock.getElapsedTime()
-
-    for (let i = 0; i < 4; i++) {
-      const s = opt.lights.spots[i]
-      const ref = lightRefs[i].current
-      const tgt = targets[i]
-
-      // Update per-light target object position.
-      tgt.position.set(s.target[0], s.target[1], s.target[2])
-      tgt.updateMatrixWorld()
-
-      if (!ref) continue
-
-      // Layers: avatar-only or global.
-      if (s.layerAvatarOnly) {
-        ref.layers.set(LAYER_AVATAR)
-      } else {
-        ref.layers.enableAll()
-      }
-
-      // Apply rotation about the target along selected axis.
-      const basePos = tmpV.set(s.position[0], s.position[1], s.position[2])
-      if (s.rotationEnabled && s.rotationRate !== 0) {
-        tmpAxis.set(0, 0, 0)
-        if (s.rotationAxis === 'x') tmpAxis.set(1, 0, 0)
-        if (s.rotationAxis === 'y') tmpAxis.set(0, 1, 0)
-        if (s.rotationAxis === 'z') tmpAxis.set(0, 0, 1)
-
-        tmpQuat.setFromAxisAngle(tmpAxis, s.rotationRate * t)
-        basePos.sub(tgt.position).applyQuaternion(tmpQuat).add(tgt.position)
-      }
-
-      ref.position.copy(basePos)
-      ref.target = tgt
-      ref.updateMatrixWorld()
-    }
-  })
+function RotatingLightRig(props: { opt: DevOptions }) {
+  const { opt } = props
+  const { lightRefs, targets } = useLightRig(opt)
 
   return (
     <>
-      {/* Per-light targets */}
       {targets.map((t, i) => (
         <primitive key={i} object={t} />
       ))}
 
-      {/* 4-spot rig with full per-light controls */}
       {opt.lights.spots.map((s, i) => (
         <spotLight
           // eslint-disable-next-line react/no-array-index-key
@@ -178,10 +128,7 @@ function RotatingLightRig(props: { opt: DevOptions; lightTarget: THREE.Object3D 
           penumbra={s.penumbra}
           decay={s.decay}
           castShadow={s.castShadow}
-          onUpdate={(o) => {
-            if (s.layerAvatarOnly) o.layers.set(LAYER_AVATAR)
-            else o.layers.enableAll()
-          }}
+          onUpdate={(o) => o.layers.set(LAYER_AVATAR)}
         />
       ))}
     </>
@@ -197,6 +144,14 @@ export default function App() {
   const lastMobiusTRef = useRef<number>(performance.now() * 0.001)
 
   useEffect(() => subscribeDevOptions(() => setOpt(getDevOptions())), [])
+
+  useEffect(() => {
+    try {
+      window.__scing_avatar_env_app_mounted = true
+    } catch {
+      // ignore
+    }
+  }, [])
 
   useEffect(() => {
     // Restore last crash (survives reload), so we can diagnose even if the app dies quickly.
@@ -274,37 +229,33 @@ export default function App() {
   useEffect(() => {
     // Hard reset runtime state to known-visible defaults (runtime only; no persistence).
     resetAvatarStateToDefaults()
-    // Prevent persisted "avatar off" from blanking the scene on boot (boot-only enforcement).
-    setDevOptions({ avatar: { enabled: true }, ui: { hudVisible: true } } as any)
   }, [])
 
   useEffect(() => {
-    let lastMic = getDevOptions().sensors.mic.enabled
-    let lastCam = getDevOptions().sensors.cam.enabled
+    let last = { source: getDevOptions().sensors.source, mic: getDevOptions().sensors.mic.enabled, cam: getDevOptions().sensors.cam.enabled }
 
-    // Start sensors on boot using dev toggles.
-    setMediaEnabled({ mic: lastMic, cam: lastCam })
-    void startMediaSensors()
+    const apply = (o: DevOptions) => {
+      const wantLive = o.sensors.source === 'live'
+      const wantMic = wantLive && o.sensors.mic.enabled
+      const wantCam = wantLive && o.sensors.cam.enabled
+
+      setMediaEnabled({ mic: wantMic, cam: wantCam })
+
+      if (wantMic || wantCam) {
+        void startMediaSensors()
+      } else {
+        // Hard disengage: stop everything when not explicitly live-enabled.
+        stopMediaSensors()
+      }
+    }
+
+    apply(getDevOptions())
 
     const unsub = subscribeDevOptions(() => {
       const o = getDevOptions()
-      if (o.sensors.mic.enabled === lastMic && o.sensors.cam.enabled === lastCam) return
-
-      // Apply desired state immediately.
-      setMediaEnabled({ mic: o.sensors.mic.enabled, cam: o.sensors.cam.enabled })
-
-      // If enabling, start streams (exact request set determined by the current toggles).
-      if ((o.sensors.mic.enabled && !lastMic) || (o.sensors.cam.enabled && !lastCam)) {
-        void startMediaSensors()
-      }
-
-      // If disabling both, fully stop.
-      if (!o.sensors.mic.enabled && !o.sensors.cam.enabled) {
-        stopMediaSensors()
-      }
-
-      lastMic = o.sensors.mic.enabled
-      lastCam = o.sensors.cam.enabled
+      if (o.sensors.source === last.source && o.sensors.mic.enabled === last.mic && o.sensors.cam.enabled === last.cam) return
+      apply(o)
+      last = { source: o.sensors.source, mic: o.sensors.mic.enabled, cam: o.sensors.cam.enabled }
     })
 
     return () => {
@@ -315,7 +266,10 @@ export default function App() {
 
   useEffect(() => {
     // Sensor-driven avatar state driver (deterministic; no Math.random).
+    const smoothed = { mic: 0, cam: 0, pitchHz: 0, pitchClarity: 0 }
+
     const id = window.setInterval(() => {
+      const o = getDevOptions()
       const s = getMediaStatus()
       const t = performance.now() * 0.001
 
@@ -324,23 +278,58 @@ export default function App() {
 
       const clamp01 = (v: number) => Math.max(0, Math.min(1, v))
 
-      const mic = clamp01(s.micRms)
-      const camMotion = clamp01(s.camMotion)
+      const smoothingHz = 1 + clamp01(o.sensors.sensorSmoothing) * 20
+      const k = 1 - Math.exp(-smoothingHz * dt)
+
+      let rawMic = 0
+      let rawCam = 0
+      let rawPitchHz = 0
+      let rawPitchClarity = 0
+
+      if (o.sensors.source === 'sim') {
+        // Deterministic simulation for safe demos (no capture).
+        const micWave = 0.5 + 0.5 * Math.sin(t * 1.7)
+        const camWave = 0.5 + 0.5 * Math.sin(t * 0.9 + 2.0)
+        rawMic = clamp01(micWave * 0.85)
+        rawCam = clamp01(camWave * 0.75)
+
+        if (o.sensors.mic.pitchDetect) {
+          rawPitchHz = 220 + 90 * Math.sin(t * 0.5 + 1.0)
+          rawPitchClarity = clamp01(0.65 + 0.35 * Math.sin(t * 0.33 + 3.0))
+        }
+      } else {
+        rawMic = clamp01(s.micRms)
+        rawCam = clamp01(s.camMotion)
+        rawPitchHz = s.pitchHz
+        rawPitchClarity = clamp01(s.pitchClarity)
+      }
+
+      rawMic = clamp01(rawMic * o.sensors.mic.gain)
+      rawCam = clamp01(rawCam * o.sensors.cam.motionSensitivity)
+      rawPitchClarity = clamp01(rawPitchClarity * o.sensors.pitchSensitivity)
+
+      smoothed.mic = smoothed.mic + (rawMic - smoothed.mic) * k
+      smoothed.cam = smoothed.cam + (rawCam - smoothed.cam) * k
+      smoothed.pitchHz = smoothed.pitchHz + (rawPitchHz - smoothed.pitchHz) * k
+      smoothed.pitchClarity = smoothed.pitchClarity + (rawPitchClarity - smoothed.pitchClarity) * k
+
+      const mic = clamp01(smoothed.mic)
+      const camMotion = clamp01(smoothed.cam)
 
       const arousal = clamp01(mic * 1.35)
 
       // Rhythm rises with voice and gets a tiny deterministic phase nudge from pitch.
       let rhythm = clamp01(mic * 1.1)
-      if (s.pitchHz > 0 && s.pitchClarity > 0) {
-        const phase = Math.sin(t * 1.9 + s.pitchHz * 0.01)
-        rhythm = clamp01(rhythm + phase * 0.05 * clamp01(s.pitchClarity))
+      if (smoothed.pitchHz > 0 && smoothed.pitchClarity > 0) {
+        const phase = Math.sin(t * 1.9 + smoothed.pitchHz * 0.01)
+        rhythm = clamp01(rhythm + phase * 0.05 * clamp01(smoothed.pitchClarity))
       }
 
       const focus = clamp01(0.55 + 0.35 * (1 - camMotion))
       const cognitiveLoad = clamp01(0.35 + 0.65 * camMotion)
 
       // Small bounded oscillation from pitch clarity (no randomness).
-      const valence = clamp01(s.pitchClarity) * 0.22 * Math.sin(t * 0.33)
+      const valence = clamp01(smoothed.pitchClarity) * 0.22 * Math.sin(t * 0.33)
 
       setAvatarState({
         arousal,
@@ -351,6 +340,11 @@ export default function App() {
         entropy: 0.04,
       })
 
+      if (!o.mobius.mobiusEnabled) {
+        setMobiusTelemetry(null)
+        return
+      }
+
       const r = tickMobius(
         mobiusRef.current,
         {
@@ -359,10 +353,40 @@ export default function App() {
           focus,
           dt,
         },
-        mobiusParams,
+        {
+          k: o.mobius.phaseSpeed,
+          eps: o.mobius.epsBand,
+          aMax: o.mobius.aMax,
+          w1: o.mobius.w1,
+          w2: o.mobius.w2,
+        },
       )
       mobiusRef.current = r.state
-      setMobiusTelemetry(r.telem)
+
+      // Palette override + emissive selector.
+      const forcedFamily =
+        o.mobius.paletteMode === 'forceSCING'
+          ? 'SCING'
+          : o.mobius.paletteMode === 'forceLARI'
+            ? 'LARI'
+            : o.mobius.paletteMode === 'forceBANE'
+              ? 'BANE'
+              : r.telem.family
+
+      const forcedBase = colorFromPhase({
+        family: forcedFamily,
+        phase: r.telem.phase,
+        invertedLatched: r.telem.invertedLatched,
+      })
+      const forcedEmissive =
+        o.mobius.emissiveFrom === 'baseColor' ? forcedBase : applyIntensity(forcedBase, r.telem.inversionAmplitude)
+
+      setMobiusTelemetry({
+        ...r.telem,
+        family: forcedFamily,
+        baseColor: forcedBase,
+        emissiveColor: forcedEmissive,
+      })
     }, 50)
 
     return () => window.clearInterval(id)
@@ -378,7 +402,7 @@ export default function App() {
         }}
       >
         {/* HUD: locked top-left (toggleable) */}
-        <ScingAvatarLiveHud />
+        {opt.ui.hudVisible ? <ScingAvatarLiveHud /> : null}
       </ErrorBoundary>
 
       {crash ? (
@@ -452,9 +476,30 @@ export default function App() {
           tryPersistCrash(c)
           setCrash(c)
         }}
+        fallback={
+          <div
+            style={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: 999,
+              background: '#05020b',
+              color: 'rgba(255,255,255,0.92)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontFamily:
+                'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+              fontSize: 12,
+              padding: 16,
+              textAlign: 'center',
+            }}
+          >
+            Renderer crashed. See “RUNTIME CRASH CAPTURE”.
+          </div>
+        }
       >
         <Canvas
-          camera={{ position: [0, AVATAR_CENTER_Y, CAMERA_Z], fov: 38, near: 0.05, far: 5000 }}
+          camera={{ position: [0, AVATAR_CENTER_Y, CAMERA_Z], fov: opt.camera.cameraFov, near: 0.05, far: 5000 }}
           dpr={1}
           gl={{
             antialias: false,
@@ -473,6 +518,7 @@ export default function App() {
             }
           }}
         >
+          <FrameHeartbeat />
           {/* Background: deep studio black-purple */}
           <color attach="background" args={['#05020b']} />
 
@@ -482,7 +528,7 @@ export default function App() {
           {/* Shared spotlight target at avatar center (hover height accounted for) */}
           <primitive object={lightTarget} />
 
-          <RotatingLightRig opt={opt} lightTarget={lightTarget} />
+          <RotatingLightRig opt={opt} />
 
           {/* Infinite floor + reflection plane (reflection independent from floor visibility) */}
           <Floor floorY={opt.floor.floorY} size={18} />

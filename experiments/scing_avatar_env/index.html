@@ -210,11 +210,32 @@
       body {
         height: 100%;
         margin: 0;
-        background: #02030a;
+        background: #02030a !important;
+      }
+
+      #root {
+        height: 100%;
+        background: #02030a !important;
+      }
+
+      /* Hard guarantee: never render a white page */
+      #scing-boot-screen {
+        position: fixed;
+        inset: 0;
+        z-index: 2147483000;
+        background: #05020b;
+        color: rgba(255, 255, 255, 0.78);
+        font: 12px ui-sans-serif, system-ui;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+        pointer-events: none;
       }
     </style>
   </head>
   <body>
+    <div id="scing-boot-screen">loading…</div>
     <div id="root" style="height: 100%; color: rgba(255, 255, 255, 0.65); font: 12px ui-sans-serif, system-ui;">
       loading…
     </div>

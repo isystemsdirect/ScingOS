@@ -15,6 +15,14 @@ export type LightRigSpot = {
   target: Vec3
   castShadow: boolean
   layerAvatarOnly: boolean
+  // Orbit parameters (preferred)
+  orbitEnabled: boolean
+  orbitAxis: LightRotationAxis
+  orbitSpeed: number // rad/sec
+  orbitRadius: number // units; 0 => keep initial radius
+  orbitPhase: number // radians
+
+  // Legacy orbit parameters (kept for backwards compat)
   rotationEnabled: boolean
   rotationAxis: LightRotationAxis
   rotationRate: number // rad/sec
@@ -28,6 +36,18 @@ export type DevOptions = {
     devPanelDock: 'left' | 'right'
     panelsMaxWidthPct: number
     safeMode: boolean
+  }
+
+  camera: {
+    orbitEnabled: boolean
+    orbitAutoRotate: boolean
+    orbitRotateSpeed: number
+    orbitZoomEnabled: boolean
+    orbitMinDistance: number
+    orbitMaxDistance: number
+    orbitPanEnabled: boolean
+    cameraFov: number
+    cameraReset: number
   }
 
   avatar: {
@@ -53,7 +73,13 @@ export type DevOptions = {
   reflection: {
     reflectionEnabled: boolean
     reflectionIntensity: number
+    reflectionRadius: number
+    reflectionFalloff: number
+    reflectionFade: number
+    reflectionExtent: number
     reflectionMaxDistance: number
+    reflectionNoiseAmount: number
+    reflectionOnlyAvatar: true
     reflectionResolution: ReflectionResolution
     reflectionBlur: number
     reflectionSharpness: number
@@ -69,9 +95,40 @@ export type DevOptions = {
   // B) Light Rig (4 spots)
   lights: {
     enabled: boolean
+    rigRotateEnabled: boolean
+    rigRotateSpeed: number
     ambientEnabled: boolean
     ambientIntensity: number
     spots: [LightRigSpot, LightRigSpot, LightRigSpot, LightRigSpot]
+  }
+
+  mobius: {
+    mobiusEnabled: boolean
+    phaseSpeed: number // k
+    epsBand: number // eps
+    aMax: number
+    w1: number
+    w2: number
+    paletteMode: 'auto' | 'forceSCING' | 'forceLARI' | 'forceBANE'
+    emissiveFrom: 'baseColor' | 'emissiveColor'
+  }
+
+  haloFlares: {
+    haloEnabled: boolean
+    haloRadius: number
+    haloSoftness: number
+    haloNoiseScale: number
+    haloDissipation: number
+    haloIntensity: number
+
+    flareEnabled: boolean
+    flareCount: number
+    flareSize: number
+    flareIntensity: number
+    flarePulseRate: number
+    flareDepthBias: number
+    flareFollowStrength: number
+    flareParallaxScale: number
   }
 
   // C) Floor shine (condensed hotspot)
@@ -150,6 +207,9 @@ export type DevOptions = {
   }
 
   sensors: {
+    source: 'live' | 'sim'
+    pitchSensitivity: number
+    sensorSmoothing: number
     mic: {
       enabled: boolean
       autoSuspendWhenOff: boolean
@@ -277,6 +337,13 @@ function defaultSpot(i: number): LightRigSpot {
     target: p.tgt,
     castShadow: false,
     layerAvatarOnly: true,
+
+    orbitEnabled: false,
+    orbitAxis: 'y',
+    orbitSpeed: 0.6,
+    orbitRadius: 0,
+    orbitPhase: 0,
+
     rotationEnabled: false,
     rotationAxis: 'y',
     rotationRate: 0.6,
@@ -291,6 +358,18 @@ export const DEV_OPTIONS_DEFAULTS: DevOptions = {
     devPanelDock: 'right',
     panelsMaxWidthPct: 20,
     safeMode: false,
+  },
+
+  camera: {
+    orbitEnabled: true,
+    orbitAutoRotate: false,
+    orbitRotateSpeed: 0.6,
+    orbitZoomEnabled: true,
+    orbitMinDistance: 0.9,
+    orbitMaxDistance: 800.0,
+    orbitPanEnabled: true,
+    cameraFov: 45,
+    cameraReset: 0,
   },
 
   avatar: {
@@ -315,7 +394,13 @@ export const DEV_OPTIONS_DEFAULTS: DevOptions = {
   reflection: {
     reflectionEnabled: true,
     reflectionIntensity: 1.0,
+    reflectionRadius: 20,
+    reflectionFalloff: 0.9,
+    reflectionFade: 0.9,
+    reflectionExtent: 2000,
     reflectionMaxDistance: 20,
+    reflectionNoiseAmount: 0.08,
+    reflectionOnlyAvatar: true,
     reflectionResolution: 1024,
     reflectionBlur: 0.2,
     reflectionSharpness: 0.7,
@@ -330,9 +415,40 @@ export const DEV_OPTIONS_DEFAULTS: DevOptions = {
 
   lights: {
     enabled: true,
+    rigRotateEnabled: false,
+    rigRotateSpeed: 0.35,
     ambientEnabled: true,
     ambientIntensity: 0.06,
     spots: [defaultSpot(0), defaultSpot(1), defaultSpot(2), defaultSpot(3)],
+  },
+
+  mobius: {
+    mobiusEnabled: true,
+    phaseSpeed: 1.0,
+    epsBand: 0.05 * Math.PI,
+    aMax: 1.0,
+    w1: 0.65,
+    w2: 0.55,
+    paletteMode: 'auto',
+    emissiveFrom: 'emissiveColor',
+  },
+
+  haloFlares: {
+    haloEnabled: true,
+    haloRadius: 0.06,
+    haloSoftness: 0.65,
+    haloNoiseScale: 1.0,
+    haloDissipation: 0.7,
+    haloIntensity: 1.0,
+
+    flareEnabled: true,
+    flareCount: 6,
+    flareSize: 0.22,
+    flareIntensity: 1.0,
+    flarePulseRate: 1.0,
+    flareDepthBias: 1.0,
+    flareFollowStrength: 1.0,
+    flareParallaxScale: 1.0,
   },
 
   floorShine: {
@@ -409,6 +525,9 @@ export const DEV_OPTIONS_DEFAULTS: DevOptions = {
   },
 
   sensors: {
+    source: 'live',
+    pitchSensitivity: 1.0,
+    sensorSmoothing: 0.15,
     mic: {
       enabled: true,
       autoSuspendWhenOff: true,
@@ -478,6 +597,18 @@ function normalizeSpot(src: any, fallback: LightRigSpot): LightRigSpot {
     target: vec3(s.target, fallback.target),
     castShadow: !!s.castShadow,
     layerAvatarOnly: s.layerAvatarOnly === undefined ? fallback.layerAvatarOnly : !!s.layerAvatarOnly,
+
+    orbitEnabled:
+      s.orbitEnabled === undefined
+        ? s.rotationEnabled === undefined
+          ? fallback.orbitEnabled
+          : !!s.rotationEnabled
+        : !!s.orbitEnabled,
+    orbitAxis: pick(s.orbitAxis, ['x', 'y', 'z'] as const, pick(s.rotationAxis, ['x', 'y', 'z'] as const, fallback.orbitAxis)),
+    orbitSpeed: clamp(Number(s.orbitSpeed ?? s.rotationRate ?? fallback.orbitSpeed), -10, 10),
+    orbitRadius: clamp(Number(s.orbitRadius ?? fallback.orbitRadius), 0, 50),
+    orbitPhase: clamp(Number(s.orbitPhase ?? fallback.orbitPhase), -1000, 1000),
+
     rotationEnabled: !!s.rotationEnabled,
     rotationAxis: pick(s.rotationAxis, ['x', 'y', 'z'] as const, fallback.rotationAxis),
     rotationRate: clamp(Number(s.rotationRate ?? fallback.rotationRate), -10, 10),
@@ -489,10 +620,13 @@ export function normalizeDevOptions(input: unknown): DevOptions {
   const src = input && typeof input === 'object' ? (input as any) : {}
 
   const ui = src.ui && typeof src.ui === 'object' ? src.ui : {}
+  const camera = src.camera && typeof src.camera === 'object' ? src.camera : {}
   const avatar = src.avatar && typeof src.avatar === 'object' ? src.avatar : {}
   const floor = src.floor && typeof src.floor === 'object' ? src.floor : {}
   const reflection = src.reflection && typeof src.reflection === 'object' ? src.reflection : {}
   const lights = src.lights && typeof src.lights === 'object' ? src.lights : {}
+  const mobius = src.mobius && typeof src.mobius === 'object' ? src.mobius : {}
+  const haloFlares = src.haloFlares && typeof src.haloFlares === 'object' ? src.haloFlares : {}
   const floorShine = src.floorShine && typeof src.floorShine === 'object' ? src.floorShine : {}
   const post = src.post && typeof src.post === 'object' ? src.post : {}
   const perf = src.perf && typeof src.perf === 'object' ? src.perf : {}
@@ -535,6 +669,18 @@ export function normalizeDevOptions(input: unknown): DevOptions {
       safeMode: !!ui.safeMode,
     },
 
+    camera: {
+      orbitEnabled: camera.orbitEnabled === undefined ? DEV_OPTIONS_DEFAULTS.camera.orbitEnabled : !!camera.orbitEnabled,
+      orbitAutoRotate: camera.orbitAutoRotate === undefined ? DEV_OPTIONS_DEFAULTS.camera.orbitAutoRotate : !!camera.orbitAutoRotate,
+      orbitRotateSpeed: clamp(Number(camera.orbitRotateSpeed ?? DEV_OPTIONS_DEFAULTS.camera.orbitRotateSpeed), -10, 10),
+      orbitZoomEnabled: camera.orbitZoomEnabled === undefined ? DEV_OPTIONS_DEFAULTS.camera.orbitZoomEnabled : !!camera.orbitZoomEnabled,
+      orbitMinDistance: clamp(Number(camera.orbitMinDistance ?? DEV_OPTIONS_DEFAULTS.camera.orbitMinDistance), 0.1, 5000),
+      orbitMaxDistance: clamp(Number(camera.orbitMaxDistance ?? DEV_OPTIONS_DEFAULTS.camera.orbitMaxDistance), 0.2, 5000),
+      orbitPanEnabled: camera.orbitPanEnabled === undefined ? DEV_OPTIONS_DEFAULTS.camera.orbitPanEnabled : !!camera.orbitPanEnabled,
+      cameraFov: clamp(Number(camera.cameraFov ?? DEV_OPTIONS_DEFAULTS.camera.cameraFov), 10, 120),
+      cameraReset: clamp(Number(camera.cameraReset ?? DEV_OPTIONS_DEFAULTS.camera.cameraReset), 0, 1e9),
+    },
+
     avatar: {
       enabled: avatar.enabled === undefined ? DEV_OPTIONS_DEFAULTS.avatar.enabled : !!avatar.enabled,
       meshVisible: avatar.meshVisible === undefined ? DEV_OPTIONS_DEFAULTS.avatar.meshVisible : !!avatar.meshVisible,
@@ -558,7 +704,13 @@ export function normalizeDevOptions(input: unknown): DevOptions {
       reflectionEnabled:
         reflection.reflectionEnabled === undefined ? DEV_OPTIONS_DEFAULTS.reflection.reflectionEnabled : !!reflection.reflectionEnabled,
       reflectionIntensity: clamp(Number(reflection.reflectionIntensity ?? DEV_OPTIONS_DEFAULTS.reflection.reflectionIntensity), 0, 5),
+      reflectionRadius: clamp(Number(reflection.reflectionRadius ?? DEV_OPTIONS_DEFAULTS.reflection.reflectionRadius), 0.1, 5000),
+      reflectionFalloff: clamp(Number(reflection.reflectionFalloff ?? DEV_OPTIONS_DEFAULTS.reflection.reflectionFalloff), 0.05, 2),
+      reflectionFade: clamp01(Number(reflection.reflectionFade ?? DEV_OPTIONS_DEFAULTS.reflection.reflectionFade)),
+      reflectionExtent: clamp(Number(reflection.reflectionExtent ?? DEV_OPTIONS_DEFAULTS.reflection.reflectionExtent), 50, 20000),
       reflectionMaxDistance: clamp(Number(reflection.reflectionMaxDistance ?? DEV_OPTIONS_DEFAULTS.reflection.reflectionMaxDistance), 0, 5000),
+      reflectionNoiseAmount: clamp01(Number(reflection.reflectionNoiseAmount ?? DEV_OPTIONS_DEFAULTS.reflection.reflectionNoiseAmount)),
+      reflectionOnlyAvatar: true,
       reflectionResolution,
       reflectionBlur: clamp01(Number(reflection.reflectionBlur ?? DEV_OPTIONS_DEFAULTS.reflection.reflectionBlur)),
       reflectionSharpness: clamp01(Number(reflection.reflectionSharpness ?? DEV_OPTIONS_DEFAULTS.reflection.reflectionSharpness)),
@@ -573,9 +725,50 @@ export function normalizeDevOptions(input: unknown): DevOptions {
 
     lights: {
       enabled: lights.enabled === undefined ? DEV_OPTIONS_DEFAULTS.lights.enabled : !!lights.enabled,
+      rigRotateEnabled: lights.rigRotateEnabled === undefined ? DEV_OPTIONS_DEFAULTS.lights.rigRotateEnabled : !!lights.rigRotateEnabled,
+      rigRotateSpeed: clamp(Number(lights.rigRotateSpeed ?? DEV_OPTIONS_DEFAULTS.lights.rigRotateSpeed), -10, 10),
       ambientEnabled: lights.ambientEnabled === undefined ? DEV_OPTIONS_DEFAULTS.lights.ambientEnabled : !!lights.ambientEnabled,
-      ambientIntensity: clamp(Number(lights.ambientIntensity ?? DEV_OPTIONS_DEFAULTS.lights.ambientIntensity), 0, 2),
+      ambientIntensity: clamp(Number(lights.ambientIntensity ?? DEV_OPTIONS_DEFAULTS.lights.ambientIntensity), 0, 0.25),
       spots,
+    },
+
+    mobius: {
+      mobiusEnabled: mobius.mobiusEnabled === undefined ? DEV_OPTIONS_DEFAULTS.mobius.mobiusEnabled : !!mobius.mobiusEnabled,
+      phaseSpeed: clamp(Number(mobius.phaseSpeed ?? DEV_OPTIONS_DEFAULTS.mobius.phaseSpeed), 0, 10),
+      epsBand: clamp(Number(mobius.epsBand ?? DEV_OPTIONS_DEFAULTS.mobius.epsBand), 0.0001, Math.PI),
+      aMax: clamp(Number(mobius.aMax ?? DEV_OPTIONS_DEFAULTS.mobius.aMax), 0, 1),
+      w1: clamp(Number(mobius.w1 ?? DEV_OPTIONS_DEFAULTS.mobius.w1), 0, 1.5),
+      w2: clamp(Number(mobius.w2 ?? DEV_OPTIONS_DEFAULTS.mobius.w2), 0, 1.5),
+      paletteMode: pick(mobius.paletteMode, ['auto', 'forceSCING', 'forceLARI', 'forceBANE'] as const, DEV_OPTIONS_DEFAULTS.mobius.paletteMode),
+      emissiveFrom: pick(mobius.emissiveFrom, ['baseColor', 'emissiveColor'] as const, DEV_OPTIONS_DEFAULTS.mobius.emissiveFrom),
+    },
+
+    haloFlares: {
+      haloEnabled:
+        haloFlares.haloEnabled === undefined
+          ? avatar.haloEnabled === undefined
+            ? DEV_OPTIONS_DEFAULTS.haloFlares.haloEnabled
+            : !!avatar.haloEnabled
+          : !!haloFlares.haloEnabled,
+      haloRadius: clamp(Number(haloFlares.haloRadius ?? DEV_OPTIONS_DEFAULTS.haloFlares.haloRadius), 0, 0.5),
+      haloSoftness: clamp01(Number(haloFlares.haloSoftness ?? DEV_OPTIONS_DEFAULTS.haloFlares.haloSoftness)),
+      haloNoiseScale: clamp(Number(haloFlares.haloNoiseScale ?? DEV_OPTIONS_DEFAULTS.haloFlares.haloNoiseScale), 0.1, 10),
+      haloDissipation: clamp01(Number(haloFlares.haloDissipation ?? DEV_OPTIONS_DEFAULTS.haloFlares.haloDissipation)),
+      haloIntensity: clamp(Number(haloFlares.haloIntensity ?? DEV_OPTIONS_DEFAULTS.haloFlares.haloIntensity), 0, 3),
+
+      flareEnabled:
+        haloFlares.flareEnabled === undefined
+          ? avatar.flaresEnabled === undefined
+            ? DEV_OPTIONS_DEFAULTS.haloFlares.flareEnabled
+            : !!avatar.flaresEnabled
+          : !!haloFlares.flareEnabled,
+      flareCount: clamp(Math.round(Number(haloFlares.flareCount ?? DEV_OPTIONS_DEFAULTS.haloFlares.flareCount)), 0, 24),
+      flareSize: clamp(Number(haloFlares.flareSize ?? DEV_OPTIONS_DEFAULTS.haloFlares.flareSize), 0.02, 2),
+      flareIntensity: clamp(Number(haloFlares.flareIntensity ?? DEV_OPTIONS_DEFAULTS.haloFlares.flareIntensity), 0, 3),
+      flarePulseRate: clamp(Number(haloFlares.flarePulseRate ?? DEV_OPTIONS_DEFAULTS.haloFlares.flarePulseRate), 0, 10),
+      flareDepthBias: clamp(Number(haloFlares.flareDepthBias ?? DEV_OPTIONS_DEFAULTS.haloFlares.flareDepthBias), 0, 5),
+      flareFollowStrength: clamp01(Number(haloFlares.flareFollowStrength ?? DEV_OPTIONS_DEFAULTS.haloFlares.flareFollowStrength)),
+      flareParallaxScale: clamp(Number(haloFlares.flareParallaxScale ?? DEV_OPTIONS_DEFAULTS.haloFlares.flareParallaxScale), 0, 5),
     },
 
     floorShine: {
@@ -659,11 +852,14 @@ export function normalizeDevOptions(input: unknown): DevOptions {
     },
 
     sensors: {
+      source: pick(sensors.source, ['live', 'sim'] as const, DEV_OPTIONS_DEFAULTS.sensors.source),
+      pitchSensitivity: clamp(Number(sensors.pitchSensitivity ?? DEV_OPTIONS_DEFAULTS.sensors.pitchSensitivity), 0, 5),
+      sensorSmoothing: clamp01(Number(sensors.sensorSmoothing ?? DEV_OPTIONS_DEFAULTS.sensors.sensorSmoothing)),
       mic: {
         enabled: mic.enabled === undefined ? DEV_OPTIONS_DEFAULTS.sensors.mic.enabled : !!mic.enabled,
         autoSuspendWhenOff:
           mic.autoSuspendWhenOff === undefined ? DEV_OPTIONS_DEFAULTS.sensors.mic.autoSuspendWhenOff : !!mic.autoSuspendWhenOff,
-        gain: clamp(Number(mic.gain ?? DEV_OPTIONS_DEFAULTS.sensors.mic.gain), 0, 3),
+        gain: clamp(Number(mic.gain ?? DEV_OPTIONS_DEFAULTS.sensors.mic.gain), 0, 5),
         pitchDetect: mic.pitchDetect === undefined ? DEV_OPTIONS_DEFAULTS.sensors.mic.pitchDetect : !!mic.pitchDetect,
         noiseGate: clamp01(Number(mic.noiseGate ?? DEV_OPTIONS_DEFAULTS.sensors.mic.noiseGate)),
         debugHUD: !!mic.debugHUD,
@@ -672,12 +868,12 @@ export function normalizeDevOptions(input: unknown): DevOptions {
         enabled: cam.enabled === undefined ? DEV_OPTIONS_DEFAULTS.sensors.cam.enabled : !!cam.enabled,
         autoSuspendWhenOff:
           cam.autoSuspendWhenOff === undefined ? DEV_OPTIONS_DEFAULTS.sensors.cam.autoSuspendWhenOff : !!cam.autoSuspendWhenOff,
-        motionSensitivity: clamp(Number(cam.motionSensitivity ?? DEV_OPTIONS_DEFAULTS.sensors.cam.motionSensitivity), 0, 3),
-        downscale: clamp(Number(cam.downscale ?? DEV_OPTIONS_DEFAULTS.sensors.cam.downscale), 0.25, 1),
+        motionSensitivity: clamp(Number(cam.motionSensitivity ?? DEV_OPTIONS_DEFAULTS.sensors.cam.motionSensitivity), 0, 5),
+        downscale: clamp01(Number(cam.downscale ?? DEV_OPTIONS_DEFAULTS.sensors.cam.downscale)),
         debugHUD: !!cam.debugHUD,
       },
       sim: {
-        enabled: !!sim.enabled,
+        enabled: sim.enabled === undefined ? DEV_OPTIONS_DEFAULTS.sensors.sim.enabled : !!sim.enabled,
         mode: typeof sim.mode === 'string' ? sim.mode : DEV_OPTIONS_DEFAULTS.sensors.sim.mode,
         intensity: clamp01(Number(sim.intensity ?? DEV_OPTIONS_DEFAULTS.sensors.sim.intensity)),
       },
