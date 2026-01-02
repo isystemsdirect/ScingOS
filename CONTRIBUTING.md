@@ -218,6 +218,47 @@ We follow **Conventional Commits** specification:
 
 **Type**:
 - `feat`: New feature
+
+---
+
+## Documentation Governance (Training Framework)
+
+The **training documentation** under:
+
+`docs/hr/training/`
+
+is governed by the following rules:
+
+- **Markdown (.md) files are the canonical source of truth**
+- **PDFs are derived artifacts** stored under `_attachments/`
+- Any change to canonical training Markdown **requires regenerating and committing the corresponding PDFs**
+
+### Automatic Drift Detection
+
+This repository includes an automated staleness detector:
+
+- Script: `scripts/check-training-pdf-sync.sh`
+- CI Warning: runs on all pull requests to `main`
+
+If training Markdown changes without updated PDFs, CI will emit a warning.
+
+### Optional Local Enforcement (Recommended)
+
+Contributors may enable a local pre-push guard to prevent pushing stale documentation.
+
+One-time activation command (repo-local):
+
+```bash
+git config core.hooksPath .githooks
+```
+
+This enables the included hook:
+
+```
+.githooks/pre-push
+```
+
+This setting is local-only by design and is not enforced globally.
 - `fix`: Bug fix
 - `docs`: Documentation changes
 - `style`: Code style changes (formatting, no logic change)
