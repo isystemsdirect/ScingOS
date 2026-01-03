@@ -21,6 +21,8 @@ const hasFirebaseConfig = Boolean(
   firebaseConfig.apiKey && firebaseConfig.authDomain && firebaseConfig.projectId
 );
 
+export const firebaseConfigured = hasFirebaseConfig;
+
 // Avoid initializing Firebase during SSR/build when env is missing/invalid.
 // This prevents hard crashes that can present as a white screen.
 const app: FirebaseApp | null = (() => {

@@ -2,17 +2,18 @@ import { useRouter } from 'next/router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   addDoc,
+  doc,
   getDoc,
   onSnapshot,
   orderBy,
   query,
+  serverTimestamp,
   updateDoc,
 } from 'firebase/firestore';
 import AppShell from '../../components/layout/AppShell';
-import { firestore } from '../../lib/firebase';
-import { useAuth } from '../../lib/auth/AuthContext';
+import { firebaseConfigured, firestore } from '../../lib/firebase';
+import { useAuthStore } from '../../lib/store/authStore';
 import { sessionMessagesCollectionRef } from '../../lib/refs';
-import { sessionDocRef, ts } from '../../lib/firestore/scingModel';
 
 type SessionDoc = {
   user_id: string;
@@ -31,7 +32,7 @@ type MessageDoc = {
 
 export default function SessionDetail() {
   const router = useRouter();
-  const { user, loading, firebaseConfigured } = useAuth();
+  const { user, loading } = useAuthStore();
 
   const sessionId = typeof router.query.id === 'string' ? router.query.id : null;
 
@@ -55,7 +56,7 @@ export default function SessionDetail() {
       setError(null);
 
       try {
-        const sessionSnap = await getDoc(sessionDocRef(firestore, sessionId));
+        const sessionSnap = await getDoc(doc(firestore, 'sessions', sessionId));
         if (!sessionSnap.exists()) {
           setSession(null);
           setMessages([]);
@@ -114,11 +115,11 @@ export default function SessionDetail() {
         user_id: user.uid,
         role: 'user',
         text: trimmed,
-        created_at: ts(),
+        created_at: serverTimestamp(),
       });
 
-      await updateDoc(sessionDocRef(firestore, sessionId), {
-        last_activity: ts(),
+      await updateDoc(doc(firestore, 'sessions', sessionId), {
+        last_activity: serverTimestamp(),
       });
     } catch (e: any) {
       setError(e?.message || 'Failed to send message.');

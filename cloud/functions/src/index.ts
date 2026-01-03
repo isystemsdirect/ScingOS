@@ -1,6 +1,9 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { baneRouter } from './bane';
+import { baneIssueEntitlement, baneIssuePolicySnapshot, baneRevokeEntitlement } from './bane';
+import { evidenceAppendEvent, evidenceFinalizeArtifact } from './evidence';
+import { exportInspectionReport } from './report';
 import { lariRouter } from './lari';
 import { aipRouter } from './aip';
 import { isdcRouter } from './isdc';
@@ -10,6 +13,15 @@ admin.initializeApp();
 
 // Export BANE functions (security)
 export const bane = baneRouter;
+
+// Export entitlement endpoints as first-class callables (stable names)
+export { baneIssueEntitlement, baneRevokeEntitlement, baneIssuePolicySnapshot };
+
+// Export Evidence functions (chain-of-custody)
+export { evidenceFinalizeArtifact, evidenceAppendEvent };
+
+// Export SCING report export
+export { exportInspectionReport };
 
 // Export LARI functions (AI engines)
 export const lari = lariRouter;

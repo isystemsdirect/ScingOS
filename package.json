@@ -1,4 +1,8 @@
 {
+  "engines": {
+    "node": ">=20 <21",
+    "npm": ">=10"
+  },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.51.0",
     "@typescript-eslint/parser": "^8.51.0",
@@ -9,6 +13,17 @@
   "scripts": {
     "typecheck:scing": "tsc -p tools/tmp-tsconfig.json",
     "lint:scing": "eslint \"scing/**/*.{ts,tsx}\" \"tools/**/*.{js,mjs}\" --max-warnings=0",
+    "test:scing:attractors": "node tools/attractors.selftest.mjs",
+    "test:scing:gradients": "node tools/gradients.selftest.mjs",
+    "test:scing:identity": "node tools/identity.selftest.mjs",
+    "test:scing:expression": "node tools/expression.selftest.mjs",
+    "test:scing:orderFocus": "node tools/orderFocus.selftest.mjs",
+    "test:scing:posture": "node tools/posture.selftest.mjs",
+    "test:scing:bane": "node tools/bane.entitlements.selftest.mjs",
+    "test:scing:weather": "node tools/weather.severity.selftest.mjs",
+    "test:scing:lari:weather": "node tools/lari.weather.integration.selftest.mjs",
+    "test:scing:ui:weather": "node tools/weather.ui.selftest.mjs",
+    "test:scing:ui:contracts": "node tools/scing.ui.contracts.selftest.mjs",
     "canon:scan": "node tools/canon-scan.mjs",
     "format": "prettier --write \"scing/**/*.{ts,tsx,js,mjs,json,md}\" \"tools/**/*.{js,mjs,json,md}\"",
     "format:check": "prettier --check \"scing/**/*.{ts,tsx,js,mjs,json,md}\" \"tools/**/*.{js,mjs,json,md}\"",

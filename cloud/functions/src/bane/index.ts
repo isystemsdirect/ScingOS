@@ -2,6 +2,7 @@ import * as functions from 'firebase-functions';
 import { requestCapability } from './capability';
 import { createSDR } from './sdr';
 import { checkPolicy } from './policy';
+import { baneIssueEntitlement, baneIssuePolicySnapshot, baneRevokeEntitlement } from './admin';
 
 /**
  * BANE (Backend Augmented Neural Engine)
@@ -61,4 +62,9 @@ export const baneRouter = {
   requestCapability: requestCapabilityFunc,
   createSDR: createSDRFunc,
   checkPolicy: checkPolicyFunc,
+  issueEntitlement: baneIssueEntitlement,
+  revokeEntitlement: baneRevokeEntitlement,
+  issuePolicySnapshot: baneIssuePolicySnapshot,
 };
+
+export { baneIssueEntitlement, baneRevokeEntitlement, baneIssuePolicySnapshot };

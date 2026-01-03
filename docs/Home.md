@@ -40,6 +40,13 @@ This wiki serves as the comprehensive documentation hub for ScingOS and the SCIN
 - [SCING Interface](SCING-INTERFACE.md) - Voice orchestrator design
 - [BANE Security](BANE-SECURITY.md) - Security governance framework
 - [ISDC Protocol 2025](ISDC-PROTOCOL-2025.md) - Inspection Systems Direct Communication Protocol
+- [MCB-01 MapContext Core Schema, Normalization & Provenance](MCB-01-MAPCONTEXT-CORE-SCHEMA-NORMALIZATION-PROVENANCE.md) - Canonical mapping schema feeding the ICB pipeline
+- [MCB-02 Political, Administrative & Special-Jurisdiction Resolution](MCB-02-POLITICAL-ADMINISTRATIVE-SPECIAL-JURISDICTION-RESOLUTION.md) - Jurisdiction truth engine feeding ICB authority resolution
+- [MCB-03 Authority, Code & Regulatory Overlay Indexing](MCB-03-AUTHORITY-CODE-REGULATORY-OVERLAY-INDEXING.md) - Authority-to-code applicability index feeding ICB enforcement
+- [MCB-04 Risk, Regulatory & Environmental Zone Overlays](MCB-04-RISK-REGULATORY-ENVIRONMENTAL-ZONE-OVERLAYS.md) - Zone overlays feeding ICB risk scoring and zone-triggered obligations
+- [MCB-05 Parcel, Zoning & Permit Context Resolution](MCB-05-PARCEL-ZONING-PERMIT-CONTEXT-RESOLUTION.md) - Parcel and permit context binding inspections to lawful scope
+- [MCB-06 Offline Operation, Field Resilience & Degraded-Mode Mapping](MCB-06-OFFLINE-OPERATION-FIELD-RESILIENCE-DEGRADED-MODE-MAPPING.md) - Offline/degraded mapping controls and reconciliation rules
+- [MCB-07 GIS Evidence Binding, Spatial Traceability & Location-Anchored Proof](MCB-07-GIS-EVIDENCE-BINDING-SPATIAL-TRACEABILITY-LOCATION-ANCHORED-PROOF.md) - Location-anchored proof and GIS evidence traceability
 
 ### 📦 File Systems & Data
 
@@ -49,9 +56,9 @@ This wiki serves as the comprehensive documentation hub for ScingOS and the SCIN
 
 ### 🔒 Security & Legal
 
-- [BANE Security Framework](BANE-SECURITY.md) - Zero-trust security architecture
-- [Legal Framework](LEGAL-FRAMEWORK.md) - Compliance and legal documentation
-- [Secrets Management](SECRETS-MANAGEMENT.md) - Cryptographic key management
+- [ICB-22 Intellectual Property, Provenance & Trust Anchoring](ICB-22-INTELLECTUAL-PROPERTY-PROVENANCE-TRUST-ANCHORING.md)
+- [ICB-23 Validation, Verification & Claim Substantiation Framework](ICB-23-VALIDATION-VERIFICATION-CLAIM-SUBSTANTIATION-FRAMEWORK.md)
+- [ICB-24 Codex Closure, System Certification & Operational Attestation](ICB-24-CODEX-CLOSURE-SYSTEM-CERTIFICATION-OPERATIONAL-ATTESTATION.md)
 
 ### 🧪 Development & Testing
 

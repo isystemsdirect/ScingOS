@@ -3,8 +3,8 @@ import { useRouter } from 'next/router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { addDoc, getDocs, limit, orderBy, query, serverTimestamp, where } from 'firebase/firestore';
 import AppShell from '../../components/layout/AppShell';
-import { firestore } from '../../lib/firebase';
-import { useAuth } from '../../lib/auth/AuthContext';
+import { firebaseConfigured, firestore } from '../../lib/firebase';
+import { useAuthStore } from '../../lib/store/authStore';
 import { sessionsCollectionRef } from '../../lib/refs';
 
 type SessionDoc = {
@@ -17,7 +17,7 @@ type SessionDoc = {
 
 export default function Sessions() {
   const router = useRouter();
-  const { user, loading, firebaseConfigured } = useAuth();
+  const { user, loading } = useAuthStore();
 
   const [sessions, setSessions] = useState<SessionDoc[]>([]);
   const [loadingSessions, setLoadingSessions] = useState(false);

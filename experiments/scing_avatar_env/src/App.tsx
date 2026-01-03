@@ -22,6 +22,10 @@ import type { NeuralSignal } from '../../../mobius/signal'
 import { tickMobius } from '../../../mobius/runtime'
 import { applyIntensity, colorFromPhase } from '../../../mobius/palettes'
 
+import { connectNeural } from './neural/client'
+import { neuralEventToSignal } from './neural/mapToMobius'
+import type { NeuralEvent, NeuralTransport } from './neural/types'
+
 const mobiusInitial: MobiusState<NeuralSignal> = {
   signal: { role: 'propose', content: {}, tags: [], annotations: {} },
   phase: 0,
@@ -140,6 +144,20 @@ export default function App() {
   const [crash, setCrash] = useState<RuntimeCrash | null>(null)
   const [glCanvas, setGlCanvas] = useState<HTMLCanvasElement | null>(null)
 
+  const [neuralStatus, setNeuralStatus] = useState<{ connected: boolean; error?: string } | null>(null)
+  const lastRemoteEventRef = useRef<{ evt: NeuralEvent; receivedAt: number } | null>(null)
+
+  const transport = useMemo(() => {
+    const raw = (import.meta as any)?.env?.VITE_NEURAL_TRANSPORT
+    const t = (typeof raw === 'string' ? raw.trim() : '') as NeuralTransport
+    return t === 'poll' || t === 'sse' || t === 'ws' ? t : 'sse'
+  }, [])
+
+  const url = useMemo(() => {
+    const raw = (import.meta as any)?.env?.VITE_NEURAL_URL
+    return typeof raw === 'string' ? raw.trim() : ''
+  }, [])
+
   const mobiusRef = useRef<MobiusState<NeuralSignal>>(mobiusInitial)
   const lastMobiusTRef = useRef<number>(performance.now() * 0.001)
 
@@ -217,6 +235,33 @@ export default function App() {
       glCanvas.removeEventListener('webglcontextrestored', onRestored as any)
     }
   }, [glCanvas])
+
+  useEffect(() => {
+    if (!url) {
+      setNeuralStatus({ connected: false, error: 'Missing VITE_NEURAL_URL' })
+      return
+    }
+
+    const unsub = connectNeural(
+      { url, transport, pollIntervalMs: 500 },
+      (evt) => {
+        lastRemoteEventRef.current = { evt, receivedAt: Date.now() }
+
+        // Feed Mobius semantics channel without changing the tick loop.
+        try {
+          mobiusRef.current = {
+            ...mobiusRef.current,
+            signal: neuralEventToSignal(evt),
+          }
+        } catch {
+          // ignore
+        }
+      },
+      (s) => setNeuralStatus(s),
+    )
+
+    return () => unsub()
+  }, [transport, url])
 
   const lightTarget = useMemo(() => {
     const o = new THREE.Object3D()
@@ -331,12 +376,58 @@ export default function App() {
       // Small bounded oscillation from pitch clarity (no randomness).
       const valence = clamp01(smoothed.pitchClarity) * 0.22 * Math.sin(t * 0.33)
 
+      // Remote neural events can override the *inputs* that drive avatar state + Mobius traversal.
+      // Priority: remote signal if present, else local sensors.
+      const remote = lastRemoteEventRef.current
+      const remoteActive = Boolean(url && remote && Date.now() - remote.receivedAt < 5_000)
+
+      const remoteIntensity = remoteActive ? clamp01(typeof remote!.evt.intensity === 'number' ? remote!.evt.intensity : 0) : 0
+      const remoteLari = remoteActive ? clamp01(typeof remote!.evt.channels?.lari === 'number' ? remote!.evt.channels.lari : 0) : 0
+      const remoteBane = remoteActive ? clamp01(typeof remote!.evt.channels?.bane === 'number' ? remote!.evt.channels.bane : 0) : 0
+      const remoteIo = remoteActive ? clamp01(typeof remote!.evt.channels?.io === 'number' ? remote!.evt.channels.io : 0) : 0
+
+      const baseArousal = remoteActive
+        ? clamp01(
+            typeof remote!.evt.intensity === 'number'
+              ? remoteIntensity
+              : remote!.evt.mode === 'alert'
+                ? 1
+                : remote!.evt.mode === 'speak'
+                  ? 0.65
+                  : remote!.evt.mode === 'think'
+                    ? 0.45
+                    : 0.25,
+          )
+        : arousal
+
+      const baseRhythm = remoteActive
+        ? clamp01(remote!.evt.mode === 'speak' ? 0.35 + 0.75 * remoteIntensity : 0.12 + 0.25 * remoteIntensity)
+        : rhythm
+
+      let baseFocus = remoteActive
+        ? clamp01(remote!.evt.mode === 'alert' ? 0.25 : remote!.evt.mode === 'think' ? 0.78 : 0.6)
+        : focus
+
+      let baseCognitiveLoad = remoteActive
+        ? clamp01(remote!.evt.mode === 'alert' ? 0.92 : remote!.evt.mode === 'think' ? 0.65 : 0.4)
+        : cognitiveLoad
+
+      // Channels bias the Mobius gating in predictable ways:
+      // - BANE: lower focus + raise load
+      // - LARI: raise focus + lower load
+      if (remoteActive) {
+        baseFocus = clamp01(baseFocus + 0.35 * remoteLari - 0.45 * remoteBane)
+        baseCognitiveLoad = clamp01(baseCognitiveLoad + 0.55 * remoteBane - 0.35 * remoteLari)
+      }
+
+      const baseValence = remoteActive ? clamp01(remoteIo) * 0.22 * Math.sin(t * 0.33) : valence
+
       setAvatarState({
-        arousal,
-        rhythm,
-        focus,
-        cognitiveLoad,
-        valence,
+        arousal: baseArousal,
+        rhythm: baseRhythm,
+        focus: baseFocus,
+        cognitiveLoad: baseCognitiveLoad,
+        valence: baseValence,
         entropy: 0.04,
       })
 
@@ -348,9 +439,9 @@ export default function App() {
       const r = tickMobius(
         mobiusRef.current,
         {
-          rhythm,
-          cognitiveLoad,
-          focus,
+          rhythm: baseRhythm,
+          cognitiveLoad: baseCognitiveLoad,
+          focus: baseFocus,
           dt,
         },
         {
@@ -469,6 +560,37 @@ export default function App() {
         {/* Dev panel: locked top-right (<= 20% viewport) */}
         <DevOptionsPanel />
       </ErrorBoundary>
+
+      {import.meta.env.DEV && url ? (
+        <div
+          style={{
+            position: 'fixed',
+            right: 12,
+            bottom: 12,
+            zIndex: 999,
+            background: 'rgba(8, 6, 14, 0.72)',
+            border: '1px solid rgba(255,255,255,0.14)',
+            borderRadius: 10,
+            padding: '8px 10px',
+            color: 'rgba(255,255,255,0.9)',
+            fontFamily:
+              'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+            fontSize: 11,
+            lineHeight: 1.25,
+            pointerEvents: 'none',
+            maxWidth: 520,
+          }}
+        >
+          <div style={{ fontWeight: 800, marginBottom: 2 }}>NEURAL</div>
+          <div style={{ opacity: 0.9 }}>
+            {neuralStatus?.connected ? 'CONNECTED' : 'DISCONNECTED'}
+            {neuralStatus?.error ? ` (${neuralStatus.error})` : ''}
+          </div>
+          <div style={{ opacity: 0.65, marginTop: 4, wordBreak: 'break-all' }}>
+            {transport}: {url}
+          </div>
+        </div>
+      ) : null}
 
       <ErrorBoundary
         onError={(message, detail) => {

@@ -4,6 +4,8 @@ import '../styles/globals.css';
 import { auth } from '../lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useAuthStore } from '../lib/store/authStore';
+import { ScingProvider } from '../src/scing/ScingProvider';
+import { LariBusProvider } from '../src/lariBus/LariBusProvider';
 
 export default function App({ Component, pageProps }: AppProps) {
   const setUser = useAuthStore((state) => state.setUser);
@@ -14,5 +16,11 @@ export default function App({ Component, pageProps }: AppProps) {
     return () => unsubscribe();
   }, [setUser]);
 
-  return <Component {...pageProps} />;
+  return (
+    <ScingProvider>
+      <LariBusProvider>
+        <Component {...pageProps} />
+      </LariBusProvider>
+    </ScingProvider>
+  );
 }
