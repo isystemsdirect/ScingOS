@@ -37,6 +37,8 @@ export function sha256Hex(s: string): string {
   }
 }
 
-export function computeSnapshotHash(snapshotUnsigned: Omit<PolicySnapshot, 'hash' | 'signature'>): string {
+export function computeSnapshotHash(
+  snapshotUnsigned: Omit<PolicySnapshot, 'hash' | 'signature'>
+): string {
   return sha256Hex(stableJson(snapshotUnsigned));
 }

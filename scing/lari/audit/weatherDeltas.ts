@@ -19,13 +19,16 @@ const describeHazards = (hazards: WeatherHazard[]): string => {
   return `${hazards[0]} (+${hazards.length - 1} more)`;
 };
 
-export const buildWeatherDeltaRationale = (context: LariWeatherContext, opts?: { note?: string }): string => {
+export const buildWeatherDeltaRationale = (
+  context: LariWeatherContext,
+  opts?: { note?: string }
+): string => {
   const hazardDesc = describeHazards(context.hazards);
   const isForecast = context.horizon !== 'now';
 
   const parts: string[] = [];
   parts.push(
-    `Plan adjusted due to ${isForecast ? 'forecasted' : 'current'} ${hazardDesc} risk (severity ${context.severityIndex.toFixed(0)})`,
+    `Plan adjusted due to ${isForecast ? 'forecasted' : 'current'} ${hazardDesc} risk (severity ${context.severityIndex.toFixed(0)})`
   );
 
   if (context.confidenceBand === 'low') {

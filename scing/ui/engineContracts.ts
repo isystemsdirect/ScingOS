@@ -12,7 +12,11 @@ export type EngineUIContract = {
   supportsGuidance: boolean;
   supportsReports: boolean;
 
-  hud?: (input: { findingsCount: number; telemetry?: any; warnings?: string[] }) => EngineHUDPayload;
+  hud?: (input: {
+    findingsCount: number;
+    telemetry?: any;
+    warnings?: string[];
+  }) => EngineHUDPayload;
 
   workflow?: () => GuidedWorkflow | null;
 
@@ -32,7 +36,8 @@ function computeReportSections(engineId: EngineId): ReportSection[] {
   if (e.capabilities.includes('capture')) sections.push('imagery');
   if (e.capabilities.includes('map')) sections.push('maps', 'measurements');
   if (e.capabilities.includes('control')) sections.push('flight');
-  if (e.capabilities.includes('analyze') || e.capabilities.includes('classify')) sections.push('findings');
+  if (e.capabilities.includes('analyze') || e.capabilities.includes('classify'))
+    sections.push('findings');
 
   sections.push('appendix');
   return uniq(sections);

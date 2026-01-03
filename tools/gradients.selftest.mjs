@@ -90,7 +90,11 @@ const apply = loadTsModule(path.join(srcRoot, 'gradients', 'apply.ts'));
 
 // Curiosity high => more cycles + lower varianceThreshold
 {
-  const g = derive.deriveGradients({ userIntent: 'exploratory', timePressure: 'low', hasSecurityFlags: false });
+  const g = derive.deriveGradients({
+    userIntent: 'exploratory',
+    timePressure: 'low',
+    hasSecurityFlags: false,
+  });
   assert.ok(g.curiosity >= 0.7);
   const eff = apply.effectiveCollapseParams(g);
   assert.ok(eff.maxEvaluationCycles >= 3);
@@ -116,7 +120,12 @@ const apply = loadTsModule(path.join(srcRoot, 'gradients', 'apply.ts'));
     riskPosture: 'open',
   };
 
-  const next = apply.applyToAttractorPolicy(basePolicy, g, { hasSecurityFlags: true, userIntent: 'overloaded' }, false);
+  const next = apply.applyToAttractorPolicy(
+    basePolicy,
+    g,
+    { hasSecurityFlags: true, userIntent: 'overloaded' },
+    false
+  );
   assert.equal(next.riskPosture, 'cautious');
 }
 

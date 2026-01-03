@@ -13,7 +13,9 @@ export function sliceRecentIntents(
   nowTs: number
 ): Array<{ ts: number; label: string }> {
   const cutoff = nowTs - INTENT_STABILITY_WINDOW_MS;
-  const recent = intents.filter((x) => Number.isFinite(x.ts) && x.ts >= cutoff && typeof x.label === 'string');
+  const recent = intents.filter(
+    (x) => Number.isFinite(x.ts) && x.ts >= cutoff && typeof x.label === 'string'
+  );
   recent.sort((a, b) => a.ts - b.ts);
   const trimmed = recent.slice(-HISTORY_WINDOW_SIZE);
   return trimmed;

@@ -3,8 +3,15 @@ import { buildResponsePlan } from './languagePlan';
 import { buildTelemetry } from './telemetryPlan';
 
 export function composeExpressionBundle(input: ExpressionComposerInput): ExpressionBundle {
-  const responsePlan = buildResponsePlan(input.attractor, input.gradients, input.decision, { posture: input.posture });
-  const telemetry = buildTelemetry(input.attractor, input.gradients, input.decision, input.context ?? {});
+  const responsePlan = buildResponsePlan(input.attractor, input.gradients, input.decision, {
+    posture: input.posture,
+  });
+  const telemetry = buildTelemetry(
+    input.attractor,
+    input.gradients,
+    input.decision,
+    input.context ?? {}
+  );
   return { responsePlan, telemetry };
 }
 

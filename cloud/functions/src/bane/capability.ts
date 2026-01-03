@@ -14,7 +14,7 @@ const SECRET_KEY = process.env.BANE_SECRET_KEY || 'dev-secret-key-change-in-prod
 export async function requestCapability(
   userId: string,
   action: string,
-  _metadata?: any
+  _metadata?: unknown
 ): Promise<CapabilityToken> {
   // Check user permissions
   const userDoc = await admin.firestore().collection('users').doc(userId).get();

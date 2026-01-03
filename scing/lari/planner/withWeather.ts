@@ -37,7 +37,11 @@ const intersects = (a: WeatherHazard[] | undefined, b: WeatherHazard[]): Weather
   return a.filter((x) => setB.has(x));
 };
 
-const normalizeTolerance = (t: WeatherTolerance | undefined, cfg: LariWeatherConfig, conservative: boolean): WeatherTolerance => {
+const normalizeTolerance = (
+  t: WeatherTolerance | undefined,
+  cfg: LariWeatherConfig,
+  conservative: boolean
+): WeatherTolerance => {
   if (!conservative) return t ?? {};
 
   // Conservative mode rule:
@@ -49,7 +53,11 @@ const normalizeTolerance = (t: WeatherTolerance | undefined, cfg: LariWeatherCon
   };
 };
 
-export const scorePlanWithWeather = (plan: LariPlan, context: LariWeatherContext, cfg?: Partial<LariWeatherConfig>): PlanScore => {
+export const scorePlanWithWeather = (
+  plan: LariPlan,
+  context: LariWeatherContext,
+  cfg?: Partial<LariWeatherConfig>
+): PlanScore => {
   const config = { ...DEFAULT_LARI_WEATHER_CONFIG, ...(cfg ?? {}) };
   const reasons: string[] = [];
 
@@ -89,7 +97,10 @@ export const scorePlanWithWeather = (plan: LariPlan, context: LariWeatherContext
         planId: plan.id,
         valid: false,
         totalCost: Number.POSITIVE_INFINITY,
-        reasons: [...reasons, `action ${action.id} forbidden hazards present: ${forbidden.join(', ')}`],
+        reasons: [
+          ...reasons,
+          `action ${action.id} forbidden hazards present: ${forbidden.join(', ')}`,
+        ],
         refreshRequested,
       };
     }
@@ -103,7 +114,10 @@ export const scorePlanWithWeather = (plan: LariPlan, context: LariWeatherContext
           planId: plan.id,
           valid: false,
           totalCost: Number.POSITIVE_INFINITY,
-          reasons: [...reasons, `action ${action.id} exceeds maxSeverity by ${exceed.toFixed(1)} (rejected)`],
+          reasons: [
+            ...reasons,
+            `action ${action.id} exceeds maxSeverity by ${exceed.toFixed(1)} (rejected)`,
+          ],
           refreshRequested,
         };
       }
@@ -128,7 +142,11 @@ export const scorePlanWithWeather = (plan: LariPlan, context: LariWeatherContext
   };
 };
 
-export const selectBestPlanWithWeather = (plans: LariPlan[], context: LariWeatherContext, cfg?: Partial<LariWeatherConfig>): PlanScore => {
+export const selectBestPlanWithWeather = (
+  plans: LariPlan[],
+  context: LariWeatherContext,
+  cfg?: Partial<LariWeatherConfig>
+): PlanScore => {
   let best: PlanScore | null = null;
   for (const plan of plans) {
     const scored = scorePlanWithWeather(plan, context, cfg);

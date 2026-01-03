@@ -26,7 +26,10 @@ export type WeatherForSRT = {
   isStale: boolean;
 };
 
-const pickPrimaryHazard = (signal: WeatherSignal, thresholds: WeatherThresholdSet): WeatherHazard | null => {
+const pickPrimaryHazard = (
+  signal: WeatherSignal,
+  thresholds: WeatherThresholdSet
+): WeatherHazard | null => {
   if (signal.hazards.length === 0) return null;
 
   const intensities = computeHazardIntensities(signal, thresholds);
@@ -53,7 +56,11 @@ export const toWeatherForLARI = (signal: WeatherSignal, nowUtcIso: string): Weat
   };
 };
 
-export const toWeatherForBANE = (signal: WeatherSignal, nowUtcIso: string, opts?: { thresholds?: WeatherThresholdSet }): WeatherForBANE => {
+export const toWeatherForBANE = (
+  signal: WeatherSignal,
+  nowUtcIso: string,
+  opts?: { thresholds?: WeatherThresholdSet }
+): WeatherForBANE => {
   const thresholds = opts?.thresholds ?? resolveWeatherThresholds();
   const stale = computeStaleStatus(signal, nowUtcIso, DEFAULT_STALE_POLICY);
 
@@ -65,7 +72,11 @@ export const toWeatherForBANE = (signal: WeatherSignal, nowUtcIso: string, opts?
   };
 };
 
-export const toWeatherForSRT = (signal: WeatherSignal, nowUtcIso: string, opts?: { thresholds?: WeatherThresholdSet }): WeatherForSRT => {
+export const toWeatherForSRT = (
+  signal: WeatherSignal,
+  nowUtcIso: string,
+  opts?: { thresholds?: WeatherThresholdSet }
+): WeatherForSRT => {
   const thresholds = opts?.thresholds ?? resolveWeatherThresholds();
   const stale = computeStaleStatus(signal, nowUtcIso, DEFAULT_STALE_POLICY);
 

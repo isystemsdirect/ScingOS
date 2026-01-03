@@ -4,7 +4,7 @@
 
 interface Intent {
   action: string;
-  entities: Record<string, any>;
+  entities: Record<string, unknown>;
   confidence: number;
 }
 

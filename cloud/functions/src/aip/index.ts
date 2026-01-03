@@ -1,4 +1,5 @@
 import * as functions from 'firebase-functions';
+import { asString, getRecord } from '../shared/types/safe';
 
 /**
  * AIP (Augmented Intelligence Portal)
@@ -25,9 +26,9 @@ export const handleMessage = functions.https.onCall(async (data, context) => {
   }
 });
 
-async function handleTaskRequest(payload: any, userId: string) {
-  // Extract only the action - params will be accessed from payload when routing is implemented
-  const { action } = payload;
+async function handleTaskRequest(payload: unknown, userId: string) {
+  const p = getRecord(payload, 'aip.taskRequest');
+  const action = asString(p.action);
 
   console.log(`Task request from ${userId}: ${action}`);
 
@@ -42,8 +43,9 @@ async function handleTaskRequest(payload: any, userId: string) {
   };
 }
 
-async function handleContextUpdate(payload: any, userId: string) {
-  const { updates } = payload;
+async function handleContextUpdate(payload: unknown, userId: string) {
+  const p = getRecord(payload, 'aip.contextUpdate');
+  const updates = p.updates;
 
   console.log(`Context update from ${userId}:`, updates);
 

@@ -44,7 +44,10 @@ export function extractSignals(input: PostureInput): PostureFeatures {
   const messagesLast2Min = input.interaction.messagesLast2Min ?? 0;
   const repeatedPhrases = input.interaction.repeatedPhrases ?? 0;
 
-  const capsRatio = typeof input.interaction.capsRatio === 'number' ? input.interaction.capsRatio : calcCapsRatio(text);
+  const capsRatio =
+    typeof input.interaction.capsRatio === 'number'
+      ? input.interaction.capsRatio
+      : calcCapsRatio(text);
 
   const isVeryShort = msgLen <= VERY_SHORT_CHARS;
   const isVeryLong = msgLen >= VERY_LONG_CHARS;
@@ -52,12 +55,36 @@ export function extractSignals(input: PostureInput): PostureFeatures {
   const highCaps = capsRatio >= HIGH_CAPS_RATIO;
   const repetition = repeatedPhrases >= REPEAT_PHRASE_HIGH;
 
-  const directiveVerbs = [' do ', ' build ', ' implement ', ' ship ', ' execute ', ' generate ', ' fix ', ' now '];
+  const directiveVerbs = [
+    ' do ',
+    ' build ',
+    ' implement ',
+    ' ship ',
+    ' execute ',
+    ' generate ',
+    ' fix ',
+    ' now ',
+  ];
   const directiveLoose = ['do', 'build', 'implement', 'ship', 'execute', 'generate', 'fix', 'now'];
   const exploratoryMarkers = ['what if', 'could', 'ideas', 'options', 'compare', 'why', 'explain'];
-  const overloadMarkers = ['too much', 'overwhelmed', 'confused', 'lost', "can't track", 'cant track'];
+  const overloadMarkers = [
+    'too much',
+    'overwhelmed',
+    'confused',
+    'lost',
+    "can't track",
+    'cant track',
+  ];
   const frustrationMarkers = ["why isn't", 'still', 'wasting', 'ridiculous', 'broken', 'come on'];
-  const confidenceMarkers = ['exactly', 'perfect', "that's it", 'that’s it', 'proceed', 'locked', 'go'];
+  const confidenceMarkers = [
+    'exactly',
+    'perfect',
+    "that's it",
+    'that’s it',
+    'proceed',
+    'locked',
+    'go',
+  ];
 
   const t = ` ${text.toLowerCase()} `;
 

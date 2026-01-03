@@ -17,7 +17,12 @@ export const runWeatherUiTests = (): void => {
 
   // 1) Indicator updates on severity change
   {
-    const prev = { severityIndex: 2, hazards: makeHazards('wind'), certaintyScore: 0.9, stale: false };
+    const prev = {
+      severityIndex: 2,
+      hazards: makeHazards('wind'),
+      certaintyScore: 0.9,
+      stale: false,
+    };
     const next = { ...prev, severityIndex: 3 };
     assertEqual(shouldWeatherIndicatorUpdate(prev, next), true);
 
@@ -75,7 +80,12 @@ export const runWeatherUiTests = (): void => {
 
   // 4) Stale data visually indicated
   {
-    const m = buildWeatherIndicatorModel({ severityIndex: 4, hazards: makeHazards('wind'), certaintyScore: 0.8, stale: true });
+    const m = buildWeatherIndicatorModel({
+      severityIndex: 4,
+      hazards: makeHazards('wind'),
+      certaintyScore: 0.8,
+      stale: true,
+    });
     assertEqual(m.stale, true);
 
     const panel = buildWeatherPanelModel({

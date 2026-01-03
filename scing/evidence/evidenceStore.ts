@@ -38,7 +38,10 @@ export function makeArtifact(params: {
       integrityState: 'pending',
     },
     storage: { uploadState: 'local' },
-    retention: { class: retentionClass, deleteAfter: computeDeleteAfter(retentionClass, createdAt) },
+    retention: {
+      class: retentionClass,
+      deleteAfter: computeDeleteAfter(retentionClass, createdAt),
+    },
     createdAt,
     updatedAt: createdAt,
     finalized: false,
@@ -72,6 +75,11 @@ export function makeArtifactEvent(params: {
     engineId: params.engineId,
     details: params.details ?? null,
   };
-  const worm = nextWormRef(params.prevWorm ?? null, params.wormScope, params.wormScopeId, eventPayload);
+  const worm = nextWormRef(
+    params.prevWorm ?? null,
+    params.wormScope,
+    params.wormScopeId,
+    eventPayload
+  );
   return { ...(eventPayload as any), worm } as ArtifactEvent;
 }

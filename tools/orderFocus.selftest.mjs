@@ -66,11 +66,21 @@ const mkInput = (overrides = {}) => {
     attractor: {
       id: 'order',
       confidence: 0.8,
-      policy: { verbosity: 'standard', tone: 'formal', structure: 'checklist', riskPosture: 'open' },
+      policy: {
+        verbosity: 'standard',
+        tone: 'formal',
+        structure: 'checklist',
+        riskPosture: 'open',
+      },
     },
     gradients: { stress: 0.2, curiosity: 0.2, urgency: 0.6, confidence: 0.8 },
     decisionDraft: undefined,
-    context: { userIntent: 'directive', hasSecurityFlags: false, requestImpact: 'medium', timePressure: 'medium' },
+    context: {
+      userIntent: 'directive',
+      hasSecurityFlags: false,
+      requestImpact: 'medium',
+      timePressure: 'medium',
+    },
     signals: { ambiguity: 0.2, contradiction: 0.0, lastInputTs: now, lastIntentLabel: 'directive' },
     history: {
       intents: [
@@ -179,7 +189,12 @@ const mkInput = (overrides = {}) => {
     attractor: {
       id: 'protection',
       confidence: 0.7,
-      policy: { verbosity: 'minimal', tone: 'guarded', structure: 'checklist', riskPosture: 'restricted' },
+      policy: {
+        verbosity: 'minimal',
+        tone: 'guarded',
+        structure: 'checklist',
+        riskPosture: 'restricted',
+      },
     },
     collapse: { confidence: 0.35 },
     gradients: { ...mkInput().gradients, curiosity: 0.8, urgency: 0.2, stress: 0.7 },

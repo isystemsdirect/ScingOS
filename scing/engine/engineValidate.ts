@@ -23,7 +23,8 @@ export function validateRegistry(): RegistryValidationResult {
   for (const id of ids) {
     if (!CONTRACTS[id]) errors.push(`Missing contract for ${id}`);
     if (!RISK[id]) errors.push(`Missing risk profile for ${id}`);
-    if (!VISUAL_BINDINGS[id]) warnings.push(`Missing visual binding for ${id} (will default to neutral in UI logic)`);
+    if (!VISUAL_BINDINGS[id])
+      warnings.push(`Missing visual binding for ${id} (will default to neutral in UI logic)`);
   }
 
   // 2) Dependency existence checks
@@ -37,7 +38,8 @@ export function validateRegistry(): RegistryValidationResult {
   for (const id of ids) {
     const e = ENGINE_REGISTRY[id];
     if (e.tier === 'key' || e.tier === 'roadmap') {
-      if (!e.providesKeys || e.providesKeys.length === 0) warnings.push(`${id} is ${e.tier} but providesKeys is empty`);
+      if (!e.providesKeys || e.providesKeys.length === 0)
+        warnings.push(`${id} is ${e.tier} but providesKeys is empty`);
     }
   }
 

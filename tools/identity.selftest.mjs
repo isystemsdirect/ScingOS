@@ -93,9 +93,18 @@ const basePolicy = {
 {
   const input = {
     collapse: makeCollapse(0.75),
-    attractor: makeAttractor('expression', 0.7, { ...basePolicy, structure: 'narrative', tone: 'neutral' }),
+    attractor: makeAttractor('expression', 0.7, {
+      ...basePolicy,
+      structure: 'narrative',
+      tone: 'neutral',
+    }),
     gradients: { stress: 0.2, curiosity: 0.2, urgency: 0.2, confidence: 0.7 },
-    context: { userIntent: 'unknown', contradiction: 0.9, requestImpact: 'medium', hasSecurityFlags: false },
+    context: {
+      userIntent: 'unknown',
+      contradiction: 0.9,
+      requestImpact: 'medium',
+      hasSecurityFlags: false,
+    },
   };
   const d = identity.evaluateIdentityConstraints(input);
   assert.equal(d.disposition, 'pause');
@@ -106,7 +115,11 @@ const basePolicy = {
 {
   const input = {
     collapse: makeCollapse(0.28),
-    attractor: makeAttractor('insight', 0.7, { ...basePolicy, structure: 'hybrid', tone: 'creative' }),
+    attractor: makeAttractor('insight', 0.7, {
+      ...basePolicy,
+      structure: 'hybrid',
+      tone: 'creative',
+    }),
     gradients: { stress: 0.2, curiosity: 0.7, urgency: 0.2, confidence: 0.4 },
     context: { userIntent: 'unknown', requestImpact: 'high', hasSecurityFlags: false },
   };
@@ -122,7 +135,11 @@ const basePolicy = {
 {
   const input = {
     collapse: makeCollapse(0.4),
-    attractor: makeAttractor('protection', 0.8, { ...basePolicy, riskPosture: 'restricted', tone: 'guarded' }),
+    attractor: makeAttractor('protection', 0.8, {
+      ...basePolicy,
+      riskPosture: 'restricted',
+      tone: 'guarded',
+    }),
     gradients: { stress: 0.8, curiosity: 0.1, urgency: 0.6, confidence: 0.4 },
     context: { userIntent: 'directive', requestImpact: 'high', hasSecurityFlags: true },
   };
@@ -137,7 +154,12 @@ const basePolicy = {
     collapse: makeCollapse(0.9),
     attractor: makeAttractor('order', 0.9, basePolicy),
     gradients: { stress: 0.2, curiosity: 0.2, urgency: 0.2, confidence: 0.8 },
-    context: { userIntent: 'directive', requestImpact: 'high', hasSecurityFlags: true, disallowed: true },
+    context: {
+      userIntent: 'directive',
+      requestImpact: 'high',
+      hasSecurityFlags: true,
+      disallowed: true,
+    },
   };
   const d = identity.evaluateIdentityConstraints(input);
   assert.equal(d.disposition, 'decline');
@@ -149,7 +171,11 @@ const basePolicy = {
 {
   const input = {
     collapse: makeCollapse(0.9),
-    attractor: makeAttractor('expression', 0.7, { ...basePolicy, structure: 'narrative', tone: 'neutral' }),
+    attractor: makeAttractor('expression', 0.7, {
+      ...basePolicy,
+      structure: 'narrative',
+      tone: 'neutral',
+    }),
     gradients: { stress: 0.2, curiosity: 0.2, urgency: 0.8, confidence: 0.8 },
     context: { userIntent: 'unknown', requestImpact: 'low', hasSecurityFlags: false },
   };

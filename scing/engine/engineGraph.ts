@@ -12,7 +12,9 @@ export function buildDependencyGraph(): EngineGraph {
   for (const id of nodes) {
     for (const dep of ENGINE_REGISTRY[id].dependsOn) edges.push({ from: dep, to: id });
   }
-  edges.sort((a, b) => (a.from === b.from ? a.to.localeCompare(b.to) : a.from.localeCompare(b.from)));
+  edges.sort((a, b) =>
+    a.from === b.from ? a.to.localeCompare(b.to) : a.from.localeCompare(b.from)
+  );
   return { nodes, edges };
 }
 

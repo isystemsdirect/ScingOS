@@ -1,6 +1,9 @@
 export type RetentionClass = 'standard' | 'extended' | 'legal_hold';
 
-export function computeDeleteAfter(retention: RetentionClass, createdAtIso: string): string | undefined {
+export function computeDeleteAfter(
+  retention: RetentionClass,
+  createdAtIso: string
+): string | undefined {
   const created = new Date(createdAtIso).getTime();
   if (retention === 'legal_hold') return undefined;
   const days = retention === 'extended' ? 365 * 3 : 365;

@@ -23,7 +23,8 @@ const isStale = (lastInputTs: number | undefined, nowTs: number): boolean => {
 };
 
 export function computeContradiction(input: OrderFocusInput): number {
-  const provided = typeof input.signals.contradiction === 'number' ? clamp01(input.signals.contradiction) : 0;
+  const provided =
+    typeof input.signals.contradiction === 'number' ? clamp01(input.signals.contradiction) : 0;
 
   const collapseConfidence = clamp01(input.collapse.confidence);
   const urgency = clamp01(input.gradients.urgency);
@@ -41,7 +42,11 @@ export function computeContradiction(input: OrderFocusInput): number {
   return Math.max(provided, inferred);
 }
 
-export function computeNoise(input: OrderFocusInput, oscillation: number, contradiction: number): number {
+export function computeNoise(
+  input: OrderFocusInput,
+  oscillation: number,
+  contradiction: number
+): number {
   const collapseConfidence = clamp01(input.collapse.confidence);
   const stress = clamp01(input.gradients.stress);
   const userIntent = input.context.userIntent ?? 'unknown';
@@ -59,7 +64,10 @@ export function computeNoise(input: OrderFocusInput, oscillation: number, contra
   return clamp01(withOsc);
 }
 
-export function gateOrderFocus(input: OrderFocusInput, nowTs: number = Date.now()): OrderFocusState {
+export function gateOrderFocus(
+  input: OrderFocusInput,
+  nowTs: number = Date.now()
+): OrderFocusState {
   const { intentStability, oscillation } = computeIntentStability(input.history, nowTs);
   const contradiction = computeContradiction(input);
 
@@ -75,8 +83,13 @@ export function gateOrderFocus(input: OrderFocusInput, nowTs: number = Date.now(
 
   const riskLow = !hasSecurityFlags && input.attractor.id !== 'protection' && contradiction < 0.5;
   let coherenceAct = COHERENCE_ACT;
-  if (postureId === 'overloaded' || postureId === 'frustrated') coherenceAct = clamp01(coherenceAct + 0.05);
-  if (postureId === 'confident' && (input.context.userIntent ?? 'unknown') === 'directive' && riskLow) {
+  if (postureId === 'overloaded' || postureId === 'frustrated')
+    coherenceAct = clamp01(coherenceAct + 0.05);
+  if (
+    postureId === 'confident' &&
+    (input.context.userIntent ?? 'unknown') === 'directive' &&
+    riskLow
+  ) {
     coherenceAct = clamp01(coherenceAct - 0.03);
   }
 

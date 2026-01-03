@@ -14,7 +14,9 @@ export function computeCoherence(input: OrderFocusInput, noise: number): Coheren
   const stress = clamp01(input.gradients.stress);
 
   const ambiguity =
-    typeof input.signals.ambiguity === 'number' ? clamp01(input.signals.ambiguity) : clamp01(1 - collapseConfidence);
+    typeof input.signals.ambiguity === 'number'
+      ? clamp01(input.signals.ambiguity)
+      : clamp01(1 - collapseConfidence);
 
   const baseOrder =
     0.4 +
@@ -25,7 +27,10 @@ export function computeCoherence(input: OrderFocusInput, noise: number): Coheren
     0.15 * curiosity;
 
   // If stress is extreme, nudge down order unless posture is already controlled (order/protection attractor).
-  const stressPenalty = stress >= 0.85 && input.attractor.id !== 'order' && input.attractor.id !== 'protection' ? 0.08 : 0;
+  const stressPenalty =
+    stress >= 0.85 && input.attractor.id !== 'order' && input.attractor.id !== 'protection'
+      ? 0.08
+      : 0;
   const order = clamp01(baseOrder - stressPenalty);
 
   const userIntent = input.context.userIntent ?? 'unknown';

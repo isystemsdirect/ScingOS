@@ -47,7 +47,12 @@ export function evaluateEntitlement(input: EvaluateInput): EntitlementDecision {
     if (!snapshot) return { allow: false, reason: 'OFFLINE_POLICY_MISSING', key };
 
     if (!snapshot.constraints.offlineAllowed) {
-      return { allow: false, reason: 'OFFLINE_POLICY_EXPIRED', key, policyVersion: snapshot.policyVersion };
+      return {
+        allow: false,
+        reason: 'OFFLINE_POLICY_EXPIRED',
+        key,
+        policyVersion: snapshot.policyVersion,
+      };
     }
 
     const issuedAtMs = new Date(snapshot.issuedAt).getTime();
@@ -56,21 +61,39 @@ export function evaluateEntitlement(input: EvaluateInput): EntitlementDecision {
     const effectiveExpiryMs = Math.min(expiresAtMs, maxValidUntilMs);
 
     if (nowMs >= effectiveExpiryMs) {
-      return { allow: false, reason: 'OFFLINE_POLICY_EXPIRED', key, policyVersion: snapshot.policyVersion };
+      return {
+        allow: false,
+        reason: 'OFFLINE_POLICY_EXPIRED',
+        key,
+        policyVersion: snapshot.policyVersion,
+      };
     }
 
     // Offline hard denies
     if (requiresExternalHardware && snapshot.constraints.offlineHardDenyExternalHardware) {
-      return { allow: false, reason: 'OFFLINE_DENY_EXTERNAL', key, policyVersion: snapshot.policyVersion };
+      return {
+        allow: false,
+        reason: 'OFFLINE_DENY_EXTERNAL',
+        key,
+        policyVersion: snapshot.policyVersion,
+      };
     }
     if (requiresPhysicalControl && snapshot.constraints.offlineHardDenyPhysicalControl) {
-      return { allow: false, reason: 'OFFLINE_DENY_CONTROL', key, policyVersion: snapshot.policyVersion };
+      return {
+        allow: false,
+        reason: 'OFFLINE_DENY_CONTROL',
+        key,
+        policyVersion: snapshot.policyVersion,
+      };
     }
 
     const ent = snapshot.entitlements[key];
-    if (!ent) return { allow: false, reason: 'NO_ENTITLEMENT', key, policyVersion: snapshot.policyVersion };
-    if (ent.status === 'revoked') return { allow: false, reason: 'REVOKED', key, policyVersion: snapshot.policyVersion };
-    if (isExpired(ent.expiresAt, nowMs)) return { allow: false, reason: 'EXPIRED', key, policyVersion: snapshot.policyVersion };
+    if (!ent)
+      return { allow: false, reason: 'NO_ENTITLEMENT', key, policyVersion: snapshot.policyVersion };
+    if (ent.status === 'revoked')
+      return { allow: false, reason: 'REVOKED', key, policyVersion: snapshot.policyVersion };
+    if (isExpired(ent.expiresAt, nowMs))
+      return { allow: false, reason: 'EXPIRED', key, policyVersion: snapshot.policyVersion };
 
     if (requiredStage && stageRank(ent.stage) < stageRank(requiredStage)) {
       return {
@@ -125,8 +148,10 @@ export function evaluateEntitlement(input: EvaluateInput): EntitlementDecision {
   // Snapshot entitlements omit orgId; server entitlements include it.
   const policyVersion = (entOnline as any).policyVersion as number | undefined;
 
-  if ((entOnline as any).status === 'revoked') return { allow: false, reason: 'REVOKED', key, policyVersion };
-  if (isExpired((entOnline as any).expiresAt, nowMs)) return { allow: false, reason: 'EXPIRED', key, policyVersion };
+  if ((entOnline as any).status === 'revoked')
+    return { allow: false, reason: 'REVOKED', key, policyVersion };
+  if (isExpired((entOnline as any).expiresAt, nowMs))
+    return { allow: false, reason: 'EXPIRED', key, policyVersion };
 
   if (requiredStage && stageRank((entOnline as any).stage) < stageRank(requiredStage)) {
     return {

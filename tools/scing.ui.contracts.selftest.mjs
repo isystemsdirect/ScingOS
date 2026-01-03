@@ -66,8 +66,14 @@ assert.ok(engineIds.length > 0, 'ENGINE_REGISTRY should not be empty');
 for (const id of engineIds) {
   const c = ui.getEngineUIContract(id);
   assert.equal(c.engineId, id, `engineId mismatch for ${id}`);
-  assert.ok(typeof c.displayName === 'string' && c.displayName.length > 0, `missing displayName for ${id}`);
-  assert.ok(Array.isArray(c.reportSections) && c.reportSections.length > 0, `missing report sections for ${id}`);
+  assert.ok(
+    typeof c.displayName === 'string' && c.displayName.length > 0,
+    `missing displayName for ${id}`
+  );
+  assert.ok(
+    Array.isArray(c.reportSections) && c.reportSections.length > 0,
+    `missing report sections for ${id}`
+  );
 }
 
 console.log(`ok: validated UI contracts for ${engineIds.length} engines`);

@@ -2,20 +2,23 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { verifyEd25519Base64Url } from '../../../../scing/evidence/evidenceSign';
 import { makeArtifactEvent } from '../../../../scing/evidence/evidenceStore';
+import type { ArtifactRecord, WormChainRef } from '../../../../scing/evidence/evidenceTypes';
 
 function isoNow() {
   return new Date().toISOString();
 }
 
+type PrevWorm = { thisHash: string; index: number } | null;
+
 async function getPrevWorm(db: FirebaseFirestore.Firestore, scope: string, scopeId: string) {
   const headRef = db.doc(`audit/wormHeads/${scope}_${scopeId}`);
   const head = await headRef.get();
-  if (!head.exists) return { prev: null as any, headRef };
+  if (!head.exists) return { prev: null as PrevWorm, headRef };
   const d = head.data()!;
   return { prev: { thisHash: d.thisHash as string, index: d.index as number }, headRef };
 }
 
-async function setWormHead(headRef: FirebaseFirestore.DocumentReference, worm: any) {
+async function setWormHead(headRef: FirebaseFirestore.DocumentReference, worm: WormChainRef) {
   await headRef.set(
     { thisHash: worm.thisHash, index: worm.index, prevHash: worm.prevHash, updatedAt: isoNow() },
     { merge: true }
@@ -32,12 +35,17 @@ export const evidenceFinalizeArtifact = functions.https.onCall(async (data, ctx)
   }
 
   const db = admin.firestore();
-  const artRef = db.doc(`inspections/${inspectionId}/artifacts/${artifactId}`);
+  const artRefPath = `inspections/${inspectionId}/artifacts/${artifactId}`;
+  const artRef = db.doc(artRefPath);
   const artSnap = await artRef.get();
-  if (!artSnap.exists) throw new functions.https.HttpsError('not-found', 'Artifact missing');
+  if (!artSnap.exists) {
+    throw new functions.https.HttpsError('not-found', 'Artifact missing');
+  }
 
-  const art = artSnap.data() as any;
-  if (art.orgId !== orgId) throw new functions.https.HttpsError('permission-denied', 'ORG_MISMATCH');
+  const art = artSnap.data() as ArtifactRecord;
+  if (art.orgId !== orgId) {
+    throw new functions.https.HttpsError('permission-denied', 'ORG_MISMATCH');
+  }
 
   if (art.integrity?.contentHash && art.integrity.contentHash !== contentHash) {
     throw new functions.https.HttpsError('failed-precondition', 'HASH_MISMATCH');
@@ -102,7 +110,8 @@ export const evidenceFinalizeArtifact = functions.https.onCall(async (data, ctx)
   });
 
   await db.doc(`inspections/${inspectionId}/artifactEvents/${eventId}`).set(ev, { merge: false });
-  await db.collection('audit').doc('evidenceEvents').collection('events').doc(eventId).set(ev, { merge: false });
+  const auditRef = db.collection('audit').doc('evidenceEvents').collection('events').doc(eventId);
+  await auditRef.set(ev, { merge: false });
   await setWormHead(headRef, ev.worm);
 
   return { ok: true, integrityState };

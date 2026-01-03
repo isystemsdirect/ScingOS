@@ -4,7 +4,11 @@ import type { WeatherHazard, WeatherSignal } from '../contracts/weatherSignal';
 
 const clamp01 = (n: number): number => Math.max(0, Math.min(1, n));
 
-const stepIntensity = (value: number, thresholds: { low: number; mid: number; high: number }, mode: 'ge' | 'le'): number => {
+const stepIntensity = (
+  value: number,
+  thresholds: { low: number; mid: number; high: number },
+  mode: 'ge' | 'le'
+): number => {
   if (!Number.isFinite(value)) return 0;
 
   if (mode === 'ge') {
@@ -25,7 +29,7 @@ export type HazardIntensityMap = Record<WeatherHazard, number>;
 export const computeHazardIntensity = (
   hazard: WeatherHazard,
   signal: WeatherSignal,
-  thresholds: HazardThresholdMatrix,
+  thresholds: HazardThresholdMatrix
 ): number => {
   const hazardsSet = new Set(signal.hazards);
   const m = signal.metrics;
@@ -63,7 +67,7 @@ export const computeHazardIntensity = (
           mid: thresholds.windGustKphModerate,
           high: thresholds.windGustKphSevere,
         },
-        'ge',
+        'ge'
       );
     }
 
@@ -76,7 +80,7 @@ export const computeHazardIntensity = (
           mid: thresholds.heatFeelsLikeCModerate,
           high: thresholds.heatFeelsLikeCSevere,
         },
-        'ge',
+        'ge'
       );
     }
 
@@ -109,7 +113,10 @@ export const computeHazardIntensity = (
   }
 };
 
-export const computeHazardIntensities = (signal: WeatherSignal, thresholdSet?: WeatherThresholdSet): HazardIntensityMap => {
+export const computeHazardIntensities = (
+  signal: WeatherSignal,
+  thresholdSet?: WeatherThresholdSet
+): HazardIntensityMap => {
   const resolved = thresholdSet ?? resolveWeatherThresholds();
   const thresholds = resolved.hazardThresholds;
 

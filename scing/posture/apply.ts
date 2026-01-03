@@ -62,9 +62,13 @@ export function applyPostureToGradients(
   return { ...gradients, stress, curiosity };
 }
 
-export function postureOrderFocusActThresholdDelta(posture: PostureResult, ctx: { riskLow?: boolean }): number {
+export function postureOrderFocusActThresholdDelta(
+  posture: PostureResult,
+  ctx: { riskLow?: boolean }
+): number {
   if (posture.id === 'overloaded' || posture.id === 'frustrated') return 0.05;
-  if (posture.id === 'confident' && postureToUserIntent(posture.id) === 'directive' && ctx.riskLow) return -0.03;
+  if (posture.id === 'confident' && postureToUserIntent(posture.id) === 'directive' && ctx.riskLow)
+    return -0.03;
   return 0;
 }
 

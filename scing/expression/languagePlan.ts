@@ -50,7 +50,12 @@ const baselineSectionsForAttractor = (id: AttractorResult['id']): ResponseSectio
 
 const overrideForDisposition = (
   disposition: GatingDecision['disposition']
-): { structure: ResponsePlan['structure']; tone?: ResponsePlan['tone']; verbosity: VerbosityLevel; sections: ResponseSectionId[] } | null => {
+): {
+  structure: ResponsePlan['structure'];
+  tone?: ResponsePlan['tone'];
+  verbosity: VerbosityLevel;
+  sections: ResponseSectionId[];
+} | null => {
   switch (disposition) {
     case 'pause':
       return {
@@ -98,7 +103,8 @@ export function buildResponsePlan(
     tone: attractor.policy.tone,
     verbosity: attractor.policy.verbosity,
     limits: {
-      maxOptions: typeof decision.outputLimits.maxOptions === 'number' ? decision.outputLimits.maxOptions : 5,
+      maxOptions:
+        typeof decision.outputLimits.maxOptions === 'number' ? decision.outputLimits.maxOptions : 5,
       maxLength: decision.outputLimits.maxLength ?? 'medium',
     },
     sections: baselineSectionsForAttractor(attractor.id).map((id) => ({ id, enabled: true })),
@@ -133,7 +139,11 @@ export function buildResponsePlan(
   if (posture) {
     base.limits.maxOptions = Math.min(base.limits.maxOptions, posture.constraints.maxOptions);
 
-    const lenRank: Record<ResponsePlan['limits']['maxLength'], number> = { short: 0, medium: 1, long: 2 };
+    const lenRank: Record<ResponsePlan['limits']['maxLength'], number> = {
+      short: 0,
+      medium: 1,
+      long: 2,
+    };
     const currentLen = base.limits.maxLength;
     const postureLen = posture.constraints.maxLength;
     base.limits.maxLength = lenRank[postureLen] < lenRank[currentLen] ? postureLen : currentLen;
@@ -142,7 +152,10 @@ export function buildResponsePlan(
       base.structure = 'checklist';
     }
 
-    if (posture.constraints.askSingleQuestion && (base.disposition === 'ask' || base.disposition === 'pause')) {
+    if (
+      posture.constraints.askSingleQuestion &&
+      (base.disposition === 'ask' || base.disposition === 'pause')
+    ) {
       base.limits.maxOptions = 1;
       // Ensure a question section exists and is enabled.
       const hasQuestion = base.sections.some((s) => s.id === 'question');
@@ -158,7 +171,8 @@ export function buildResponsePlan(
 
   let vShift = 0;
   if (urgency >= 0.7 || stress >= 0.7) vShift -= 1;
-  if (curiosity >= 0.7 && attractor.id !== 'protection' && decision.disposition === 'act') vShift += 1;
+  if (curiosity >= 0.7 && attractor.id !== 'protection' && decision.disposition === 'act')
+    vShift += 1;
   if (vShift !== 0) base.verbosity = shiftVerbosity(base.verbosity, vShift > 0 ? 1 : -1);
 
   // Assumptions section when required
@@ -168,7 +182,9 @@ export function buildResponsePlan(
     base.sections.splice(1, 0, { id: 'assumptions', enabled: true });
   }
   if (!needAssumptions) {
-    base.sections = base.sections.map((s) => (s.id === 'assumptions' ? { ...s, enabled: false } : s));
+    base.sections = base.sections.map((s) =>
+      s.id === 'assumptions' ? { ...s, enabled: false } : s
+    );
   }
 
   // Max bullets per section
@@ -178,7 +194,10 @@ export function buildResponsePlan(
   // Formatting rules
   base.formatting.headingStyle = base.verbosity === 'minimal' ? 'minimal' : 'strong';
   base.formatting.bulletStyle =
-    base.structure === 'checklist' && (decision.disposition === 'act' || decision.disposition === 'defer') ? 'number' : 'dash';
+    base.structure === 'checklist' &&
+    (decision.disposition === 'act' || decision.disposition === 'defer')
+      ? 'number'
+      : 'dash';
 
   return base;
 }
