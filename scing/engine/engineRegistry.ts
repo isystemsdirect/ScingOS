@@ -1,4 +1,11 @@
-import { EngineCapability, EngineFamily, EngineId, EngineRuntime, EngineStage, EngineTier } from './engineTypes';
+import {
+  EngineCapability,
+  EngineFamily,
+  EngineId,
+  EngineRuntime,
+  EngineStage,
+  EngineTier,
+} from './engineTypes';
 
 export type EngineRecord = {
   id: EngineId;
@@ -47,7 +54,8 @@ export const ENGINE_REGISTRY: Record<EngineId, EngineRecord> = {
     runtime: 'server',
     stage: 'NA',
     capabilities: ['analyze', 'classify', 'fuse', 'audit'],
-    description: 'Central intelligence: fuses sensor data and codes/standards into decisions + guidance.',
+    description:
+      'Central intelligence: fuses sensor data and codes/standards into decisions + guidance.',
     dependsOn: ['BANE'],
     flags: { enabledByDefault: true, canRunOffline: false, requiresExternalHardware: false },
     version: { schema: '1.0.0', impl: '0.1.0' },
@@ -75,7 +83,8 @@ export const ENGINE_REGISTRY: Record<EngineId, EngineRecord> = {
     runtime: 'hybrid',
     stage: 'A',
     capabilities: ['capture', 'analyze', 'audit'],
-    description: 'Camera/video capture + on-device detection + OCR + evidence watermarking; Stage B adds external camera adapters.',
+    description:
+      'Camera/video capture + on-device detection + OCR + evidence watermarking; Stage B adds external camera adapters.',
     dependsOn: ['BANE', 'LARI'],
     providesKeys: ['vision.stage'],
     flags: { enabledByDefault: true, canRunOffline: true, requiresExternalHardware: false },
@@ -90,7 +99,8 @@ export const ENGINE_REGISTRY: Record<EngineId, EngineRecord> = {
     runtime: 'hybrid',
     stage: 'A',
     capabilities: ['capture', 'map', 'analyze', 'audit'],
-    description: 'On-device LiDAR/ToF mapping (Stage A) and external LiDAR rigs (Stage B) with GIS alignment.',
+    description:
+      'On-device LiDAR/ToF mapping (Stage A) and external LiDAR rigs (Stage B) with GIS alignment.',
     dependsOn: ['BANE', 'LARI', 'LARI-GIS'],
     providesKeys: ['mapper.stage'],
     flags: { enabledByDefault: true, canRunOffline: true, requiresExternalHardware: false },
@@ -105,7 +115,8 @@ export const ENGINE_REGISTRY: Record<EngineId, EngineRecord> = {
     runtime: 'hybrid',
     stage: 'NA',
     capabilities: ['capture', 'control', 'map', 'audit'],
-    description: 'Aerial imagery + telemetry collection with safety gates (weather/geofence); integrates closed-loop control.',
+    description:
+      'Aerial imagery + telemetry collection with safety gates (weather/geofence); integrates closed-loop control.',
     dependsOn: ['BANE', 'LARI', 'LARI-CONTROL', 'LARI-WEATHERBOT', 'LARI-GIS'],
     providesKeys: ['dose.enabled'],
     flags: { enabledByDefault: false, canRunOffline: true, requiresExternalHardware: true },
@@ -150,7 +161,8 @@ export const ENGINE_REGISTRY: Record<EngineId, EngineRecord> = {
     runtime: 'edge',
     stage: 'NA',
     capabilities: ['control', 'enforce', 'audit'],
-    description: 'Edge-only hot loop controller bus for safe device control; async signed telemetry to server.',
+    description:
+      'Edge-only hot loop controller bus for safe device control; async signed telemetry to server.',
     dependsOn: ['BANE'],
     flags: { enabledByDefault: true, canRunOffline: true, requiresExternalHardware: false },
     version: { schema: '1.0.0', impl: '0.1.0' },
@@ -164,7 +176,8 @@ export const ENGINE_REGISTRY: Record<EngineId, EngineRecord> = {
     runtime: 'server',
     stage: 'NA',
     capabilities: ['ingest', 'analyze', 'enforce', 'audit'],
-    description: 'Authoritative weather/hazard ingestion and normalization for safety gating and report context.',
+    description:
+      'Authoritative weather/hazard ingestion and normalization for safety gating and report context.',
     dependsOn: ['BANE'],
     flags: { enabledByDefault: true, canRunOffline: false, requiresExternalHardware: false },
     version: { schema: '1.0.0', impl: '0.1.0' },
@@ -178,7 +191,8 @@ export const ENGINE_REGISTRY: Record<EngineId, EngineRecord> = {
     runtime: 'server',
     stage: 'NA',
     capabilities: ['ingest', 'fuse', 'map', 'audit'],
-    description: 'Geospatial fusion: maps/parcels/overlays; aligns LiDAR/drone/sonar outputs to ground truth.',
+    description:
+      'Geospatial fusion: maps/parcels/overlays; aligns LiDAR/drone/sonar outputs to ground truth.',
     dependsOn: ['BANE'],
     flags: { enabledByDefault: true, canRunOffline: false, requiresExternalHardware: false },
     version: { schema: '1.0.0', impl: '0.1.0' },

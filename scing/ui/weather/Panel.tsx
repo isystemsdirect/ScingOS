@@ -52,7 +52,10 @@ export const certaintyToBand = (certaintyScore: number): WeatherCertaintyBand =>
   return 'low';
 };
 
-export const alertSurfaceForAlerts = (alerts: WeatherPanelAlert[], acknowledged: Record<string, boolean> | undefined): AlertSurface => {
+export const alertSurfaceForAlerts = (
+  alerts: WeatherPanelAlert[],
+  acknowledged: Record<string, boolean> | undefined
+): AlertSurface => {
   if (!alerts || alerts.length === 0) return 'none';
 
   const isAck = (id: string): boolean => Boolean(acknowledged?.[id]);

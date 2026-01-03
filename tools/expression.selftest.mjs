@@ -151,7 +151,12 @@ const mkAttractor = (id, policyOverrides = {}) => ({
   );
   assert.equal(plan.formatting.bulletStyle, 'dash');
 
-  const frame = telemetry.buildTelemetry(input.attractor, input.gradients, input.decision, input.context);
+  const frame = telemetry.buildTelemetry(
+    input.attractor,
+    input.gradients,
+    input.decision,
+    input.context
+  );
   assert.equal(frame.state, 'asking');
   assert.equal(frame.channel, 'amber_think');
 }
@@ -162,7 +167,9 @@ const mkAttractor = (id, policyOverrides = {}) => ({
     collapse: { confidence: 0.7 },
     attractor: mkAttractor('insight', { verbosity: 'expanded', structure: 'hybrid' }),
     gradients: { stress: 0.2, curiosity: 0.6, urgency: 0.2, confidence: 0.7 },
-    decision: mkDecision('act', { outputLimits: { maxOptions: 5, maxLength: 'long', requireExplicitAssumptions: false } }),
+    decision: mkDecision('act', {
+      outputLimits: { maxOptions: 5, maxLength: 'long', requireExplicitAssumptions: false },
+    }),
     posture: {
       id: 'overloaded',
       confidence: 0.9,
@@ -199,7 +206,12 @@ const mkAttractor = (id, policyOverrides = {}) => ({
     context: { hasSecurityFlags: true },
   };
 
-  const frame = telemetry.buildTelemetry(input.attractor, input.gradients, input.decision, input.context);
+  const frame = telemetry.buildTelemetry(
+    input.attractor,
+    input.gradients,
+    input.decision,
+    input.context
+  );
   assert.equal(frame.channel, 'redviolet_alert');
   assert.ok(frame.tags.includes('protection_mode'));
 }

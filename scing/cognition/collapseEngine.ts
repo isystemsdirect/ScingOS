@@ -19,9 +19,17 @@ type ConfidenceHints = Partial<{
   constraintSatisfaction: number;
 }>;
 
-type ConfidenceFn = (hypothesis: Hypothesis, input: unknown, cycle: number) => number | ConfidenceHints;
+type ConfidenceFn = (
+  hypothesis: Hypothesis,
+  input: unknown,
+  cycle: number
+) => number | ConfidenceHints;
 
-type GeneratorFn = (input: unknown, idx: number, n: number) => Omit<Hypothesis, 'stability'> | Hypothesis;
+type GeneratorFn = (
+  input: unknown,
+  idx: number,
+  n: number
+) => Omit<Hypothesis, 'stability'> | Hypothesis;
 
 type CollapseInput = unknown &
   Partial<{
@@ -42,7 +50,8 @@ const clamp01 = (v: number): number => {
   return v;
 };
 
-const toNumberOr = (v: unknown, fallback: number): number => (typeof v === 'number' && Number.isFinite(v) ? v : fallback);
+const toNumberOr = (v: unknown, fallback: number): number =>
+  typeof v === 'number' && Number.isFinite(v) ? v : fallback;
 
 const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null;
 
@@ -91,7 +100,10 @@ const pickMaxHypothesis = (hypotheses: Hypothesis[]): Hypothesis => {
   })[0];
 };
 
-const normalizeInitialHypothesis = (h: Omit<Hypothesis, 'stability'> | Hypothesis, idx: number): Hypothesis => {
+const normalizeInitialHypothesis = (
+  h: Omit<Hypothesis, 'stability'> | Hypothesis,
+  idx: number
+): Hypothesis => {
   const id = typeof h.id === 'string' && h.id.trim() ? h.id : `h${idx}`;
   const confidence = clamp01(toNumberOr((h as any).confidence, 0.5));
   const stability = clamp01(toNumberOr((h as any).stability, 1));
@@ -105,9 +117,14 @@ const normalizeInitialHypothesis = (h: Omit<Hypothesis, 'stability'> | Hypothesi
 
 export async function generateHypotheses(input: unknown): Promise<HypothesisSet> {
   const cfg = input as CollapseInput;
-  const maxN = Math.max(1, Math.min(MAX_PARALLEL_HYPOTHESES, toNumberOr(cfg.maxHypotheses, MAX_PARALLEL_HYPOTHESES)));
+  const maxN = Math.max(
+    1,
+    Math.min(MAX_PARALLEL_HYPOTHESES, toNumberOr(cfg.maxHypotheses, MAX_PARALLEL_HYPOTHESES))
+  );
 
-  const candidates = Array.isArray((cfg as CandidateInput)?.candidates) ? (cfg as CandidateInput).candidates! : null;
+  const candidates = Array.isArray((cfg as CandidateInput)?.candidates)
+    ? (cfg as CandidateInput).candidates!
+    : null;
 
   let n = 4;
   if (candidates && candidates.length > 0) n = Math.min(maxN, candidates.length);
@@ -154,7 +171,8 @@ export async function generateHypotheses(input: unknown): Promise<HypothesisSet>
 export function evaluateConfidence(hypothesis: Hypothesis, input?: unknown, cycle = 0): Hypothesis {
   const cfg = (input ?? {}) as CollapseInput;
   const userEval = typeof cfg.evaluateConfidence === 'function' ? cfg.evaluateConfidence : null;
-  const constraintFn: ConstraintFn | null = typeof cfg.constraints === 'function' ? cfg.constraints : null;
+  const constraintFn: ConstraintFn | null =
+    typeof cfg.constraints === 'function' ? cfg.constraints : null;
 
   const prev = clamp01(hypothesis.confidence);
 
@@ -206,7 +224,11 @@ export function calculateVariance(hypotheses: Hypothesis[]): number {
   return v / n;
 }
 
-export function attemptCollapse(hypothesisSet: HypothesisSet, evaluationCycles = 0, input?: unknown): CollapseResult | null {
+export function attemptCollapse(
+  hypothesisSet: HypothesisSet,
+  evaluationCycles = 0,
+  input?: unknown
+): CollapseResult | null {
   if (hypothesisSet.collapsed) {
     const selected = pickMaxHypothesis(hypothesisSet.hypotheses);
     return {
@@ -219,7 +241,10 @@ export function attemptCollapse(hypothesisSet: HypothesisSet, evaluationCycles =
   const cfg = (input ?? {}) as CollapseInput;
   const varianceThreshold = clamp01(toNumberOr(cfg.varianceThreshold, VARIANCE_THRESHOLD));
   const confidenceLock = clamp01(toNumberOr(cfg.confidenceLock, CONFIDENCE_LOCK));
-  const maxCycles = Math.max(1, Math.floor(toNumberOr(cfg.maxEvaluationCycles, MAX_EVALUATION_CYCLES)));
+  const maxCycles = Math.max(
+    1,
+    Math.floor(toNumberOr(cfg.maxEvaluationCycles, MAX_EVALUATION_CYCLES))
+  );
 
   const best = pickMaxHypothesis(hypothesisSet.hypotheses);
 
@@ -248,7 +273,10 @@ export async function cognitiveCollapse(input: unknown): Promise<CollapseResult>
   const hypothesisSet = await generateHypotheses(input);
 
   const cfg = input as CollapseInput;
-  const maxCycles = Math.max(1, Math.floor(toNumberOr(cfg.maxEvaluationCycles, MAX_EVALUATION_CYCLES)));
+  const maxCycles = Math.max(
+    1,
+    Math.floor(toNumberOr(cfg.maxEvaluationCycles, MAX_EVALUATION_CYCLES))
+  );
 
   // 2) Loop (max MAX_EVALUATION_CYCLES)
   for (let cycle = 1; cycle <= maxCycles; cycle++) {

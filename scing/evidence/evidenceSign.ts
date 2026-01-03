@@ -22,7 +22,11 @@ export function signEd25519Base64Url(privateKeyPem: string, payload: string): st
   return toBase64Url(sig);
 }
 
-export function verifyEd25519Base64Url(publicKeyPem: string, payload: string, sigB64Url: string): boolean {
+export function verifyEd25519Base64Url(
+  publicKeyPem: string,
+  payload: string,
+  sigB64Url: string
+): boolean {
   const crypto = nodeCrypto();
   if (!crypto) return false;
 

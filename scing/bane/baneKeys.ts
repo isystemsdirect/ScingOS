@@ -20,7 +20,13 @@ export const KEY_STAGE_DEFAULT: Record<BaneKey, Stage> = {
 // Canonical “capability” suggestions (extend freely)
 export const KEY_CAPS: Record<BaneKey, string[]> = {
   vision: ['capture_builtin', 'ocr', 'watermark', 'detect_basic', 'external_cam_optional'],
-  mapper: ['lidar_builtin', 'measure', 'mesh_basic', 'external_lidar_optional', 'registration_optional'],
+  mapper: [
+    'lidar_builtin',
+    'measure',
+    'mesh_basic',
+    'external_lidar_optional',
+    'registration_optional',
+  ],
   dose: ['drone_control', 'telemetry', 'capture_aerial', 'geofence', 'rtl'],
   prism: ['spectral_ingest', 'classify_materials', 'hazard_flags'],
   echo: ['sonar_ingest', 'acoustic_map', 'void_detect'],

@@ -22,7 +22,8 @@ const loadScore = (load?: 'low' | 'medium' | 'high'): number => {
 };
 
 const errorsScore = (recentErrors?: number): number => {
-  if (typeof recentErrors !== 'number' || !Number.isFinite(recentErrors) || recentErrors <= 0) return 0;
+  if (typeof recentErrors !== 'number' || !Number.isFinite(recentErrors) || recentErrors <= 0)
+    return 0;
   // Normalize: 0..5 => 0..1, then clamp.
   return clamp01(recentErrors / 5);
 };

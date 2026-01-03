@@ -1,4 +1,9 @@
-import type { ArtifactRecord, ClassificationRecord, FindingRecord, MapLayerRecord } from './evidenceTypes';
+import type {
+  ArtifactRecord,
+  ClassificationRecord,
+  FindingRecord,
+  MapLayerRecord,
+} from './evidenceTypes';
 
 export type InspectionIndex = {
   inspectionId: string;

@@ -16,7 +16,9 @@ export type LariWeatherContext = {
 
 const clamp = (n: number, min: number, max: number): number => Math.max(min, Math.min(max, n));
 
-export const mapWeatherKindToHorizon = (kind: WeatherForLARI['forecastHorizon']): LariForecastHorizon => {
+export const mapWeatherKindToHorizon = (
+  kind: WeatherForLARI['forecastHorizon']
+): LariForecastHorizon => {
   // Horizon mapping (canonical):
   // - now   → current (0–3h)
   // - near  → hourly (3–24h)
@@ -43,7 +45,10 @@ export const toConfidenceBand = (certaintyScore: number): LariConfidenceBand => 
   return 'low';
 };
 
-export const toLariWeatherContext = (input: { weather: WeatherForLARI; nowUtc: string }): LariWeatherContext => {
+export const toLariWeatherContext = (input: {
+  weather: WeatherForLARI;
+  nowUtc: string;
+}): LariWeatherContext => {
   const { weather } = input;
 
   return {

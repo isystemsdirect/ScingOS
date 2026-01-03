@@ -12,7 +12,10 @@ export type SeverityComputation = {
   severityIndex: number;
 };
 
-export const computeSeverityIndex = (signal: WeatherSignal, thresholdSet?: WeatherThresholdSet): SeverityComputation => {
+export const computeSeverityIndex = (
+  signal: WeatherSignal,
+  thresholdSet?: WeatherThresholdSet
+): SeverityComputation => {
   const resolved = thresholdSet ?? resolveWeatherThresholds();
   const weights = resolved.hazardWeights;
 

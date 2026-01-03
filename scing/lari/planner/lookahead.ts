@@ -33,7 +33,11 @@ export type LookaheadScore = {
 
 const clamp01 = (n: number): number => Math.max(0, Math.min(1, n));
 
-const blendCostForDuration = (schedule: HorizonKey, durationHours: number | undefined, costs: Record<HorizonKey, number>): number => {
+const blendCostForDuration = (
+  schedule: HorizonKey,
+  durationHours: number | undefined,
+  costs: Record<HorizonKey, number>
+): number => {
   if (!durationHours || durationHours <= 0) return costs[schedule];
 
   // Canonical horizon bands: now (0-3h), near (3-24h), future (24h+)
@@ -47,7 +51,11 @@ const blendCostForDuration = (schedule: HorizonKey, durationHours: number | unde
   return costs[schedule];
 };
 
-export const scorePlanLookahead = (candidate: LookaheadPlanCandidate, contexts: HorizonContexts, cfg?: Partial<LariWeatherConfig>): LookaheadScore => {
+export const scorePlanLookahead = (
+  candidate: LookaheadPlanCandidate,
+  contexts: HorizonContexts,
+  cfg?: Partial<LariWeatherConfig>
+): LookaheadScore => {
   const config = { ...DEFAULT_LARI_WEATHER_CONFIG, ...(cfg ?? {}) };
 
   const scoredNow = scorePlanWithWeather(candidate.plan, contexts.now, config);
@@ -60,16 +68,23 @@ export const scorePlanLookahead = (candidate: LookaheadPlanCandidate, contexts: 
     future: scoredFuture.totalCost,
   };
 
-  const scheduleCost = candidate.schedule === 'near' ? config.delayPreferenceWeight : candidate.schedule === 'future' ? config.delayPreferenceWeight * 2 : 0;
+  const scheduleCost =
+    candidate.schedule === 'near'
+      ? config.delayPreferenceWeight
+      : candidate.schedule === 'future'
+        ? config.delayPreferenceWeight * 2
+        : 0;
 
   // Prefer acceleration if future severity worsens (heuristic bonus for executing earlier).
   const worsening = clamp01((contexts.future.severityIndex - contexts.now.severityIndex) / 10);
-  const accelerateBonus = candidate.schedule === 'now' ? config.acceleratePreferenceWeight * worsening : 0;
+  const accelerateBonus =
+    candidate.schedule === 'now' ? config.acceleratePreferenceWeight * worsening : 0;
 
   const blended = blendCostForDuration(candidate.schedule, candidate.durationHours, costs);
   const chosenCost = blended + scheduleCost - accelerateBonus;
 
-  const label = candidate.schedule === 'now' ? 'now' : candidate.schedule === 'near' ? 'near-term' : 'future';
+  const label =
+    candidate.schedule === 'now' ? 'now' : candidate.schedule === 'near' ? 'near-term' : 'future';
   const hazard = (contexts[candidate.schedule].hazards[0] ?? 'weather').toString();
   const rationaleParts: string[] = [];
 
@@ -88,7 +103,9 @@ export const scorePlanLookahead = (candidate: LookaheadPlanCandidate, contexts: 
     rationaleParts.push(`severity=${contexts[candidate.schedule].severityIndex.toFixed(1)}`);
 
     if (contexts[candidate.schedule].confidenceBand === 'low') {
-      rationaleParts.push(`uncertainty noted (certainty=${contexts[candidate.schedule].certaintyScore.toFixed(2)})`);
+      rationaleParts.push(
+        `uncertainty noted (certainty=${contexts[candidate.schedule].certaintyScore.toFixed(2)})`
+      );
     }
 
     if (contexts[candidate.schedule].stale) {
@@ -104,11 +121,17 @@ export const scorePlanLookahead = (candidate: LookaheadPlanCandidate, contexts: 
     scoreFuture: scoredFuture.totalCost,
     chosenCost,
     rationale: rationaleParts.join(' | '),
-    refreshRequested: Boolean(scoredNow.refreshRequested || scoredNear.refreshRequested || scoredFuture.refreshRequested),
+    refreshRequested: Boolean(
+      scoredNow.refreshRequested || scoredNear.refreshRequested || scoredFuture.refreshRequested
+    ),
   };
 };
 
-export const choosePlanWithLookahead = (candidates: LookaheadPlanCandidate[], contexts: HorizonContexts, cfg?: Partial<LariWeatherConfig>): LookaheadScore => {
+export const choosePlanWithLookahead = (
+  candidates: LookaheadPlanCandidate[],
+  contexts: HorizonContexts,
+  cfg?: Partial<LariWeatherConfig>
+): LookaheadScore => {
   let best: LookaheadScore | null = null;
   for (const c of candidates) {
     const s = scorePlanLookahead(c, contexts, cfg);

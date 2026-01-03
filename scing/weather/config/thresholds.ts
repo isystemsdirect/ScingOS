@@ -91,7 +91,9 @@ export const resolveWeatherThresholds = (opts?: {
     hardStopSeverityIndex: DEFAULT_HARD_STOP_SEVERITY_INDEX,
   };
 
-  const layers = [opts?.profile, opts?.industry, opts?.region].filter(Boolean) as WeatherThresholdOverrides[];
+  const layers = [opts?.profile, opts?.industry, opts?.region].filter(
+    Boolean
+  ) as WeatherThresholdOverrides[];
   for (const layer of layers) {
     if (layer.hazardThresholds) {
       base.hazardThresholds = { ...base.hazardThresholds, ...layer.hazardThresholds };

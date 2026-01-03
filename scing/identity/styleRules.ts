@@ -39,7 +39,11 @@ const enforceSingleQuestion = (text: string): string => {
   return before + after;
 };
 
-export function applyStyleRules(draft: string, decision: GatingDecision, opts: StyleFilterOptions = {}): string {
+export function applyStyleRules(
+  draft: string,
+  decision: GatingDecision,
+  opts: StyleFilterOptions = {}
+): string {
   let out = draft ?? '';
 
   // 5) Forbidden patterns

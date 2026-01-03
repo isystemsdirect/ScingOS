@@ -27,7 +27,9 @@ const stateFromDisposition = (d: GatingDecision['disposition']): VisualState => 
   }
 };
 
-const baselineFromAttractor = (id: AttractorResult['id']): { state: VisualState; channel: ColorChannel } => {
+const baselineFromAttractor = (
+  id: AttractorResult['id']
+): { state: VisualState; channel: ColorChannel } => {
   switch (id) {
     case 'order':
       return { state: 'focused', channel: 'amber_think' };
@@ -52,7 +54,10 @@ export function buildTelemetry(
   const stress = clamp01(gradients.stress);
   const confidence = clamp01(gradients.confidence);
 
-  const dispWins = decision.disposition === 'decline' || decision.disposition === 'pause' || decision.disposition === 'ask';
+  const dispWins =
+    decision.disposition === 'decline' ||
+    decision.disposition === 'pause' ||
+    decision.disposition === 'ask';
 
   const baseA = baselineFromAttractor(attractor.id);
   const state = dispWins ? stateFromDisposition(decision.disposition) : baseA.state;
@@ -65,26 +70,38 @@ export function buildTelemetry(
         ? 'rainbow_speak'
         : 'amber_think';
 
-  const stressGain = attractor.id === 'protection' || state === 'guarding' || state === 'declining' ? 0.25 : 0.1;
+  const stressGain =
+    attractor.id === 'protection' || state === 'guarding' || state === 'declining' ? 0.25 : 0.1;
 
   // Intensity
-  const intensity = clamp01(0.45 + 0.3 * urgency + 0.2 * curiosity + stressGain * stress + 0.25 * confidence);
+  const intensity = clamp01(
+    0.45 + 0.3 * urgency + 0.2 * curiosity + stressGain * stress + 0.25 * confidence
+  );
 
   // Motion
   const pulseRate = clamp01(0.2 + 0.6 * urgency + 0.2 * stress);
   const morphRate = clamp01(0.15 + 0.7 * curiosity + 0.2 * (1 - confidence));
   const tighten = clamp01(
-    0.2 + 0.6 * stress + 0.3 * (attractor.id === 'order' ? 1 : 0) + 0.3 * (attractor.id === 'protection' ? 1 : 0)
+    0.2 +
+      0.6 * stress +
+      0.3 * (attractor.id === 'order' ? 1 : 0) +
+      0.3 * (attractor.id === 'protection' ? 1 : 0)
   );
   const expand = clamp01(0.15 + 0.7 * curiosity - 0.3 * stress);
-  const stillness = clamp01(0.2 + 0.6 * confidence + 0.4 * (decision.disposition === 'pause' || decision.disposition === 'decline' ? 1 : 0) - 0.3 * urgency);
+  const stillness = clamp01(
+    0.2 +
+      0.6 * confidence +
+      0.4 * (decision.disposition === 'pause' || decision.disposition === 'decline' ? 1 : 0) -
+      0.3 * urgency
+  );
 
   const tags: string[] = [];
   if (urgency >= 0.7) tags.push('high_urgency');
   if (stress >= 0.7) tags.push('high_stress');
   if (curiosity >= 0.7) tags.push('high_curiosity');
   if (confidence <= 0.45) tags.push('low_confidence');
-  if (attractor.id === 'protection' || decision.disposition === 'decline') tags.push('protection_mode');
+  if (attractor.id === 'protection' || decision.disposition === 'decline')
+    tags.push('protection_mode');
 
   // TTL
   let ttlMs = 5000;

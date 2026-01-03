@@ -18,7 +18,10 @@ export type WeatherBlockingThresholds = {
 
 const DEFAULT_CRITICAL_HAZARDS: WeatherHazard[] = ['lightning', 'tornado'];
 
-export const isWeatherBlocking = (context: LariWeatherContext, thresholds: WeatherBlockingThresholds): boolean => {
+export const isWeatherBlocking = (
+  context: LariWeatherContext,
+  thresholds: WeatherBlockingThresholds
+): boolean => {
   const hardStop = context.severityIndex >= thresholds.hardStopThreshold;
   if (hardStop) return true;
 

@@ -1,5 +1,11 @@
 import type { CollapseResult } from '../cognition/types';
-import type { AttractorPolicy, AttractorResult, AttractorScore, IntegrationContext, IntegrationInput } from './types';
+import type {
+  AttractorPolicy,
+  AttractorResult,
+  AttractorScore,
+  IntegrationContext,
+  IntegrationInput,
+} from './types';
 import { ATTRACTOR_TIE_BREAK, attractorRegistry } from './registry';
 import { computeNeeds, scoreAttractors } from './scoring';
 import type { GradientVector } from '../gradients/types';
@@ -28,21 +34,28 @@ const pickByTieBreak = (scores: AttractorScore[]): AttractorScore => {
   })[0];
 };
 
-export function selectAttractor(scores: AttractorScore[], input: IntegrationInput): AttractorResult {
+export function selectAttractor(
+  scores: AttractorScore[],
+  input: IntegrationInput
+): AttractorResult {
   const needs = computeNeeds(input);
 
   // 1) Hard override rules (highest precedence)
   if (input.context.hasSecurityFlags || needs.riskNeed >= 0.7) {
     const policy = { ...attractorRegistry.protection.policyDefaults };
     const confidenceBaseline = scores.find((s) => s.id === 'protection')?.score ?? needs.riskNeed;
-    const confidence = clamp01(input.collapse.confidence < 0.5 ? Math.min(confidenceBaseline, 0.65) : confidenceBaseline);
+    const confidence = clamp01(
+      input.collapse.confidence < 0.5 ? Math.min(confidenceBaseline, 0.65) : confidenceBaseline
+    );
     return { id: 'protection', confidence, policy };
   }
 
   if (needs.clarityNeed >= 0.7 && input.collapse.confidence >= 0.7) {
     const policy = { ...attractorRegistry.order.policyDefaults };
     const confidenceBaseline = scores.find((s) => s.id === 'order')?.score ?? needs.clarityNeed;
-    const confidence = clamp01(input.collapse.confidence < 0.5 ? Math.min(confidenceBaseline, 0.65) : confidenceBaseline);
+    const confidence = clamp01(
+      input.collapse.confidence < 0.5 ? Math.min(confidenceBaseline, 0.65) : confidenceBaseline
+    );
     return applyPolicyModifiers({ id: 'order', confidence, policy }, input);
   }
 
@@ -59,7 +72,10 @@ export function selectAttractor(scores: AttractorScore[], input: IntegrationInpu
   return applyPolicyModifiers({ id: selectedScore.id, confidence, policy }, input);
 }
 
-const applyPolicyModifiers = (result: AttractorResult, input: IntegrationInput): AttractorResult => {
+const applyPolicyModifiers = (
+  result: AttractorResult,
+  input: IntegrationInput
+): AttractorResult => {
   const userIntent = input.context.userIntent ?? 'unknown';
   const timePressure = input.context.timePressure ?? 'low';
 
@@ -83,7 +99,10 @@ const applyPolicyModifiers = (result: AttractorResult, input: IntegrationInput):
   return { ...result, policy };
 };
 
-export function collapseToAttractor(collapse: CollapseResult, context: IntegrationContext = {}): AttractorResult {
+export function collapseToAttractor(
+  collapse: CollapseResult,
+  context: IntegrationContext = {}
+): AttractorResult {
   const input: IntegrationInput = { collapse, context };
   const scores = scoreAttractors(input);
   return selectAttractor(scores, input);

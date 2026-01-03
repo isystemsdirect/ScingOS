@@ -33,7 +33,10 @@ function downsample<T>(arr: T[], maxPoints: number): T[] {
   return out;
 }
 
-export const buildWeatherTimelineModel = (input: { points: WeatherTimelinePoint[]; maxPoints?: number }): WeatherTimelineModel => {
+export const buildWeatherTimelineModel = (input: {
+  points: WeatherTimelinePoint[];
+  maxPoints?: number;
+}): WeatherTimelineModel => {
   const max = clamp(input.maxPoints ?? 24, 6, 96);
   const coarse = input.points.length > max;
   const pts = downsample(input.points, max);
@@ -45,7 +48,10 @@ export const buildWeatherTimelineModel = (input: { points: WeatherTimelinePoint[
       severityIndex: p.severityIndex,
       band: severityToBand(p.severityIndex),
       hazards: p.hazards,
-      alertMarker: p.alertSeverity === 'critical' || p.alertSeverity === 'caution' || p.alertSeverity === 'info',
+      alertMarker:
+        p.alertSeverity === 'critical' ||
+        p.alertSeverity === 'caution' ||
+        p.alertSeverity === 'info',
     })),
   };
 };

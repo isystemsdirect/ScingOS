@@ -1,14 +1,6 @@
-import {
-  CONFIDENCE_LOCK,
-  MAX_EVALUATION_CYCLES,
-  VARIANCE_THRESHOLD,
-} from '../cognition/config';
+import { CONFIDENCE_LOCK, MAX_EVALUATION_CYCLES, VARIANCE_THRESHOLD } from '../cognition/config';
 import type { AttractorPolicy } from '../attractors/types';
-import {
-  MAX_POLICY_SHIFT,
-  MAX_RISK_POSTURE_TIGHTEN,
-  MAX_THRESHOLD_DELTA,
-} from './config';
+import { MAX_POLICY_SHIFT, MAX_RISK_POSTURE_TIGHTEN, MAX_THRESHOLD_DELTA } from './config';
 import type {
   AttractorResultLike,
   CollapseModulation,
@@ -38,7 +30,10 @@ const clampInt = (v: number, lo: number, hi: number): number => {
   return n;
 };
 
-export function withCollapseConfidence(gradients: GradientVector, collapseConfidence: number): GradientVector {
+export function withCollapseConfidence(
+  gradients: GradientVector,
+  collapseConfidence: number
+): GradientVector {
   const cc = clamp01(collapseConfidence);
   return {
     ...gradients,
@@ -95,11 +90,18 @@ export function effectiveCollapseParams(
 ): { varianceThreshold: number; confidenceLock: number; maxEvaluationCycles: number } {
   const modulation = applyToCollapse(gradients);
 
-  const varianceThresholdBase = typeof base.varianceThreshold === 'number' ? base.varianceThreshold : VARIANCE_THRESHOLD;
-  const confidenceLockBase = typeof base.confidenceLock === 'number' ? base.confidenceLock : CONFIDENCE_LOCK;
-  const maxCyclesBase = typeof base.maxEvaluationCycles === 'number' ? base.maxEvaluationCycles : MAX_EVALUATION_CYCLES;
+  const varianceThresholdBase =
+    typeof base.varianceThreshold === 'number' ? base.varianceThreshold : VARIANCE_THRESHOLD;
+  const confidenceLockBase =
+    typeof base.confidenceLock === 'number' ? base.confidenceLock : CONFIDENCE_LOCK;
+  const maxCyclesBase =
+    typeof base.maxEvaluationCycles === 'number' ? base.maxEvaluationCycles : MAX_EVALUATION_CYCLES;
 
-  const varianceThreshold = clamp(varianceThresholdBase + modulation.varianceThresholdDelta, 0.01, 0.25);
+  const varianceThreshold = clamp(
+    varianceThresholdBase + modulation.varianceThresholdDelta,
+    0.01,
+    0.25
+  );
   const confidenceLock = clamp(confidenceLockBase + modulation.confidenceLockDelta, 0.55, 0.95);
   const maxEvaluationCycles = clampInt(maxCyclesBase + modulation.maxEvaluationCyclesDelta, 1, 5);
 
@@ -109,7 +111,7 @@ export function effectiveCollapseParams(
 const verbosityLevels: AttractorPolicy['verbosity'][] = ['minimal', 'standard', 'expanded'];
 const riskPostureLevels: AttractorPolicy['riskPosture'][] = ['open', 'cautious', 'restricted'];
 
-const shiftByOne = <T,>(levels: T[], current: T, delta: number): T => {
+const shiftByOne = <T>(levels: T[], current: T, delta: number): T => {
   const i = Math.max(0, levels.indexOf(current));
   const ni = Math.max(0, Math.min(levels.length - 1, i + delta));
   return levels[ni];

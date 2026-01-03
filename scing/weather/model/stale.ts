@@ -30,7 +30,7 @@ export const getMaxAgeMsForKind = (
   kind: WeatherSignalKind,
   signal: WeatherSignal,
   policy: StalePolicy,
-  nowUtcIso: string,
+  nowUtcIso: string
 ): number => {
   if (kind !== 'alert') {
     switch (kind) {
@@ -58,10 +58,15 @@ export const getMaxAgeMsForKind = (
   return policy.alertsMaxAgeMs;
 };
 
-export const computeStaleStatus = (signal: WeatherSignal, nowUtcIso: string, policy: StalePolicy = DEFAULT_STALE_POLICY): StaleStatus => {
+export const computeStaleStatus = (
+  signal: WeatherSignal,
+  nowUtcIso: string,
+  policy: StalePolicy = DEFAULT_STALE_POLICY
+): StaleStatus => {
   const nowMs = Date.parse(nowUtcIso);
   const fetchedMs = Date.parse(signal.source.fetchedAtUtc);
-  const ageMs = Number.isFinite(nowMs) && Number.isFinite(fetchedMs) ? Math.max(0, nowMs - fetchedMs) : 0;
+  const ageMs =
+    Number.isFinite(nowMs) && Number.isFinite(fetchedMs) ? Math.max(0, nowMs - fetchedMs) : 0;
 
   const maxAgeMs = getMaxAgeMsForKind(signal.kind, signal, policy, nowUtcIso);
   return {

@@ -22,7 +22,13 @@ const makeWeather = (overrides: Partial<WeatherForLARI>): WeatherForLARI => ({
   ...overrides,
 });
 
-const makePlan = (id: string, baseCost: number, actionId: string, actionCost: number, tol?: { maxSeverity?: number; forbiddenHazards?: any[] }): LariPlan => ({
+const makePlan = (
+  id: string,
+  baseCost: number,
+  actionId: string,
+  actionCost: number,
+  tol?: { maxSeverity?: number; forbiddenHazards?: any[] }
+): LariPlan => ({
   id,
   baseCost,
   actions: [
@@ -39,12 +45,22 @@ export const runLariWeatherIntegrationTests = (): void => {
 
   // 1) Clear now, storm near → delay plan (modeled as long-running action that would overlap into near).
   {
-    const ctxNow = toLariWeatherContext({ weather: makeWeather({ forecastHorizon: 'current', severityIndex: 1, hazards: [] }), nowUtc });
-    const ctxNear = toLariWeatherContext({
-      weather: makeWeather({ forecastHorizon: 'hourly', severityIndex: 8, hazards: ['wind', 'snow'] }),
+    const ctxNow = toLariWeatherContext({
+      weather: makeWeather({ forecastHorizon: 'current', severityIndex: 1, hazards: [] }),
       nowUtc,
     });
-    const ctxFuture = toLariWeatherContext({ weather: makeWeather({ forecastHorizon: 'daily', severityIndex: 1, hazards: [] }), nowUtc });
+    const ctxNear = toLariWeatherContext({
+      weather: makeWeather({
+        forecastHorizon: 'hourly',
+        severityIndex: 8,
+        hazards: ['wind', 'snow'],
+      }),
+      nowUtc,
+    });
+    const ctxFuture = toLariWeatherContext({
+      weather: makeWeather({ forecastHorizon: 'daily', severityIndex: 1, hazards: [] }),
+      nowUtc,
+    });
 
     const contexts = { now: ctxNow, near: ctxNear, future: ctxFuture };
 
@@ -69,9 +85,18 @@ export const runLariWeatherIntegrationTests = (): void => {
 
   // 2) Storm now, clear near → wait
   {
-    const ctxNow = toLariWeatherContext({ weather: makeWeather({ forecastHorizon: 'current', severityIndex: 8, hazards: ['wind'] }), nowUtc });
-    const ctxNear = toLariWeatherContext({ weather: makeWeather({ forecastHorizon: 'hourly', severityIndex: 2, hazards: [] }), nowUtc });
-    const ctxFuture = toLariWeatherContext({ weather: makeWeather({ forecastHorizon: 'daily', severityIndex: 3, hazards: [] }), nowUtc });
+    const ctxNow = toLariWeatherContext({
+      weather: makeWeather({ forecastHorizon: 'current', severityIndex: 8, hazards: ['wind'] }),
+      nowUtc,
+    });
+    const ctxNear = toLariWeatherContext({
+      weather: makeWeather({ forecastHorizon: 'hourly', severityIndex: 2, hazards: [] }),
+      nowUtc,
+    });
+    const ctxFuture = toLariWeatherContext({
+      weather: makeWeather({ forecastHorizon: 'daily', severityIndex: 3, hazards: [] }),
+      nowUtc,
+    });
 
     const contexts = { now: ctxNow, near: ctxNear, future: ctxFuture };
 
@@ -95,15 +120,30 @@ export const runLariWeatherIntegrationTests = (): void => {
   // 3) Low certainty conflicting data → conservative output
   {
     const ctxNow = toLariWeatherContext({
-      weather: makeWeather({ forecastHorizon: 'current', severityIndex: 4, hazards: ['wind'], certaintyScore: 0.5 }),
+      weather: makeWeather({
+        forecastHorizon: 'current',
+        severityIndex: 4,
+        hazards: ['wind'],
+        certaintyScore: 0.5,
+      }),
       nowUtc,
     });
     const ctxNear = toLariWeatherContext({
-      weather: makeWeather({ forecastHorizon: 'hourly', severityIndex: 4, hazards: ['wind'], certaintyScore: 0.5 }),
+      weather: makeWeather({
+        forecastHorizon: 'hourly',
+        severityIndex: 4,
+        hazards: ['wind'],
+        certaintyScore: 0.5,
+      }),
       nowUtc,
     });
     const ctxFuture = toLariWeatherContext({
-      weather: makeWeather({ forecastHorizon: 'daily', severityIndex: 4, hazards: ['wind'], certaintyScore: 0.5 }),
+      weather: makeWeather({
+        forecastHorizon: 'daily',
+        severityIndex: 4,
+        hazards: ['wind'],
+        certaintyScore: 0.5,
+      }),
       nowUtc,
     });
 
@@ -115,7 +155,10 @@ export const runLariWeatherIntegrationTests = (): void => {
     };
 
     const safeExpensive: LookaheadPlanCandidate = {
-      plan: makePlan('plan-safe', 1, 'act', 1, { maxSeverity: 5, forbiddenHazards: ['wind'] as any }),
+      plan: makePlan('plan-safe', 1, 'act', 1, {
+        maxSeverity: 5,
+        forbiddenHazards: ['wind'] as any,
+      }),
       schedule: 'now',
     };
 
@@ -133,7 +176,12 @@ export const runLariWeatherIntegrationTests = (): void => {
   // 4) Critical alert (lightning) → immediate replan with hard stop
   {
     const ctxNow = toLariWeatherContext({
-      weather: makeWeather({ forecastHorizon: 'current', severityIndex: 9, hazards: ['lightning'], certaintyScore: 0.95 }),
+      weather: makeWeather({
+        forecastHorizon: 'current',
+        severityIndex: 9,
+        hazards: ['lightning'],
+        certaintyScore: 0.95,
+      }),
       nowUtc,
     });
 

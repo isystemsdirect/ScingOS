@@ -22,7 +22,14 @@ const clamp = (v: number, lo: number, hi: number): number => {
   return v;
 };
 
-const tieBreakOrder: PostureId[] = ['overloaded', 'frustrated', 'directive', 'exploratory', 'confident', 'unknown'];
+const tieBreakOrder: PostureId[] = [
+  'overloaded',
+  'frustrated',
+  'directive',
+  'exploratory',
+  'confident',
+  'unknown',
+];
 
 const inferToleranceForOptions = (f: PostureFeatures): number => {
   // Deterministic inference: exploratory cues and longer form => more options tolerated.
@@ -67,7 +74,8 @@ export function scorePostures(features: PostureFeatures): PostureScore[] {
   // CONFIDENT
   if (features.confidenceHit) out.confident += 0.35;
   if (!features.repetition && !features.rapidFire) out.confident += 0.2;
-  if (!features.isVeryLong && features.messageLengthChars >= 80 && features.directiveHit) out.confident += 0.1;
+  if (!features.isVeryLong && features.messageLengthChars >= 80 && features.directiveHit)
+    out.confident += 0.1;
 
   // FRUSTRATED
   if (features.frustrationHit) out.frustrated += 0.35;
@@ -77,7 +85,11 @@ export function scorePostures(features: PostureFeatures): PostureScore[] {
 
   // UNKNOWN (fallback)
   const anyStrong =
-    features.directiveHit || features.exploratoryHit || features.overloadHit || features.frustrationHit || features.confidenceHit;
+    features.directiveHit ||
+    features.exploratoryHit ||
+    features.overloadHit ||
+    features.frustrationHit ||
+    features.confidenceHit;
   if (!anyStrong) out.unknown += 0.25;
   if (features.isVeryShort && !features.directiveHit) out.unknown += 0.2;
 
@@ -108,7 +120,10 @@ const pickTop = (scores: PostureScore[]): PostureScore => {
   return best;
 };
 
-const deriveSignals = (id: PostureId, timePressure: 'low' | 'medium' | 'high'): PostureResult['signals'] => {
+const deriveSignals = (
+  id: PostureId,
+  timePressure: 'low' | 'medium' | 'high'
+): PostureResult['signals'] => {
   const urgencyCue = timePressure === 'high' ? 0.8 : timePressure === 'low' ? 0.3 : 0.5;
 
   switch (id) {
@@ -164,27 +179,44 @@ const deriveSignals = (id: PostureId, timePressure: 'low' | 'medium' | 'high'): 
   }
 };
 
-const deriveConstraints = (signals: PostureResult['signals'], id: PostureId): PostureResult['constraints'] => {
-  const maxOptions = Math.round(clamp(1 + 5 * clamp01(signals.toleranceForOptions), MAX_OPTIONS_MIN, MAX_OPTIONS_MAX));
+const deriveConstraints = (
+  signals: PostureResult['signals'],
+  id: PostureId
+): PostureResult['constraints'] => {
+  const maxOptions = Math.round(
+    clamp(1 + 5 * clamp01(signals.toleranceForOptions), MAX_OPTIONS_MIN, MAX_OPTIONS_MAX)
+  );
 
   const maxLength: PostureResult['constraints']['maxLength'] =
-    signals.brevityPreference >= 0.85 ? 'short' : signals.brevityPreference >= 0.55 ? 'medium' : 'long';
+    signals.brevityPreference >= 0.85
+      ? 'short'
+      : signals.brevityPreference >= 0.55
+        ? 'medium'
+        : 'long';
 
   const askSingleQuestion =
-    id === 'overloaded' || id === 'frustrated' || id === 'unknown' || clamp01(signals.brevityPreference) >= 0.85;
+    id === 'overloaded' ||
+    id === 'frustrated' ||
+    id === 'unknown' ||
+    clamp01(signals.brevityPreference) >= 0.85;
 
   const preferChecklist = clamp01(signals.structurePreference) >= 0.75;
 
   return { maxOptions, maxLength, askSingleQuestion, preferChecklist };
 };
 
-const normalizeHistory = (last: Array<{ ts: number; id: PostureId }>): Array<{ ts: number; id: PostureId }> => {
+const normalizeHistory = (
+  last: Array<{ ts: number; id: PostureId }>
+): Array<{ ts: number; id: PostureId }> => {
   const clean = (last ?? []).filter((x) => typeof x.id === 'string' && Number.isFinite(x.ts));
   clean.sort((a, b) => a.ts - b.ts);
   return clean.slice(-POSTURE_WINDOW_SIZE);
 };
 
-export function selectPosture(scores: PostureScore[], history: { lastPostures: Array<{ ts: number; id: PostureId }> }): PostureResult {
+export function selectPosture(
+  scores: PostureScore[],
+  history: { lastPostures: Array<{ ts: number; id: PostureId }> }
+): PostureResult {
   const top = pickTop(scores);
   const last = normalizeHistory(history.lastPostures);
   const current = last.length > 0 ? last[last.length - 1].id : null;

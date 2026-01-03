@@ -78,7 +78,10 @@ export const buildWeatherIndicatorModel = (input: WeatherIndicatorInput): Weathe
 
 // Memoization hook: update only on severity band change or primary hazard change.
 // This ensures the indicator remains performant and does not re-render on minor certainty churn.
-export const shouldWeatherIndicatorUpdate = (prev: WeatherIndicatorInput, next: WeatherIndicatorInput): boolean => {
+export const shouldWeatherIndicatorUpdate = (
+  prev: WeatherIndicatorInput,
+  next: WeatherIndicatorInput
+): boolean => {
   if (severityToBand(prev.severityIndex) !== severityToBand(next.severityIndex)) return true;
   if (pickPrimaryHazard(prev.hazards) !== pickPrimaryHazard(next.hazards)) return true;
   if (Boolean(prev.stale) !== Boolean(next.stale)) return true;

@@ -49,7 +49,12 @@ export const buildWeatherOpsDashboardModel = (input: {
   if (staleCache) notes.push('Cache freshness degraded');
   if (criticalAlert) notes.push('Critical alert active');
 
-  const status: 'green' | 'yellow' | 'red' = criticalAlert || (providerDown && staleCache) ? 'red' : providerDown || staleCache ? 'yellow' : 'green';
+  const status: 'green' | 'yellow' | 'red' =
+    criticalAlert || (providerDown && staleCache)
+      ? 'red'
+      : providerDown || staleCache
+        ? 'yellow'
+        : 'green';
 
   return {
     generatedAtUtc: input.nowUtc,

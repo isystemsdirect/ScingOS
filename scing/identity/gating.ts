@@ -23,7 +23,10 @@ const computeRisk = (input: GatingInput): number => {
 };
 
 const computeAmbiguity = (input: GatingInput): number => {
-  const a = typeof input.context.ambiguity === 'number' ? input.context.ambiguity : 1.0 - clamp01(input.collapse.confidence);
+  const a =
+    typeof input.context.ambiguity === 'number'
+      ? input.context.ambiguity
+      : 1.0 - clamp01(input.collapse.confidence);
   return clamp01(a);
 };
 
@@ -44,7 +47,13 @@ const isAssertive = (input: GatingInput, risk: number): boolean => {
 };
 
 export function resolveIdentityTraits(input: GatingInput): IdentityTrait[] {
-  const base: IdentityTrait[] = ['calm', 'restrained', 'precisionDriven', 'riskAware', 'nonSubmissive'];
+  const base: IdentityTrait[] = [
+    'calm',
+    'restrained',
+    'precisionDriven',
+    'riskAware',
+    'nonSubmissive',
+  ];
   const risk = computeRisk(input);
   if (isAssertive(input, risk)) base.push('assertive');
   return base;
@@ -90,7 +99,10 @@ export function evaluateIdentityConstraints(input: GatingInput): GatingDecision 
 
   // 3) Constraint defaults
   const forbidOverExplain = urgency >= 0.7 || userIntent === 'overloaded';
-  const enforceDirectness = userIntent === 'directive' || input.attractor.id === 'order' || input.attractor.id === 'protection';
+  const enforceDirectness =
+    userIntent === 'directive' ||
+    input.attractor.id === 'order' ||
+    input.attractor.id === 'protection';
 
   const decisionBase: Omit<GatingDecision, 'disposition' | 'confidence'> = {
     constraints: {
@@ -177,7 +189,9 @@ export function evaluateIdentityConstraints(input: GatingInput): GatingDecision 
   }
 
   // RULE E — ACT
-  const actConfidence = clamp01(0.5 * clamp01(input.collapse.confidence) + 0.5 * clamp01(input.attractor.confidence));
+  const actConfidence = clamp01(
+    0.5 * clamp01(input.collapse.confidence) + 0.5 * clamp01(input.attractor.confidence)
+  );
 
   let out: GatingDecision = {
     disposition: 'act',
@@ -197,7 +211,8 @@ export function evaluateIdentityConstraints(input: GatingInput): GatingDecision 
         ...out.outputLimits,
         maxOptions: 3,
         maxLength: 'short',
-        requireExplicitAssumptions: out.confidence < 0.6 ? true : out.outputLimits.requireExplicitAssumptions,
+        requireExplicitAssumptions:
+          out.confidence < 0.6 ? true : out.outputLimits.requireExplicitAssumptions,
       },
     };
   }
@@ -220,9 +235,15 @@ export function evaluateIdentityConstraints(input: GatingInput): GatingDecision 
   // Keep invariants bounded.
   // CB-06 bias override: prevent ACT unless order+focus emerge.
   // Precedence: DECLINE (already returned) > OFAG bias > CB-04 default act.
-  if (out.disposition === 'act' && (ofState.dispositionBias === 'pause' || ofState.dispositionBias === 'ask' || ofState.dispositionBias === 'defer')) {
+  if (
+    out.disposition === 'act' &&
+    (ofState.dispositionBias === 'pause' ||
+      ofState.dispositionBias === 'ask' ||
+      ofState.dispositionBias === 'defer')
+  ) {
     const highConfidence = clamp01(input.collapse.confidence) >= 0.75 && out.confidence >= 0.75;
-    const lowRisk = risk < 0.4 && !input.context.hasSecurityFlags && input.attractor.id !== 'protection';
+    const lowRisk =
+      risk < 0.4 && !input.context.hasSecurityFlags && input.attractor.id !== 'protection';
     if (!(highConfidence && lowRisk)) {
       out = {
         ...out,
@@ -257,7 +278,10 @@ export function evaluateIdentityConstraints(input: GatingInput): GatingDecision 
   if (input.context.postureConstraints) {
     out = {
       ...out,
-      outputLimits: applyPostureConstraintsToOutputLimits(out.outputLimits, input.context.postureConstraints),
+      outputLimits: applyPostureConstraintsToOutputLimits(
+        out.outputLimits,
+        input.context.postureConstraints
+      ),
     };
   }
 

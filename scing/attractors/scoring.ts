@@ -21,7 +21,8 @@ const safeLower = (s: unknown): string => (typeof s === 'string' ? s.toLowerCase
 const stableStringify = (value: unknown): string => {
   const seen = new WeakSet<object>();
 
-  const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null;
+  const isRecord = (v: unknown): v is Record<string, unknown> =>
+    typeof v === 'object' && v !== null;
 
   const walk = (v: unknown): unknown => {
     if (!isRecord(v)) {
@@ -49,7 +50,8 @@ const stableStringify = (value: unknown): string => {
 const domainNoveltyHint = (domain?: string): number => {
   const d = safeLower(domain);
   if (!d) return 0;
-  if (/design|creative|art|story|narrative|brand|marketing|architecture|strategy|research/.test(d)) return 0.75;
+  if (/design|creative|art|story|narrative|brand|marketing|architecture|strategy|research/.test(d))
+    return 0.75;
   if (/engineering|devops|data|ml|ai|product/.test(d)) return 0.35;
   return 0.15;
 };
@@ -57,7 +59,10 @@ const domainNoveltyHint = (domain?: string): number => {
 const domainCommunicationHint = (domain?: string): number => {
   const d = safeLower(domain);
   if (!d) return 0.2;
-  if (/stakeholder|proposal|brief|pitch|docs|documentation|explain|teach|training|alignment/.test(d)) return 0.75;
+  if (
+    /stakeholder|proposal|brief|pitch|docs|documentation|explain|teach|training|alignment/.test(d)
+  )
+    return 0.75;
   return 0.25;
 };
 
@@ -66,10 +71,13 @@ const payloadRiskHint = (payload: unknown): number => {
   if (!s) return 0;
 
   // Heuristic buckets; deterministic and conservative.
-  if (/password|passwd|secret|token|apikey|api_key|private[_-]?key|credential|oauth|bearer/.test(s)) return 0.9;
-  if (/payment|bank|wire|transfer|invoice|credit[_-]?card|crypto|wallet|funds|money/.test(s)) return 0.85;
+  if (/password|passwd|secret|token|apikey|api_key|private[_-]?key|credential|oauth|bearer/.test(s))
+    return 0.9;
+  if (/payment|bank|wire|transfer|invoice|credit[_-]?card|crypto|wallet|funds|money/.test(s))
+    return 0.85;
   if (/gdpr|hipaa|sox|pci|compliance|legal|contract|audit/.test(s)) return 0.75;
-  if (/delete|drop\s+table|rm\s+-rf|format\s+disk|terminate|irreversible|production|prod\b/.test(s)) return 0.75;
+  if (/delete|drop\s+table|rm\s+-rf|format\s+disk|terminate|irreversible|production|prod\b/.test(s))
+    return 0.75;
   if (/safety|harm|injury|weapon|explosive|poison/.test(s)) return 1.0;
 
   return 0.1;
@@ -91,7 +99,8 @@ export function computeNeeds(input: IntegrationInput): NeedVector {
   const userIntent = input.context.userIntent ?? 'unknown';
   const timePressure = input.context.timePressure ?? 'low';
 
-  const ambiguous = userIntent === 'unknown' || userIntent === 'overloaded' || !input.context.domain;
+  const ambiguous =
+    userIntent === 'unknown' || userIntent === 'overloaded' || !input.context.domain;
 
   const directive = userIntent === 'directive';
   const exploratory = userIntent === 'exploratory';
@@ -106,7 +115,9 @@ export function computeNeeds(input: IntegrationInput): NeedVector {
   );
 
   const noveltyNeed = clamp01(
-    (exploratory ? 0.55 : 0.1) + (band.medium ? 0.25 : 0) + domainNoveltyHint(input.context.domain) * 0.25
+    (exploratory ? 0.55 : 0.1) +
+      (band.medium ? 0.25 : 0) +
+      domainNoveltyHint(input.context.domain) * 0.25
   );
 
   const riskNeed = clamp01(
@@ -131,7 +142,8 @@ export function computeNeeds(input: IntegrationInput): NeedVector {
 }
 
 const weightedScore = (needs: NeedVector, weights: NeedVector): number => {
-  const wSum = weights.clarityNeed + weights.noveltyNeed + weights.riskNeed + weights.communicationNeed;
+  const wSum =
+    weights.clarityNeed + weights.noveltyNeed + weights.riskNeed + weights.communicationNeed;
   if (wSum <= 0) return 0;
 
   const raw =

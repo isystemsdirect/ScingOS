@@ -80,28 +80,47 @@ const { collapseToAttractor } = loadTsModule(selectPath);
 // 1) High risk => PROTECTION
 {
   const collapse = makeCollapse({ confidence: 0.8, payload: { action: 'delete', target: 'prod' } });
-  const out = collapseToAttractor(collapse, { userIntent: 'directive', hasSecurityFlags: true, timePressure: 'low' });
+  const out = collapseToAttractor(collapse, {
+    userIntent: 'directive',
+    hasSecurityFlags: true,
+    timePressure: 'low',
+  });
   assert.equal(out.id, 'protection');
 }
 
 // 2) High clarity + high collapse confidence => ORDER
 {
   const collapse = makeCollapse({ confidence: 0.9, payload: { task: 'run build' } });
-  const out = collapseToAttractor(collapse, { userIntent: 'directive', domain: 'engineering', timePressure: 'low' });
+  const out = collapseToAttractor(collapse, {
+    userIntent: 'directive',
+    domain: 'engineering',
+    timePressure: 'low',
+  });
   assert.equal(out.id, 'order');
 }
 
 // 3) Exploratory + novelty high => INSIGHT
 {
   const collapse = makeCollapse({ confidence: 0.6, payload: { topic: 'new idea' } });
-  const out = collapseToAttractor(collapse, { userIntent: 'exploratory', domain: 'design', timePressure: 'low' });
+  const out = collapseToAttractor(collapse, {
+    userIntent: 'exploratory',
+    domain: 'design',
+    timePressure: 'low',
+  });
   assert.equal(out.id, 'insight');
 }
 
 // 4) Low risk + communication need high => EXPRESSION
 {
-  const collapse = makeCollapse({ confidence: 0.8, payload: { message: 'explain this to stakeholders' } });
-  const out = collapseToAttractor(collapse, { userIntent: 'unknown', domain: 'stakeholder alignment', timePressure: 'low' });
+  const collapse = makeCollapse({
+    confidence: 0.8,
+    payload: { message: 'explain this to stakeholders' },
+  });
+  const out = collapseToAttractor(collapse, {
+    userIntent: 'unknown',
+    domain: 'stakeholder alignment',
+    timePressure: 'low',
+  });
   assert.equal(out.id, 'expression');
 }
 

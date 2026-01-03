@@ -7,7 +7,14 @@ export type VerbosityLevel = 'minimal' | 'standard' | 'expanded';
 export type Tone = 'neutral' | 'formal' | 'creative' | 'guarded';
 export type Structure = 'checklist' | 'narrative' | 'hybrid';
 
-export type ResponseSectionId = 'goal' | 'steps' | 'constraints' | 'assumptions' | 'next' | 'safety' | 'question';
+export type ResponseSectionId =
+  | 'goal'
+  | 'steps'
+  | 'constraints'
+  | 'assumptions'
+  | 'next'
+  | 'safety'
+  | 'question';
 
 export type ResponsePlan = {
   disposition: ActionDisposition;
