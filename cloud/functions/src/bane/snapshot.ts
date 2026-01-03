@@ -1,6 +1,11 @@
 import * as admin from 'firebase-admin';
 import { isoNow, mustEnv } from './middleware';
-import type { BaneKey, PolicyConstraints, PolicySnapshot } from '../../../../scing/bane/baneTypes';
+import type {
+  BaneKey,
+  OrgRole,
+  PolicyConstraints,
+  PolicySnapshot,
+} from '../../../../scing/bane/baneTypes';
 import { computeSnapshotHash } from '../../../../scing/bane/banePolicySnapshot';
 import { signSnapshotHmac } from '../../../../scing/bane/baneSignature';
 
@@ -10,11 +15,11 @@ export async function issuePolicySnapshot(orgId: string, uid: string): Promise<P
   // roles
   const mem = await db.doc(`orgs/${orgId}/members/${uid}`).get();
   if (!mem.exists) throw new Error('NO_ROLE');
-  const role = mem.data()!.role as any;
+  const role = mem.data()!.role as OrgRole;
 
   // entitlements
   const entsSnap = await db.collection(`orgs/${orgId}/entitlements`).where('uid', '==', uid).get();
-  const entitlements: any = {};
+  const entitlements: PolicySnapshot['entitlements'] = {};
   let maxPolicyVersion = 0;
 
   entsSnap.forEach((d) => {
@@ -60,7 +65,7 @@ export async function issuePolicySnapshot(orgId: string, uid: string): Promise<P
     constraints,
   } as Omit<PolicySnapshot, 'hash' | 'signature'>;
 
-  const hash = computeSnapshotHash(unsigned as any);
+  const hash = computeSnapshotHash(unsigned);
   const kid = mustEnv('BANE_SNAPSHOT_KID');
   const secret = mustEnv('BANE_SNAPSHOT_HMAC_SECRET');
 

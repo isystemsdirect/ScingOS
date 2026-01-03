@@ -24,8 +24,9 @@ export const requestCapabilityFunc = functions.https.onCall(async (data, context
   try {
     const token = await requestCapability(userId, action, metadata);
     return { token };
-  } catch (error: any) {
-    throw new functions.https.HttpsError('permission-denied', error.message);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    throw new functions.https.HttpsError('permission-denied', message);
   }
 });
 

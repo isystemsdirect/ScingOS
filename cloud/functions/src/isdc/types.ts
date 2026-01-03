@@ -63,7 +63,7 @@ export type ISDCPayload =
 export interface SyncRequestPayload {
   entity_type: 'inspection' | 'finding' | 'report' | 'all';
   since?: string; // ISO 8601 timestamp
-  filters?: Record<string, any>;
+  filters?: Record<string, unknown>;
   include_deleted?: boolean;
 }
 
@@ -104,7 +104,7 @@ export interface InspectionDetails {
   updated_at: string;
   version: number;
   findings: FindingDetails[];
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   sync_status?: SyncStatus;
 }
 
@@ -189,8 +189,8 @@ export interface ConflictInfo {
   entity_id: string;
   local_version: number;
   remote_version: number;
-  local_data: any;
-  remote_data: any;
+  local_data: unknown;
+  remote_data: unknown;
   conflict_fields: string[];
 }
 
@@ -200,7 +200,7 @@ export interface ConflictInfo {
 export interface ConflictResolutionPayload {
   conflict_id: string;
   resolution_strategy: 'local' | 'remote' | 'merge' | 'manual';
-  merged_data?: any;
+  merged_data?: unknown;
   resolved_by: string;
   resolved_at: string;
 }
@@ -252,7 +252,7 @@ export interface AuditContext {
   session_id: string;
   capability_tokens?: string[];
   action: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -264,7 +264,7 @@ export interface AuditLogPayload {
   entity_id: string;
   user_id: string;
   timestamp: string;
-  changes?: Record<string, any>;
+  changes?: Record<string, unknown>;
   result: 'success' | 'failed' | 'denied';
   sdr_id?: string; // Security Decision Record ID
 }
@@ -288,6 +288,6 @@ export enum ISDCErrorCode {
 export interface ISDCError {
   code: ISDCErrorCode;
   message: string;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
   recoverable: boolean;
 }

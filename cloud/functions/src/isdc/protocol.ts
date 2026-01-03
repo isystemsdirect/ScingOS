@@ -42,7 +42,7 @@ async function createSecurityDecisionRecord(data: {
   action: string;
   userId: string;
   result: 'allowed' | 'denied';
-  metadata?: any;
+  metadata?: unknown;
 }): Promise<string> {
   return await createSDR({
     userId: data.userId,
@@ -105,15 +105,17 @@ export const handleISDCMessage = functions.https.onCall(
           `Unknown ISDCProtocol2025 message type: ${type}`
         );
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('ISDCProtocol2025 error:', error);
 
+      const message = error instanceof Error ? error.message : 'ISDCProtocol2025 operation failed';
+
       // Log audit record for failed operations
-      await logAuditRecord(userId, type, 'failed', error.message);
+      await logAuditRecord(userId, type, 'failed', message);
 
       throw new functions.https.HttpsError(
         'internal',
-        error.message || 'ISDCProtocol2025 operation failed'
+        message
       );
     }
   }
@@ -203,7 +205,7 @@ async function handleDetailsSync(
       conflicts: conflicts.length > 0 ? conflicts : undefined,
       has_more: false,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Details sync error:', error);
     throw error;
   }
@@ -383,15 +385,30 @@ async function handleSyncRequest(
   const snapshot = await query.get();
 
   snapshot.forEach((doc) => {
-    const data = doc.data();
-    entities.push({
-      entity_type: entity_type as 'inspection' | 'finding',
-      entity_id: doc.id,
-      operation: 'update',
-      data: data as any,
-      version: data.version || 1,
-      timestamp: data.updated_at,
-    });
+    if (entity_type === 'inspection') {
+      const inspection = doc.data() as InspectionDetails;
+      entities.push({
+        entity_type: 'inspection',
+        entity_id: doc.id,
+        operation: 'update',
+        data: inspection,
+        version: inspection.version || 1,
+        timestamp: inspection.updated_at,
+      });
+      return;
+    }
+
+    if (entity_type === 'finding') {
+      const finding = doc.data() as FindingDetails;
+      entities.push({
+        entity_type: 'finding',
+        entity_id: doc.id,
+        operation: 'update',
+        data: finding,
+        version: finding.version || 1,
+        timestamp: finding.updated_at,
+      });
+    }
   });
 
   await logAuditRecord(userId, 'sync.request', 'success', `Retrieved ${entities.length} entities`);
@@ -408,11 +425,11 @@ async function handleSyncRequest(
  */
 async function handleInspectionOperation(
   type: ISDCMessageType,
-  payload: any,
+  payload: unknown,
   userId: string
-): Promise<any> {
+): Promise<unknown> {
   const db = admin.firestore();
-  const { inspection } = payload;
+  const { inspection } = payload as { inspection: InspectionDetails };
 
   const isCreate = type === 'inspection.create';
   const capability = isCreate ? 'cap:inspection.create' : 'cap:inspection.update';
@@ -455,11 +472,11 @@ async function handleInspectionOperation(
  */
 async function handleFindingOperation(
   type: ISDCMessageType,
-  payload: any,
+  payload: unknown,
   userId: string
-): Promise<any> {
+): Promise<unknown> {
   const db = admin.firestore();
-  const { finding } = payload;
+  const { finding } = payload as { finding: FindingDetails };
 
   const isCreate = type === 'finding.create';
   const capability = isCreate ? 'cap:finding.create' : 'cap:finding.update';
@@ -499,8 +516,11 @@ async function handleFindingOperation(
 /**
  * Handle conflict resolution
  */
-async function handleConflictResolution(payload: any, userId: string): Promise<any> {
-  const { conflict_id, resolution_strategy } = payload;
+async function handleConflictResolution(payload: unknown, userId: string): Promise<unknown> {
+  const { conflict_id, resolution_strategy } = payload as {
+    conflict_id: string;
+    resolution_strategy: string;
+  };
 
   console.log(`Resolving conflict ${conflict_id} with strategy: ${resolution_strategy}`);
 
