@@ -1,6 +1,6 @@
 import React, { createContext, useReducer } from 'react';
-import { initialScingState } from '../../../scing/ui/scingState';
-import type { ScingState } from '../../../scing/ui/scingState';
+import { initialScingState } from '@scing/ui/scingState';
+import type { ScingState } from '@scing/ui/scingState';
 
 export const ScingContext = createContext<{ state: ScingState; dispatch: any }>({
   state: initialScingState,

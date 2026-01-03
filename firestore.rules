@@ -150,6 +150,15 @@ service cloud.firestore {
       allow read: if false;
       allow write: if false;
     }
+
+    // =========================
+    // Observability events (LFCB-10)
+    // =========================
+    match /obs/events/{eventId} {
+      allow create: if isAuthenticated();
+      allow read: if isAdmin();
+      allow update, delete: if false;
+    }
     
     // Tasks collection
     match /tasks/{taskId} {
@@ -169,6 +178,7 @@ service cloud.firestore {
       
       allow delete: if isAdmin();
     }
+
     
     // Security Decision Records (SDRs)
     match /sdrs/{sdrId} {

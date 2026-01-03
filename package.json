@@ -22,6 +22,7 @@
     "test:scing:bane": "node tools/bane.entitlements.selftest.mjs",
     "test:scing:weather": "node tools/weather.severity.selftest.mjs",
     "test:scing:lari:weather": "node tools/lari.weather.integration.selftest.mjs",
+    "test:scing:devices": "node tools/devices.router.selftest.mjs",
     "test:scing:ui:weather": "node tools/weather.ui.selftest.mjs",
     "test:scing:ui:contracts": "node tools/scing.ui.contracts.selftest.mjs",
     "canon:scan": "node tools/canon-scan.mjs",

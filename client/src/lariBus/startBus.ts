@@ -1,5 +1,6 @@
-import { LariBusRuntime } from '../../../scing/lariBus/busRuntime';
-import type { StoreBridge } from '../../../scing/lariBus/busStoreBridge';
+import { LariBusRuntime } from '@scing/lariBus/busRuntime';
+import type { StoreBridge } from '@scing/lariBus/busStoreBridge';
+import type { DeviceRouter } from '@scing/devices/deviceRouter';
 
 export function startBus(params: {
   auth: { uid: string; orgId: string; role?: string; deviceId: string };
@@ -7,6 +8,7 @@ export function startBus(params: {
   mode: 'online' | 'offline';
   snapshot?: any;
   bridge: StoreBridge;
+  deviceRouter?: DeviceRouter;
 }) {
   const sessionId = crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}_${Math.random()}`;
   const bus = new LariBusRuntime({
@@ -21,6 +23,7 @@ export function startBus(params: {
     mode: params.mode,
     snapshot: params.snapshot,
     bridge: params.bridge,
+    deviceRouter: params.deviceRouter,
   });
   bus.start();
   return bus;

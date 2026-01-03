@@ -1,4 +1,4 @@
-import type { ArtifactRecord } from '../../../scing/evidence';
+import type { ArtifactRecord } from '@scing/evidence';
 
 const QKEY = 'scing_evidence_queue_v1';
 

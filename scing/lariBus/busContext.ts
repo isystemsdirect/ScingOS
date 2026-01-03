@@ -1,6 +1,7 @@
 import type { BusContext, BusAuth, BusSession, EngineGate, EngineOutput } from './busTypes';
 import type { PolicySnapshot } from '../bane';
 import { checkEntitlement } from '../bane/baneApi';
+import type { DeviceRouter } from '../devices/deviceRouter';
 
 export function makeContext(params: {
   auth: BusAuth;
@@ -8,6 +9,7 @@ export function makeContext(params: {
   mode: 'online' | 'offline';
   snapshot?: PolicySnapshot;
   deviceId: string;
+  deviceRouter?: DeviceRouter;
   onEmit: (out: EngineOutput) => void;
 }): BusContext {
   const nowIso = () => new Date().toISOString();
@@ -30,5 +32,6 @@ export function makeContext(params: {
       }),
     emit: params.onEmit,
     nowIso,
+    deviceRouter: params.deviceRouter,
   };
 }

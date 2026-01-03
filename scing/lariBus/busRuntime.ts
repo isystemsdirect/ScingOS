@@ -6,6 +6,7 @@ import { dispatchToEngine, emitAll } from './busDispatch';
 import type { PolicySnapshot } from '../bane';
 import type { StoreBridge } from './busStoreBridge';
 import { routeOutput } from './busStoreBridge';
+import type { DeviceRouter } from '../devices/deviceRouter';
 
 export type BusRuntimeConfig = {
   auth: BusAuth;
@@ -13,6 +14,7 @@ export type BusRuntimeConfig = {
   mode: 'online' | 'offline';
   snapshot?: PolicySnapshot;
   bridge: StoreBridge;
+  deviceRouter?: DeviceRouter;
 };
 
 export class LariBusRuntime {
@@ -34,6 +36,7 @@ export class LariBusRuntime {
       mode: this.cfg.mode,
       snapshot: this.cfg.snapshot,
       deviceId: this.cfg.auth.deviceId,
+      deviceRouter: this.cfg.deviceRouter,
       onEmit: (out: EngineOutput) => routeOutput(this.cfg.bridge, out),
     });
 
@@ -69,6 +72,7 @@ export class LariBusRuntime {
       mode: this.cfg.mode,
       snapshot: this.cfg.snapshot,
       deviceId: this.cfg.auth.deviceId,
+      deviceRouter: this.cfg.deviceRouter,
       onEmit: () => {},
     });
     for (const e of listEngines()) {
@@ -83,6 +87,7 @@ export class LariBusRuntime {
       mode: this.cfg.mode,
       snapshot: this.cfg.snapshot,
       deviceId: this.cfg.auth.deviceId,
+      deviceRouter: this.cfg.deviceRouter,
       onEmit: (out: EngineOutput) => routeOutput(this.cfg.bridge, out),
     });
     const engine = getEngine(engineId as any);

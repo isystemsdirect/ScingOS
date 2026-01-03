@@ -1,5 +1,9 @@
 # Dependencies
 node_modules/
+.next/
+
+# Local environment repo (was previously tracked as a broken submodule/gitlink)
+ScingOSEnvironment/
 .pnp/
 .pnp.js
 

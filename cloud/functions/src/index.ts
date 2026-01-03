@@ -3,7 +3,10 @@ import * as admin from 'firebase-admin';
 import { baneRouter } from './bane';
 import { baneIssueEntitlement, baneIssuePolicySnapshot, baneRevokeEntitlement } from './bane';
 import { evidenceAppendEvent, evidenceFinalizeArtifact } from './evidence';
-import { exportInspectionReport } from './report';
+import { exportInspectionReport, buildInspectionReport, exportInspectionBundle } from './report';
+import { writeObsEvent } from './obs';
+import { createInspection } from './inspection/create';
+import { finalizeInspection } from './inspection/finalize';
 import { lariRouter } from './lari';
 import { aipRouter } from './aip';
 import { isdcRouter } from './isdc';
@@ -23,6 +26,12 @@ export { evidenceFinalizeArtifact, evidenceAppendEvent };
 // Export SCING report export
 export { exportInspectionReport };
 
+// Export Inspection workflow endpoints
+export { createInspection, finalizeInspection, buildInspectionReport, exportInspectionBundle };
+
+// Export Observability callable
+export { writeObsEvent };
+
 // Export LARI functions (AI engines)
 export const lari = lariRouter;
 
@@ -41,6 +50,7 @@ export const healthCheck = functions.https.onRequest((req, res) => {
     timestamp: new Date().toISOString(),
   });
 });
+
 
 // Example: User creation trigger
 export const onUserCreate = functions.auth.user().onCreate(async (user) => {

@@ -7,6 +7,7 @@ import type {
   TelemetryRecord,
 } from '../evidence';
 import type { EngineHUDPayload } from '../ui/scingTypes';
+import type { DeviceRouter } from '../devices/deviceRouter';
 
 export type EngineId =
   | 'LARI-CORE'
@@ -78,4 +79,5 @@ export type BusContext = {
   entitlements: (gate: EngineGate) => EntitlementDecision;
   emit: (out: EngineOutput) => void;
   nowIso: () => string;
+  deviceRouter?: DeviceRouter;
 };

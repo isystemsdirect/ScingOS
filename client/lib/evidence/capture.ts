@@ -1,5 +1,5 @@
-import { makeArtifact } from '../../../scing/evidence/evidenceStore';
-import type { ArtifactRecord } from '../../../scing/evidence';
+import { makeArtifact } from '@scing/evidence/evidenceStore';
+import type { ArtifactRecord } from '@scing/evidence';
 
 function toHex(buf: ArrayBuffer): string {
   const bytes = new Uint8Array(buf);

@@ -1,4 +1,4 @@
-import type { PolicySnapshot } from '../../../scing/bane';
+import type { PolicySnapshot } from '@scing/bane';
 
 const KEY = 'scing_bane_policy_snapshot_v1';
 

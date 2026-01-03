@@ -1,5 +1,5 @@
 import React, { createContext, useMemo, useState } from 'react';
-import type { LariBusRuntime } from '../../../scing/lariBus/busRuntime';
+import type { LariBusRuntime } from '@scing/lariBus/busRuntime';
 
 export const LariBusContext = createContext<{ bus: LariBusRuntime | null; setBus: (b: LariBusRuntime) => void }>(
   {

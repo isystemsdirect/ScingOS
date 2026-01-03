@@ -1,5 +1,5 @@
-import type { BaneKey, EntitlementDecision, PolicySnapshot, Stage } from '../../../scing/bane';
-import { checkEntitlement } from '../../../scing/bane';
+import type { BaneKey, EntitlementDecision, PolicySnapshot, Stage } from '@scing/bane';
+import { checkEntitlement } from '@scing/bane';
 
 export function evaluateOnClient(p: {
   authUid: string;
