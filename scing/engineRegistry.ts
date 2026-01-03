@@ -1,17 +1,7 @@
-export type EngineFamily =
-  | 'orchestrator'
-  | 'lari'
-  | 'lari-domain'
-  | 'bane'
-  | 'provider'
-  | 'system';
+export type EngineFamily = 'orchestrator' | 'lari' | 'lari-domain' | 'bane' | 'provider' | 'system';
 
 // Add a more specific union for LARI "sub-babies"
-export type LariSubEngineId =
-  | 'lari-core'
-  | 'lari-ops'
-  | 'lari-security'
-  | 'lari-edl'; // ← LARI-EDL (Ecosystem Dynamic Library bridge)
+export type LariSubEngineId = 'lari-core' | 'lari-ops' | 'lari-security' | 'lari-edl'; // ← LARI-EDL (Ecosystem Dynamic Library bridge)
 
 // Global engine ids
 export type EngineId =

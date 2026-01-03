@@ -17,23 +17,21 @@ jobs:
         with:
           node-version: 20
           cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            client/package-lock.json
 
-      - name: Install dependencies
+      - name: Install root dependencies
         run: npm ci
 
-      - name: Typecheck scing (isolated)
-        run: npx -y tsc -p tools/tmp-tsconfig.json
+      - name: Install client dependencies
+        run: npm ci --prefix client
 
-      - name: Lint scing + tools
-        run: npx eslint "scing/**/*.{ts,tsx}" "tools/**/*.{js,mjs}" --max-warnings=0
+      - name: Format check
+        run: npm run format:check
 
-      - name: Canon scan
-        run: node tools/canon-scan.mjs
+      - name: Quality gate
+        run: npm run quality:scing
 
-      - name: Prettier check (optional)
-        run: |
-          if npx --no -- prettier -v >/dev/null 2>&1; then
-            npx prettier --check "scing/**/*.{ts,tsx,js,mjs,json,md}" "tools/**/*.{js,mjs,json,md}"
-          else
-            echo "prettier not installed; skipping"
-          fi
+      - name: Build
+        run: npm run build

@@ -1,0 +1,1 @@
+export { exportInspectionReport } from './export';

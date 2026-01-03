@@ -1,21 +1,4 @@
-export type EngineFamily =
-  | 'orchestrator'
-  | 'cognition'
-  | 'expression'
-  | 'subengine'
+// Legacy compatibility shim.
+// Canonical engine registry lives in `scing/engine/*` (LFCB-01).
+export * from '../engine';
 
-export type EngineRecord = {
-  id: string
-  family: EngineFamily
-  description: string
-  enabled: boolean
-}
-
-export const engineRegistry: EngineRecord[] = [
-  {
-    id: 'srt-core',
-    family: 'expression',
-    description: 'SRT federation + influence field + motif constraints',
-    enabled: true,
-  },
-]

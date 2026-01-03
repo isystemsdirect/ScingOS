@@ -1,5 +1,5 @@
-import fs from "node:fs";
-import path from "node:path";
+import fs from 'node:fs';
+import path from 'node:path';
 
 const root = process.cwd();
 
@@ -10,8 +10,8 @@ function ensureDir(p) {
 function write(rel, content) {
   const abs = path.join(root, rel);
   ensureDir(path.dirname(abs));
-  fs.writeFileSync(abs, content, "utf8");
-  console.log("Wrote", rel);
+  fs.writeFileSync(abs, content, 'utf8');
+  console.log('Wrote', rel);
 }
 
 /* ============================================================
@@ -19,7 +19,9 @@ function write(rel, content) {
 ============================================================ */
 
 /* ---------- FEI CATEGORY DEFINITION ---------- */
-write("scing/canon/fei.category.md", `
+write(
+  'scing/canon/fei.category.md',
+  `
 # Federated Embodied Intelligence (FEI)
 
 ## Official Category Definition
@@ -76,7 +78,9 @@ It **exists** as intelligence.
 );
 
 /* ---------- FEI MANIFESTO ---------- */
-write("scing/canon/fei.manifesto.md", `
+write(
+  'scing/canon/fei.manifesto.md',
+  `
 # The Federated Embodied Intelligence Manifesto
 
 Intelligence is not a reply.
@@ -111,7 +115,9 @@ This is FEI.
 );
 
 /* ---------- FEI ENGINEERING RULES ---------- */
-write("scing/canon/fei.engineering.rules.md", `
+write(
+  'scing/canon/fei.engineering.rules.md',
+  `
 # FEI Engineering Rules (Non-Negotiable)
 
 These rules apply to all FEI-compliant systems and all SCINGULAR components.
@@ -140,7 +146,9 @@ No exceptions.
 );
 
 /* ---------- INDEX / DISCOVERY ---------- */
-write("scing/canon/README.md", `
+write(
+  'scing/canon/README.md',
+  `
 # SCINGULAR Canon
 
 This directory contains the authoritative canon for SCINGULAR.
@@ -161,4 +169,4 @@ These documents are canonical and supersede informal descriptions.
    DONE
 ============================================================ */
 
-console.log("\n✅ VSCI CB complete: FEI category locked into canon\n");
+console.log('\n✅ VSCI CB complete: FEI category locked into canon\n');

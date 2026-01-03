@@ -10,6 +10,37 @@ on:
       - develop
 
 jobs:
+  root-quality:
+    name: Root - Format, Quality, Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: |
+            package-lock.json
+            client/package-lock.json
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Install client dependencies
+        run: npm ci --prefix client
+
+      - name: Format check
+        run: npm run format:check
+
+      - name: Quality gate
+        run: npm run quality:scing
+
+      - name: Build
+        run: npm run build
+
   client-test:
     name: Client - Test & Lint
     runs-on: ubuntu-latest
@@ -25,7 +56,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'npm'
           cache-dependency-path: client/package-lock.json
       
@@ -62,7 +93,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'npm'
           cache-dependency-path: cloud/functions/package-lock.json
       
