@@ -3,6 +3,6 @@
  */
 export function forbidDeterministicSeed(seed: unknown) {
   if (seed !== undefined && seed !== null) {
-    throw new Error('Guardrail: deterministic seed detected')
+    throw new Error('Guardrail: deterministic seed detected');
   }
 }

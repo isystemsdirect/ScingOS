@@ -1,5 +1,4 @@
-
-import { SubEngineBase } from '../subEngineBase'
+import { SubEngineBase } from '../subEngineBase';
 
 /**
  * Catalyst Sub-Engine:
@@ -8,22 +7,22 @@ import { SubEngineBase } from '../subEngineBase'
  * - often temporary
  */
 export class CatalystTemplateEngine extends SubEngineBase {
-  private pressure = 0
+  private pressure = 0;
 
   constructor(id: string) {
-    super(id, 'catalyst')
+    super(id, 'catalyst');
   }
 
   ingest(signal: number[]) {
-    this.pressure += signal.reduce((a, b) => a + Math.abs(b), 0)
+    this.pressure += signal.reduce((a, b) => a + Math.abs(b), 0);
   }
 
   step() {
     // pressure decays after resolution
-    this.pressure *= 0.92
+    this.pressure *= 0.92;
   }
 
   retireEligible(): boolean {
-    return this.pressure < 0.05
+    return this.pressure < 0.05;
   }
 }

@@ -1,5 +1,5 @@
-import fs from "node:fs";
-import path from "node:path";
+import fs from 'node:fs';
+import path from 'node:path';
 
 const root = process.cwd();
 
@@ -10,12 +10,12 @@ function ensureDir(p) {
 function writeFile(rel, content) {
   const abs = path.join(root, rel);
   ensureDir(path.dirname(abs));
-  fs.writeFileSync(abs, content, "utf8");
-  console.log("Wrote", rel);
+  fs.writeFileSync(abs, content, 'utf8');
+  console.log('Wrote', rel);
 }
 
 function banner() {
-  console.log("\n[SCING] Generating SRT scaffold...\n");
+  console.log('\n[SCING] Generating SRT scaffold...\n');
 }
 
 /* ============================================================
@@ -23,7 +23,7 @@ function banner() {
 ============================================================ */
 const files = {
   // ---------------- core ----------------
-  "scing/core/scingRuntime.ts": `import { SRTRuntime } from '../srt/srtRuntime'
+  'scing/core/scingRuntime.ts': `import { SRTRuntime } from '../srt/srtRuntime'
 import { orderAndFocus } from './orderFocusProtocol'
 import { allowGrowth } from './growthProtocol'
 import { allowCatalyst } from './catalystProtocol'
@@ -70,7 +70,7 @@ export class ScingRuntime {
 }
 `,
 
-  "scing/core/orderFocusProtocol.ts": `/**
+  'scing/core/orderFocusProtocol.ts': `/**
  * Order & Focus Protocol
  * Scing engineers solutions only when order/focus naturally emerge.
  * This is a gate, not a mode.
@@ -82,7 +82,7 @@ export function orderAndFocus(influence: number[]): boolean {
 }
 `,
 
-  "scing/core/growthProtocol.ts": `/**
+  'scing/core/growthProtocol.ts': `/**
  * Growth Protocol (self-driven sub-engine genesis eligibility)
  * Autonomous; no user confirmation required.
  */
@@ -91,7 +91,7 @@ export function allowGrowth(ordered: boolean, persistence: number): boolean {
 }
 `,
 
-  "scing/core/catalystProtocol.ts": `/**
+  'scing/core/catalystProtocol.ts': `/**
  * Catalyst Protocol (externally-induced sub-engine genesis eligibility)
  * Autonomous; no user confirmation required.
  */
@@ -100,7 +100,7 @@ export function allowCatalyst(ordered: boolean, strain: number): boolean {
 }
 `,
 
-  "scing/core/engineRegistry.ts": `export type EngineFamily =
+  'scing/core/engineRegistry.ts': `export type EngineFamily =
   | 'orchestrator'
   | 'cognition'
   | 'expression'
@@ -124,7 +124,7 @@ export const engineRegistry: EngineRecord[] = [
 `,
 
   // ---------------- srt ----------------
-  "scing/srt/influenceField.ts": `/**
+  'scing/srt/influenceField.ts': `/**
  * InfluenceField: shared continuous signal substrate.
  * Canon:
  * - No resets
@@ -157,7 +157,7 @@ export class InfluenceField {
 }
 `,
 
-  "scing/srt/federation.ts": `import { InfluenceField } from './influenceField'
+  'scing/srt/federation.ts': `import { InfluenceField } from './influenceField'
 
 export type FederationNode = {
   id: string
@@ -202,7 +202,7 @@ export class Federation {
 }
 `,
 
-  "scing/srt/motifEngine.ts": `import { InfluenceField } from './influenceField'
+  'scing/srt/motifEngine.ts': `import { InfluenceField } from './influenceField'
 
 /**
  * Motif Engine: "repetitive randomness"
@@ -269,7 +269,7 @@ export class MotifEngine {
 }
 `,
 
-  "scing/srt/antiRepeatGuard.ts": `/**
+  'scing/srt/antiRepeatGuard.ts': `/**
  * AntiRepeatGuard: asserts non-identical execution.
  * Replace signature hashing with influence+output hashing in production.
  */
@@ -290,7 +290,7 @@ export class AntiRepeatGuard {
 }
 `,
 
-  "scing/srt/srtRuntime.ts": `import { InfluenceField } from './influenceField'
+  'scing/srt/srtRuntime.ts': `import { InfluenceField } from './influenceField'
 import { Federation } from './federation'
 import { MotifEngine } from './motifEngine'
 import { AntiRepeatGuard } from './antiRepeatGuard'
@@ -317,7 +317,7 @@ export class SRTRuntime {
 `,
 
   // ---------------- guards ----------------
-  "scing/guards/auditLog.ts": `export class AuditLog {
+  'scing/guards/auditLog.ts': `export class AuditLog {
   note(event: string, payload: Record<string, any>) {
     // Replace with structured logging sink.
     // IMPORTANT: do not log raw sensitive bio/voice data; log aggregates only.
@@ -326,7 +326,7 @@ export class SRTRuntime {
 }
 `,
 
-  "scing/guards/noLoopGuard.ts": `/**
+  'scing/guards/noLoopGuard.ts': `/**
  * Guard placeholder:
  * Enforce via lint rules + runtime asserts + code review.
  */
@@ -335,7 +335,7 @@ export function forbidExpressionLoops(): never {
 }
 `,
 
-  "scing/guards/determinismGuard.ts": `/**
+  'scing/guards/determinismGuard.ts': `/**
  * Determinism guard: disallow explicit seeds in expression pipelines.
  */
 export function forbidDeterministicSeed(seed: unknown) {
@@ -346,25 +346,25 @@ export function forbidDeterministicSeed(seed: unknown) {
 `,
 
   // ---------------- sensors ----------------
-  "scing/sensors/camera.ts": `export type CameraReading = { motionFlux: number; luminanceFlux: number }
+  'scing/sensors/camera.ts': `export type CameraReading = { motionFlux: number; luminanceFlux: number }
 export function cameraFlux(r: CameraReading): number[] {
   return [r.motionFlux * 0.15, r.luminanceFlux * 0.10]
 }
 `,
 
-  "scing/sensors/lidar.ts": `export type LidarReading = { proximity: number; depthGradient: number }
+  'scing/sensors/lidar.ts': `export type LidarReading = { proximity: number; depthGradient: number }
 export function lidarFlux(r: LidarReading): number[] {
   return [r.proximity * 0.20, r.depthGradient * 0.12]
 }
 `,
 
-  "scing/sensors/microphone.ts": `export type MicReading = { freqEnergy: number; silenceDensity: number }
+  'scing/sensors/microphone.ts': `export type MicReading = { freqEnergy: number; silenceDensity: number }
 export function micFlux(r: MicReading): number[] {
   return [r.freqEnergy * 0.18, r.silenceDensity * -0.10]
 }
 `,
 
-  "scing/sensors/smartwatch.ts": `export type BioReading = {
+  'scing/sensors/smartwatch.ts': `export type BioReading = {
   hr: number
   hrv: number
   stress: number
@@ -405,7 +405,7 @@ export class BioSignature {
 }
 `,
 
-  "scing/sensors/voiceProsody.ts": `export type ProsodyReading = {
+  'scing/sensors/voiceProsody.ts': `export type ProsodyReading = {
   cadence: number
   pitchVar: number
   pauseRate: number
@@ -446,7 +446,7 @@ export class ProsodySignature {
 }
 `,
 
-  "scing/sensors/sensorFluxBuilder.ts": `import { cameraFlux } from './camera'
+  'scing/sensors/sensorFluxBuilder.ts': `import { cameraFlux } from './camera'
 import { lidarFlux } from './lidar'
 import { micFlux } from './microphone'
 import { BioSignature, BioReading } from './smartwatch'
@@ -491,7 +491,7 @@ export class SensorFluxBuilder {
 `,
 
   // ---------------- expression ----------------
-  "scing/expression/motionField.ts": `/**
+  'scing/expression/motionField.ts': `/**
  * Motion field: converts influence into deformation params.
  * Canon: always drifted; no looped curves; no replay.
  */
@@ -500,7 +500,7 @@ export function motionDeform(influence: number[]): number[] {
 }
 `,
 
-  "scing/expression/colorField.ts": `export type RGB = { r: number; g: number; b: number }
+  'scing/expression/colorField.ts': `export type RGB = { r: number; g: number; b: number }
 
 /**
  * Color field: derived tendencies (not states).
@@ -523,7 +523,7 @@ function clamp01(x: number) {
 }
 `,
 
-  "scing/expression/humSynth.ts": `/**
+  'scing/expression/humSynth.ts': `/**
  * Hum synth: audible silhouette of presence.
  * Canon: no looped samples; no reset phases.
  */
@@ -536,7 +536,7 @@ export function humValue(influence: number[]): number {
 }
 `,
 
-  "scing/expression/environmentCoupling.ts": `export function environmentSignals(influence: number[]) {
+  'scing/expression/environmentCoupling.ts': `export function environmentSignals(influence: number[]) {
   const density = influence.reduce((a, b) => a + Math.abs(b), 0) / (influence.length || 1)
   const glow = clamp01(density * 0.9 + Math.random() * 0.05)
   const breath = clamp01((1 - density) * 0.6 + Math.random() * 0.05)
@@ -549,7 +549,7 @@ function clamp01(x: number) {
 `,
 
   // ---------------- subengines ----------------
-  "scing/subengines/subEngineBase.ts": `export type SubEngineKind = 'growth' | 'catalyst'
+  'scing/subengines/subEngineBase.ts': `export type SubEngineKind = 'growth' | 'catalyst'
 
 export abstract class SubEngineBase {
   constructor(public readonly id: string, public readonly kind: SubEngineKind) {}
@@ -560,7 +560,7 @@ export abstract class SubEngineBase {
 `,
 
   // ---------------- barrel + example ----------------
-  "scing/index.ts": `export * from './core/scingRuntime'
+  'scing/index.ts': `export * from './core/scingRuntime'
 export * from './core/orderFocusProtocol'
 export * from './core/growthProtocol'
 export * from './core/catalystProtocol'
@@ -571,7 +571,7 @@ export * from './srt/srtRuntime'
 export * from './sensors/sensorFluxBuilder'
 `,
 
-  "scing/examples/runtimeExample.ts": `import { ScingRuntime } from '../core/scingRuntime'
+  'scing/examples/runtimeExample.ts': `import { ScingRuntime } from '../core/scingRuntime'
 import { SensorFluxBuilder } from '../sensors/sensorFluxBuilder'
 
 const scing = new ScingRuntime()
@@ -600,4 +600,4 @@ export function tick() {
 ============================================================ */
 banner();
 for (const [rel, content] of Object.entries(files)) writeFile(rel, content);
-console.log("\n✅ Done. Full SRT scaffold + wiring created under ./scing\n");
+console.log('\n✅ Done. Full SRT scaffold + wiring created under ./scing\n');

@@ -1,42 +1,42 @@
-import { cameraFlux } from './camera'
-import { lidarFlux } from './lidar'
-import { micFlux } from './microphone'
-import { BioSignature, BioReading } from './smartwatch'
-import { ProsodySignature, ProsodyReading } from './voiceProsody'
+import { cameraFlux } from './camera';
+import { lidarFlux } from './lidar';
+import { micFlux } from './microphone';
+import { BioSignature, BioReading } from './smartwatch';
+import { ProsodySignature, ProsodyReading } from './voiceProsody';
 
 /**
  * SensorFluxBuilder: merges live sensor streams into a single influence vector.
  * Canon: no discretized states, only continuous modulation pressure.
  */
 export class SensorFluxBuilder {
-  private bio = new BioSignature()
-  private prosody = new ProsodySignature()
+  private bio = new BioSignature();
+  private prosody = new ProsodySignature();
 
   updateBio(r: BioReading) {
-    this.bio.learn(r)
-    return this.bio.flux(r)
+    this.bio.learn(r);
+    return this.bio.flux(r);
   }
 
   updateProsody(p: ProsodyReading) {
-    this.prosody.learn(p)
-    return this.prosody.flux(p)
+    this.prosody.learn(p);
+    return this.prosody.flux(p);
   }
 
   build(input: {
-    camera?: Parameters<typeof cameraFlux>[0]
-    lidar?: Parameters<typeof lidarFlux>[0]
-    mic?: Parameters<typeof micFlux>[0]
-    bio?: BioReading
-    prosody?: ProsodyReading
+    camera?: Parameters<typeof cameraFlux>[0];
+    lidar?: Parameters<typeof lidarFlux>[0];
+    mic?: Parameters<typeof micFlux>[0];
+    bio?: BioReading;
+    prosody?: ProsodyReading;
   }): number[] {
-    const flux: number[] = []
+    const flux: number[] = [];
 
-    if (input.camera) flux.push(...cameraFlux(input.camera))
-    if (input.lidar) flux.push(...lidarFlux(input.lidar))
-    if (input.mic) flux.push(...micFlux(input.mic))
-    if (input.bio) flux.push(...this.updateBio(input.bio))
-    if (input.prosody) flux.push(...this.updateProsody(input.prosody))
+    if (input.camera) flux.push(...cameraFlux(input.camera));
+    if (input.lidar) flux.push(...lidarFlux(input.lidar));
+    if (input.mic) flux.push(...micFlux(input.mic));
+    if (input.bio) flux.push(...this.updateBio(input.bio));
+    if (input.prosody) flux.push(...this.updateProsody(input.prosody));
 
-    return flux
+    return flux;
   }
 }

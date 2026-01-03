@@ -1,19 +1,21 @@
-import fs from "node:fs";
-import path from "node:path";
+import fs from 'node:fs';
+import path from 'node:path';
 
 const root = process.cwd();
 const write = (p, c) => {
   const a = path.join(root, p);
   fs.mkdirSync(path.dirname(a), { recursive: true });
-  fs.writeFileSync(a, c, "utf8");
-  console.log("Wrote", p);
+  fs.writeFileSync(a, c, 'utf8');
+  console.log('Wrote', p);
 };
 
 /* ============================================================
    SUB-ENGINE GOVERNANCE CORE
 ============================================================ */
 
-write("scing/subengines/subEngineRegistry.ts", `
+write(
+  'scing/subengines/subEngineRegistry.ts',
+  `
 import { SubEngineBase, SubEngineKind } from './subEngineBase'
 
 export type SubEngineStatus = 'active' | 'dormant' | 'retired'
@@ -67,13 +69,16 @@ export class SubEngineRegistry {
     this.engines.delete(id)
   }
 }
-`);
+`
+);
 
 /* ============================================================
    LIFECYCLE MANAGER
 ============================================================ */
 
-write("scing/subengines/lifecycleManager.ts", `
+write(
+  'scing/subengines/lifecycleManager.ts',
+  `
 import { SubEngineRegistry } from './subEngineRegistry'
 import { SubEngineBase } from './subEngineBase'
 import { AuditLog } from '../guards/auditLog'
@@ -114,13 +119,16 @@ export class LifecycleManager {
     }
   }
 }
-`);
+`
+);
 
 /* ============================================================
    GROWTH SUB-ENGINE TEMPLATE
 ============================================================ */
 
-write("scing/subengines/growthEngines/growthTemplate.ts", `
+write(
+  'scing/subengines/growthEngines/growthTemplate.ts',
+  `
 import { SubEngineBase } from '../subEngineBase'
 
 /**
@@ -150,13 +158,16 @@ export class GrowthTemplateEngine extends SubEngineBase {
     return this.saturation < 0.01
   }
 }
-`);
+`
+);
 
 /* ============================================================
    CATALYST SUB-ENGINE TEMPLATE
 ============================================================ */
 
-write("scing/subengines/catalystEngines/catalystTemplate.ts", `
+write(
+  'scing/subengines/catalystEngines/catalystTemplate.ts',
+  `
 import { SubEngineBase } from '../subEngineBase'
 
 /**
@@ -185,13 +196,16 @@ export class CatalystTemplateEngine extends SubEngineBase {
     return this.pressure < 0.05
   }
 }
-`);
+`
+);
 
 /* ============================================================
    GOVERNANCE WIRING EXAMPLE
 ============================================================ */
 
-write("scing/subengines/subEngineGovernance.ts", `
+write(
+  'scing/subengines/subEngineGovernance.ts',
+  `
 import { SubEngineRegistry } from './subEngineRegistry'
 import { LifecycleManager } from './lifecycleManager'
 import { GrowthTemplateEngine } from './growthEngines/growthTemplate'
@@ -203,20 +217,24 @@ export const lifecycle = new LifecycleManager(registry)
 // Example births (real triggers come from Growth/Catalyst Protocols)
 registry.register(new GrowthTemplateEngine('growth-core-patterns'))
 registry.register(new CatalystTemplateEngine('catalyst-pressure-resolver'))
-`);
+`
+);
 
 /* ============================================================
    BARREL EXPORT
 ============================================================ */
 
-write("scing/subengines/index.ts", `
+write(
+  'scing/subengines/index.ts',
+  `
 export * from './subEngineBase'
 export * from './subEngineRegistry'
 export * from './lifecycleManager'
-`);
+`
+);
 
 /* ============================================================
    DONE
 ============================================================ */
 
-console.log("\n✅ VSCI complete: Sub-Engine Lifecycle & Governance installed\n");
+console.log('\n✅ VSCI complete: Sub-Engine Lifecycle & Governance installed\n');

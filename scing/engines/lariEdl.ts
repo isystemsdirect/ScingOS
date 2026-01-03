@@ -43,10 +43,7 @@ export async function runLariEdl(task: LariEdlTask): Promise<string> {
   return result.text;
 }
 
-function buildSystemPrompt(
-  mode: LariEdlMode,
-  context: LariEdlTask['context']
-): string {
+function buildSystemPrompt(mode: LariEdlMode, context: LariEdlTask['context']): string {
   const base = [
     'You are LARI-EDL, a sub-engine of the LARI family.',
     'Your domain is the SCINGULAR Ecosystem Dynamic Library:',
@@ -57,7 +54,7 @@ function buildSystemPrompt(
     '',
     'General rules:',
     '- Always preserve SCINGULAR canon and terminology.',
-    "- Never invent new product names without explicit instruction.",
+    '- Never invent new product names without explicit instruction.',
     '- Prefer expansion and clarification over abstraction.',
     '- Keep outputs structurally clean and ready to paste into docs or code comments.',
   ].join('\n');
@@ -89,9 +86,7 @@ function buildSystemPrompt(
   if (context?.language) ctxLines.push(`Language: ${context.language}`);
 
   const ctxBlock =
-    ctxLines.length > 0
-      ? ['Context:', ...ctxLines, ''].join('\n')
-      : 'Context: none provided.\n';
+    ctxLines.length > 0 ? ['Context:', ...ctxLines, ''].join('\n') : 'Context: none provided.\n';
 
   return [base, '', modeLine, '', ctxBlock].join('\n');
 }

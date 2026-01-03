@@ -1,18 +1,20 @@
-import fs from "node:fs";
-import path from "node:path";
+import fs from 'node:fs';
+import path from 'node:path';
 
 const root = process.cwd();
 const write = (p, c) => {
   const a = path.join(root, p);
   fs.mkdirSync(path.dirname(a), { recursive: true });
-  fs.writeFileSync(a, c, "utf8");
-  console.log("Wrote", p);
+  fs.writeFileSync(a, c, 'utf8');
+  console.log('Wrote', p);
 };
 
 /* ===============================
    SensorFlux Builder
 ================================ */
-write("scing/sensors/sensorFluxBuilder.ts", `
+write(
+  'scing/sensors/sensorFluxBuilder.ts',
+  `
 import { cameraFlux } from './camera'
 import { lidarFlux } from './lidar'
 import { micFlux } from './microphone'
@@ -51,12 +53,15 @@ export class SensorFluxBuilder {
     return flux
   }
 }
-`);
+`
+);
 
 /* ===============================
    Barrel Export
 ================================ */
-write("scing/index.ts", `
+write(
+  'scing/index.ts',
+  `
 export * from './core/scingRuntime'
 export * from './core/orderFocusProtocol'
 export * from './core/growthProtocol'
@@ -65,12 +70,15 @@ export * from './core/catalystProtocol'
 export * from './srt/srtRuntime'
 
 export * from './sensors/sensorFluxBuilder'
-`);
+`
+);
 
 /* ===============================
    Minimal Runtime Example
 ================================ */
-write("scing/examples/runtimeExample.ts", `
+write(
+  'scing/examples/runtimeExample.ts',
+  `
 import { ScingRuntime } from '../core/scingRuntime'
 import { SensorFluxBuilder } from '../sensors/sensorFluxBuilder'
 
@@ -92,6 +100,7 @@ export function tick() {
     strain: Math.random(),
   })
 }
-`);
+`
+);
 
-console.log("\n✅ VSCI CB complete: SensorFlux + wiring added\n");
+console.log('\n✅ VSCI CB complete: SensorFlux + wiring added\n');
