@@ -33,7 +33,7 @@ export const ScingAI: React.FC<ScingAIAutonomousProps> = ({
 
   // Firebase Functions with enhanced capabilities
   const functions = getFirebaseFunctions();
-  const processAdvancedMessage = functions ? httpsCallable(functions, 'processAdvancedScingMessage') : null;
+  // const processAdvancedMessage = functions ? httpsCallable(functions, 'processAdvancedScingMessage') : null;
 
   // Wake word detection
   const {
@@ -238,57 +238,65 @@ export const ScingAI: React.FC<ScingAIAutonomousProps> = ({
 
   // Handle speech input with GUI control
   async function handleSpeechResult(transcript: string, isFinal: boolean): Promise<void> {
-    if (!isFinal || !transcript.trim() || !processAdvancedMessage) return;
+    // if (!isFinal || !transcript.trim() || !processAdvancedMessage) return;
+    if (!isFinal || !transcript.trim()) return;
+
 
     setCurrentMode('processing');
     console.log('👤 User command:', transcript);
 
+    toast({
+        variant: 'destructive',
+        title: 'Feature Temporarily Disabled',
+        description: 'The AI features are currently unavailable due to dependency issues.',
+    });
+
     try {
-      // Process with enhanced AI that can generate GUI actions
-      const result: any = await processAdvancedMessage({
-        message: transcript,
-        sessionId,
-        userId,
-        context: {
-          domSnapshot: autonomousDOMController.getDOMSnapshot(),
-          mountedComponents: autonomousComponentController.getMountedComponents(),
-          guiControlLevel,
-          currentMode
-        }
-      });
+      // // Process with enhanced AI that can generate GUI actions
+      // const result: any = await processAdvancedMessage({
+      //   message: transcript,
+      //   sessionId,
+      //   userId,
+      //   context: {
+      //     domSnapshot: autonomousDOMController.getDOMSnapshot(),
+      //     mountedComponents: autonomousComponentController.getMountedComponents(),
+      //     guiControlLevel,
+      //     currentMode
+      //   }
+      // });
 
-      const { response, guiActions } = result.data;
+      // const { response, guiActions } = result.data;
 
-      // Execute GUI actions if provided
-      if (guiActions) {
-        setCurrentMode('executing');
-        console.log('🎮 Executing GUI actions:', guiActions);
+      // // Execute GUI actions if provided
+      // if (guiActions) {
+      //   setCurrentMode('executing');
+      //   console.log('🎮 Executing GUI actions:', guiActions);
         
-        if (guiActions.domActions) {
-          autonomousDOMController.queueActions(guiActions.domActions);
-        }
+      //   if (guiActions.domActions) {
+      //     autonomousDOMController.queueActions(guiActions.domActions);
+      //   }
         
-        if (guiActions.componentActions) {
-          await autonomousComponentController.executeComponentActions(guiActions.componentActions);
-        }
+      //   if (guiActions.componentActions) {
+      //     await autonomousComponentController.executeComponentActions(guiActions.componentActions);
+      //   }
         
-        await new Promise(resolve => setTimeout(resolve, 1000));
-      }
+      //   await new Promise(resolve => setTimeout(resolve, 1000));
+      // }
 
-      // Speak response
-      speak(response);
+      // // Speak response
+      // speak(response);
       
-      // Update control panel
-      updateControlPanel();
+      // // Update control panel
+      // updateControlPanel();
       
-      setCurrentMode('listening');
+      // setCurrentMode('listening');
       
-      // Continue listening
-      setTimeout(() => {
-        if (conversationActive && !isSpeechListening) {
-          startSpeechListening();
-        }
-      }, response.length * 50);
+      // // Continue listening
+      // setTimeout(() => {
+      //   if (conversationActive && !isSpeechListening) {
+      //     startSpeechListening();
+      //   }
+      // }, response.length * 50);
 
     } catch (error) {
       console.error('Error processing autonomous command:', error);
@@ -317,7 +325,7 @@ export const ScingAI: React.FC<ScingAIAutonomousProps> = ({
           <div class="space-y-2 text-sm">
             <div class="flex justify-between">
               <span>DOM Elements:</span>
-              <span class="font-mono text-blue-600">${Object.keys(autonomousDOMController.getDOMSnapshot()).length}</span>
+              <span class="font-mono text-blue-600">${autonomousDOMController.getDOMSnapshot ? Object.keys(autonomousDOMController.getDOMSnapshot()).length : 0}</span>
             </div>
             <div class="flex justify-between">
               <span>Components:</span>

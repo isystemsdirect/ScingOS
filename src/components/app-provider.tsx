@@ -1,108 +1,81 @@
-
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
-import AppShell from './app-shell';
-import { cn } from '@/lib/utils';
-import { MessagingDialog } from './messaging-dialog';
-import { TooltipProvider } from './ui/tooltip';
-import BackgroundSlideshow from './background-slideshow';
-import Logo from './logo';
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import AppShell from "./app-shell";
+import { getFirebaseAuth } from "@/lib/firebase";
+import { onAuthStateChanged, type User } from "firebase/auth";
+import { MessagingDialog } from "./messaging-dialog";
+import { TooltipProvider } from "./ui/tooltip";
 
+export function AppProvider({ children }: { children: React.ReactNode }) {
+    const pathname = usePathname();
+    const [user, setUser] = useState<User | null>(null);
+    const [authInitialized, setAuthInitialized] = useState(false);
+    const [isFullScreen, setIsFullScreen] = useState(false);
+    const [refreshKey, setRefreshKey] = useState(0);
 
-export function AppProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const router = useRouter();
-  const pathname = usePathname();
+    const isAuthPage =
+        pathname === "/" ||
+        pathname === "/signup" ||
+        pathname === "/forgot-password";
 
-  const [isFullScreen, setIsFullScreen] = useState(false);
-  const [userId, setUserId] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+    useEffect(() => {
+        const auth = getFirebaseAuth();
+        if (auth) {
+            const unsubscribe = onAuthStateChanged(auth, (user) => {
+                setUser(user);
+                setAuthInitialized(true);
+            });
+            return () => unsubscribe();
+        } else {
+            // Handle case where auth is not available
+            setAuthInitialized(true);
+        }
+    }, []);
 
-  useEffect(() => {
-    const mockUserId = 'mock-dev-user';
-    setUserId(mockUserId);
-    
-    const timer = setTimeout(() => {
-        setIsLoading(false);
-    }, 500);
-
-    return () => clearTimeout(timer);
-    
-  }, []);
-
-  useEffect(() => {
-    const handleFullScreenChange = () => {
-      setIsFullScreen(!!document.fullscreenElement);
+    const toggleFullScreen = () => {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+            setIsFullScreen(true);
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+                setIsFullScreen(false);
+            }
+        }
     };
-
-    document.addEventListener('fullscreenchange', handleFullScreenChange);
-
-    return () => {
-      document.removeEventListener('fullscreenchange', handleFullScreenChange);
-    };
-  }, []);
-
-  const toggleFullScreen = () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch(err => {
-        alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
-      });
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      }
+    
+    const handleRefresh = () => {
+        setRefreshKey(prevKey => prevKey + 1);
     }
-  };
 
-  const handleRefresh = () => {
-    router.refresh();
-  };
+    if (!authInitialized) {
+        // You might want a proper loading skeleton here
+        return <div className="h-screen w-screen flex items-center justify-center bg-background">Loading...</div>;
+    }
+    
+    if (isAuthPage) {
+        return (
+            <TooltipProvider>
+                <main key={refreshKey}>{children}</main>
+            </TooltipProvider>
+        )
+    }
 
-  const authRoutes = ['/login', '/', '/signup', '/forgot-password'];
-  const isAuthRoute = authRoutes.includes(pathname);
-
-  if (isAuthRoute) {
     return (
-        <>
-            <BackgroundSlideshow />
-            {children}
-        </>
-    );
-  }
-
-  if (isLoading) {
-      return (
-        <div className="flex h-screen w-full items-center justify-center bg-background">
-          <BackgroundSlideshow />
-          <div className="flex flex-col items-center gap-4">
-            <Logo isLoginPage={true} />
-            <p className="text-muted-foreground">Loading Ecosystem...</p>
-          </div>
-       </div>
-      );
-  }
-
-  return (
-    <TooltipProvider>
-        <AppShell
-            userId={userId}
-            isFullScreen={isFullScreen}
-            toggleFullScreen={toggleFullScreen}
-            handleRefresh={handleRefresh}
-        >
-            <main className={cn("flex-1 overflow-y-auto p-4 sm:px-6 sm:py-6 rounded-xl bg-[radial-gradient(ellipse_at_center,hsl(var(--card)/0.1)_0%,transparent_70%)]", 
-                pathname === '/messaging' && 'p-0 sm:p-0',
-                pathname === '/maps-weather' && 'p-0 sm:p-0'
-            )}>
-                {children}
-            </main>
+        <TooltipProvider>
+            <AppShell 
+                userId={user?.uid || null} 
+                isFullScreen={isFullScreen} 
+                toggleFullScreen={toggleFullScreen}
+                handleRefresh={handleRefresh}
+            >
+                <main key={refreshKey} className="flex-1 overflow-y-auto p-4 sm:px-6 sm:py-0 md:gap-8">
+                    {children}
+                </main>
+            </AppShell>
             <MessagingDialog />
-        </AppShell>
-    </TooltipProvider>
-  );
+        </TooltipProvider>
+    );
 }

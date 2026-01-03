@@ -799,7 +799,7 @@ export default function WorkstationPage() {
                         </Button>
                         </CardFooter>
                     </Card>
-                    <Card className="bg-card/60 backdrop-blur-sm">
+                    {/* <Card className="bg-card/60 backdrop-blur-sm">
                         <CardHeader>
                         <CardTitle>API Keys & Environment</CardTitle>
                         <CardDescription>
@@ -824,7 +824,7 @@ export default function WorkstationPage() {
                                 </TableBody>
                             </Table>
                         </CardContent>
-                    </Card>
+                    </Card> */}
                 </div>
             </TabsContent>
         </div>

@@ -1,13 +1,50 @@
 {
-  "type": "service_account",
-  "project_id": "studio-3494288633-91d2b",
-  "private_key_id": "3e376638e3a735f885bc4d2bc39085da2c14452a",
-  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC1hPiC5FVEEv05\norI8W1VEiZvZm2es1Ox3IwI/sy9KcLkSLBKLzkgmMU49GRLPkL9Db0fxD0iUVTFT\nnAKpHgIvzeSR5O+D/d38v6fK/8SxgtTYDVAeU31Ja/diTQFo2r569XXTMdF9Js1j\nAoHZJmNUB+GjU0BjiAQV6TW2q9FFDeKRwjpa/WRseF0cvv+JzannPOM92S7Ub3XL\nfGijkpSjlhkcnjJC1KG3P0PePUYBSXInlnmsHxKMxEwvWK0aneiou/7msaRGBJtS\nmwixURTOxj4bKpScpiczIuPi77FcPV5tCLO2dkW5pHFGVIVL1B22zErsGjksdYJc\n9x6ZpgK7AgMBAAECggEAEudDHhZ7TriPiHYKC8ETMy0FfvbxKA2QhqOts0aM0TrF\n+z99uvODjf6qgDBhRh5z3Kj1HASUcWYh2ewwVr5aSfIuMIdf7iX8/TpUVg6mxDm0\nwr84LcBSFthYjfMpB2toVNPFLnZMs7TbxMjZDu0xgOnFNMYRuYvLqSB9SIXCKGep\nv4t1oQ6RHdC3D++56vAq23qgEIOUr8/ta7m5Eqi2M1YMLGqGxWYP9UOhquWarfyE\nahSGV6ZsI2tllbaTDUllVNlptF6d9rLb1K51ehlNkeGdw6diNc8TTdpsQSBIQXnM\nfsHgRxTAfpG/JLYDQ8J2u7zoUDCPAVAu2Vl0K5MHEQKBgQDoSXi1SEqzgZeEnUP2\nz86MItwVH4VhQauhKUVnyle/90Rw9jemt1/ZGB/x4tVx+1jEbNB3dhx3VgooPYr1\nQRmpgkzgUMYmLA3g46BEobpJGNHB2KTsQyMA/7d3rWAlsvc1sI/JFdvBRmZAL0QF\nILPiRYaiTqwdOIqKktSSgqzXYwKBgQDIDMCa2LOVtYJTxCFa6/SfEw3jt/DPDxW0\nUFO0k/74rhwv6m9HF+WPcgOkG3c5DPwHZD38DYvvbYIGy7nPQraF9U6A1IxRwPYS\nHBLNpG8CzgdnPp2X83Bti8OQr17OjJPXeHRNM/nYFWLPvJYljgw4qML5jlsygChT\qsQUZZ9iyQKBgQDNeGgY2yiQ3nobqUz8HleTKCbLXIWMQR3DQhGNvLOgL+ZPkcwq\nYZycGTXwrfimiXG81pAUi9qkSOxVKhMn3H0JryO3bFvKWj+whUk4TGLO0/B/atZ/\n0uc8s/YjG66nykXYLSUS943ayh4aenTNoF7eMSflnHespV4PM9BrBMJFBwKBgAUo\nnwbfM7JWnee/FQUdNI+tlBwdMC6Guw6NS7tKXbbX9o4dw4TXzummDQX8V1S3SwB9\ny0Nmrgcckc/PDRmVJNPLgZy83ml1SmMpKir3ZI1z9qjo6nNyqaGJix9+BjnZUi6q\nQoWDI5w44PVubYjGYvZLE8wPqbZhq6iMrMXB4RxRAoGACx05ftcqtSnGrhjTf4fY\nlHntwLgHB5EGN/zjtiBIUb62aUMhQgGhfkvPquIx7j9qYA8z0CLmqHYdYe2WObYe\njVUK5x+IsreyWz4UJtOuk/UxEqNJ7EgTtfhNwbXQ/IYWxgf/yPjiZ1YxKj4k8Tdy\ntnu/CLCve8XQvCQd2c/Vr20=\n-----END PRIVATE KEY-----\n",
-  "client_email": "firebase-adminsdk-fbsvc@studio-3494288633-91d2b.iam.gserviceaccount.com",
-  "client_id": "104352627973523915350",
-  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-  "token_uri": "https://oauth2.googleapis.com/token",
-  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40studio-3494288633-91d2b.iam.gserviceaccount.com",
-  "universe_domain": "googleapis.com"
+  "$schema": "https://modelcontextprotocol.io/schema/mcp.json",
+  "name": "scing-firebase-mcp",
+  "description": "SCINGULAR MCP bridge for Firebase and Next.js analysis",
+  "version": "1.0.0",
+  "servers": [
+    {
+      "id": "scing-firebase-local",
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "mcp/server.mjs"
+      ],
+      "env": {
+        "OPENAI_API_KEY": "${env:OPENAI_API_KEY}"
+      }
+    }
+  ],
+  "tools": [
+    {
+      "name": "analyze_firebase_status",
+      "description": "Analyze Firebase Studio and Next.js app status reports",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "repoReport": {
+            "type": "string"
+          },
+          "appReport": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "repoReport",
+          "appReport"
+        ]
+      }
+    }
+  ],
+  "mcpServers": {
+    "Scing-MCP-Core": {
+      "command": "",
+      "args": []
+    },
+    "stdio": {
+      "command": "",
+      "args": []
+    }
+  }
 }

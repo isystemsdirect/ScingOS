@@ -23,12 +23,12 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-  crossCheckStandards,
-  type CrossCheckStandardsOutput,
-} from '@/ai/flows/lari-compliance';
-import { processVoiceCommand } from '@/ai/flows/lari-scing-bridge';
-import { textToSpeech } from '@/ai/flows/lari-narrator';
+// import {
+//   crossCheckStandards,
+//   type CrossCheckStandardsOutput,
+// } from '@/ai/flows/lari-compliance';
+// import { processVoiceCommand } from '@/ai/flows/lari-scing-bridge';
+// import { textToSpeech } from '@/ai/flows/lari-narrator';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import Image from 'next/image';
@@ -36,6 +36,8 @@ import { cn } from '@/lib/utils';
 import { mockSubscriptionPlans } from '@/lib/data';
 import Link from 'next/link';
 import { ScingularLogoText } from './ui/logo-text';
+
+type CrossCheckStandardsOutput = any;
 
 const searchSchema = z.object({
   query: z.string().min(3, 'Search query must be at least 3 characters.'),
@@ -74,39 +76,12 @@ export function AiSearchDialog() {
 
   const processAndRespond = useCallback(async (text: string) => {
     setDialogState('processing');
-    try {
-      // 1. Send transcribed text to LARI to understand intent
-      const commandResult = await processVoiceCommand({ command: text });
-      
-      let responseText = commandResult.speech || `Understood. Executing action: ${commandResult.action.replace(/_/g, ' ')}.`;
-
-      // 2. Send the text response to LARI to generate speech
-      const { audio } = await textToSpeech(responseText);
-      
-      // 3. SCING plays the audio response
-      const audioEl = new Audio(audio);
-      audioEl.onplay = () => setDialogState('speaking');
-      audioEl.onended = () => setDialogState('idle');
-      audioEl.onerror = (e) => {
-        console.error("Audio playback error:", e);
-        toast({
-            variant: "destructive",
-            title: "Audio Error",
-            description: "Could not play the audio response."
-        })
-        setDialogState('idle');
-      }
-      audioEl.play();
-
-    } catch (error) {
-      console.error("Error processing command or generating speech:", error);
-       toast({
-        variant: "destructive",
-        title: "Processing Error",
-        description: "I'm sorry, I had trouble processing that command."
-      });
-      setDialogState('idle');
-    }
+    toast({
+      variant: 'destructive',
+      title: 'Feature Temporarily Disabled',
+      description: 'The AI features are currently unavailable due to dependency issues.',
+    });
+    setDialogState('idle');
   }, [toast]);
 
 
@@ -115,7 +90,7 @@ export function AiSearchDialog() {
     // Ensure this runs only in the browser
     if (typeof window === 'undefined') return;
 
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (SpeechRecognition) {
       recognitionRef.current = new SpeechRecognition();
       const recognition = recognitionRef.current;
@@ -217,10 +192,17 @@ export function AiSearchDialog() {
     setResults(null);
     try {
       // Here you would also pass the capturedImage if it exists
-      const searchResults = await crossCheckStandards({
-        searchText: values.query,
-      });
-      setResults(searchResults);
+      // const searchResults = await crossCheckStandards({
+      //   searchText: values.query,
+      // });
+      // setResults(searchResults);
+       toast({
+        variant: "destructive",
+        title: "AI Search Disabled",
+        description: "AI features are temporarily disabled."
+      })
+      setResults({ citations: [] });
+
     } catch (error) {
       console.error('AI Search failed:', error);
       toast({
@@ -393,7 +375,7 @@ export function AiSearchDialog() {
               {results && (
                  <div className="max-h-[50vh] overflow-y-auto pr-4 space-y-4">
                   {results.citations && results.citations.length > 0 ? (
-                    results.citations.map((citation, index) => (
+                    results.citations.map((citation: any, index: number) => (
                       <div key={index} className="rounded-lg border p-4">
                         <div className="flex items-start gap-3">
                           <Bot className="h-6 w-6 text-accent flex-shrink-0" />
