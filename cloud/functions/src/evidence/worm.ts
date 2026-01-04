@@ -2,6 +2,8 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { makeArtifactEvent } from '../../../../scing/evidence/evidenceStore';
 import type { WormChainRef } from '../../../../scing/evidence/evidenceTypes';
+import { enforceBaneCallable } from '../bane/enforce';
+import { runGuardedTool } from '../../../../scing/bane/server/toolBoundary';
 
 function isoNow() {
   return new Date().toISOString();
@@ -25,8 +27,8 @@ async function setWormHead(headRef: FirebaseFirestore.DocumentReference, worm: W
 }
 
 export const evidenceAppendEvent = functions.https.onCall(async (data, ctx) => {
-  const uid = ctx.auth?.uid;
-  if (!uid) throw new functions.https.HttpsError('unauthenticated', 'NO_AUTH');
+  const gate = await enforceBaneCallable({ name: 'evidenceAppendEvent', data, ctx });
+  const uid = gate.uid;
 
   const { orgId, inspectionId, artifactId, type, details, wormScope } = data ?? {};
   if (!orgId || !inspectionId || !type || !wormScope) {
@@ -58,10 +60,38 @@ export const evidenceAppendEvent = functions.https.onCall(async (data, ctx) => {
     wormScopeId: scopeId,
   });
 
-  await db.doc(`inspections/${inspectionId}/artifactEvents/${eventId}`).set(ev, { merge: false });
-  const auditRef = db.collection('audit').doc('evidenceEvents').collection('events').doc(eventId);
-  await auditRef.set(ev, { merge: false });
-  await setWormHead(headRef, ev.worm);
+  try {
+    await runGuardedTool({
+      toolName: 'firestore_write',
+      requiredCapability: 'tool:db_write',
+      payloadText: JSON.stringify({ op: 'set', path: `inspections/${inspectionId}/artifactEvents/${eventId}` }),
+      identityId: uid,
+      capabilities: gate.capabilities,
+      exec: async () => db.doc(`inspections/${inspectionId}/artifactEvents/${eventId}`).set(ev, { merge: false }),
+    });
+
+    const auditRef = db.collection('audit').doc('evidenceEvents').collection('events').doc(eventId);
+    await runGuardedTool({
+      toolName: 'firestore_write',
+      requiredCapability: 'tool:db_write',
+      payloadText: JSON.stringify({ op: 'set', path: `audit/evidenceEvents/events/${eventId}` }),
+      identityId: uid,
+      capabilities: gate.capabilities,
+      exec: async () => auditRef.set(ev, { merge: false }),
+    });
+
+    await runGuardedTool({
+      toolName: 'firestore_write',
+      requiredCapability: 'tool:db_write',
+      payloadText: JSON.stringify({ op: 'merge', path: (headRef as any).path ?? 'audit/wormHeads/*' }),
+      identityId: uid,
+      capabilities: gate.capabilities,
+      exec: async () => setWormHead(headRef, ev.worm),
+    });
+  } catch (e: any) {
+    if (e?.baneTraceId) throw new functions.https.HttpsError('permission-denied', e.message, { traceId: e.baneTraceId });
+    throw e;
+  }
 
   return { ok: true, eventId, worm: ev.worm };
 });

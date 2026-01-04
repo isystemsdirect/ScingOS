@@ -9,6 +9,8 @@ import { signReport } from '../../../../scing/ui/exportSigner';
 import { sha256Hex } from '../../../../scing/evidence/evidenceHash';
 import { asString, isRecord } from '../shared/types/safe';
 import { evaluateFinalize } from '../../../../scing/inspection/inspectionPolicy';
+import { enforceBaneCallable } from '../bane/enforce';
+import { runGuardedTool } from '../../../../scing/bane/server/toolBoundary';
 
 function isoNow() {
   return new Date().toISOString();
@@ -39,8 +41,8 @@ async function getWormHead(db: FirebaseFirestore.Firestore, scope: string, scope
 }
 
 export const exportInspectionBundle = functions.https.onCall(async (data, ctx) => {
-  const uid = ctx.auth?.uid;
-  if (!uid) throw new functions.https.HttpsError('unauthenticated', 'NO_AUTH');
+  const gate = await enforceBaneCallable({ name: 'exportInspectionBundle', data, ctx });
+  const uid = gate.uid;
 
   const { inspectionId, reportId, correlationId } = data ?? {};
   if (!inspectionId || !reportId)
@@ -61,125 +63,140 @@ export const exportInspectionBundle = functions.https.onCall(async (data, ctx) =
   }
 
   const db = admin.firestore();
-  const inspSnap = await db.doc(`inspections/${inspectionId}`).get();
-  if (!inspSnap.exists) throw new functions.https.HttpsError('not-found', 'Inspection missing');
-  const inspection = inspSnap.data() as any;
 
-  // Enforce policy: bundle export implies finalized and integrity OK.
-  const artsSnap = await db.collection(`inspections/${inspectionId}/artifacts`).get();
-  const artifacts = artsSnap.docs.map((d) => d.data() as ArtifactRecord);
-  const decision = evaluateFinalize({ inspection, artifacts, online: true });
-  if (!decision.allow || decision.status !== 'final') {
-    throw new functions.https.HttpsError('failed-precondition', 'EXPORT_BLOCKED', {
-      reasons: decision.reasons,
-    });
-  }
+  try {
+    return await runGuardedTool({
+      toolName: 'firestore_export_bundle',
+      requiredCapability: 'tool:db_write',
+      payloadText: JSON.stringify({ inspectionId, reportId, op: 'exportInspectionBundle' }),
+      identityId: uid,
+      capabilities: gate.capabilities,
+      exec: async () => {
+        const inspSnap = await db.doc(`inspections/${inspectionId}`).get();
+        if (!inspSnap.exists) throw new functions.https.HttpsError('not-found', 'Inspection missing');
+        const inspection = inspSnap.data() as any;
 
-  const reportSnap = await db.doc(`inspections/${inspectionId}/reportBlocks/${reportId}`).get();
-  if (!reportSnap.exists) throw new functions.https.HttpsError('not-found', 'Report missing');
-  const report = reportSnap.data() as unknown;
+        // Enforce policy: bundle export implies finalized and integrity OK.
+        const artsSnap = await db.collection(`inspections/${inspectionId}/artifacts`).get();
+        const artifacts = artsSnap.docs.map((d) => d.data() as ArtifactRecord);
+        const decision = evaluateFinalize({ inspection, artifacts, online: true });
+        if (!decision.allow || decision.status !== 'final') {
+          throw new functions.https.HttpsError('failed-precondition', 'EXPORT_BLOCKED', {
+            reasons: decision.reasons,
+          });
+        }
 
-  // Collect worm heads for inspection + each artifact
-  const wormHeads: Array<{
-    scope: string;
-    scopeId: string;
-    thisHash: string;
-    index: number;
-    prevHash?: string;
-  }> = [];
-  const inspHead = await getWormHead(db, 'inspection', inspectionId);
-  if (inspHead) wormHeads.push(inspHead);
-  for (const a of artifacts) {
-    const h = await getWormHead(db, 'artifact', a.artifactId);
-    if (h) wormHeads.push(h);
-  }
+        const reportSnap = await db.doc(`inspections/${inspectionId}/reportBlocks/${reportId}`).get();
+        if (!reportSnap.exists) throw new functions.https.HttpsError('not-found', 'Report missing');
+        const report = reportSnap.data() as unknown;
 
-  const blobs = [
-    { name: 'inspection.json', json: inspection },
-    { name: 'report.json', json: report },
-  ];
+        // Collect worm heads for inspection + each artifact
+        const wormHeads: Array<{
+          scope: string;
+          scopeId: string;
+          thisHash: string;
+          index: number;
+          prevHash?: string;
+        }> = [];
+        const inspHead = await getWormHead(db, 'inspection', inspectionId);
+        if (inspHead) wormHeads.push(inspHead);
+        for (const a of artifacts) {
+          const h = await getWormHead(db, 'artifact', a.artifactId);
+          if (h) wormHeads.push(h);
+        }
 
-  const createdAt = isoNow();
-  const manifest = buildManifest({
-    orgId: inspection.orgId as string,
-    inspectionId,
-    reportId,
-    createdAt,
-    blobs,
-    artifacts: artifacts.map((a) => ({
-      artifactId: a.artifactId,
-      contentHash: a.integrity.contentHash,
-      integrityState: a.integrity.integrityState,
-      finalized: a.finalized,
-    })),
-    wormHeads,
-  });
+        const blobs = [
+          { name: 'inspection.json', json: inspection },
+          { name: 'report.json', json: report },
+        ];
 
-  const reportHtml = renderSimpleHtml(report);
+        const createdAt = isoNow();
+        const manifest = buildManifest({
+          orgId: inspection.orgId as string,
+          inspectionId,
+          reportId,
+          createdAt,
+          blobs,
+          artifacts: artifacts.map((a) => ({
+            artifactId: a.artifactId,
+            contentHash: a.integrity.contentHash,
+            integrityState: a.integrity.integrityState,
+            finalized: a.finalized,
+          })),
+          wormHeads,
+        });
 
-  const unsignedBundle = {
-    bundleVersion: '1' as const,
-    orgId: inspection.orgId as string,
-    inspectionId,
-    reportId,
-    createdAt,
-    manifest,
-    reportJson: report,
-    reportHtml,
-  };
+        const reportHtml = renderSimpleHtml(report);
 
-  const bundleDigest = bundleHash(unsignedBundle);
-  const signature = signReport(
-    { kind: 'exportBundle', bundleDigest, manifestHash: sha256Hex(JSON.stringify(manifest)) },
-    privateKeyPem
-  );
+        const unsignedBundle = {
+          bundleVersion: '1' as const,
+          orgId: inspection.orgId as string,
+          inspectionId,
+          reportId,
+          createdAt,
+          manifest,
+          reportJson: report,
+          reportHtml,
+        };
 
-  // Append custody event: EXPORTED (inspection scope)
-  const { prev, headRef } = await getPrevWorm(db, 'inspection', inspectionId);
-  const eventId = db.collection('_').doc().id;
-  const ev = makeArtifactEvent({
-    eventId,
-    orgId: inspection.orgId as string,
-    inspectionId,
-    artifactId: undefined,
-    type: 'EXPORTED',
-    ts: createdAt,
-    actor: { uid, orgId: inspection.orgId as string },
-    engineId: 'SCING',
-    details: {
-      reportId,
-      bundleDigest,
-      manifestHash: sha256Hex(JSON.stringify(manifest)),
-      correlationId: corr ?? null,
-    },
-    prevWorm: prev,
-    wormScope: 'inspection',
-    wormScopeId: inspectionId,
-  });
+        const bundleDigest = bundleHash(unsignedBundle);
+        const signature = signReport(
+          { kind: 'exportBundle', bundleDigest, manifestHash: sha256Hex(JSON.stringify(manifest)) },
+          privateKeyPem
+        );
 
-  await db.doc(`inspections/${inspectionId}/artifactEvents/${eventId}`).set(ev, { merge: false });
-  const auditRef = db.collection('audit').doc('evidenceEvents').collection('events').doc(eventId);
-  await auditRef.set(ev, { merge: false });
-  await setWormHead(headRef, ev.worm);
+        // Append custody event: EXPORTED (inspection scope)
+        const { prev, headRef } = await getPrevWorm(db, 'inspection', inspectionId);
+        const eventId = db.collection('_').doc().id;
+        const ev = makeArtifactEvent({
+          eventId,
+          orgId: inspection.orgId as string,
+          inspectionId,
+          artifactId: undefined,
+          type: 'EXPORTED',
+          ts: createdAt,
+          actor: { uid, orgId: inspection.orgId as string },
+          engineId: 'SCING',
+          details: {
+            reportId,
+            bundleDigest,
+            manifestHash: sha256Hex(JSON.stringify(manifest)),
+            correlationId: corr ?? null,
+          },
+          prevWorm: prev,
+          wormScope: 'inspection',
+          wormScopeId: inspectionId,
+        });
 
-  functions.logger.info('exportInspectionBundle:ok', {
-    inspectionId,
-    reportId,
-    correlationId: corr,
-    bundleDigest,
-  });
+        await db.doc(`inspections/${inspectionId}/artifactEvents/${eventId}`).set(ev, { merge: false });
+        const auditRef = db.collection('audit').doc('evidenceEvents').collection('events').doc(eventId);
+        await auditRef.set(ev, { merge: false });
+        await setWormHead(headRef, ev.worm);
 
-  return {
-    ok: true,
-    bundle: {
-      ...unsignedBundle,
-      signature: {
-        alg: signature.alg,
-        kid: signature.kid,
-        sig: signature.sig,
-        signedAt: isoNow(),
+        functions.logger.info('exportInspectionBundle:ok', {
+          inspectionId,
+          reportId,
+          correlationId: corr,
+          bundleDigest,
+        });
+
+        return {
+          ok: true,
+          bundle: {
+            ...unsignedBundle,
+            signature: {
+              alg: signature.alg,
+              kid: signature.kid,
+              sig: signature.sig,
+              signedAt: isoNow(),
+            },
+          },
+        };
       },
-    },
-  };
+    });
+  } catch (e: any) {
+    if (e?.baneTraceId) throw new functions.https.HttpsError('permission-denied', e.message, { traceId: e.baneTraceId });
+    throw e;
+  }
 });
 

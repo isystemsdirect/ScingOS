@@ -10,6 +10,7 @@ import { finalizeInspection } from './inspection/finalize';
 import { lariRouter } from './lari';
 import { aipRouter } from './aip';
 import { isdcRouter } from './isdc';
+import { enforceBaneHttp } from './bane/enforce';
 
 // Initialize Firebase Admin
 admin.initializeApp();
@@ -43,6 +44,9 @@ export const isdc = isdcRouter;
 
 // Health check endpoint
 export const healthCheck = functions.https.onRequest((req, res) => {
+  const gate = enforceBaneHttp({ req, res, name: 'healthCheck' });
+  if (!gate.ok) return;
+
   res.status(200).json({
     status: 'healthy',
     service: 'ScingOS Cloud Functions',

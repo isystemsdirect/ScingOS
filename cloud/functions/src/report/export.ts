@@ -1,10 +1,10 @@
 import * as functions from 'firebase-functions';
 import { signReport } from '../../../../scing/ui/exportSigner';
 import { asString, isRecord } from '../shared/types/safe';
+import { enforceBaneCallable } from '../bane/enforce';
 
 export const exportInspectionReport = functions.https.onCall(async (data, ctx) => {
-  const uid = ctx.auth?.uid;
-  if (!uid) throw new functions.https.HttpsError('unauthenticated', 'NO_AUTH');
+  await enforceBaneCallable({ name: 'exportInspectionReport', data, ctx });
 
   const { report } = data ?? {};
   if (!report) throw new functions.https.HttpsError('invalid-argument', 'Missing fields');

@@ -1,6 +1,8 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { maybeNotifyGitHubOnCritical } from './githubNotify';
+import { enforceBaneCallable } from '../bane/enforce';
+import { runGuardedTool } from '../../../../scing/bane/server/toolBoundary';
 
 const SECRET_KEYS = new Set([
   'password',
@@ -33,8 +35,8 @@ function redact(value: any): any {
 }
 
 export const writeObsEvent = functions.https.onCall(async (data, ctx) => {
-  const uid = ctx.auth?.uid;
-  if (!uid) throw new functions.https.HttpsError('unauthenticated', 'NO_AUTH');
+  const gate = await enforceBaneCallable({ name: 'writeObsEvent', data, ctx });
+  const uid = gate.uid;
 
   const evt = data?.event;
   if (
@@ -70,11 +72,30 @@ export const writeObsEvent = functions.https.onCall(async (data, ctx) => {
   };
 
   const db = admin.firestore();
-  await db.doc(`obs/events/${sanitized.eventId}`).set(sanitized, { merge: false });
+  try {
+    await runGuardedTool({
+      toolName: 'firestore_write',
+      requiredCapability: 'tool:db_write',
+      payloadText: JSON.stringify({ op: 'set', path: `obs/events/${sanitized.eventId}` }),
+      identityId: uid,
+      capabilities: gate.capabilities,
+      exec: async () => db.doc(`obs/events/${sanitized.eventId}`).set(sanitized, { merge: false }),
+    });
+  } catch (e: any) {
+    if (e?.baneTraceId) throw new functions.https.HttpsError('permission-denied', e.message, { traceId: e.baneTraceId });
+    throw e;
+  }
 
   // Best-effort GitHub notify; never fail the write on notify errors.
   try {
-    await maybeNotifyGitHubOnCritical(sanitized);
+    await runGuardedTool({
+      toolName: 'external_call',
+      requiredCapability: 'tool:external_call',
+      payloadText: JSON.stringify({ host: 'api.github.com', method: 'POST', kind: 'issues.create' }),
+      identityId: uid,
+      capabilities: gate.capabilities,
+      exec: async () => maybeNotifyGitHubOnCritical(sanitized),
+    });
   } catch {
     // ignore
   }

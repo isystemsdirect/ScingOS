@@ -1,5 +1,6 @@
 import * as functions from 'firebase-functions';
 import { asString, getRecord } from '../shared/types/safe';
+import { enforceBaneCallable } from '../bane/enforce';
 
 /**
  * AIP (Augmented Intelligence Portal)
@@ -8,18 +9,17 @@ import { asString, getRecord } from '../shared/types/safe';
 
 // AIP message handler
 export const handleMessage = functions.https.onCall(async (data, context) => {
-  if (!context.auth) {
-    throw new functions.https.HttpsError('unauthenticated', 'Must be authenticated');
-  }
+  const gate = await enforceBaneCallable({ name: 'aip.handleMessage', data, ctx: context });
+  const uid = gate.uid;
 
   const { type, payload } = data;
 
   switch (type) {
   case 'task.request':
-    return await handleTaskRequest(payload, context.auth.uid);
+    return await handleTaskRequest(payload, uid);
     
   case 'context.update':
-    return await handleContextUpdate(payload, context.auth.uid);
+    return await handleContextUpdate(payload, uid);
     
   default:
     throw new functions.https.HttpsError('invalid-argument', `Unknown message type: ${type}`);

@@ -2,6 +2,8 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { requestCapability } from '../bane/capability';
 import { createSDR } from '../bane/sdr';
+import { enforceBaneCallable } from '../bane/enforce';
+import { runGuardedTool } from '../../../../scing/bane/server/toolBoundary';
 import {
   ISDCMessage,
   ISDCMessageType,
@@ -58,15 +60,8 @@ async function createSecurityDecisionRecord(data: {
  */
 export const handleISDCMessage = functions.https.onCall(
   async (data: ISDCMessage, context) => {
-    // Authentication check
-    if (!context.auth) {
-      throw new functions.https.HttpsError(
-        'unauthenticated',
-        'Must be authenticated to use ISDCProtocol2025'
-      );
-    }
-
-    const userId = context.auth.uid;
+    const gate = await enforceBaneCallable({ name: 'handleISDCMessage', data, ctx: context });
+    const userId = gate.uid;
     const { type, payload } = data;
 
     console.log(
@@ -74,38 +69,50 @@ export const handleISDCMessage = functions.https.onCall(
     );
 
     try {
-      // Route message to appropriate handler
-      switch (type) {
-      case 'details.sync':
-        return await handleDetailsSync(
-            payload as DetailsSyncPayload,
-            userId
-        );
+      return await runGuardedTool({
+        toolName: 'isdc_protocol_router',
+        requiredCapability: 'tool:db_write',
+        payloadText: JSON.stringify({ type, protocol: ISDC_PROTOCOL_VERSION }),
+        identityId: userId,
+        capabilities: gate.capabilities,
+        exec: async () => {
+          // Route message to appropriate handler
+          switch (type) {
+          case 'details.sync':
+            return await handleDetailsSync(
+                payload as DetailsSyncPayload,
+                userId
+            );
 
-      case 'sync.request':
-        return await handleSyncRequest(
-            payload as SyncRequestPayload,
-            userId
-        );
+          case 'sync.request':
+            return await handleSyncRequest(
+                payload as SyncRequestPayload,
+                userId
+            );
 
-      case 'inspection.create':
-      case 'inspection.update':
-        return await handleInspectionOperation(type, payload, userId);
+          case 'inspection.create':
+          case 'inspection.update':
+            return await handleInspectionOperation(type, payload, userId);
 
-      case 'finding.create':
-      case 'finding.update':
-        return await handleFindingOperation(type, payload, userId);
+          case 'finding.create':
+          case 'finding.update':
+            return await handleFindingOperation(type, payload, userId);
 
-      case 'conflict.resolution':
-        return await handleConflictResolution(payload, userId);
+          case 'conflict.resolution':
+            return await handleConflictResolution(payload, userId);
 
-      default:
-        throw new functions.https.HttpsError(
-          'invalid-argument',
-          `Unknown ISDCProtocol2025 message type: ${type}`
-        );
+          default:
+            throw new functions.https.HttpsError(
+              'invalid-argument',
+              `Unknown ISDCProtocol2025 message type: ${type}`
+            );
+          }
+        },
+      });
+    } catch (error: any) {
+      if (error?.baneTraceId) {
+        throw new functions.https.HttpsError('permission-denied', error.message, { traceId: error.baneTraceId });
       }
-    } catch (error: unknown) {
       console.error('ISDCProtocol2025 error:', error);
 
       const message = error instanceof Error ? error.message : 'ISDCProtocol2025 operation failed';
