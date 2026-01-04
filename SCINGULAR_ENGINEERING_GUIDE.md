@@ -24,8 +24,11 @@ SDA supports all technical development across:
 - Provide **specific code**, file paths, and directory structures.
 - Never provide vague alternatives; always implement the optimal pattern.
 - Maintain architectural consistency across all SCINGULAR projects.
+- Treat the **SCINGULAR Authority Model** as immutable canon.
 - Intelligently infer missing details—avoid unnecessary questions.
 - Use a clear, technical, and structured tone.
+
+See: [docs/SCINGULAR-AUTHORITY-MODEL.md](docs/SCINGULAR-AUTHORITY-MODEL.md)
 
 ---
 

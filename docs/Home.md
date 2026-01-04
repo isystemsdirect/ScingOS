@@ -36,6 +36,10 @@ This wiki serves as the comprehensive documentation hub for ScingOS and the SCIN
 ### 🏗️ Architecture & Core Systems
 
 - [System Architecture](ARCHITECTURE.md) - Overall system design
+- [SCINGULAR Authority Model (Immutable Canon)](SCINGULAR-AUTHORITY-MODEL.md) - Single authority flow and bypass prohibitions
+- [SRT Avatar State Taxonomy (Immutable Canon)](SRT-AVATAR-STATE-TAXONOMY.md) - Canonical avatar states, truth mapping, and transition legality
+- [Failover & Degradation Rules (Immutable Canon)](FAILOVER-DEGRADATION-CANON.md) - Safe-authority behavior and disclosure rules
+- [Embodiment Modes (Immutable Canon)](EMBODIMENT-MODES-CANON.md) - NEURAL-ONLY / SRT-ONLY / HYBRID constraints and transitions
 - [AIP Protocol](AIP-PROTOCOL.md) - Communication protocol specification
 - [SCING Interface](SCING-INTERFACE.md) - Voice orchestrator design
 - [BANE Security](BANE-SECURITY.md) - Security governance framework

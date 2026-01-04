@@ -342,6 +342,11 @@ test(voice): add unit tests for ASR module
 
 - **Automated checks** must pass (linting, tests, build)
 - At least **one approving review** from a maintainer is required
+- Any change that affects **authority flow, mediation, intent arbitration, subsystem boundaries, SRT constraints, failover/degradation, or embodiment modes** requires explicit canon review against:
+   - [docs/SCINGULAR-AUTHORITY-MODEL.md](docs/SCINGULAR-AUTHORITY-MODEL.md)
+   - [docs/SRT-AVATAR-STATE-TAXONOMY.md](docs/SRT-AVATAR-STATE-TAXONOMY.md)
+   - [docs/FAILOVER-DEGRADATION-CANON.md](docs/FAILOVER-DEGRADATION-CANON.md)
+   - [docs/EMBODIMENT-MODES-CANON.md](docs/EMBODIMENT-MODES-CANON.md)
 - Address all review comments
 - Keep PR scope focused (avoid unrelated changes)
 - Be responsive to feedback

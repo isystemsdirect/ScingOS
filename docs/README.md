@@ -27,6 +27,10 @@ New to ScingOS? Start here:
 ### Architecture & Design
 
 - **[System Architecture](ARCHITECTURE.md)** - Overall system design
+- **[SCINGULAR Authority Model](SCINGULAR-AUTHORITY-MODEL.md)** - Immutable authority flow and mediation rules
+- **[SRT Avatar State Taxonomy](SRT-AVATAR-STATE-TAXONOMY.md)** - Canonical states, truth mapping, and transition legality
+- **[Failover & Degradation Rules](FAILOVER-DEGRADATION-CANON.md)** - Safe-authority behavior and disclosure rules
+- **[Embodiment Modes](EMBODIMENT-MODES-CANON.md)** - NEURAL-ONLY / SRT-ONLY / HYBRID constraints and transitions
 - **[SCINGULAR Ecosystem](SCINGULAR-ECOSYSTEM.md)** - Platform overview
 - **[Roadmap](ROADMAP.md)** - Product timeline and milestones
 - **[UX Guidelines](UX-GUIDELINES.md)** - User experience principles
