@@ -1,8 +1,15 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { dispatchAvatarIntent } from '../avatar/intentBridge';
 import * as scingPanelStore from './scingPanelStore';
-
-type ChatResponse = { textOut: string };
+import {
+  getConversationState,
+  subscribeConversation,
+  setConversationAssistantText,
+  setConversationError,
+  setConversationUserText,
+} from './scingConversationStore';
+import { NeuralIngressError, submitTextToScing } from '../neural/runtime/neuralIngress';
+import { getSrtFeedbackState, subscribeSrtFeedback } from '../srt/feedback/srtFeedbackStore';
 
 type PanelModel = {
   isOpen: boolean;
@@ -12,18 +19,19 @@ export function ScingPanel() {
   const [model, setModel] = useState<PanelModel>({ isOpen: scingPanelStore.getState().isOpen });
 
   const [text, setText] = useState('');
-  const [transcript, setTranscript] = useState<string[]>([]);
-  const [responses, setResponses] = useState<string[]>([]);
-
-  const identityHeaders = useMemo(() => {
-    return {
-      'x-bane-identity': 'local-dev',
-      'x-bane-capabilities': 'bane:invoke',
-    } as const;
-  }, []);
+  const [conv, setConv] = useState(getConversationState());
+  const [srt, setSrt] = useState(getSrtFeedbackState());
 
   useEffect(() => {
     return scingPanelStore.subscribe((s) => setModel({ isOpen: s.isOpen }));
+  }, []);
+
+  useEffect(() => {
+    return subscribeConversation(setConv);
+  }, []);
+
+  useEffect(() => {
+    return subscribeSrtFeedback(setSrt);
   }, []);
 
   useEffect(() => {
@@ -43,28 +51,14 @@ export function ScingPanel() {
     const trimmed = msg.trim();
     if (!trimmed) return;
 
-    const correlationId = typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `corr_${Date.now()}`;
-    setTranscript((t) => [...t, trimmed]);
-
+    setConversationUserText(trimmed);
     try {
-      const res = await fetch('/api/scing/chat', {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-          ...identityHeaders,
-        },
-        body: JSON.stringify({ correlationId, text: trimmed }),
-      });
-
-      if (!res.ok) {
-        const payload = await res.json().catch(() => null);
-        throw new Error(payload?.message || payload?.error || `HTTP ${res.status}`);
-      }
-
-      const json = (await res.json()) as ChatResponse;
-      setResponses((r) => [...r, json.textOut]);
+      const res = await submitTextToScing(trimmed);
+      setConversationAssistantText(res.textOut, res.correlationId);
     } catch (e: any) {
-      setResponses((r) => [...r, e?.message || 'Failed to send.']);
+      const msg = e?.message || 'Failed to send.';
+      const correlationId = e instanceof NeuralIngressError ? e.correlationId : undefined;
+      setConversationError({ message: msg, correlationId });
     }
   };
 
@@ -103,15 +97,28 @@ export function ScingPanel() {
 
       <div style={{ padding: 12, display: 'grid', gap: 10, overflow: 'auto' }}>
         <div>
+          <div style={{ fontSize: 12, fontWeight: 800 }}>SRT</div>
+          <div style={{ marginTop: 6, fontSize: 13 }}>
+            <div>truth: {srt.truth}</div>
+            <div style={{ opacity: 0.7 }}>corr: {srt.lastCorrelationId ?? conv.lastCorrelationId ?? '—'}</div>
+          </div>
+        </div>
+        <div>
           <div style={{ fontSize: 12, fontWeight: 800 }}>Transcript</div>
           <div style={{ marginTop: 6, fontSize: 13, whiteSpace: 'pre-wrap' }}>
-            {transcript.length === 0 ? <span style={{ opacity: 0.6 }}>—</span> : transcript.join('\n')}
+            {conv.lastUserText ? conv.lastUserText : <span style={{ opacity: 0.6 }}>—</span>}
           </div>
         </div>
         <div>
           <div style={{ fontSize: 12, fontWeight: 800 }}>Response</div>
           <div style={{ marginTop: 6, fontSize: 13, whiteSpace: 'pre-wrap' }}>
-            {responses.length === 0 ? <span style={{ opacity: 0.6 }}>—</span> : responses[responses.length - 1]}
+            {conv.error ? (
+              <span style={{ fontWeight: 700 }}>{conv.error.message}</span>
+            ) : conv.lastAssistantText ? (
+              conv.lastAssistantText
+            ) : (
+              <span style={{ opacity: 0.6 }}>—</span>
+            )}
           </div>
         </div>
 

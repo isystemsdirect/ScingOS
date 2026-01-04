@@ -1,7 +1,8 @@
 import type React from 'react';
-import { useCallback, useMemo, useRef, useState } from 'react';
-import { dispatchAvatarIntent } from './intentBridge';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { dispatchAvatarIntent, subscribeAvatarIntents } from './intentBridge';
 import { RadialMenu } from './RadialMenu';
+import { setSrtModifiers } from '../srt/feedback/srtFeedbackStore';
 
 function clamp01(x: number): number {
   if (!Number.isFinite(x)) return 0;
@@ -25,8 +26,26 @@ export function AvatarInteractive(props: { children: React.ReactNode; className?
       '--scing-hover': hoverProximity,
       '--scing-pressed': pressed ? 1 : 0,
       '--scing-attn': attentionPulse,
+		'--srt-hover': hoverProximity,
+		'--srt-pressed': pressed ? 1 : 0,
+		'--srt-attn': attentionPulse,
     } as React.CSSProperties;
   }, [hoverProximity, pressed, attentionPulse]);
+
+  useEffect(() => {
+    setSrtModifiers({
+      hover: hoverProximity,
+      pressed: pressed ? 1 : 0,
+      attn: attentionPulse,
+    });
+  }, [hoverProximity, pressed, attentionPulse]);
+
+  useEffect(() => {
+    return subscribeAvatarIntents((intent) => {
+      if (intent.type === 'close_radial_menu') setMenuOpen(false);
+      if (intent.type === 'reset') setMenuOpen(false);
+    });
+  }, []);
 
   const computeHoverProximity = useCallback((clientX: number, clientY: number) => {
     const el = ref.current;

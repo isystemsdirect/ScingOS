@@ -18,6 +18,7 @@ export function useVoiceMvp() {
   const [transcriptFinal, setTranscriptFinal] = useState('');
   const [lastResponse, setLastResponse] = useState('');
   const [lastError, setLastError] = useState<VoiceError | null>(null);
+  const [correlationId, setCorrelationId] = useState<string | null>(null);
 
   const controllerRef = useRef<ReturnType<typeof createVoiceMvpController> | null>(null);
 
@@ -70,6 +71,7 @@ export function useVoiceMvp() {
         setTranscriptFinal(snap.transcriptFinal);
         setLastResponse(snap.lastResponse);
         setLastError(snap.lastError);
+		setCorrelationId(snap.correlationId);
       },
       timeoutMs: 12_000,
     });
@@ -133,6 +135,7 @@ export function useVoiceMvp() {
     transcriptFinal,
     lastResponse,
     lastError,
+    correlationId,
     pttDown,
     pttUp,
   };

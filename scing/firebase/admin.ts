@@ -18,7 +18,6 @@ function getAdmin(): AdminModule {
   if (adminMod) return adminMod;
 
   // Avoid bundlers trying to resolve firebase-admin at build time (e.g. Next.js).
-  // eslint-disable-next-line no-eval
   const req = (0, eval)('require') as (id: string) => any;
   const loaded = req('firebase-admin');
   adminMod = (loaded?.default ?? loaded) as AdminModule;

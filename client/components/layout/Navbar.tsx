@@ -1,35 +1,145 @@
 import Link from 'next/link';
 import { useAuthStore } from '../../lib/store/authStore';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../lib/firebase';
 import { useVoiceMvp } from '../../src/voice/client/useVoiceMvp';
-import { subscribeAvatarIntents } from '@rtsf/avatar/intentBridge';
+import {
+  createWebSpeechSynthesisBargeIn,
+  setVoiceRuntime,
+  type VoiceRuntimeState,
+} from '@rtsf/voice/runtime/voiceRuntime';
+import {
+  setConversationAssistantText,
+  setConversationError,
+  setConversationUserText,
+} from '@rtsf/ui/scingConversationStore';
 
 export function Navbar() {
   const { user } = useAuthStore();
   const voice = useVoiceMvp();
+  const enabled = voice.enabled;
+  const pttDown = voice.pttDown;
+  const pttUp = voice.pttUp;
+
+  const runtimeStateRef = useRef<VoiceRuntimeState>({ status: 'idle' });
+  const listenersRef = useRef(new Set<(s: VoiceRuntimeState) => void>());
+  const bargeInRef = useRef(createWebSpeechSynthesisBargeIn());
+  const lastVoiceRef = useRef({
+    transcriptFinal: '',
+    lastResponse: '',
+    lastErrorCode: '' as string | null,
+    correlationId: '' as string | null,
+  });
 
   useEffect(() => {
-    const unsub = subscribeAvatarIntents((intent) => {
-      if (!voice.enabled) return;
-
-      if (intent.type === 'voice_ptt_start') {
-        // Barge-in: if any browser speech is active, cancel immediately.
+    const runtime = {
+      getState: () => runtimeStateRef.current,
+      subscribe: (listener: (s: VoiceRuntimeState) => void) => {
+        listenersRef.current.add(listener);
+        listener(runtimeStateRef.current);
+        return () => listenersRef.current.delete(listener);
+      },
+      startPushToTalk: () => {
+        if (!enabled) return;
         try {
-          (window as any).speechSynthesis?.cancel?.();
+          if (bargeInRef.current.isSpeaking()) bargeInRef.current.cancelSpeaking();
         } catch {
-          // ignore
+          // best-effort
         }
-        voice.pttDown();
-      }
+        pttDown();
+      },
+      stopPushToTalk: () => {
+        if (!enabled) return;
+        pttUp();
+      },
+      isListening: () => runtimeStateRef.current.status === 'listening',
+      isSpeaking: () => {
+        try {
+          return bargeInRef.current.isSpeaking();
+        } catch {
+          return false;
+        }
+      },
+      cancelSpeaking: () => {
+        try {
+          bargeInRef.current.cancelSpeaking();
+        } catch {
+          // best-effort
+        }
+      },
+      reset: () => {
+        try {
+          bargeInRef.current.cancelSpeaking();
+        } catch {
+          // best-effort
+        }
+        pttUp();
+      },
+    };
 
-      if (intent.type === 'voice_ptt_stop') {
-        voice.pttUp();
-      }
-    });
-    return () => unsub();
-  }, [voice]);
+    setVoiceRuntime(runtime);
+    return () => {
+      // On unmount, revert to a truthful noop runtime.
+      setVoiceRuntime({
+        getState: () => ({ status: 'idle' }),
+        subscribe: () => () => undefined,
+        startPushToTalk: () => undefined,
+        stopPushToTalk: () => undefined,
+        isListening: () => false,
+        isSpeaking: () => false,
+        cancelSpeaking: () => undefined,
+        reset: () => undefined,
+      });
+    };
+  }, [enabled, pttDown, pttUp]);
+
+  useEffect(() => {
+    const prev = runtimeStateRef.current;
+    const preserveStartedAt = (status: 'listening' | 'thinking' | 'speaking') => {
+      if (prev.status === status && 'startedAt' in prev) return prev.startedAt;
+      return Date.now();
+    };
+
+    let next: VoiceRuntimeState;
+    if (!voice.enabled) next = { status: 'idle' };
+    else if (voice.state === 'listening') next = { status: 'listening', startedAt: preserveStartedAt('listening') };
+    else if (voice.state === 'thinking' || voice.state === 'transcribing') next = { status: 'thinking', startedAt: preserveStartedAt('thinking') };
+    else if (voice.state === 'error') {
+      next = { status: 'error', message: voice.lastError?.message || 'Voice error', at: Date.now() };
+    } else next = { status: 'idle' };
+
+    const changed =
+      prev.status !== next.status ||
+      (prev.status === 'error' && next.status === 'error' && prev.message !== next.message);
+
+    if (changed) {
+      runtimeStateRef.current = next;
+      for (const l of listenersRef.current) l(next);
+    }
+  }, [voice.enabled, voice.state, voice.lastError?.message]);
+
+  useEffect(() => {
+    // Publish voice outputs to the shared conversation store.
+    const prev = lastVoiceRef.current;
+    if (voice.correlationId !== prev.correlationId) prev.correlationId = voice.correlationId;
+
+    if (voice.transcriptFinal && voice.transcriptFinal !== prev.transcriptFinal) {
+      prev.transcriptFinal = voice.transcriptFinal;
+      setConversationUserText(voice.transcriptFinal, voice.correlationId ?? undefined);
+    }
+
+    if (voice.lastResponse && voice.lastResponse !== prev.lastResponse) {
+      prev.lastResponse = voice.lastResponse;
+      setConversationAssistantText(voice.lastResponse, voice.correlationId ?? undefined);
+    }
+
+    const errorCode = voice.lastError?.code ?? null;
+    if (errorCode && errorCode !== prev.lastErrorCode) {
+      prev.lastErrorCode = errorCode;
+      setConversationError({ message: voice.lastError?.message || errorCode, correlationId: voice.correlationId ?? undefined });
+    }
+  }, [voice.correlationId, voice.lastError?.code, voice.lastError?.message, voice.lastResponse, voice.transcriptFinal]);
 
   const handleSignOut = async () => {
     try {

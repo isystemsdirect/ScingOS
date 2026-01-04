@@ -9,6 +9,8 @@ import { LariBusProvider } from '../src/lariBus/LariBusProvider';
 import { GlobalErrorCapture, ObsProvider } from '../src/obs';
 import { DeviceBoot } from '../src/devices';
 import { initAvatarIntentWiring } from '@rtsf/avatar/wireAvatarIntents';
+import { startSrtTruthAdapter } from '@rtsf/srt/feedback/truthAdapter';
+import { startRtsfLiveAdapter } from '@rtsf/sensors/runtime/rtsfLiveAdapter';
 
 export default function App({ Component, pageProps }: AppProps) {
   const setUser = useAuthStore((state) => state.setUser);
@@ -22,6 +24,15 @@ export default function App({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     initAvatarIntentWiring();
+  }, []);
+
+  useEffect(() => {
+    const stopTruth = startSrtTruthAdapter();
+    const stopRtsf = startRtsfLiveAdapter();
+    return () => {
+      stopRtsf();
+      stopTruth();
+    };
   }, []);
 
   return (
