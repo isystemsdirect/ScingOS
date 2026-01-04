@@ -6,6 +6,8 @@ import { AVATAR_CENTER_Y, CAMERA_Z } from './visual/scale'
 import ScingAvatarLiveHud from './hud/ScingAvatarLiveHud'
 import DevOptionsPanel from './ui/DevOptionsPanel'
 
+import PillInputWiring from '../../../src/ui/pillInputWiring'
+
 import './styles.css'
 import './ui/devPanelTheme.css'
 
@@ -549,6 +551,8 @@ export default function App() {
           </div>
         </div>
       ) : null}
+
+      <PillInputWiring />
 
       <ErrorBoundary
         onError={(message, detail) => {
