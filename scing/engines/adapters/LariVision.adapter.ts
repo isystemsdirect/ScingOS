@@ -37,7 +37,7 @@ function artifactMatchesKey(params: {
 }
 
 function requiredArtifactKeys(params: {
-  domainArtifacts: DomainArtifactRequirement[];
+  domainArtifacts: ReadonlyArray<DomainArtifactRequirement>;
   artifacts: Array<{ artifactId: string; type: string }>;
 }): { missingKeys: string[]; presentKeys: Set<string> } {
   const presentKeys = new Set<string>();
@@ -59,7 +59,7 @@ function requiredArtifactKeys(params: {
 }
 
 function pickRoofingFinding(params: {
-  domainTaxonomy: Array<{ code: string; label: string; defaultSeverity: string }>;
+  domainTaxonomy: ReadonlyArray<{ code: string; label: string; defaultSeverity: string }>;
   artifacts: Array<{ artifactId: string; type: string }>;
 }): { title: string; code: string; severity: LariFinding['severity']; evidenceArtifactId: string } | null {
   const rf02 = params.domainTaxonomy.find((t) => t.code === 'RF-02');

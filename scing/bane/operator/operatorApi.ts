@@ -6,8 +6,8 @@ import { lockIdentity, unlockIdentity } from '../runtime/riskLedger';
 export function makeBaneOperatorApi(store: BaneStore) {
   return {
     async getRecentAudits(auth: OperatorAuth, limit = 50): Promise<OperatorResult<unknown[]>> {
-      const ok = requireCapability(auth, 'bane:operator');
-      if (!ok.ok) return ok;
+      const authz = requireCapability(auth, 'bane:operator');
+      if (authz.ok === false) return authz;
       try {
         const rows = await store.getRecentAudits(Math.max(1, Math.min(200, limit)));
         return { ok: true, data: rows };
@@ -17,8 +17,8 @@ export function makeBaneOperatorApi(store: BaneStore) {
     },
 
     async unlockIdentity(auth: OperatorAuth, identityId: string): Promise<OperatorResult<{ identityId: string }>> {
-      const ok = requireCapability(auth, 'bane:operator');
-      if (!ok.ok) return ok;
+      const authz = requireCapability(auth, 'bane:operator');
+      if (authz.ok === false) return authz;
       try {
         unlockIdentity(identityId);
         return { ok: true, data: { identityId } };
@@ -32,8 +32,8 @@ export function makeBaneOperatorApi(store: BaneStore) {
       identityId: string,
       ttlMs: number
     ): Promise<OperatorResult<{ identityId: string; ttlMs: number }>> {
-      const ok = requireCapability(auth, 'bane:operator');
-      if (!ok.ok) return ok;
+      const authz = requireCapability(auth, 'bane:operator');
+      if (authz.ok === false) return authz;
       const bounded = Math.max(5_000, Math.min(24 * 60 * 60 * 1000, ttlMs));
       try {
         lockIdentity(identityId, bounded);

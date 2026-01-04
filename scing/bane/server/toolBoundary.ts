@@ -22,7 +22,8 @@ export async function runGuardedTool<T>(params: {
   });
 
   if (!decision.ok) {
-    const err = new Error(decision.message);
+    const msg = 'message' in decision ? String((decision as any).message) : 'Tool invocation blocked by policy.';
+    const err = new Error(msg);
     (err as any).baneTraceId = decision.traceId;
     throw err;
   }

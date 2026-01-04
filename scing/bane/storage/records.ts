@@ -9,7 +9,8 @@ export type BaneAuditRecord = {
   verdict: BaneVerdict;
   severity: BaneSeverity;
   enforcementLevel: BaneEnforcementLevel;
-  textHash: string;
+  inputHash: string;
+  safeTextHash?: string;
   findingsSummary: Array<{ id: string; severity: BaneSeverity; verdict: BaneVerdict }>;
 };
 
