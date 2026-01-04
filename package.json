@@ -1,6 +1,6 @@
 {
   "engines": {
-    "node": ">=20 <21",
+    "node": ">=20",
     "npm": ">=10"
   },
   "devDependencies": {
@@ -14,6 +14,7 @@
     "typescript": "^5.9.3"
   },
   "scripts": {
+    "dev": "npm --prefix client run dev",
     "typecheck:scing": "tsc -p tools/tmp-tsconfig.json",
     "lint:scing": "eslint \"scing/**/*.{ts,tsx}\" \"tools/**/*.{js,mjs}\" --max-warnings=0",
     "test:scing:attractors": "node tools/attractors.selftest.mjs",

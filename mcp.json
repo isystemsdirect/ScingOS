@@ -8,9 +8,7 @@
       "type": "stdio",
       "command": "node",
       "args": ["mcp/server.mjs"],
-      "env": {
-        "OPENAI_API_KEY": "${env:OPENAI_API_KEY}"
-      }
+      "env": {}
     }
   ],
   "tools": [

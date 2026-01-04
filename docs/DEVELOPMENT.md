@@ -80,7 +80,7 @@ Optional variables:
 
 ```bash
 NEXT_PUBLIC_USE_FIREBASE_NEURAL=true
-OPENAI_API_KEY=your_openai_key
+OPENAI_KEY=your_openai_key
 ANTHROPIC_API_KEY=your_anthropic_key
 ```
 

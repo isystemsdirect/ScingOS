@@ -47,7 +47,7 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 
 ```bash
 # OpenAI
-OPENAI_API_KEY=sk-...
+OPENAI_KEY=sk-...
 
 # ElevenLabs (TTS)
 ELEVENLABS_API_KEY=...
@@ -132,7 +132,7 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 | `VERCEL_TOKEN`                 | Vercel deployment token | Vercel Dashboard        |
 | `VERCEL_ORG_ID`                | Vercel organization ID  | Run `vercel` locally    |
 | `VERCEL_PROJECT_ID`            | Vercel project ID       | Run `vercel` locally    |
-| `OPENAI_API_KEY`               | OpenAI API key          | OpenAI Dashboard        |
+| `OPENAI_KEY`                   | OpenAI API key          | OpenAI Dashboard        |
 | `ELEVENLABS_API_KEY`           | ElevenLabs API key      | ElevenLabs Dashboard    |
 | `PICOVOICE_API_KEY`            | Picovoice API key       | Picovoice Console       |
 | `SNYK_TOKEN`                   | Snyk security token     | Snyk Dashboard          |

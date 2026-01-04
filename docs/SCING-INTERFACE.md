@@ -154,7 +154,7 @@ await porcupine.start();
 ```typescript
 import { Configuration, OpenAIApi } from 'openai';
 
-const openai = new OpenAIApi(new Configuration({ apiKey: process.env.OPENAI_API_KEY }));
+const openai = new OpenAIApi(new Configuration({ apiKey: process.env.LLM_API_KEY }));
 
 async function transcribeAudio(audioBlob: Blob): Promise<string> {
   const formData = new FormData();
