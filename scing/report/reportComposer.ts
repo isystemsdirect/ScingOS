@@ -13,6 +13,8 @@ import { getDomain } from '../domains/domainRegistry';
 import { domainAppendixBlock } from './templates/domainAppendix';
 import { stableJsonDeep, stableSort, stableSeverityRank } from './reportDeterminism';
 import { lariSealBlock } from './seals/lariSeal';
+import { regulatoryDisclosure } from '../compliance/regulatoryDisclosure';
+import { investorPack } from '../export/investorPack';
 
 export type ReportBlock = { section: string; title: string; content: unknown };
 
@@ -24,6 +26,10 @@ export type ComposedReport = {
   version: '1';
   sections: ReportBlock[];
   evidenceRefs: string[]; // artifactIds
+  exportBlocks?: {
+    regulatoryDisclosure?: unknown;
+    investorPack?: unknown;
+  };
 };
 
 export class EvidenceLinkError extends Error {
@@ -159,6 +165,7 @@ export function composeDeterministicReport(params: {
   findings: FindingRecord[];
   classifications: ClassificationRecord[];
   mapLayers: MapLayerRecord[];
+  includeExportBlocks?: boolean;
 }): ComposedReport {
   const inspection = params.inspection;
   const domain = inspection.domainKey ? getDomain(inspection.domainKey) : null;
@@ -345,5 +352,11 @@ export function composeDeterministicReport(params: {
     version: '1',
     sections,
     evidenceRefs: artifacts.map((a) => a.artifactId),
+    exportBlocks: params.includeExportBlocks
+      ? {
+          regulatoryDisclosure: regulatoryDisclosure(),
+          investorPack: investorPack(),
+        }
+      : undefined,
   };
 }
