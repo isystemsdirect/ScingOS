@@ -1,10 +1,13 @@
 export type QuantityKind =
   | 'length'
+  | 'angle'
   | 'temperature'
+  | 'voltage'
   | 'mass'
   | 'percent'
   | 'ratio'
   | 'count'
+  | 'bool'
   | 'unknown';
 
 export type UnitId =
@@ -13,16 +16,19 @@ export type UnitId =
   | 'mm'
   | 'in'
   | 'ft'
+  | 'deg'
   | 'C'
   | 'F'
   | 'K'
+  | 'v'
   | 'kg'
   | 'g'
   | 'lb'
   | 'pct'
   | '%'
   | '1'
-  | 'count';
+  | 'count'
+  | 'bool';
 
 const UNIT_KIND: Record<UnitId, QuantityKind> = {
   m: 'length',
@@ -30,10 +36,13 @@ const UNIT_KIND: Record<UnitId, QuantityKind> = {
   mm: 'length',
   in: 'length',
   ft: 'length',
+  deg: 'angle',
 
   C: 'temperature',
   F: 'temperature',
   K: 'temperature',
+
+  v: 'voltage',
 
   kg: 'mass',
   g: 'mass',
@@ -43,6 +52,7 @@ const UNIT_KIND: Record<UnitId, QuantityKind> = {
   '%': 'percent',
   '1': 'ratio',
   count: 'count',
+  bool: 'bool',
 };
 
 export function isKnownUnit(unit: string): unit is UnitId {

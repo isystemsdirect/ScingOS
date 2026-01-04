@@ -40,5 +40,64 @@ export function runEcho(params: { input: LariEngineInput; domainKey?: string }):
     }
   }
 
+  if (domain.domainKey === 'roofing') {
+    // Safe-access slope limit (future-tunable): flag steep roofs deterministically.
+    const SAFE_ACCESS_SLOPE_DEG = 45;
+    const slope = params.input.measurements.find((x) => x.name === 'roof_slope');
+    if (slope && slope.value.unit === 'deg') {
+      const a = detectThreshold({
+        measurement: {
+          measurementId: slope.measurementId,
+          name: slope.name,
+          value: slope.value.value,
+          unit: String(slope.value.unit),
+        },
+        limit: SAFE_ACCESS_SLOPE_DEG,
+        comparator: '>=',
+      });
+      if (a) out.push(a);
+    }
+  }
+
+  if (domain.domainKey === 'electrical') {
+    // Voltage out of range thresholds (deterministic; config later).
+    const v = params.input.measurements.find((x) => x.name === 'line_voltage');
+    if (v && v.value.unit === 'v') {
+      const value = v.value.value;
+      if (Number.isFinite(value) && (value < 110 || value > 125)) {
+        const a = detectThreshold({
+          measurement: {
+            measurementId: v.measurementId,
+            name: v.name,
+            value,
+            unit: String(v.value.unit),
+          },
+          limit: value < 110 ? 110 : 125,
+          comparator: value < 110 ? '<' : '>',
+        });
+        if (a) out.push(a);
+      }
+    }
+
+    // Boolean-like measurements: 1 = pass, 0 = fail.
+    const gfci = params.input.measurements.find((x) => x.name === 'gfci_trip_test');
+    if (gfci && gfci.value.unit === 'bool') {
+      const pass = gfci.value.value;
+      if (Number.isFinite(pass) && pass <= 0) {
+        const a = detectThreshold({
+          measurement: {
+            measurementId: gfci.measurementId,
+            name: gfci.name,
+            value: gfci.value.value,
+            unit: String(gfci.value.unit),
+          },
+          limit: 0,
+          comparator: '<=',
+        });
+        if (a) out.push(a);
+      }
+    }
+  }
+
   return out;
 }

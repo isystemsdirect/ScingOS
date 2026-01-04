@@ -1,0 +1,9 @@
+{
+  "engineId": "LARI-VISION",
+  "findings": [
+    {
+      "severity": "moderate",
+      "evidence": [{ "kind": "artifact", "refId": "a_damage" }]
+    }
+  ]
+}

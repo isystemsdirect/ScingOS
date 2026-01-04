@@ -1,0 +1,6 @@
+{
+  "engineId": "LARI-VISION",
+  "inspectionId": "I-ROOF-001",
+  "artifactIds": ["a_overview", "a_damage"],
+  "domainKey": "roofing"
+}
