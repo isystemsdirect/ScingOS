@@ -8,6 +8,7 @@ import { ScingProvider } from '../src/scing/ScingProvider';
 import { LariBusProvider } from '../src/lariBus/LariBusProvider';
 import { GlobalErrorCapture, ObsProvider } from '../src/obs';
 import { DeviceBoot } from '../src/devices';
+import { initAvatarIntentWiring } from '@rtsf/avatar/wireAvatarIntents';
 
 export default function App({ Component, pageProps }: AppProps) {
   const setUser = useAuthStore((state) => state.setUser);
@@ -18,6 +19,10 @@ export default function App({ Component, pageProps }: AppProps) {
     const unsubscribe = onAuthStateChanged(auth, (user) => setUser(user));
     return () => unsubscribe();
   }, [setUser]);
+
+  useEffect(() => {
+    initAvatarIntentWiring();
+  }, []);
 
   return (
     <ScingProvider>

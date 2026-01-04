@@ -1,12 +1,35 @@
 import Link from 'next/link';
 import { useAuthStore } from '../../lib/store/authStore';
+import { useEffect } from 'react';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../lib/firebase';
 import { useVoiceMvp } from '../../src/voice/client/useVoiceMvp';
+import { subscribeAvatarIntents } from '@rtsf/avatar/intentBridge';
 
 export function Navbar() {
   const { user } = useAuthStore();
   const voice = useVoiceMvp();
+
+  useEffect(() => {
+    const unsub = subscribeAvatarIntents((intent) => {
+      if (!voice.enabled) return;
+
+      if (intent.type === 'voice_ptt_start') {
+        // Barge-in: if any browser speech is active, cancel immediately.
+        try {
+          (window as any).speechSynthesis?.cancel?.();
+        } catch {
+          // ignore
+        }
+        voice.pttDown();
+      }
+
+      if (intent.type === 'voice_ptt_stop') {
+        voice.pttUp();
+      }
+    });
+    return () => unsub();
+  }, [voice]);
 
   const handleSignOut = async () => {
     try {
