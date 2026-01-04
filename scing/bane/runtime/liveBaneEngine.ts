@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 
-import type { BaneInput, BaneOutput, BaneRuntimeConfig } from '../types';
+import type { BaneInput, BaneOutput } from '../types';
+import type { BaneRuntimeConfig } from './config';
 import { policyForProfile } from '../policy/banePolicy';
 import { baselineDetectors } from '../core/detectors.baseline';
 import { runDetectors } from '../core/detectors';

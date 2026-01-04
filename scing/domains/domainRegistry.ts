@@ -10,6 +10,8 @@ export const DOMAIN_REGISTRY = {
   plumbing: PLUMBING_DOMAIN_V1,
 } as const;
 
+export type DomainDefinition = (typeof DOMAIN_REGISTRY)[keyof typeof DOMAIN_REGISTRY];
+
 export function getDomain(domainKey: string) {
-  return (DOMAIN_REGISTRY as any)[domainKey] ?? null;
+  return (DOMAIN_REGISTRY as Record<string, DomainDefinition>)[domainKey] ?? null;
 }

@@ -1,4 +1,5 @@
-import type { BaneRuntimeConfig, BaneInput } from '../types';
+import type { BaneInput } from '../types';
+import type { BaneRuntimeConfig } from '../runtime/config';
 import { createLiveBaneEngine } from '../runtime/liveBaneEngine';
 
 export type BaneHttpRequest = {

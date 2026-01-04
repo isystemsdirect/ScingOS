@@ -1,7 +1,9 @@
-import type { BaneInput, BaneOutput, BaneRuntimeConfig } from '../types';
+import type { BaneInput, BaneOutput } from '../types';
+import type { BaneRuntimeConfig } from './config';
 import { policyForProfile } from '../policy/banePolicy';
 import { isLocked } from './riskLedger';
 import { checkIntegrity } from './integrity';
+import { isGlobalLockdown } from './containment';
 
 function deny(params: {
   traceId: string;
@@ -34,6 +36,27 @@ function deny(params: {
 
 export function banePreflight(config: BaneRuntimeConfig, input: BaneInput, traceId: string, t0: number): BaneOutput | null {
   const hints = policyForProfile(config.profileId);
+  const lockdown = isGlobalLockdown();
+  if (lockdown.active) {
+    return {
+      verdict: 'deny',
+      severity: 'critical',
+      enforcementLevel: 5,
+      publicMessage: 'System temporarily unavailable due to a security event.',
+      findings: [
+        {
+          id: 'GLOBAL_LOCKDOWN',
+          title: 'Global containment active',
+          severity: 'critical',
+          verdict: 'deny',
+          rationale: 'Emergency containment mode is active.',
+          tags: ['containment', 'global', 'preflight'],
+        },
+      ],
+      traceId,
+      timingMs: Date.now() - t0,
+    };
+  }
   const auth = input.req?.auth;
   const requiredCapability = input.req?.requiredCapability;
 

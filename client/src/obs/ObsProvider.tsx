@@ -7,7 +7,9 @@ import { getFunctions, httpsCallable } from 'firebase/functions';
 import app from '../../lib/firebase';
 
 export const ObsContext = createContext<{
-  emit: (evt: Omit<ObsEvent, 'eventId' | 'createdAt'> & { error?: any }) => void;
+  emit: (
+    evt: Omit<ObsEvent, 'eventId' | 'createdAt' | 'correlationId'> & { correlationId?: string; error?: any }
+  ) => void;
   flush: () => Promise<{ ok: boolean; flushed: number }>;
 }>({ emit: () => {}, flush: async () => ({ ok: true, flushed: 0 }) });
 

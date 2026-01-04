@@ -8,8 +8,11 @@ export * from './baneApi';
 
 // CB-2/3/4 runtime foundation
 export * from './types';
+export * from './runtime/config';
 export * from './policy/banePolicy';
+export * from './policy/profiles';
 export * from './runtime/liveBaneEngine';
+export * from './runtime/containment';
 export * from './integrations/httpMiddleware';
 export * from './integrations/toolGuard';
 

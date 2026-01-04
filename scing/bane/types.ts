@@ -54,8 +54,3 @@ export type BaneOutput = {
     | { action: 'delay'; delayMs: number }
     | { action: 'block'; retryAfterMs: number };
 };
-
-export type BaneRuntimeConfig = {
-  profileId: 'bane_fog_v1' | string;
-  store?: import('./storage/baneStore').BaneStore;
-};

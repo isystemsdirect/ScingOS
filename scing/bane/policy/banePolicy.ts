@@ -1,3 +1,5 @@
+import { BANE_POLICY_PROFILES } from './profiles';
+
 export type PolicyHints = {
   strictMode: boolean;
   defaultVerdict: 'deny' | 'allow';
@@ -8,23 +10,15 @@ export type PolicyHints = {
 };
 
 export function policyForProfile(profileId: string): PolicyHints {
-  if (profileId === 'bane_fog_v1') {
-    return {
-      strictMode: true,
-      defaultVerdict: 'deny',
-      escalationEnabled: true,
-      quarantineOnDeny: true,
-      lockoutOnRepeat: true,
-      incidentOnCritical: true,
-    };
-  }
-
+  const id = profileId?.trim() || 'bane_fog_v1';
+  const profile = BANE_POLICY_PROFILES[id] ?? BANE_POLICY_PROFILES['bane_fog_v1'];
+  const d = profile.defaults;
   return {
-    strictMode: false,
-    defaultVerdict: 'allow',
-    escalationEnabled: false,
-    quarantineOnDeny: false,
-    lockoutOnRepeat: false,
-    incidentOnCritical: false,
+    strictMode: d.strictMode,
+    defaultVerdict: d.defaultVerdict === 'deny' ? 'deny' : 'allow',
+    escalationEnabled: d.escalationEnabled,
+    quarantineOnDeny: d.quarantineOnDeny,
+    lockoutOnRepeat: d.lockoutOnRepeat,
+    incidentOnCritical: d.incidentOnCritical,
   };
 }

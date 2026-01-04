@@ -1,4 +1,5 @@
-import type { BaneInput, BaneOutput, BaneRuntimeConfig } from '../types';
+import type { BaneInput, BaneOutput } from '../types';
+import type { BaneRuntimeConfig } from './config';
 import { toAuditRecord } from '../storage/toAuditRecord';
 
 export function safeSideEffects(config: BaneRuntimeConfig, input: BaneInput, out: BaneOutput) {
