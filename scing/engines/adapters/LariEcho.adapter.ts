@@ -3,6 +3,7 @@ import type { LariEngineOutput, LariFinding } from '../../lari/contracts/lariOut
 import { validateLariInput } from '../../lari/contracts/validateLariInput';
 import { runEcho } from '../../lari/echo/runEcho';
 import { emitEngineOutput } from '../../lari/runtime/emitEngineOutput';
+import { getSensorProviderById } from '../../sensors/sensorRegistry';
 
 function mapSeverity(type: string): LariFinding['severity'] {
   if (type === 'threshold_exceeded') return 'moderate';
@@ -25,6 +26,23 @@ export async function handle(params: {
     return { blocked: true, reason: 'INPUT_SCHEMA_VIOLATION', errors: vi.errors };
   }
 
+  // CB-15: sensor capture references must map to a declared provider.
+  const engineWarnings: string[] = [];
+  const sensorErrors: string[] = [];
+  for (const s of i.sensorCaptures ?? []) {
+    const p = getSensorProviderById(s.providerId);
+    if (!p) {
+      sensorErrors.push(`SENSOR_PROVIDER_UNKNOWN:${s.providerId}`);
+      continue;
+    }
+    const info = p.info();
+    if (info.status === 'stub') engineWarnings.push(`SENSOR_STUB_USED:${info.providerId}`);
+  }
+  if (sensorErrors.length) {
+    sensorErrors.sort();
+    return { blocked: true, reason: 'INPUT_SCHEMA_VIOLATION', errors: sensorErrors };
+  }
+
   const anomalies = runEcho({ input: i, domainKey: params.fields.domainKey });
 
   const output: LariEngineOutput = {
@@ -41,7 +59,7 @@ export async function handle(params: {
     })),
     assumptions: ['Echo flags indicators only; it does not assert cause.'],
     limitations: ['Echo operates on structured measurements, artifacts metadata, and stored snapshots only.'],
-    engineWarnings: [],
+    engineWarnings,
     schemaVersion: '1.0.0',
   };
 

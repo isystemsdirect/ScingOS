@@ -23,6 +23,10 @@ export function validateLariInput(
   if (!Array.isArray(i.measurements)) errors.push('MEASUREMENTS_NOT_ARRAY');
   if (!Array.isArray(i.fieldInputs)) errors.push('FIELDINPUTS_NOT_ARRAY');
 
+  if (i.sensorCaptures !== undefined && !Array.isArray(i.sensorCaptures)) {
+    errors.push('SENSORCAPTURES_NOT_ARRAY');
+  }
+
   const artifactIds = new Set<string>();
   for (const [idx, a] of (i.artifacts ?? []).entries()) {
     if (!isNonEmptyString(a.artifactId)) errors.push(`ARTIFACT_${idx}_MISSING_ID`);
@@ -102,6 +106,15 @@ export function validateLariInput(
     if (!Array.isArray(f.evidence) || f.evidence.length === 0) {
       errors.push(`FIELD_${idx}_NO_EVIDENCE`);
     }
+  }
+
+  for (const [idx, s] of ((i.sensorCaptures ?? []) as any[]).entries()) {
+    if (!s || typeof s !== 'object') {
+      errors.push(`SENSORCAPTURE_${idx}_INVALID`);
+      continue;
+    }
+    if (!isNonEmptyString((s as any).providerId)) errors.push(`SENSORCAPTURE_${idx}_MISSING_PROVIDER`);
+    if (!isNonEmptyString((s as any).captureId)) errors.push(`SENSORCAPTURE_${idx}_MISSING_CAPTURE`);
   }
 
   return errors.length ? { ok: false, errors } : { ok: true };

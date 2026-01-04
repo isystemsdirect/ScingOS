@@ -53,6 +53,11 @@ export type LariEngineInput = {
   measurements: LariInputMeasurement[];
   fieldInputs: LariFieldInput[];
 
+  sensorCaptures?: {
+    providerId: string;
+    captureId: string;
+  }[];
+
   assumptions?: string[];
   constraints?: {
     preferredUnits?: UnitId[];

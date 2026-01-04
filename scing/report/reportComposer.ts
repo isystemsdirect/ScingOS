@@ -12,6 +12,7 @@ import { prismGraphSection } from './templates/prismGraphSection';
 import { getDomain } from '../domains/domainRegistry';
 import { domainAppendixBlock } from './templates/domainAppendix';
 import { stableJsonDeep, stableSort, stableSeverityRank } from './reportDeterminism';
+import { lariSealBlock } from './seals/lariSeal';
 
 export type ReportBlock = { section: string; title: string; content: unknown };
 
@@ -73,7 +74,7 @@ function deterministicReportId(params: {
   const payload = {
     composer: {
       // Bump this any time report content schema changes.
-      format: 'deterministic_report_with_prism_v1',
+      format: 'deterministic_report_with_prism_v2',
     },
     domain: domain
       ? {
@@ -292,7 +293,12 @@ export function composeDeterministicReport(params: {
     }
     if (sec === 'appendix') {
       if (domain) {
-        sections.push(domainAppendixBlock({ domain }) as any);
+        sections.push(
+          domainAppendixBlock({
+            domain,
+            sensorCaptures: params.inspection.sensorCaptures,
+          }) as any
+        );
         if (domain.reportRequirements?.includeDisclaimer && domain.reportRequirements?.disclaimerText) {
           sections.push({
             section: 'disclaimer',
@@ -319,6 +325,9 @@ export function composeDeterministicReport(params: {
       });
     }
   }
+
+  const seal = lariSealBlock(inspection.updatedAt);
+  if (seal) sections.push(seal as any);
 
   const reportId = deterministicReportId({
     inspection: params.inspection,

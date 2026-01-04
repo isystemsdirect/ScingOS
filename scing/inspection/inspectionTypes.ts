@@ -49,6 +49,12 @@ export type InspectionRecord = {
 
   // report pointers
   currentReportId?: string;
+
+  // Optional references to sensor captures used during inspection.
+  sensorCaptures?: {
+    providerId: string;
+    captureId: string;
+  }[];
 };
 
 export type FinalizeDecision =
