@@ -11,6 +11,10 @@ export type InspectionRecord = {
   inspectionId: string;
   orgId: string;
 
+  // Domain pack binding (immutable once created)
+  domainKey?: string;
+  domainVersion?: string;
+
   title: string;
   description?: string;
 

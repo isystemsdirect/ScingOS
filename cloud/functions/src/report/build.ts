@@ -1,6 +1,6 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { composeDeterministicReport } from '../../../../scing/report/reportComposer';
+import { composeDeterministicReport, EvidenceLinkError } from '../../../../scing/report/reportComposer';
 import type {
   ArtifactRecord,
   FindingRecord,
@@ -33,13 +33,23 @@ export const buildInspectionReport = functions.https.onCall(async (data, ctx) =>
   const classifications = clsSnap.docs.map((d) => d.data() as ClassificationRecord);
   const mapLayers = mapSnap.docs.map((d) => d.data() as MapLayerRecord);
 
-  const report = composeDeterministicReport({
-    inspection,
-    artifacts,
-    findings,
-    classifications,
-    mapLayers,
-  });
+  let report;
+  try {
+    report = composeDeterministicReport({
+      inspection,
+      artifacts,
+      findings,
+      classifications,
+      mapLayers,
+    });
+  } catch (err) {
+    if (err instanceof EvidenceLinkError) {
+      throw new functions.https.HttpsError('failed-precondition', 'EVIDENCE_LINK_MISSING', {
+        missing: err.missing,
+      });
+    }
+    throw err;
+  }
 
   const reportId = report.reportId;
   await db.doc(`inspections/${inspectionId}/reportBlocks/${reportId}`).set(report, { merge: false });

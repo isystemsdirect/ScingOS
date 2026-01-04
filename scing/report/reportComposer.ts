@@ -7,6 +7,10 @@ import type {
 } from '../evidence';
 import { sha256Hex } from '../evidence/evidenceHash';
 import { DEFAULT_SECTIONS, SECTION_TITLES } from './templates/defaultTemplate';
+import { buildPrismGraph } from '../lari/prism/buildPrismGraph';
+import { prismGraphSection } from './templates/prismGraphSection';
+import { getDomain } from '../domains/domainRegistry';
+import { domainAppendixBlock } from './templates/domainAppendix';
 import { stableJsonDeep, stableSort, stableSeverityRank } from './reportDeterminism';
 
 export type ReportBlock = { section: string; title: string; content: unknown };
@@ -21,6 +25,41 @@ export type ComposedReport = {
   evidenceRefs: string[]; // artifactIds
 };
 
+export class EvidenceLinkError extends Error {
+  public readonly missing: string[];
+  constructor(missing: string[]) {
+    super(`EVIDENCE_LINK_MISSING_${missing.length}`);
+    this.name = 'EvidenceLinkError';
+    this.missing = missing;
+  }
+}
+
+function assertEvidenceLinks(params: {
+  artifacts: ArtifactRecord[];
+  findings: FindingRecord[];
+  classifications: ClassificationRecord[];
+  mapLayers: MapLayerRecord[];
+}): void {
+  const known = new Set(params.artifacts.map((a) => a.artifactId));
+  const missing: string[] = [];
+
+  const check = (owner: string, ids: string[]) => {
+    for (const id of ids) {
+      if (!known.has(id)) missing.push(`${owner}:${id}`);
+    }
+  };
+
+  for (const f of params.findings) check(`finding:${f.findingId}`, f.relatedArtifactIds ?? []);
+  for (const c of params.classifications)
+    check(`classification:${c.classificationId}`, c.relatedArtifactIds ?? []);
+  for (const m of params.mapLayers) check(`map:${m.layerId}`, m.relatedArtifactIds ?? []);
+
+  if (missing.length) {
+    missing.sort();
+    throw new EvidenceLinkError(missing);
+  }
+}
+
 function deterministicReportId(params: {
   inspection: InspectionRecord;
   artifacts: ArtifactRecord[];
@@ -29,7 +68,19 @@ function deterministicReportId(params: {
   mapLayers: MapLayerRecord[];
 }): string {
   // Canon: report output must be deterministic for the same state.
+  const domain = params.inspection.domainKey ? getDomain(params.inspection.domainKey) : null;
+
   const payload = {
+    composer: {
+      // Bump this any time report content schema changes.
+      format: 'deterministic_report_with_prism_v1',
+    },
+    domain: domain
+      ? {
+          domainKey: domain.domainKey,
+          version: domain.version,
+        }
+      : null,
     inspection: {
       inspectionId: params.inspection.inspectionId,
       orgId: params.inspection.orgId,
@@ -109,6 +160,7 @@ export function composeDeterministicReport(params: {
   mapLayers: MapLayerRecord[];
 }): ComposedReport {
   const inspection = params.inspection;
+  const domain = inspection.domainKey ? getDomain(inspection.domainKey) : null;
   const artifacts = stableSort(params.artifacts, (a) => `${a.createdAt}|${a.artifactId}`);
   const findings = [...params.findings].sort((a, b) => {
     const ra = stableSeverityRank(a.severity);
@@ -123,6 +175,11 @@ export function composeDeterministicReport(params: {
     (c) => `${c.createdAt}|${c.classificationId}`
   );
   const mapLayers = stableSort(params.mapLayers ?? [], (m) => `${m.createdAt}|${m.layerId}`);
+
+  // Enforce evidence-link integrity before composing.
+  assertEvidenceLinks({ artifacts, findings, classifications, mapLayers });
+
+  const prism = buildPrismGraph({ artifacts, findings, classifications });
 
   const sections: ReportBlock[] = [];
   for (const sec of DEFAULT_SECTIONS) {
@@ -200,6 +257,13 @@ export function composeDeterministicReport(params: {
         })),
       });
     }
+    if (sec === 'prism_graph') {
+      sections.push({
+        section: sec,
+        title: SECTION_TITLES[sec],
+        content: prismGraphSection(prism),
+      });
+    }
     if (sec === 'classifications') {
       sections.push({
         section: sec,
@@ -227,6 +291,20 @@ export function composeDeterministicReport(params: {
       });
     }
     if (sec === 'appendix') {
+      if (domain) {
+        sections.push(domainAppendixBlock({ domain }) as any);
+        if (domain.reportRequirements?.includeDisclaimer && domain.reportRequirements?.disclaimerText) {
+          sections.push({
+            section: 'disclaimer',
+            title: 'Disclaimer',
+            content: {
+              text: domain.reportRequirements.disclaimerText,
+              domainKey: domain.domainKey,
+              domainVersion: domain.version,
+            },
+          });
+        }
+      }
       sections.push({
         section: sec,
         title: SECTION_TITLES[sec],

@@ -9,7 +9,7 @@ export const createInspection = functions.https.onCall(async (data, ctx) => {
   const uid = ctx.auth?.uid;
   if (!uid) throw new functions.https.HttpsError('unauthenticated', 'NO_AUTH');
 
-  const { orgId, title, description, location, addressText } = data ?? {};
+  const { orgId, title, description, location, addressText, domainKey, domainVersion } = data ?? {};
   if (!orgId || !title) throw new functions.https.HttpsError('invalid-argument', 'Missing fields');
 
   const db = admin.firestore();
@@ -19,6 +19,8 @@ export const createInspection = functions.https.onCall(async (data, ctx) => {
   const record = {
     inspectionId,
     orgId,
+    domainKey: domainKey ?? 'moisture_mold',
+    domainVersion: domainVersion ?? '1.0.0',
     title,
     description: description ?? null,
     createdAt: ts,

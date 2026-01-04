@@ -4,6 +4,7 @@ export type ReportSection =
   | 'site'
   | 'evidence_summary'
   | 'findings'
+  | 'prism_graph'
   | 'classifications'
   | 'maps'
   | 'appendix';
