@@ -31,6 +31,8 @@ New to ScingOS? Start here:
 - **[SRT Avatar State Taxonomy](SRT-AVATAR-STATE-TAXONOMY.md)** - Canonical states, truth mapping, and transition legality
 - **[Failover & Degradation Rules](FAILOVER-DEGRADATION-CANON.md)** - Safe-authority behavior and disclosure rules
 - **[Embodiment Modes](EMBODIMENT-MODES-CANON.md)** - NEURAL-ONLY / SRT-ONLY / HYBRID constraints and transitions
+- **[Scing Embodiment Positioning](SCING-EMBODIMENT-POSITIONING-CANON.md)** - Executive/investor narrative; not an assistant/tool
+- **[SCB Line Closure](SCB-LINE-CLOSURE.md)** - SCB workstream closure directive and governance
 - **[SCINGULAR Ecosystem](SCINGULAR-ECOSYSTEM.md)** - Platform overview
 - **[Roadmap](ROADMAP.md)** - Product timeline and milestones
 - **[UX Guidelines](UX-GUIDELINES.md)** - User experience principles

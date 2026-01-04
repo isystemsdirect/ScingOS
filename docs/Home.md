@@ -40,6 +40,8 @@ This wiki serves as the comprehensive documentation hub for ScingOS and the SCIN
 - [SRT Avatar State Taxonomy (Immutable Canon)](SRT-AVATAR-STATE-TAXONOMY.md) - Canonical avatar states, truth mapping, and transition legality
 - [Failover & Degradation Rules (Immutable Canon)](FAILOVER-DEGRADATION-CANON.md) - Safe-authority behavior and disclosure rules
 - [Embodiment Modes (Immutable Canon)](EMBODIMENT-MODES-CANON.md) - NEURAL-ONLY / SRT-ONLY / HYBRID constraints and transitions
+- [Scing Embodiment Positioning (Immutable Canon)](SCING-EMBODIMENT-POSITIONING-CANON.md) - Executive/investor narrative; not an assistant/tool
+- [SCB Line Closure](SCB-LINE-CLOSURE.md) - SCB workstream closure directive and governance
 - [AIP Protocol](AIP-PROTOCOL.md) - Communication protocol specification
 - [SCING Interface](SCING-INTERFACE.md) - Voice orchestrator design
 - [BANE Security](BANE-SECURITY.md) - Security governance framework
