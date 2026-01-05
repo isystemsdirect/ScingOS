@@ -1,0 +1,177 @@
+openapi: 3.0.3
+info:
+  title: Scing Emulator Service API
+  version: 0.1.0
+  description: |
+    Canonical localhost API contract for the ScingOS Win11 emulator stack.
+    This OpenAPI file is the source of truth for HTTP endpoints.
+servers:
+  - url: http://127.0.0.1:3333
+
+paths:
+  /health:
+    get:
+      summary: Health check
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+
+  /version:
+    get:
+      summary: Service version and SDK compatibility
+      responses:
+        '200':
+          description: Version payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionInfo'
+
+  /compat:
+    get:
+      summary: Compatibility matrix
+      responses:
+        '200':
+          description: Compatibility payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompatInfo'
+
+  /config:
+    get:
+      summary: Read service configuration
+      responses:
+        '200':
+          description: Current config
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    post:
+      summary: Write service configuration (token required)
+      parameters:
+        - in: header
+          name: X-Scing-Dev-Token
+          required: false
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Written
+        '401':
+          description: Unauthorized
+
+  /event:
+    post:
+      summary: Publish an event (broadcasts to WS/SSE)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '202':
+          description: Accepted
+
+  /sse/neural:
+    get:
+      summary: Neural stream via Server-Sent Events
+      responses:
+        '200':
+          description: text/event-stream
+          content:
+            text/event-stream:
+              schema:
+                type: string
+
+  /logs/tail:
+    get:
+      summary: Tail service logs (token required)
+      parameters:
+        - in: query
+          name: lines
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 5000
+        - in: header
+          name: X-Scing-Dev-Token
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+
+components:
+  schemas:
+    VersionInfo:
+      type: object
+      additionalProperties: false
+      required: [serviceVersion, sdkMin, sdkMax]
+      properties:
+        serviceVersion:
+          type: string
+        sdkMin:
+          type: string
+        sdkMax:
+          type: string
+        buildSha:
+          type: string
+          nullable: true
+        buildTime:
+          type: string
+          format: date-time
+          nullable: true
+
+    CompatInfo:
+      type: object
+      additionalProperties: false
+      required: [supportedClients]
+      properties:
+        supportedClients:
+          type: array
+          items:
+            $ref: '#/components/schemas/SupportedClient'
+        deprecatedAfter:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+
+    SupportedClient:
+      type: object
+      additionalProperties: false
+      required: [language, minVersion, maxVersion]
+      properties:
+        language:
+          type: string
+          enum: [ts, dotnet, shell]
+        minVersion:
+          type: string
+        maxVersion:
+          type: string

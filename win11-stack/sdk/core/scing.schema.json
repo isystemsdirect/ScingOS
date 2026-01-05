@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://scingos.local/schema/scing-envelope.json",
+  "title": "Scing Envelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "ts", "correlationId", "source", "type", "payload"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Envelope schema version (SemVer)."
+    },
+    "ts": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Event timestamp (ISO-8601)."
+    },
+    "correlationId": {
+      "type": "string",
+      "description": "Correlation ID for tracing across service/clients/plugins."
+    },
+    "source": {
+      "type": "string",
+      "description": "Source identifier (service/plugin/shell/client)."
+    },
+    "type": {
+      "type": "string",
+      "description": "Event type name.",
+      "examples": [
+        "neural.signal",
+        "avatar.state",
+        "bane.alert",
+        "lari.intent",
+        "srt.mood"
+      ]
+    },
+    "payload": {
+      "type": "object",
+      "description": "Event payload; shape depends on event type.",
+      "additionalProperties": true
+    },
+    "signature": {
+      "type": "string",
+      "description": "Reserved for future signed envelopes."
+    }
+  }
+}

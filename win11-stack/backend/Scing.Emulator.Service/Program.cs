@@ -6,6 +6,44 @@ using Serilog.Events;
 using Scing.Emulator.Service.Models;
 using Scing.Emulator.Service.Services;
 
+static (int major, int minor, int patch) ParseSemVer(string version)
+{
+  var parts = version.Split('.', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+  if (parts.Length < 3)
+  {
+    return (0, 0, 0);
+  }
+
+  _ = int.TryParse(parts[0], out var major);
+  _ = int.TryParse(parts[1], out var minor);
+  _ = int.TryParse(parts[2], out var patch);
+  return (major, minor, patch);
+}
+
+static string LoadServiceVersion(string contentRootPath)
+{
+  try
+  {
+    var path = Path.Combine(contentRootPath, "version.json");
+    if (!File.Exists(path))
+    {
+      return "0.0.0";
+    }
+
+    using var doc = JsonDocument.Parse(File.ReadAllText(path));
+    if (doc.RootElement.TryGetProperty("version", out var ver) && ver.ValueKind == JsonValueKind.String)
+    {
+      return ver.GetString() ?? "0.0.0";
+    }
+
+    return "0.0.0";
+  }
+  catch
+  {
+    return "0.0.0";
+  }
+}
+
 var builder = WebApplication.CreateBuilder(args);
 
 var bindHost = builder.Configuration["ScingEmulator:BindHost"] ?? "127.0.0.1";
@@ -81,6 +119,8 @@ app.UseCors();
 app.UseWebSockets();
 
 var startedAt = DateTimeOffset.UtcNow;
+var serviceVersion = LoadServiceVersion(app.Environment.ContentRootPath);
+var (svcMajor, svcMinor, _) = ParseSemVer(serviceVersion);
 
 app.MapGet("/health", () => Results.Ok(new
 {
@@ -89,6 +129,61 @@ app.MapGet("/health", () => Results.Ok(new
   bind = $"{bindHost}:{port}",
   uptimeSeconds = (long)(DateTimeOffset.UtcNow - startedAt).TotalSeconds
 }));
+
+app.MapGet("/version", () =>
+{
+  // Compatibility policy:
+  // - Service major must match SDK major
+  // - SDK minor must be <= service minor
+  // Here we expose an inclusive range for the SDK.
+  var sdkMin = $"{svcMajor}.0.0";
+  var sdkMax = $"{svcMajor}.{svcMinor}.999";
+
+  var buildSha = Environment.GetEnvironmentVariable("SCING_BUILD_SHA")
+    ?? Environment.GetEnvironmentVariable("GITHUB_SHA");
+
+  DateTimeOffset? buildTime = null;
+  var buildTimeRaw = Environment.GetEnvironmentVariable("SCING_BUILD_TIME")
+    ?? Environment.GetEnvironmentVariable("SOURCE_DATE_EPOCH");
+  if (!string.IsNullOrWhiteSpace(buildTimeRaw))
+  {
+    if (long.TryParse(buildTimeRaw, out var epochSeconds))
+    {
+      buildTime = DateTimeOffset.FromUnixTimeSeconds(epochSeconds);
+    }
+    else if (DateTimeOffset.TryParse(buildTimeRaw, out var parsed))
+    {
+      buildTime = parsed;
+    }
+  }
+
+  return Results.Ok(new
+  {
+    serviceVersion,
+    sdkMin,
+    sdkMax,
+    buildSha,
+    buildTime
+  });
+});
+
+app.MapGet("/compat", () =>
+{
+  var sdkMin = $"{svcMajor}.0.0";
+  var sdkMax = $"{svcMajor}.{svcMinor}.999";
+
+  return Results.Ok(new
+  {
+    supportedClients = new object[]
+    {
+      new { language = "ts", minVersion = sdkMin, maxVersion = sdkMax },
+      new { language = "dotnet", minVersion = sdkMin, maxVersion = sdkMax },
+      new { language = "shell", minVersion = sdkMin, maxVersion = sdkMax }
+    },
+    deprecatedAfter = (string?)null,
+    notes = "Default policy: Service major == SDK major; SDK minor <= service minor. Localhost-only default."
+  });
+});
 
 app.MapGet("/config", async (ConfigStore store, CancellationToken ct) =>
 {

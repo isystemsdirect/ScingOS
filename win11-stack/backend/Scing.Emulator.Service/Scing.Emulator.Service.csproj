@@ -13,4 +13,10 @@
     <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
     <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\sdk\core\version.json" Link="version.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\sdk\core\openapi.yaml" Link="openapi.yaml" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\sdk\core\scing.schema.json" Link="scing.schema.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
