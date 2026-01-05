@@ -3,6 +3,7 @@ import AppShell from "../components/layout/AppShell";
 import { CREATOR_STAMP } from "../lib/shared/provenance/creatorStamp";
 import { mapScingToSrt } from "../lib/shared/srt/mapScingToSrt";
 import { hslToCss } from "../lib/shared/srt/colorFlux.utils";
+import SRTFluxOrb from "../components/srt/SRTFluxOrb";
 import {
   ScingAffect,
   ScingPhase,
@@ -1055,6 +1056,15 @@ export default function BfiPage() {
                 <pre className="mt-2 max-h-72 overflow-auto rounded-lg bg-gray-50 border border-gray-200 p-3 text-xs">{JSON.stringify(srtControls, null, 2)}</pre>
               </div>
             </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl border border-gray-200 p-6">
+          <h2 className="text-lg font-semibold text-gray-900">SRT Avatar (Flux Orb)</h2>
+          <p className="mt-1 text-sm text-gray-600">Subscribes to the ScingSignals bus; emits live flux gradient + motion.</p>
+
+          <div className="mt-4 flex items-center justify-center">
+            <SRTFluxOrb size={240} />
           </div>
         </div>
 
