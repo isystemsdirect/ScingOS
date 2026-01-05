@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import AppShell from "../components/layout/AppShell";
+import { CREATOR_STAMP } from "../lib/shared/provenance/creatorStamp";
 
 function useOrigin() {
   return useMemo(() => {
@@ -39,6 +40,10 @@ export default function BfiPage() {
   const [execOut, setExecOut] = useState<any>(null);
   const [healthOut, setHealthOut] = useState<any>(null);
   const [insightsOut, setInsightsOut] = useState<any>(null);
+
+  const buildSha = process.env.NEXT_PUBLIC_BUILD_SHA || "unknown";
+  const buildBranch = process.env.NEXT_PUBLIC_BUILD_BRANCH || "unknown";
+  const buildTime = process.env.NEXT_PUBLIC_BUILD_TIME || "unknown";
 
   async function declareIntent() {
     setBusy(true);
@@ -381,6 +386,38 @@ export default function BfiPage() {
           ) : insightsOut ? (
             <pre className="mt-4 max-h-72 overflow-auto rounded-lg bg-gray-50 border border-gray-200 p-3 text-xs">{JSON.stringify(insightsOut, null, 2)}</pre>
           ) : null}
+        </div>
+
+        <div className="bg-white rounded-xl border border-gray-200 p-6">
+          <h2 className="text-lg font-semibold text-gray-900">About / Provenance</h2>
+          <p className="mt-1 text-sm text-gray-600">Deterministic creator stamp + build metadata.</p>
+
+          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-gray-200 bg-gray-50 p-3">
+              <div className="text-xs text-gray-500">Creator</div>
+              <div className="text-sm font-semibold text-gray-900">{CREATOR_STAMP.creatorName}</div>
+              <div className="mt-1 text-xs text-gray-700">
+                {CREATOR_STAMP.product} / {CREATOR_STAMP.system}
+              </div>
+            </div>
+
+            <div className="rounded-lg border border-gray-200 bg-gray-50 p-3">
+              <div className="text-xs text-gray-500">Copyright Holder</div>
+              <div className="text-sm font-semibold text-gray-900">{CREATOR_STAMP.copyrightHolder}</div>
+              <div className="mt-1 text-xs text-gray-700">{CREATOR_STAMP.statement}</div>
+            </div>
+          </div>
+
+          <div className="mt-4 rounded-lg border border-gray-200 bg-white p-3">
+            <div className="text-sm font-medium text-gray-900">Build</div>
+            <div className="mt-1 text-xs text-gray-700 font-mono">sha: {buildSha}</div>
+            <div className="mt-1 text-xs text-gray-700 font-mono">branch: {buildBranch}</div>
+            <div className="mt-1 text-xs text-gray-700 font-mono">time: {buildTime}</div>
+
+            <div className="mt-3 text-xs text-gray-600">
+              APIs: <span className="font-mono">/api/meta/creator</span>, <span className="font-mono">/api/meta/provenance</span>, <span className="font-mono">/api/meta/build</span>
+            </div>
+          </div>
         </div>
       </div>
     </AppShell>
