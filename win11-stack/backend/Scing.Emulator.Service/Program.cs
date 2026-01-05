@@ -20,27 +20,24 @@ static (int major, int minor, int patch) ParseSemVer(string version)
   return (major, minor, patch);
 }
 
-static string LoadServiceVersion(string contentRootPath)
+static JsonElement LoadVersionManifest(string contentRootPath)
 {
   try
   {
     var path = Path.Combine(contentRootPath, "version.json");
     if (!File.Exists(path))
     {
-      return "0.0.0";
+      using var empty = JsonDocument.Parse("{}");
+      return empty.RootElement.Clone();
     }
 
     using var doc = JsonDocument.Parse(File.ReadAllText(path));
-    if (doc.RootElement.TryGetProperty("version", out var ver) && ver.ValueKind == JsonValueKind.String)
-    {
-      return ver.GetString() ?? "0.0.0";
-    }
-
-    return "0.0.0";
+    return doc.RootElement.Clone();
   }
   catch
   {
-    return "0.0.0";
+    using var empty = JsonDocument.Parse("{}");
+    return empty.RootElement.Clone();
   }
 }
 
@@ -119,26 +116,27 @@ app.UseCors();
 app.UseWebSockets();
 
 var startedAt = DateTimeOffset.UtcNow;
-var serviceVersion = LoadServiceVersion(app.Environment.ContentRootPath);
+var versionManifest = LoadVersionManifest(app.Environment.ContentRootPath);
+var serviceVersion = versionManifest.TryGetProperty("version", out var v) && v.ValueKind == JsonValueKind.String
+  ? (v.GetString() ?? "0.0.0")
+  : "0.0.0";
+var sdkMin = versionManifest.TryGetProperty("sdkMin", out var sMin) && sMin.ValueKind == JsonValueKind.String
+  ? (sMin.GetString() ?? "0.0.0")
+  : "0.0.0";
+var sdkMax = versionManifest.TryGetProperty("sdkMax", out var sMax) && sMax.ValueKind == JsonValueKind.String
+  ? (sMax.GetString() ?? "0.0.0")
+  : "0.0.0";
 var (svcMajor, svcMinor, _) = ParseSemVer(serviceVersion);
 
 app.MapGet("/health", () => Results.Ok(new
 {
   status = "ok",
-  service = serviceName,
-  bind = $"{bindHost}:{port}",
+  serviceName,
   uptimeSeconds = (long)(DateTimeOffset.UtcNow - startedAt).TotalSeconds
 }));
 
 app.MapGet("/version", () =>
 {
-  // Compatibility policy:
-  // - Service major must match SDK major
-  // - SDK minor must be <= service minor
-  // Here we expose an inclusive range for the SDK.
-  var sdkMin = $"{svcMajor}.0.0";
-  var sdkMax = $"{svcMajor}.{svcMinor}.999";
-
   var buildSha = Environment.GetEnvironmentVariable("SCING_BUILD_SHA")
     ?? Environment.GetEnvironmentVariable("GITHUB_SHA");
 
@@ -157,21 +155,17 @@ app.MapGet("/version", () =>
     }
   }
 
-  return Results.Ok(new
-  {
-    serviceVersion,
-    sdkMin,
-    sdkMax,
-    buildSha,
-    buildTime
-  });
+  // Contract: /version is read-only and backed by sdk/core/version.json (copied to output).
+  // We return the canonical manifest fields plus optional build metadata.
+  var dict = JsonSerializer.Deserialize<Dictionary<string, object?>>(versionManifest.GetRawText(), new JsonSerializerOptions(JsonSerializerDefaults.Web))
+    ?? new Dictionary<string, object?>();
+  dict["buildSha"] = buildSha;
+  dict["buildTime"] = buildTime;
+  return Results.Ok(dict);
 });
 
 app.MapGet("/compat", () =>
 {
-  var sdkMin = $"{svcMajor}.0.0";
-  var sdkMax = $"{svcMajor}.{svcMinor}.999";
-
   return Results.Ok(new
   {
     supportedClients = new object[]
@@ -181,7 +175,7 @@ app.MapGet("/compat", () =>
       new { language = "shell", minVersion = sdkMin, maxVersion = sdkMax }
     },
     deprecatedAfter = (string?)null,
-    notes = "Default policy: Service major == SDK major; SDK minor <= service minor. Localhost-only default."
+    notes = $"Default policy: Service major == SDK major; SDK minor <= service minor. Manifest-backed. Parsed service semver={svcMajor}.{svcMinor}.x"
   });
 });
 

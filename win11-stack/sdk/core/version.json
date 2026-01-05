@@ -1,8 +1,8 @@
 {
+  "product": "ScingOS",
+  "channel": "win11-emulator",
   "version": "0.1.0",
-  "policy": {
-    "semver": true,
-    "serviceMajorMustMatchSdkMajor": true,
-    "sdkMinorMustBeLessOrEqualServiceMinor": true
-  }
+  "sdkMin": "0.1.0",
+  "sdkMax": "0.1.x",
+  "buildPolicy": "semver"
 }

@@ -89,6 +89,17 @@ paths:
         '202':
           description: Accepted
 
+  /ws/neural:
+    get:
+      summary: Neural stream via WebSocket
+      description: |
+        WebSocket upgrade endpoint. This is described in OpenAPI for contract visibility,
+        but uses a 101 Switching Protocols upgrade at runtime.
+      x-websocket: true
+      responses:
+        '101':
+          description: Switching Protocols
+
   /sse/neural:
     get:
       summary: Neural stream via Server-Sent Events
@@ -131,13 +142,19 @@ components:
     VersionInfo:
       type: object
       additionalProperties: false
-      required: [serviceVersion, sdkMin, sdkMax]
+      required: [product, channel, version, sdkMin, sdkMax, buildPolicy]
       properties:
-        serviceVersion:
+        product:
+          type: string
+        channel:
+          type: string
+        version:
           type: string
         sdkMin:
           type: string
         sdkMax:
+          type: string
+        buildPolicy:
           type: string
         buildSha:
           type: string

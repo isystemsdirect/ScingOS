@@ -4,15 +4,14 @@
   "title": "Scing Envelope",
   "type": "object",
   "additionalProperties": false,
-  "required": ["version", "ts", "correlationId", "source", "type", "payload"],
+  "required": ["version", "timestamp", "correlationId", "source", "type", "payload"],
   "properties": {
     "version": {
       "type": "string",
       "description": "Envelope schema version (SemVer)."
     },
-    "ts": {
+    "timestamp": {
       "type": "string",
-      "format": "date-time",
       "description": "Event timestamp (ISO-8601)."
     },
     "correlationId": {
@@ -26,6 +25,7 @@
     "type": {
       "type": "string",
       "description": "Event type name.",
+      "pattern": "^(system|neural|avatar|srt|lari|bane)\\.[A-Za-z0-9][A-Za-z0-9._-]*$",
       "examples": [
         "neural.signal",
         "avatar.state",
