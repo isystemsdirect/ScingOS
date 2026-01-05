@@ -259,6 +259,15 @@ This enables the included hook:
 ```
 
 This setting is local-only by design and is not enforced globally.
+
+---
+
+## Canon Glossary Requirements
+
+- The canonical glossary lives at `docs/glossary/SCINGULAR_GLOSSARY.md`.
+- Any PR that introduces a new proprietary SCINGULAR term, acronym, engine name, protocol name, file format, or canon concept MUST add it to the glossary.
+- Do not redefine canon terms elsewhere in the repo or wiki; if a definition must change, update the glossary and align other docs to match it.
+- PRs that add or change canon terminology without updating the glossary should be rejected during review.
 - `fix`: Bug fix
 - `docs`: Documentation changes
 - `style`: Code style changes (formatting, no logic change)
