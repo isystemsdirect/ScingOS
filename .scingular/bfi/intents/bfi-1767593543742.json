@@ -1,0 +1,11 @@
+{
+  "id": "bfi-1767593543742",
+  "createdAt": "2026-01-05T06:12:23.742Z",
+  "author": "local",
+  "description": "IU-first delegated autonomy e2e verification: run bounded run_task (type-check + build)",
+  "scope": "infra",
+  "risk": "medium",
+  "expectedOutcome": "Type-check and build succeed",
+  "rollbackPlan": "No code changes; audit-only run",
+  "status": "simulated"
+}

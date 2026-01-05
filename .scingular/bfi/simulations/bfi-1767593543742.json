@@ -1,0 +1,59 @@
+{
+  "ts": "2026-01-05T06:12:24.063Z",
+  "intentId": "bfi-1767593543742",
+  "simulationHash": "aee3ea87c63fe137",
+  "output": {
+    "affectedFiles": [
+      "client/lib/server/bfi/execEngineScaffold.ts",
+      "client/lib/server/bfi/git.ts",
+      "client/lib/server/bfi/graph/systemGraph.ts",
+      "client/lib/server/bfi/hash.ts",
+      "client/lib/server/bfi/intentLedger.ts",
+      "client/lib/server/bfi/memory/cognitiveMemory.ts",
+      "client/lib/server/bfi/memory/patterns.ts",
+      "client/lib/server/bfi/policyLedger.ts",
+      "client/lib/server/bfi/reflectionLedger.ts",
+      "client/lib/server/bfi/registry/engine.types.ts",
+      "client/lib/server/bfi/registry/registryAnalyzer.ts",
+      "client/lib/server/bfi/registry.ts",
+      "client/lib/server/bfi/simulationLedger.ts",
+      "client/lib/server/bfi/simulator/confidence.ts",
+      "client/lib/server/bfi/simulator/impactMapper.ts",
+      "client/lib/server/bfi/simulator.ts",
+      "client/pages/api/bfi/execute.ts",
+      "client/pages/api/bfi/insights.ts",
+      "client/pages/api/bfi/intent/declare.ts",
+      "client/pages/api/bfi/plan.ts",
+      "client/pages/api/bfi/policy/evaluate.ts",
+      "client/pages/api/bfi/registry/health.ts",
+      "client/pages/api/bfi/simulate.ts",
+      "client/pages/api/bfi/_lib/hash.ts",
+      "client/pages/api/bfi/_lib/pipelineTypes.ts",
+      "client/pages/api/bfi/_lib/reflect.ts",
+      "client/pages/api/bfi/_lib/simulator.ts",
+      "client/pages/api/dev/_lib/requireDevKernel.ts",
+      "client/pages/api/dev/_lib/devKernel.ts",
+      "client/pages/api/dev/_lib/audit.ts"
+    ],
+    "affectedEngines": [],
+    "affectedPolicies": [],
+    "estimatedRisk": "medium",
+    "confidenceScore": 0.86,
+    "explanation": {
+      "graph": {
+        "fileCount": 370,
+        "commit": "aa9ee9cd747f5f1604e558ef63723f53726e88e7"
+      },
+      "classificationSummary": {
+        "direct": 27,
+        "indirect": 4,
+        "unknown": 0
+      },
+      "confidenceBreakdown": {
+        "graphCoverage": 1,
+        "unknownPenalty": 0,
+        "historical": 0.6
+      }
+    }
+  }
+}

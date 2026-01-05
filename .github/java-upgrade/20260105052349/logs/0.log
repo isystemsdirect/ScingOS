@@ -1,0 +1,27 @@
+2026-01-05T05:23:49.478Z [INFO] ----------------------invoke install_jdk----------------------
+2026-01-05T05:23:49.479Z [INFO] [Tool.invoke]({name: install_jdk, input: {
+  "version": "21",
+  "dest": "C:\\Users\\maste\\.jdk",
+  "projectPath": "c:\\Users\\maste\\SCINGOS_WORK\\ScingOS"
+}}).
+2026-01-05T05:23:49.479Z [INFO] [Task.start](): Starting task toolCall
+2026-01-05T05:23:49.480Z [INFO] [Task.start](): Started task toolCall
+2026-01-05T05:23:49.480Z [INFO] [Tool.invoke] validate GitHub Copilot license.
+2026-01-05T05:23:49.480Z [INFO] [Tool.invoke] do pre-invoke.
+2026-01-05T05:23:49.481Z [INFO] [Tool.invoke] do invoke.
+2026-01-05T05:26:18.100Z [INFO] [Tool.invoke]({result: {
+  "result": {
+    "name": "java",
+    "path": "C:\\Users\\maste\\.jdk\\jdk-21.0.8\\bin",
+    "version": "21.0.8"
+  },
+  "message": "JDK 21 is installed at C:\\Users\\maste\\.jdk\\jdk-21.0.8\\bin",
+  "telemetry": {
+    "tool": "JDK",
+    "version": "21"
+  }
+}}).
+2026-01-05T05:26:18.102Z [INFO] [Task.complete](): Completing task toolCall
+2026-01-05T05:26:18.105Z [INFO] [Task.complete](): Completed task toolCall
+2026-01-05T05:26:18.105Z [INFO] [Tool.invoke]({message: JDK 21 is installed at C:\Users\maste\.jdk\jdk-21.0.8\bin}).
+2026-01-05T05:26:18.105Z [INFO] ----------------------invoked install_jdk----------------------

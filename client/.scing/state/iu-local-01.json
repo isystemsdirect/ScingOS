@@ -1,0 +1,42 @@
+{
+  "phase": "co_aware",
+  "partnerId": "iu-local-01",
+  "imprintReadiness": {
+    "score": 0,
+    "samples": 0,
+    "gates": {
+      "minSamplesMet": false,
+      "minScoreMet": false
+    }
+  },
+  "delegation": {
+    "mode": "delegated",
+    "bestOutcomeDefaults": true,
+    "scope": {
+      "canRunDevTasks": true,
+      "canStartStopServices": true,
+      "canManageDeps": true,
+      "canCreatePRs": true,
+      "canEditCode": true,
+      "canApplyPatches": true,
+      "canRefactor": false,
+      "canTouchSecurityPolicy": false,
+      "canTouchAuthSecrets": false,
+      "allowedPaths": [
+        "client/**",
+        "tools/**",
+        "docs/**"
+      ],
+      "blockedPaths": [
+        "**/.env*",
+        "**/keys/**",
+        "**/secrets/**",
+        ".github/**"
+      ],
+      "maxAutoRisk": "low",
+      "requiresApprovalAbove": "low"
+    }
+  },
+  "declaredAt": "2026-01-05T06:01:43.968Z",
+  "transitionedAt": "2026-01-05T06:12:23.593Z"
+}

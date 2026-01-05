@@ -1,0 +1,1 @@
+{"version":3,"file":"systemClaims.js","sourceRoot":"","sources":["../../../../../scing/compliance/systemClaims.ts"],"names":[],"mappings":";;;AAAa,QAAA,aAAa,GAAG;IAC3B,MAAM,EAAE,yCAAyC;IACjD,kBAAkB,EAAE,CAAC,gCAAgC,EAAE,+BAA+B,CAAC;IACvF,UAAU,EAAE;QACV,yBAAyB;QACzB,uBAAuB;QACvB,sCAAsC;QACtC,gCAAgC;KACjC;IACD,iBAAiB,EAAE;QACjB,wCAAwC;QACxC,+BAA+B;QAC/B,yBAAyB;KAC1B;CACF,CAAC"}

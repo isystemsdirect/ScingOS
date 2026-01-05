@@ -1,0 +1,46 @@
+{
+  "ts": "2026-01-05T05:36:49.910Z",
+  "intentId": "bfi-1767591409807",
+  "simulationHash": "f5fdd68529b19847",
+  "output": {
+    "affectedFiles": [
+      "scing/engines/adapters/LariEcho.adapter.ts",
+      "scing/engines/adapters/LariVision.adapter.ts",
+      "scing/engines/lariEdl.ts",
+      "scing/lari/contracts/lariInput.schema.ts",
+      "scing/lari/contracts/lariOutput.schema.ts",
+      "scing/lari/contracts/validateLariInput.ts",
+      "scing/lari/echo/runEcho.ts",
+      "scing/lari/runtime/emitEngineOutput.ts",
+      "scing/sensors/sensorRegistry.ts",
+      "scing/domains/domainRegistry.ts",
+      "scing/engineRegistry.ts",
+      "scing/providers/modelRouter.ts",
+      "scingular.engine-registry.json"
+    ],
+    "affectedEngines": [
+      "lari-echo.adapter",
+      "lari-vision.adapter",
+      "lari-edl"
+    ],
+    "affectedPolicies": [],
+    "estimatedRisk": "medium",
+    "confidenceScore": 0.86,
+    "explanation": {
+      "graph": {
+        "fileCount": 370,
+        "commit": "aa9ee9cd747f5f1604e558ef63723f53726e88e7"
+      },
+      "classificationSummary": {
+        "direct": 3,
+        "indirect": 12,
+        "unknown": 0
+      },
+      "confidenceBreakdown": {
+        "graphCoverage": 1,
+        "unknownPenalty": 0,
+        "historical": 0.6
+      }
+    }
+  }
+}

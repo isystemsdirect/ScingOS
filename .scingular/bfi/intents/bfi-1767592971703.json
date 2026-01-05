@@ -1,0 +1,11 @@
+{
+  "id": "bfi-1767592971703",
+  "createdAt": "2026-01-05T06:02:51.703Z",
+  "author": "local",
+  "description": "Co-aware delegated autonomy smoke test 3: run_task should execute",
+  "scope": "engine",
+  "risk": "medium",
+  "expectedOutcome": "",
+  "rollbackPlan": "",
+  "status": "declared"
+}

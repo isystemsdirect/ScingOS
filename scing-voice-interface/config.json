@@ -1,0 +1,5 @@
+{
+  "stt_engine": "whisper",
+  "tts_engine": "elevenlabs",
+  "voice_profile": "default-soft-feminine"
+}

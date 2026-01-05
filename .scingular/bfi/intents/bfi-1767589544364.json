@@ -1,0 +1,11 @@
+{
+  "id": "bfi-1767589544364",
+  "createdAt": "2026-01-05T05:05:44.364Z",
+  "author": "local",
+  "description": "Refactor anomaly detection engine to improve correlation fidelity.",
+  "scope": "engine",
+  "risk": "medium",
+  "expectedOutcome": "",
+  "rollbackPlan": "",
+  "status": "simulated"
+}

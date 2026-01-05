@@ -1,0 +1,22 @@
+{
+  "/_error": "pages/_error.js",
+  "/_document": "pages/_document.js",
+  "/500": "pages/500.html",
+  "/404": "pages/404.html",
+  "/api/bfi/simulate": "pages/api/bfi/simulate.js",
+  "/api/dev/_lib/devKernel": "pages/api/dev/_lib/devKernel.js",
+  "/api/dev/_lib/requireDevKernel": "pages/api/dev/_lib/requireDevKernel.js",
+  "/api/scing/actions/execute": "pages/api/scing/actions/execute.js",
+  "/api/neural/poll": "pages/api/neural/poll.js",
+  "/api/scing/actions/propose": "pages/api/scing/actions/propose.js",
+  "/auth/signin": "pages/auth/signin.html",
+  "/api/scing/chat": "pages/api/scing/chat.js",
+  "/auth/signup": "pages/auth/signup.html",
+  "/bfi": "pages/bfi.html",
+  "/dashboard": "pages/dashboard.html",
+  "/": "pages/index.html",
+  "/sessions/[id]": "pages/sessions/[id].html",
+  "/sessions": "pages/sessions.html",
+  "/_app": "pages/_app.js",
+  "/api/neural/stream": "pages/api/neural/stream.js"
+}

@@ -1,0 +1,149 @@
+{
+  "version": 3,
+  "pages404": true,
+  "appType": "pages",
+  "caseSensitive": false,
+  "basePath": "",
+  "redirects": [
+    {
+      "source": "/:path+/",
+      "destination": "/:path+",
+      "internal": true,
+      "priority": true,
+      "statusCode": 308,
+      "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
+    }
+  ],
+  "headers": [],
+  "rewrites": {
+    "beforeFiles": [],
+    "afterFiles": [],
+    "fallback": []
+  },
+  "dynamicRoutes": [
+    {
+      "page": "/sessions/[id]",
+      "regex": "^/sessions/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/sessions/(?<nxtPid>[^/]+?)(?:/)?$"
+    }
+  ],
+  "staticRoutes": [
+    {
+      "page": "/",
+      "regex": "^/(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/(?:/)?$"
+    },
+    {
+      "page": "/404",
+      "regex": "^/404(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/404(?:/)?$"
+    },
+    {
+      "page": "/500",
+      "regex": "^/500(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/500(?:/)?$"
+    },
+    {
+      "page": "/api/bfi/simulate",
+      "regex": "^/api/bfi/simulate(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/bfi/simulate(?:/)?$"
+    },
+    {
+      "page": "/api/dev/_lib/devKernel",
+      "regex": "^/api/dev/_lib/devKernel(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/dev/_lib/devKernel(?:/)?$"
+    },
+    {
+      "page": "/api/dev/_lib/requireDevKernel",
+      "regex": "^/api/dev/_lib/requireDevKernel(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/dev/_lib/requireDevKernel(?:/)?$"
+    },
+    {
+      "page": "/api/neural/poll",
+      "regex": "^/api/neural/poll(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/neural/poll(?:/)?$"
+    },
+    {
+      "page": "/api/neural/stream",
+      "regex": "^/api/neural/stream(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/neural/stream(?:/)?$"
+    },
+    {
+      "page": "/api/scing/actions/execute",
+      "regex": "^/api/scing/actions/execute(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/scing/actions/execute(?:/)?$"
+    },
+    {
+      "page": "/api/scing/actions/propose",
+      "regex": "^/api/scing/actions/propose(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/scing/actions/propose(?:/)?$"
+    },
+    {
+      "page": "/api/scing/chat",
+      "regex": "^/api/scing/chat(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/scing/chat(?:/)?$"
+    },
+    {
+      "page": "/auth/signin",
+      "regex": "^/auth/signin(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/auth/signin(?:/)?$"
+    },
+    {
+      "page": "/auth/signup",
+      "regex": "^/auth/signup(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/auth/signup(?:/)?$"
+    },
+    {
+      "page": "/bfi",
+      "regex": "^/bfi(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/bfi(?:/)?$"
+    },
+    {
+      "page": "/dashboard",
+      "regex": "^/dashboard(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard(?:/)?$"
+    },
+    {
+      "page": "/sessions",
+      "regex": "^/sessions(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/sessions(?:/)?$"
+    }
+  ],
+  "dataRoutes": [],
+  "rsc": {
+    "header": "rsc",
+    "varyHeader": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "prefetchHeader": "next-router-prefetch",
+    "didPostponeHeader": "x-nextjs-postponed",
+    "contentTypeHeader": "text/x-component",
+    "suffix": ".rsc",
+    "prefetchSegmentHeader": "next-router-segment-prefetch",
+    "prefetchSegmentSuffix": ".segment.rsc",
+    "prefetchSegmentDirSuffix": ".segments",
+    "clientParamParsing": false,
+    "dynamicRSCPrerender": false
+  },
+  "rewriteHeaders": {
+    "pathHeader": "x-nextjs-rewritten-path",
+    "queryHeader": "x-nextjs-rewritten-query"
+  }
+}

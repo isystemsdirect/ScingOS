@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scing Avatar Env (Experiment)</title>
+    <script>
+      // Pre-React crash capture: if the app fails before React mounts (blank page),
+      // we still render a visible error and persist it for reload.
+      ;(() => {
+        const KEY = 'scing_avatar_env_last_crash_v1'
+        const OVERLAY_ID = 'scing-bootstrap-overlay'
+        const safeString = (v) => {
+          try {
+            if (typeof v === 'string') return v
+            if (v && typeof v.message === 'string') return v.message
+            return JSON.stringify(v)
+          } catch {
+            return String(v)
+          }
+        }
+
+        const persist = (c) => {
+          try {
+            window.localStorage.setItem(KEY, JSON.stringify(c))
+          } catch {
+            // ignore
+          }
+        }
+
+        const render = (c, heading, opts) => {
+          try {
+            const doc = document
+            const body = doc.body
+            if (!body) return
+
+            let host = doc.getElementById(OVERLAY_ID)
+            if (!host) {
+              host = doc.createElement('div')
+              host.id = OVERLAY_ID
+              body.appendChild(host)
+            }
+
+            const auto = !!(opts && opts.auto)
+            try {
+              host.dataset.auto = auto ? '1' : '0'
+            } catch {
+              // ignore
+            }
+
+            host.innerHTML = ''
+
+            const detail = c && typeof c.detail === 'string' ? c.detail : ''
+            const ts = c && typeof c.ts === 'number' ? new Date(c.ts).toISOString() : ''
+            const wrap = document.createElement('div')
+            wrap.style.position = 'fixed'
+            wrap.style.inset = '0'
+            wrap.style.zIndex = '100000'
+            wrap.style.background = 'rgba(0,0,0,0.92)'
+            wrap.style.color = 'rgba(255,255,255,0.92)'
+            wrap.style.padding = '16px'
+            wrap.style.fontFamily = 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace'
+            wrap.style.fontSize = '12px'
+            wrap.style.overflow = 'auto'
+            wrap.style.whiteSpace = 'pre-wrap'
+
+            const title = document.createElement('div')
+            title.style.fontWeight = '800'
+            title.style.marginBottom = '10px'
+            title.textContent = heading || 'SCING AVATAR ENV — Bootstrap Error'
+
+            const msg = document.createElement('div')
+            msg.style.opacity = '0.9'
+            msg.style.marginBottom = '10px'
+            msg.textContent = `${c.kind || 'error'}: ${c.message || 'Unknown error'}${ts ? `\n${ts}` : ''}`
+
+            const pre = document.createElement('div')
+            pre.textContent = detail
+
+            wrap.appendChild(title)
+            wrap.appendChild(msg)
+            if (detail) wrap.appendChild(pre)
+            host.appendChild(wrap)
+          } catch {
+            // ignore
+          }
+        }
+
+        const ensureLastCrashButton = () => {
+          try {
+            const raw = window.localStorage.getItem(KEY)
+            if (!raw) return
+            const parsed = JSON.parse(raw)
+            if (!parsed || typeof parsed !== 'object') return
+            if (typeof parsed.message !== 'string') return
+
+            let host = document.getElementById('scing-last-crash-btn')
+            if (!host) {
+              host = document.createElement('div')
+              host.id = 'scing-last-crash-btn'
+              host.style.position = 'fixed'
+              host.style.top = '8px'
+              host.style.right = '8px'
+              host.style.zIndex = '100001'
+              host.style.display = 'flex'
+              host.style.gap = '8px'
+              host.style.pointerEvents = 'auto'
+              document.body.appendChild(host)
+            }
+
+            host.innerHTML = ''
+
+            const showBtn = document.createElement('button')
+            showBtn.type = 'button'
+            showBtn.textContent = 'Last crash (click to show)'
+            showBtn.style.padding = '6px 10px'
+            showBtn.style.borderRadius = '10px'
+            showBtn.style.border = '1px solid rgba(255,255,255,0.18)'
+            showBtn.style.background = 'rgba(8, 6, 14, 0.72)'
+            showBtn.style.color = 'rgba(255,255,255,0.92)'
+            showBtn.style.cursor = 'pointer'
+            showBtn.style.fontFamily = 'ui-sans-serif, system-ui'
+            showBtn.style.fontSize = '12px'
+            showBtn.onclick = () => render(parsed, 'SCING AVATAR ENV — Restored Last Crash', { auto: false })
+
+            const clearBtn = document.createElement('button')
+            clearBtn.type = 'button'
+            clearBtn.textContent = 'Clear'
+            clearBtn.style.padding = '6px 10px'
+            clearBtn.style.borderRadius = '10px'
+            clearBtn.style.border = '1px solid rgba(255,255,255,0.18)'
+            clearBtn.style.background = 'rgba(255,255,255,0.06)'
+            clearBtn.style.color = 'rgba(255,255,255,0.92)'
+            clearBtn.style.cursor = 'pointer'
+            clearBtn.style.fontFamily = 'ui-sans-serif, system-ui'
+            clearBtn.style.fontSize = '12px'
+            clearBtn.onclick = () => {
+              try {
+                window.localStorage.removeItem(KEY)
+              } catch {
+                // ignore
+              }
+              try {
+                host?.remove()
+              } catch {
+                // ignore
+              }
+            }
+
+            host.appendChild(showBtn)
+            host.appendChild(clearBtn)
+          } catch {
+            // ignore
+          }
+        }
+
+        window.__scingCaptureBootstrapCrash = (kind, message, detail) => {
+          const c = {
+            kind: kind || 'error',
+            message: message || 'Unknown error',
+            detail: typeof detail === 'string' ? detail : undefined,
+            ts: Date.now(),
+          }
+          persist(c)
+          render(c, 'SCING AVATAR ENV — Bootstrap Crash Captured')
+          ensureLastCrashButton()
+        }
+
+        window.addEventListener('error', (e) => {
+          const detail = e && e.error && typeof e.error.stack === 'string'
+            ? e.error.stack
+            : `${e.message || 'Unknown error'}\n${e.filename || ''}:${e.lineno || 0}:${e.colno || 0}`
+          window.__scingCaptureBootstrapCrash('error', e && e.message ? e.message : 'Unknown error', detail)
+        })
+
+        window.addEventListener('unhandledrejection', (e) => {
+          const reason = e && e.reason
+          const msg = safeString(reason) || 'Unhandled promise rejection'
+          const detail = reason && typeof reason.stack === 'string' ? reason.stack : undefined
+          window.__scingCaptureBootstrapCrash('unhandledrejection', msg, detail)
+        })
+
+        // If we previously crashed and React never mounted, show it immediately on reload.
+        try {
+          const raw = window.localStorage.getItem(KEY)
+          if (!raw) return
+          const parsed = JSON.parse(raw)
+          if (!parsed || typeof parsed !== 'object') return
+          if (typeof parsed.message !== 'string') return
+          // Only render immediately if root hasn't been replaced yet (still shows "loading…" or empty)
+          const root = document.getElementById('root')
+          const txt = root ? (root.textContent || '').trim() : ''
+          if (root && (txt === '' || txt === 'loading…')) {
+            render(parsed, 'SCING AVATAR ENV — Restored Last Crash (pre-React)', { auto: true })
+          }
+        } catch {
+          // ignore
+        }
+
+        // Always provide a way to show/clear the last crash (even if React mounts).
+        try {
+          ensureLastCrashButton()
+        } catch {
+          // ignore
+        }
+      })()
+    </script>
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        background: #02030a !important;
+      }
+
+      #root {
+        height: 100%;
+        background: #02030a !important;
+      }
+
+      /* Hard guarantee: never render a white page */
+      #scing-boot-screen {
+        position: fixed;
+        inset: 0;
+        z-index: 2147483000;
+        background: #05020b;
+        color: rgba(255, 255, 255, 0.78);
+        font: 12px ui-sans-serif, system-ui;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+        pointer-events: none;
+      }
+    </style>
+    <script type="module" crossorigin src="/assets/index-D-9gGu6L.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DwGFplIN.css">
+  </head>
+  <body>
+    <div id="scing-boot-screen">loading…</div>
+    <div id="root" style="height: 100%; color: rgba(255, 255, 255, 0.65); font: 12px ui-sans-serif, system-ui;">
+      loading…
+    </div>
+  </body>
+</html>

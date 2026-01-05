@@ -1,0 +1,8 @@
+0000000000000000000000000000000000000000 ffdd4df7e6adc3569636775a6ec06cbacf0273c0 Director Teon G Anderson MsD. <isystemsdirect@gmail.com> 1767581701 -0600	commit (initial): Scaffold scing-voice-interface project layout
+ffdd4df7e6adc3569636775a6ec06cbacf0273c0 ffeb0e9ca2121bf3177d1de72d67cc7670982240 Director Teon G Anderson MsD. <isystemsdirect@gmail.com> 1767581763 -0600	commit: Add STT layer with Whisper and sounddevice
+ffeb0e9ca2121bf3177d1de72d67cc7670982240 0184dcddcfddf08eb0e89e80c69fe8cddec7ce77 Director Teon G Anderson MsD. <isystemsdirect@gmail.com> 1767581764 -0600	commit: Add Scing connector placeholder for local dialogue
+0184dcddcfddf08eb0e89e80c69fe8cddec7ce77 6396c1cb3c5c753bbb7c81e2064f3af2972844b2 Director Teon G Anderson MsD. <isystemsdirect@gmail.com> 1767581764 -0600	commit: Add TTS module using pyttsx3 for voice output
+6396c1cb3c5c753bbb7c81e2064f3af2972844b2 edafe91d1f0c20d2b1cca481760d5ac3e91713e8 Director Teon G Anderson MsD. <isystemsdirect@gmail.com> 1767581764 -0600	commit: Add main voice interaction loop connecting STT > Scing > TTS
+edafe91d1f0c20d2b1cca481760d5ac3e91713e8 d4931a198b3f3162837ab97c45805ce1ffd8c4b2 Director Teon G Anderson MsD. <isystemsdirect@gmail.com> 1767583515 -0600	commit: Upgrade Scing connector to use OpenAI chat completions (safe env handling)
+d4931a198b3f3162837ab97c45805ce1ffd8c4b2 79b624c63d9d1225ff703db364f1441be3f557e8 Director Teon G Anderson MsD. <isystemsdirect@gmail.com> 1767585979 -0600	commit: chore(voice): optionally print active OpenAI model
+79b624c63d9d1225ff703db364f1441be3f557e8 c8e75202c1be9f29df6bbbc5eb78b4a4bfe3f9a1 Director Teon G Anderson MsD. <isystemsdirect@gmail.com> 1767586551 -0600	commit: feat(voice): fallback to gpt-4o-mini on quota
