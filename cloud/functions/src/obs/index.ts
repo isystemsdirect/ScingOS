@@ -1,0 +1,1 @@
+export { writeObsEvent } from './writeObsEvent';

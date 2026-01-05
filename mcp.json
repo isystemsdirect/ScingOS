@@ -1,0 +1,28 @@
+{
+  "name": "scing-firebase-mcp",
+  "description": "SCINGULAR MCP bridge for Firebase and Next.js analysis",
+  "version": "1.0.0",
+  "servers": [
+    {
+      "id": "Scing-MCP",
+      "type": "stdio",
+      "command": "node",
+      "args": ["mcp/server.mjs"],
+      "env": {}
+    }
+  ],
+  "tools": [
+    {
+      "name": "analyze_firebase_status",
+      "description": "Analyze Firebase Studio and Next.js app status reports",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "repoReport": { "type": "string" },
+          "appReport": { "type": "string" }
+        },
+        "required": ["repoReport", "appReport"]
+      }
+    }
+  ]
+}

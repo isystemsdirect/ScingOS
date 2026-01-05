@@ -1,0 +1,46 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "docs/**"
+      - "_config.yml"
+
+  workflow_dispatch:
+
+concurrency:
+  group: github-pages-deploy
+  cancel-in-progress: true
+
+jobs:
+  build-site:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Out Repository Code
+        uses: actions/checkout@v5
+
+      - name: Build Static Site
+        run: |
+          mkdir -p _site
+          cp -R docs/. _site/
+          # Swap out these steps for Jekyll if you add it to your workflow:
+          # bundle install
+          # bundle exec jekyll build
+
+      - name: Upload Artifact for Pages
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+  deploy-site:
+    needs: build-site
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - name: Deploy Built Pages to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

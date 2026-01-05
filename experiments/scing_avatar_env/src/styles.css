@@ -1,0 +1,50 @@
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
+html {
+  color-scheme: dark;
+
+  /* Firefox global scrollbar colors */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(138, 92, 255, 0.38) rgba(10, 8, 18, 0.6);
+}
+
+/* Chromium/WebKit global scrollbar colors */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track {
+  background: rgba(10, 8, 18, 0.6);
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
+  background: rgba(138, 92, 255, 0.38);
+  border-radius: 999px;
+  border: 2px solid rgba(10, 8, 18, 0.6);
+}
+
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 0, 133, 0.38);
+}
+
+body {
+  background: #02030a;
+  overflow: hidden;
+}
+
+/* If WebGL stalls or context is lost, keep the page non-white. */
+canvas {
+  display: block;
+  background: #05020b;
+}

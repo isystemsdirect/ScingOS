@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Only enforce on branches that push to origin/main or any upstream
+# Detect base as origin/main; if missing, skip.
+git rev-parse --verify origin/main >/dev/null 2>&1 || exit 0
+
+# Run sync check against origin/main
+bash scripts/check-training-pdf-sync.sh origin/main

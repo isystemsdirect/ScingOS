@@ -1,0 +1,40 @@
+name: scing-quality
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            client/package-lock.json
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Install client dependencies
+        run: npm ci --prefix client
+
+      - name: Format check
+        run: npm run format:check
+
+      - name: Quality gate
+        run: npm run quality:scing
+
+      - name: LARI verification gates
+        run: npm test -- tests/lari/perf tests/lari/redteam tests/domains tests/gold
+
+      - name: Build
+        run: npm run build

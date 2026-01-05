@@ -1,0 +1,436 @@
+import * as THREE from 'three'
+import { useEffect, useMemo, useRef } from 'react'
+import { extend, useFrame, useThree } from '@react-three/fiber'
+import { OrbitControls } from '@react-three/drei'
+
+import { FlameMaterial } from './FlameMaterial'
+import type { FlameMaterialImpl } from './FlameMaterial'
+import { LAYER_AVATAR } from './layers'
+import { AVATAR_RADIUS_UNITS, FLOOR_Y } from './scale'
+import Starfield from './Starfield'
+import { useDevOptionsStore } from '../dev/useDevOptionsStore'
+import { setRenderStats } from '../influence/renderStats'
+import { getAvatarState, getMobiusTelemetry, getPhaseSignal } from '../influence/InfluenceBridge'
+import { getPalette, phaseABFromSignal, type PhaseChannel } from '../influence/phasePalettes'
+import AvatarFlares3D from './flares/AvatarFlares3D'
+import { HaloShellMaterial, type HaloShellMaterialImpl } from './halo/HaloShellMaterial'
+import HaloShell from './halo/HaloShell'
+import HaloSmokeShell from './HaloSmokeShell'
+
+extend({ FlameMaterial, HaloShellMaterial })
+
+// deterministic smooth (no tweens)
+function smoothDamp(current: number, target: number, smoothing: number, dt: number): number {
+  const k = 1 - Math.exp(-smoothing * dt)
+  return current + (target - current) * k
+}
+
+type AnyUniforms = Record<string, { value: unknown } | undefined>
+
+function setU(uniforms: AnyUniforms | undefined, key: string, v: unknown) {
+  const u = uniforms?.[key]
+  if (!u) return
+  u.value = v
+}
+
+function applyUniforms(
+  mat: any,
+  payload: {
+    time: number
+    layer?: number
+    arousal: number
+    valence: number
+    cognitiveLoad: number
+    rhythm: number
+    entropy: number
+    focus: number
+    // optional textures if present:
+    albedoTex?: any
+    normalTex?: any
+  },
+) {
+  const uniforms: AnyUniforms | undefined = mat?.uniforms
+
+  // Core required (guarded)
+  setU(uniforms, 'time', payload.time)
+  setU(uniforms, 'arousal', payload.arousal)
+  setU(uniforms, 'valence', payload.valence)
+  setU(uniforms, 'cognitiveLoad', payload.cognitiveLoad)
+  setU(uniforms, 'rhythm', payload.rhythm)
+  setU(uniforms, 'entropy', payload.entropy)
+  setU(uniforms, 'focus', payload.focus)
+
+  // Optional (guarded)
+  if (payload.layer !== undefined) setU(uniforms, 'layer', payload.layer)
+  if (payload.albedoTex) setU(uniforms, 'albedoTex', payload.albedoTex)
+  if (payload.normalTex) setU(uniforms, 'normalTex', payload.normalTex)
+
+  // Palette mode support (if/when present)
+  // setU(uniforms, 'paletteMode', paletteModeInt)
+}
+
+export default function Scene3D() {
+  const { gl } = useThree()
+  const { camera } = useThree()
+  const opt = useDevOptionsStore()
+
+  const controlsRef = useRef<any>(null)
+
+  const setAvatarLayer = (o: THREE.Object3D) => {
+    o.layers.set(LAYER_AVATAR)
+  }
+
+  useEffect(() => {
+    // Render avatar layer on the main camera (so avatar-only lighting/reflection layers cannot hide it).
+    camera.layers.enable(LAYER_AVATAR)
+  }, [camera])
+
+  // Stage 2 hover theory (locked): clearance = 0.33 * radius.
+  const hoverHeight = 0.33 * AVATAR_RADIUS_UNITS
+  const avatarCenterY = FLOOR_Y + AVATAR_RADIUS_UNITS + hoverHeight
+
+  // Floor placement is now fully user-controlled.
+  const floorY = opt.floor.floorY
+  const reflectionEnabled = opt.reflection.reflectionEnabled
+  const floorIntensity = opt.reflection.reflectionIntensity
+
+  useEffect(() => {
+    // Ensure the avatar starts centered even before OrbitControls runs.
+    camera.lookAt(0, avatarCenterY, 0)
+    camera.updateMatrixWorld()
+  }, [camera, avatarCenterY])
+
+  useEffect(() => {
+    const cam = camera as unknown as THREE.PerspectiveCamera
+    if (typeof cam.fov !== 'number' || typeof cam.updateProjectionMatrix !== 'function') return
+    cam.fov = opt.camera.cameraFov
+    cam.updateProjectionMatrix()
+  }, [camera, opt.camera.cameraFov])
+
+  useEffect(() => {
+    // Reset to canonical view (deterministic).
+    const c = controlsRef.current
+    if (!c) return
+    try {
+      c.reset?.()
+    } catch {
+      // ignore
+    }
+    camera.lookAt(0, avatarCenterY, 0)
+    camera.updateMatrixWorld()
+  }, [camera, avatarCenterY, opt.camera.cameraReset])
+
+  const forceFailsafeRef = useRef(false)
+  useEffect(() => {
+    // TEMP (experiments-only): deterministic failsafe proof toggle.
+    if (!import.meta.env.DEV) return
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key.toLowerCase() !== 'f') return
+      forceFailsafeRef.current = !forceFailsafeRef.current
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [])
+
+  const geometry = useMemo(() => {
+    // Always render something: public/models may be empty in this sandbox.
+    return new THREE.SphereGeometry(AVATAR_RADIUS_UNITS, 192, 192)
+  }, [])
+
+  // Two-layer material (core + skin)
+  const coreRef = useRef<FlameMaterialImpl>(null!)
+  const skinRef = useRef<FlameMaterialImpl>(null!)
+  const haloRef = useRef<HaloShellMaterialImpl>(null!)
+  const avatarGroupRef = useRef<THREE.Group>(null)
+  const failsafeMeshRef = useRef<THREE.Mesh>(null)
+  const toneMapFixedRef = useRef(false)
+  const haloMatFixedRef = useRef(false)
+
+  const healthRef = useRef({ frames: 0, avatarDrawOk: true })
+
+  // local unified time/state
+  const tRef = useRef(0)
+  const uRef = useRef({
+    arousal: 0.55,
+    valence: 0.0,
+    cognitiveLoad: 0.35,
+    rhythm: 0.55,
+    entropy: 0.04,
+    focus: 0.55,
+    phaseSignal: 0.5,
+  })
+
+  const phaseA = useMemo(() => new THREE.Vector3(), [])
+  const phaseB = useMemo(() => new THREE.Vector3(), [])
+  const phaseColor = useMemo(() => new THREE.Color(), [])
+  const phaseColorTmp = useMemo(() => new THREE.Color(), [])
+
+  const floorStrengthRef = useRef(0)
+
+  const avatarPosRef = useRef<[number, number, number]>([0, 0, 0])
+  const avatarVelRef = useRef<[number, number, number]>([0, 0, 0])
+  const lastPosRef = useRef<[number, number, number]>([0, 0, 0])
+
+  useFrame((_, dt) => {
+    tRef.current += dt
+    const t = tRef.current
+
+    healthRef.current.frames += 1
+
+    if (!toneMapFixedRef.current) {
+      // Ensure reflection reads true emissive/silhouette (not tonemapped away)
+      if (coreRef.current) coreRef.current.toneMapped = false
+      if (skinRef.current) skinRef.current.toneMapped = false
+      toneMapFixedRef.current = true
+    }
+
+    if (!haloMatFixedRef.current && haloRef.current) {
+      // Ensure halo behaves like a soft shell (no depth-writing so it doesn't hard-cut).
+      haloRef.current.transparent = true
+      haloRef.current.depthWrite = false
+      haloRef.current.toneMapped = false
+      haloMatFixedRef.current = true
+    }
+
+    // Drive visuals from the live avatar state (sensor-driven via App.tsx).
+    const s = getAvatarState()
+    uRef.current.arousal = smoothDamp(uRef.current.arousal, s.arousal, 12, dt)
+    uRef.current.focus = smoothDamp(uRef.current.focus, s.focus, 12, dt)
+    uRef.current.rhythm = smoothDamp(uRef.current.rhythm, s.rhythm, 12, dt)
+    uRef.current.cognitiveLoad = smoothDamp(uRef.current.cognitiveLoad, s.cognitiveLoad, 12, dt)
+    uRef.current.valence = smoothDamp(uRef.current.valence, s.valence, 8, dt)
+    uRef.current.entropy = smoothDamp(uRef.current.entropy, s.entropy, 6, dt)
+
+    // Phase selection derived from state vector + canonical palette selector.
+    const chromaEnabled = opt.chroma.enabled
+    const raw = (opt.material.colorPhaseMode === 'Custom' ? 'SCING' : opt.material.colorPhaseMode)
+    const channel: PhaseChannel = raw === 'LARI' || raw === 'BANE' ? raw : 'SCING'
+    const palette = getPalette(channel)
+
+    let phaseSignal = getPhaseSignal()
+    uRef.current.phaseSignal = smoothDamp(uRef.current.phaseSignal, phaseSignal, 8, dt)
+
+    const phases = phaseABFromSignal(palette, uRef.current.phaseSignal)
+    phaseA.set(phases.phaseA[0], phases.phaseA[1], phases.phaseA[2])
+    phaseB.set(phases.phaseB[0], phases.phaseB[1], phases.phaseB[2])
+    phaseColor.setRGB(phases.phaseA[0], phases.phaseA[1], phases.phaseA[2])
+    phaseColorTmp.setRGB(phases.phaseB[0], phases.phaseB[1], phases.phaseB[2])
+    phaseColor.lerp(phaseColorTmp, phases.phaseMix)
+
+    // Floor reflection strength is NON-DECAYING (no warmup/time curves).
+    // When enabled, it cannot silently collapse to ~0.
+    const clamp01Local = (v: number) => Math.max(0, Math.min(1, v))
+    const energy = clamp01Local(
+      0.55 * uRef.current.arousal +
+        0.25 * uRef.current.focus +
+        0.20 * uRef.current.rhythm,
+    )
+    const reflectionEps = 0.025
+    const reflectionStrength = reflectionEnabled
+      ? Math.max(reflectionEps, clamp01Local(floorIntensity) * (0.35 + 0.65 * energy))
+      : 0.0
+    floorStrengthRef.current = reflectionStrength
+
+    // Avatar motion tracking (deterministic)
+    const g = avatarGroupRef.current
+    if (g) {
+      const p = g.position
+      const cur = avatarPosRef.current
+      const last = lastPosRef.current
+      const vel = avatarVelRef.current
+
+      cur[0] = p.x
+      cur[1] = p.y
+      cur[2] = p.z
+
+      const invDt = 1 / Math.max(dt, 1e-4)
+      vel[0] = (cur[0] - last[0]) * invDt
+      vel[1] = (cur[1] - last[1]) * invDt
+      vel[2] = (cur[2] - last[2]) * invDt
+
+      last[0] = cur[0]
+      last[1] = cur[1]
+      last[2] = cur[2]
+    }
+
+    applyUniforms(coreRef.current, {
+      time: t,
+      layer: 0,
+      arousal: uRef.current.arousal,
+      valence: uRef.current.valence,
+      cognitiveLoad: uRef.current.cognitiveLoad,
+      rhythm: uRef.current.rhythm,
+      entropy: uRef.current.entropy,
+      focus: uRef.current.focus,
+    })
+
+    // Phase uniforms (CB-required)
+    setU((coreRef.current as any)?.uniforms, 'phaseA', phaseA)
+    setU((coreRef.current as any)?.uniforms, 'phaseB', phaseB)
+    setU((coreRef.current as any)?.uniforms, 'phaseMix', phases.phaseMix)
+    setU((coreRef.current as any)?.uniforms, 'chromaEnabled', chromaEnabled ? 1.0 : 0.0)
+    setU((coreRef.current as any)?.uniforms, 'chromaIntensity', opt.chroma.intensity)
+
+    applyUniforms(skinRef.current, {
+      time: t,
+      layer: 1,
+      arousal: uRef.current.arousal,
+      valence: uRef.current.valence,
+      cognitiveLoad: uRef.current.cognitiveLoad,
+      rhythm: uRef.current.rhythm,
+      entropy: uRef.current.entropy,
+      focus: uRef.current.focus,
+    })
+
+    // Halo shell uniforms (Stage 5 guarded writes)
+    const haloUniforms: AnyUniforms | undefined = (haloRef.current as any)?.uniforms
+    if (haloUniforms) {
+      setU(haloUniforms, 'time', t)
+      setU(haloUniforms, 'arousal', uRef.current.arousal)
+      setU(haloUniforms, 'focus', uRef.current.focus)
+      setU(haloUniforms, 'phaseBias', 0.37)
+
+      setU(haloUniforms, 'haloSoftness', opt.haloFlares.haloSoftness)
+      setU(haloUniforms, 'haloNoiseScale', opt.haloFlares.haloNoiseScale)
+      setU(haloUniforms, 'haloDissipation', opt.haloFlares.haloDissipation)
+      setU(haloUniforms, 'haloIntensity', opt.haloFlares.haloIntensity)
+
+      const telem = getMobiusTelemetry()
+      if (telem) {
+        setU(haloUniforms, 'mobiusR', telem.emissiveColor.r)
+        setU(haloUniforms, 'mobiusG', telem.emissiveColor.g)
+        setU(haloUniforms, 'mobiusB', telem.emissiveColor.b)
+        setU(haloUniforms, 'mobiusStrength', Math.max(0, Math.min(1, telem.inversionAmplitude)))
+      } else {
+        setU(haloUniforms, 'mobiusR', 0)
+        setU(haloUniforms, 'mobiusG', 0)
+        setU(haloUniforms, 'mobiusB', 0)
+        setU(haloUniforms, 'mobiusStrength', 0)
+      }
+    }
+
+    setU((skinRef.current as any)?.uniforms, 'phaseA', phaseA)
+    setU((skinRef.current as any)?.uniforms, 'phaseB', phaseB)
+    setU((skinRef.current as any)?.uniforms, 'phaseMix', phases.phaseMix)
+    setU((skinRef.current as any)?.uniforms, 'chromaEnabled', chromaEnabled ? 1.0 : 0.0)
+    setU((skinRef.current as any)?.uniforms, 'chromaIntensity', opt.chroma.intensity)
+
+    // Deterministic health check + failsafe policy:
+    // - During the first few frames, assume OK to avoid boot flicker.
+    // - After warmup, consider OK only if both materials exist and their time uniform is sane.
+    let avatarDrawOk = true
+    if (healthRef.current.frames > 8) {
+      const core = coreRef.current
+      const skin = skinRef.current
+      const coreTime = core?.uniforms?.time?.value
+      const skinTime = skin?.uniforms?.time?.value
+      avatarDrawOk = !!core && !!skin && Number.isFinite(coreTime) && Number.isFinite(skinTime) && Number.isFinite(t)
+    }
+    healthRef.current.avatarDrawOk = avatarDrawOk
+    const failsafeForced = import.meta.env.DEV && forceFailsafeRef.current
+    const failsafeOn = opt.avatar.enabled && (!avatarDrawOk || failsafeForced)
+
+    if (failsafeMeshRef.current) {
+      failsafeMeshRef.current.visible = failsafeOn
+    }
+
+    // Renderer stats proof-of-draw (no external deps; deterministic)
+    const info = gl.info
+    setRenderStats({
+      calls: info.render.calls,
+      triangles: info.render.triangles,
+      lines: info.render.lines,
+      points: info.render.points,
+      avatarDrawOk,
+      failsafeOn,
+      failsafeForced,
+      floorStrength: reflectionStrength,
+    })
+  })
+
+  return (
+    <>
+      {opt.avatar.starfieldEnabled ? <Starfield /> : null}
+
+      {/* Avatar group */}
+      {opt.avatar.enabled && (
+        <group ref={avatarGroupRef} position={[0, avatarCenterY, 0]}>
+          {/* Premium smoky halo (avatar-bound; deterministic) */}
+          <HaloSmokeShell
+            radius={opt.haloFlares.haloRadius}
+            density={opt.haloFlares.haloDissipation}
+            intensity={opt.haloFlares.haloIntensity}
+            advectionSpeed={opt.haloFlares.haloNoiseScale * 0.06}
+            noiseScale={2.2 + opt.haloFlares.haloNoiseScale * 2.6}
+          />
+          {/* CB: TRUE 3D FLARES (AVATAR-SPACE ONLY) */}
+          {opt.haloFlares.flareEnabled ? (
+            <group position={[0, 0, 0]}>
+              <AvatarFlares3D
+                intensity={opt.haloFlares.flareIntensity}
+                count={opt.haloFlares.flareCount}
+                size={opt.haloFlares.flareSize}
+                pulseRate={opt.haloFlares.flarePulseRate}
+                depthBias={opt.haloFlares.flareDepthBias}
+                followStrength={opt.haloFlares.flareFollowStrength}
+                parallaxScale={opt.haloFlares.flareParallaxScale}
+              />
+            </group>
+          ) : null}
+
+          {/* CORE */}
+          {/* Solid avatar mesh always renders when avatarVisible is ON */}
+          {
+            <mesh geometry={geometry} scale={1.0} onUpdate={setAvatarLayer}>
+              <flameMaterial ref={coreRef} />
+            </mesh>
+          }
+
+          {
+            <mesh geometry={geometry} scale={1.03} onUpdate={setAvatarLayer}>
+              <flameMaterial ref={skinRef} />
+            </mesh>
+          }
+
+          {/* FAILSAFE: deterministic visible mesh if shader pipeline isn't healthy */}
+          <mesh ref={failsafeMeshRef} geometry={geometry} scale={1.005} visible={false} onUpdate={setAvatarLayer}>
+            {/* Unlit failsafe so reflection capture stays avatar-only (no lighting contamination). */}
+            <meshBasicMaterial color="#d1ccff" />
+          </mesh>
+
+          {/* WIREFRAME OVERLAY (meshVisible toggle) */}
+          {opt.avatar.meshVisible ? (
+            <mesh geometry={geometry} scale={1.035} onUpdate={setAvatarLayer}>
+              <meshBasicMaterial wireframe opacity={0.18} transparent color="#8a5cff" />
+            </mesh>
+          ) : null}
+
+          {/* CB: HALO SHELL (AVATAR-EMANATING WRAP) */}
+          {opt.haloFlares.haloEnabled ? (
+            <HaloShell geometry={geometry} scale={1.0 + opt.haloFlares.haloRadius} onUpdate={setAvatarLayer} materialRef={haloRef} />
+          ) : null}
+        </group>
+      )}
+
+      {/* Camera controls: NO focus lock, fully manual */}
+      <OrbitControls
+        ref={controlsRef}
+        makeDefault
+        enabled={opt.camera.orbitEnabled}
+        enablePan={opt.camera.orbitPanEnabled}
+        enableZoom={opt.camera.orbitZoomEnabled}
+        enableRotate={opt.camera.orbitEnabled}
+        target={[0, avatarCenterY, 0]}
+        minDistance={opt.camera.orbitMinDistance}
+        maxDistance={opt.camera.orbitMaxDistance}
+        enableDamping
+        dampingFactor={0.08}
+        autoRotate={opt.camera.orbitAutoRotate}
+        autoRotateSpeed={opt.camera.orbitRotateSpeed}
+        rotateSpeed={opt.camera.orbitRotateSpeed}
+      />
+    </>
+  )
+}

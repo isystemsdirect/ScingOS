@@ -1,0 +1,243 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function uid() {
+      return request.auth.uid;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function hasRole(role) {
+      return isAuthenticated() && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == role;
+    }
+    
+    function isAdmin() {
+      return hasRole('admin');
+    }
+    
+    function isInspector() {
+      return hasRole('inspector') || isAdmin();
+    }
+
+    // =========================
+    // BANE Org/Entitlements layer (LFCB-02)
+    // =========================
+    function orgMemberPath(orgId) {
+      return /databases/$(database)/documents/orgs/$(orgId)/members/$(uid());
+    }
+
+    function isOrgMember(orgId) {
+      return isAuthenticated() && exists(orgMemberPath(orgId));
+    }
+
+    function orgMemberRole(orgId) {
+      return get(orgMemberPath(orgId)).data.role;
+    }
+
+    function isOrgAdmin(orgId) {
+      return isOrgMember(orgId) && (orgMemberRole(orgId) in ['owner', 'admin']);
+    }
+
+    // =========================
+    // Evidence / Chain-of-Custody (LFCB-03)
+    // =========================
+    function isOrgMemberByInspection(inspectionId) {
+      return isAuthenticated() &&
+        exists(/databases/$(database)/documents/inspections/$(inspectionId)) &&
+        exists(
+          /databases/$(database)/documents/orgs/$(get(/databases/$(database)/documents/inspections/$(inspectionId)).data.orgId)/members/$(uid())
+        );
+    }
+    
+    // Users collection
+    match /users/{userId} {
+      // Users can read their own document
+      allow read: if isOwner(userId) || isAdmin();
+      
+      // Users can update their own document (limited fields)
+      allow update: if isOwner(userId) && 
+        (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'createdAt']));
+      
+      // Only admins can create or delete users
+      allow create, delete: if isAdmin();
+    }
+    
+    // Sessions collection
+    match /sessions/{sessionId} {
+      allow read, write: if isOwner(resource.data.user_id);
+    }
+    
+    // Inspections collection
+    match /inspections/{inspectionId} {
+      // Read: Owner, team members, or admins
+      allow read: if isAuthenticated() && (
+        resource.data.created_by == request.auth.uid ||
+        request.auth.uid in resource.data.get('team', []) ||
+        isAdmin()
+      );
+      
+      // Create: Any authenticated inspector
+      allow create: if isInspector() && 
+        request.resource.data.created_by == request.auth.uid;
+      
+      // Update: Owner or admin
+      allow update: if isAuthenticated() && (
+        resource.data.created_by == request.auth.uid ||
+        isAdmin()
+      );
+      
+      // Delete: Only admin
+      allow delete: if isAdmin();
+
+      // Evidence canonical stores
+      match /artifacts/{artifactId} {
+        allow read: if isOrgMemberByInspection(inspectionId);
+        allow create: if isOrgMemberByInspection(inspectionId);
+        allow update: if isOrgMemberByInspection(inspectionId) && resource.data.finalized == false;
+        allow delete: if false;
+      }
+
+      match /artifactEvents/{eventId} {
+        allow read: if isOrgMemberByInspection(inspectionId);
+        allow write: if false;
+      }
+
+      match /classifications/{classificationId} {
+        allow read: if isOrgMemberByInspection(inspectionId);
+        allow write: if false;
+      }
+
+      match /mapLayers/{layerId} {
+        allow read: if isOrgMemberByInspection(inspectionId);
+        allow write: if false;
+      }
+
+      match /telemetry/{telemetryId} {
+        allow read: if isOrgMemberByInspection(inspectionId);
+        allow write: if false;
+      }
+
+      // SCING-only report blocks (Admin SDK bypasses rules)
+      match /reportBlocks/{blockId} {
+        allow read: if isOrgMemberByInspection(inspectionId);
+        allow write: if false;
+      }
+      
+      // Findings subcollection
+      match /findings/{findingId} {
+        allow read: if isOrgMemberByInspection(inspectionId);
+        allow write: if false;
+      }
+    }
+
+    // Evidence audit sinks (server only)
+    match /audit/evidenceEvents/events/{eventId} {
+      allow read: if false;
+      allow write: if false;
+    }
+
+    match /audit/wormHeads/{scopeId} {
+      allow read: if false;
+      allow write: if false;
+    }
+
+    // =========================
+    // Observability events (LFCB-10)
+    // =========================
+    match /obs/events/{eventId} {
+      allow create: if isAuthenticated();
+      allow read: if isAdmin();
+      allow update, delete: if false;
+    }
+    
+    // Tasks collection
+    match /tasks/{taskId} {
+      allow read: if isAuthenticated() && (
+        resource.data.assigned_to == request.auth.uid ||
+        resource.data.created_by == request.auth.uid ||
+        isAdmin()
+      );
+      
+      allow create: if isInspector();
+      
+      allow update: if isAuthenticated() && (
+        resource.data.assigned_to == request.auth.uid ||
+        resource.data.created_by == request.auth.uid ||
+        isAdmin()
+      );
+      
+      allow delete: if isAdmin();
+    }
+
+    
+    // Security Decision Records (SDRs)
+    match /sdrs/{sdrId} {
+      // Only admins can read SDRs
+      allow read: if isAdmin();
+      
+      // Only Cloud Functions can write SDRs
+      allow write: if false;
+    }
+    
+    // Reports collection
+    match /reports/{reportId} {
+      allow read: if isAuthenticated() && (
+        resource.data.created_by == request.auth.uid ||
+        request.auth.uid in resource.data.get('shared_with', []) ||
+        isAdmin()
+      );
+      
+      // Only Cloud Functions can create reports
+      allow create: if false;
+      
+      allow delete: if isAdmin();
+    }
+
+    // Orgs / members / devices / entitlements / policy snapshots
+    match /orgs/{orgId} {
+      allow read: if isOrgMember(orgId);
+      allow write: if isOrgAdmin(orgId);
+
+      match /members/{memberUid} {
+        allow read: if isOrgMember(orgId);
+        allow write: if isOrgAdmin(orgId);
+      }
+
+      match /devices/{deviceId} {
+        allow read: if isOrgMember(orgId);
+        allow write: if isOrgAdmin(orgId) || (isAuthenticated() && request.resource.data.boundToUid == uid());
+      }
+
+      match /entitlements/{entId} {
+        allow read: if isOrgMember(orgId);
+        allow write: if false; // BANE-only via Admin SDK
+      }
+
+      match /policySnapshots/{snapUid} {
+        allow read: if isAuthenticated() && snapUid == uid() && isOrgMember(orgId);
+        allow write: if false; // BANE-only via Admin SDK
+      }
+    }
+
+    // BANE audit (WORM-like append-only; Admin SDK only)
+    match /audit/baneEvents/events/{eventId} {
+      allow read: if false;
+      allow write: if false;
+    }
+    
+    // Default: deny all access
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

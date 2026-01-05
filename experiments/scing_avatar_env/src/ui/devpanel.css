@@ -1,0 +1,56 @@
+.scing-devpanel{
+  width:min(20vw,360px);
+  max-height:60vh;
+  overflow:auto;
+  color:#e9e6ff;
+  background:rgba(8,6,14,0.78);
+  border:1px solid rgba(138,92,255,0.22);
+  box-shadow:0 12px 40px rgba(0,0,0,0.45);
+  border-radius:14px;
+  padding:10px;
+  backdrop-filter: blur(10px);
+  color-scheme: dark;
+
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(138,92,255,0.38) rgba(10,8,18,0.6);
+}
+
+.scing-devpanel *{
+  color:inherit;
+}
+
+.scing-devpanel input,
+.scing-devpanel select{
+  background:rgba(18,14,28,0.8);
+  border:1px solid rgba(138,92,255,0.22);
+  color:#e9e6ff;
+  border-radius:10px;
+  padding:6px 8px;
+}
+
+.scing-devpanel textarea{
+  background:rgba(18,14,28,0.8);
+  border:1px solid rgba(138,92,255,0.22);
+  color:#e9e6ff;
+  border-radius:10px;
+  padding:8px;
+}
+
+.scing-devpanel button{
+  background:rgba(18,14,28,0.65);
+  border:1px solid rgba(138,92,255,0.28);
+  color:#e9e6ff;
+  border-radius:10px;
+  padding:6px 10px;
+  cursor:pointer;
+}
+
+.scing-devpanel button:hover{
+  border-color: rgba(255,0,133,0.38);
+}
+
+.scing-devpanel::-webkit-scrollbar{ width:10px; }
+.scing-devpanel::-webkit-scrollbar-track{ background:rgba(10,8,18,0.6); border-radius:999px; }
+.scing-devpanel::-webkit-scrollbar-thumb{ background:rgba(138,92,255,0.38); border-radius:999px; border:2px solid rgba(10,8,18,0.6); }
+.scing-devpanel::-webkit-scrollbar-thumb:hover{ background:rgba(255,0,133,0.38); }

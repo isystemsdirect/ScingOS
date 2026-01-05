@@ -1,0 +1,106 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - main
+  release:
+    types: [published]
+
+jobs:
+  test:
+    name: Run Tests
+    uses: ./.github/workflows/ci.yml
+  
+  deploy-client:
+    name: Deploy Client to Vercel Production
+    needs: test
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Install dependencies
+        working-directory: client
+        run: npm ci
+      
+      - name: Build client
+        working-directory: client
+        run: npm run build
+        env:
+          NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+          NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+          NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+          NEXT_PUBLIC_FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+      
+      - name: Deploy to Vercel Production
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: '--prod'
+          working-directory: client
+  
+  deploy-functions:
+    name: Deploy Functions to Firebase Production
+    needs: test
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Install dependencies
+        working-directory: cloud/functions
+        run: npm ci
+      
+      - name: Build functions
+        working-directory: cloud/functions
+        run: npm run build
+      
+      - name: Deploy to Firebase Production
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only functions --project production
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+      
+      - name: Deploy Firestore rules
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only firestore:rules --project production
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+      
+      - name: Deploy Storage rules
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only storage:rules --project production
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+  
+  notify:
+    name: Send Deployment Notification
+    needs: [deploy-client, deploy-functions]
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Send success notification
+        run: |
+          echo "✅ Production deployment successful!"
+          echo "Client: https://scingos.isystemsdirect.com"
+          echo "Functions: Deployed to Firebase"
