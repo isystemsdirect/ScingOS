@@ -1,10 +1,34 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import PillInputBar, { CamState, MicState } from "./PillInputBar";
 
 import { submitTextToScing } from "../neural/runtime/neuralIngress";
 import { getVoiceRuntime } from "../voice/runtime/voiceRuntime";
+
+function getPublicFlag(name: string): string | undefined {
+  // Works in Vite (import.meta.env), Next (process.env), and plain browser (undefined)
+  try {
+    const im = (import.meta as any);
+    const viteVal = im?.env?.[name];
+    if (typeof viteVal === "string") return viteVal;
+  } catch {
+    // ignore
+  }
+
+  // Guard process for Vite/browser
+  const p = (globalThis as any)?.process;
+  const nextVal = p?.env?.[name];
+  if (typeof nextVal === "string") return nextVal;
+
+  return undefined;
+}
+
+const isDemoMode =
+  (getPublicFlag("VITE_DEMO_MODE") ??
+    getPublicFlag("NEXT_PUBLIC_DEMO_MODE") ??
+    "")
+    .toLowerCase() === "true";
 
 async function enableCameraWeb(): Promise<MediaStream> {
   const stream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -98,7 +122,7 @@ export default function PillInputWiring() {
       getMicState={getMicState}
       getCamState={getCamState}
       toggleCamera={toggleCamera}
-      isDemoMode={(process.env.NEXT_PUBLIC_DEMO_MODE ?? "").toLowerCase() === "true"}
+      isDemoMode={isDemoMode}
     />
   );
 }

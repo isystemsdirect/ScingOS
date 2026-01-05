@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export type MicState = "idle" | "listening" | "error";
 export type CamState = "off" | "on" | "error";

@@ -1,6 +1,14 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import AppShell from "../components/layout/AppShell";
 import { CREATOR_STAMP } from "../lib/shared/provenance/creatorStamp";
+import { mapScingToSrt } from "../lib/shared/srt/mapScingToSrt";
+import {
+  ScingAffect,
+  ScingPhase,
+  ScingSignals,
+  ScingSpeechMode,
+} from "../lib/shared/srt/scingSignals";
+import { publishScingSignals } from "../lib/client/srt/scingSignalBus";
 
 function useOrigin() {
   return useMemo(() => {
@@ -58,6 +66,53 @@ export default function BfiPage() {
   const [coPhase, setCoPhase] = useState<"pre_imprint" | "imprinting" | "co_aware" | "suspended">("pre_imprint");
   const [coMode, setCoMode] = useState<"manual" | "assisted" | "delegated">("assisted");
   const [coBestOutcomeDefaults, setCoBestOutcomeDefaults] = useState<boolean>(false);
+
+  const [srtPhase, setSrtPhase] = useState<ScingPhase>("pre_imprint");
+  const [srtSpeechMode, setSrtSpeechMode] = useState<ScingSpeechMode>("silent");
+  const [srtAffect, setSrtAffect] = useState<ScingAffect>("calm");
+
+  const [srtConfidence, setSrtConfidence] = useState<number>(0.7);
+  const [srtLoad, setSrtLoad] = useState<number>(0.3);
+  const [srtUrgency, setSrtUrgency] = useState<number>(0.2);
+  const [srtStability, setSrtStability] = useState<number>(0.8);
+  const [srtNovelty, setSrtNovelty] = useState<number>(0.3);
+  const [srtSafety, setSrtSafety] = useState<number>(0.2);
+  const [srtCoherence, setSrtCoherence] = useState<number>(0.8);
+
+  const srtSignals = useMemo<ScingSignals>(() => {
+    return {
+      ts: Date.now(),
+      iuPartnerId,
+      phase: srtPhase,
+      confidence: srtConfidence,
+      load: srtLoad,
+      urgency: srtUrgency,
+      stability: srtStability,
+      novelty: srtNovelty,
+      safety: srtSafety,
+      coherence: srtCoherence,
+      speechMode: srtSpeechMode,
+      affect: srtAffect,
+    };
+  }, [
+    iuPartnerId,
+    srtAffect,
+    srtCoherence,
+    srtConfidence,
+    srtLoad,
+    srtNovelty,
+    srtPhase,
+    srtSafety,
+    srtSpeechMode,
+    srtStability,
+    srtUrgency,
+  ]);
+
+  const srtControls = useMemo(() => mapScingToSrt(srtSignals), [srtSignals]);
+
+  useEffect(() => {
+    publishScingSignals(srtSignals);
+  }, [srtSignals]);
 
   const buildSha = process.env.NEXT_PUBLIC_BUILD_SHA || "unknown";
   const buildBranch = process.env.NEXT_PUBLIC_BUILD_BRANCH || "unknown";
@@ -794,6 +849,187 @@ export default function BfiPage() {
             {mobiusTickOut ? (
               <pre className="max-h-72 overflow-auto rounded-lg bg-gray-50 border border-gray-200 p-3 text-xs">{JSON.stringify(mobiusTickOut, null, 2)}</pre>
             ) : null}
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl border border-gray-200 p-6">
+          <h2 className="text-lg font-semibold text-gray-900">SRT Mapping Console (Dev)</h2>
+          <p className="mt-1 text-sm text-gray-600">One-way: Scing cognitive signals → SRT expression controls.</p>
+
+          <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Phase</label>
+              <select
+                className="mt-1 w-full max-w-sm rounded-lg border border-gray-300 px-3 py-2 text-sm"
+                value={srtPhase}
+                onChange={(e) => setSrtPhase(e.target.value as ScingPhase)}
+              >
+                <option value="pre_imprint">pre_imprint</option>
+                <option value="imprinting">imprinting</option>
+                <option value="co_aware">co_aware</option>
+                <option value="suspended">suspended</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Speech mode</label>
+              <select
+                className="mt-1 w-full max-w-sm rounded-lg border border-gray-300 px-3 py-2 text-sm"
+                value={srtSpeechMode}
+                onChange={(e) => setSrtSpeechMode(e.target.value as ScingSpeechMode)}
+              >
+                <option value="silent">silent</option>
+                <option value="listening">listening</option>
+                <option value="thinking">thinking</option>
+                <option value="speaking">speaking</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Affect</label>
+              <select
+                className="mt-1 w-full max-w-sm rounded-lg border border-gray-300 px-3 py-2 text-sm"
+                value={srtAffect}
+                onChange={(e) => setSrtAffect(e.target.value as ScingAffect)}
+              >
+                <option value="calm">calm</option>
+                <option value="focused">focused</option>
+                <option value="curious">curious</option>
+                <option value="alert">alert</option>
+                <option value="protective">protective</option>
+                <option value="recovering">recovering</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-gray-200 bg-white p-4 space-y-3">
+              <div className="text-sm font-medium text-gray-900">Scalars (0..1)</div>
+
+              <div>
+                <div className="flex items-center justify-between text-xs text-gray-600">
+                  <span>confidence</span>
+                  <span className="font-mono">{srtConfidence.toFixed(2)}</span>
+                </div>
+                <input
+                  className="mt-1 w-full"
+                  type="range"
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  value={srtConfidence}
+                  onChange={(e) => setSrtConfidence(Number(e.target.value))}
+                />
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between text-xs text-gray-600">
+                  <span>load</span>
+                  <span className="font-mono">{srtLoad.toFixed(2)}</span>
+                </div>
+                <input
+                  className="mt-1 w-full"
+                  type="range"
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  value={srtLoad}
+                  onChange={(e) => setSrtLoad(Number(e.target.value))}
+                />
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between text-xs text-gray-600">
+                  <span>urgency</span>
+                  <span className="font-mono">{srtUrgency.toFixed(2)}</span>
+                </div>
+                <input
+                  className="mt-1 w-full"
+                  type="range"
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  value={srtUrgency}
+                  onChange={(e) => setSrtUrgency(Number(e.target.value))}
+                />
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between text-xs text-gray-600">
+                  <span>stability</span>
+                  <span className="font-mono">{srtStability.toFixed(2)}</span>
+                </div>
+                <input
+                  className="mt-1 w-full"
+                  type="range"
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  value={srtStability}
+                  onChange={(e) => setSrtStability(Number(e.target.value))}
+                />
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between text-xs text-gray-600">
+                  <span>novelty</span>
+                  <span className="font-mono">{srtNovelty.toFixed(2)}</span>
+                </div>
+                <input
+                  className="mt-1 w-full"
+                  type="range"
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  value={srtNovelty}
+                  onChange={(e) => setSrtNovelty(Number(e.target.value))}
+                />
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between text-xs text-gray-600">
+                  <span>safety</span>
+                  <span className="font-mono">{srtSafety.toFixed(2)}</span>
+                </div>
+                <input
+                  className="mt-1 w-full"
+                  type="range"
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  value={srtSafety}
+                  onChange={(e) => setSrtSafety(Number(e.target.value))}
+                />
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between text-xs text-gray-600">
+                  <span>coherence</span>
+                  <span className="font-mono">{srtCoherence.toFixed(2)}</span>
+                </div>
+                <input
+                  className="mt-1 w-full"
+                  type="range"
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  value={srtCoherence}
+                  onChange={(e) => setSrtCoherence(Number(e.target.value))}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <div className="text-sm font-medium text-gray-900">ScingSignals</div>
+                <pre className="mt-2 max-h-72 overflow-auto rounded-lg bg-gray-50 border border-gray-200 p-3 text-xs">{JSON.stringify(srtSignals, null, 2)}</pre>
+              </div>
+
+              <div>
+                <div className="text-sm font-medium text-gray-900">Mapped SrtControls</div>
+                <pre className="mt-2 max-h-72 overflow-auto rounded-lg bg-gray-50 border border-gray-200 p-3 text-xs">{JSON.stringify(srtControls, null, 2)}</pre>
+              </div>
+            </div>
           </div>
         </div>
 

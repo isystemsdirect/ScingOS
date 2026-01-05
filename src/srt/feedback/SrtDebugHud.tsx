@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import type { FC } from 'react';
+import { useEffect, useState } from 'react';
 import { getSrtFeedbackState, subscribeSrtFeedback } from './srtFeedbackStore';
 
-export const SrtDebugHud: React.FC = () => {
+export const SrtDebugHud: FC = () => {
 	const enabled =
 		typeof process !== 'undefined' &&
 		process.env.NEXT_PUBLIC_SRT_DEBUG === 'true';

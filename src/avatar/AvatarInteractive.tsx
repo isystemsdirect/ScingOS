@@ -1,4 +1,10 @@
-import type React from 'react';
+import type {
+  CSSProperties,
+  KeyboardEvent,
+  MouseEvent,
+  PointerEvent,
+  ReactNode,
+} from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { dispatchAvatarIntent, subscribeAvatarIntents } from './intentBridge';
 import { RadialMenu } from './RadialMenu';
@@ -29,7 +35,7 @@ export function AvatarInteractive(props: { children: React.ReactNode; className?
 		'--srt-hover': hoverProximity,
 		'--srt-pressed': pressed ? 1 : 0,
 		'--srt-attn': attentionPulse,
-    } as React.CSSProperties;
+    } as CSSProperties;
   }, [hoverProximity, pressed, attentionPulse]);
 
   useEffect(() => {
@@ -67,7 +73,7 @@ export function AvatarInteractive(props: { children: React.ReactNode; className?
     dispatchAvatarIntent('toggle_panel', { hoverProximity, pressed, attentionPulse: 1 });
   }, [hoverProximity, pressed]);
 
-  const onPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+  const onPointerDown = useCallback((e: PointerEvent<HTMLDivElement>) => {
     setPressed(true);
 
     try {
@@ -85,7 +91,7 @@ export function AvatarInteractive(props: { children: React.ReactNode; className?
     });
   }, [hoverProximity]);
 
-  const onPointerUp = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+  const onPointerUp = useCallback((e: PointerEvent<HTMLDivElement>) => {
     setPressed(false);
 
     try {
@@ -103,7 +109,7 @@ export function AvatarInteractive(props: { children: React.ReactNode; className?
     });
   }, [hoverProximity]);
 
-  const onPointerCancel = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+  const onPointerCancel = useCallback((e: PointerEvent<HTMLDivElement>) => {
     setPressed(false);
 
     try {
@@ -122,12 +128,12 @@ export function AvatarInteractive(props: { children: React.ReactNode; className?
     });
   }, [hoverProximity]);
 
-  const onPointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+  const onPointerMove = useCallback((e: PointerEvent<HTMLDivElement>) => {
     const p = computeHoverProximity(e.clientX, e.clientY);
     setHoverProximity(p);
   }, [computeHoverProximity]);
 
-  const onContextMenu = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+  const onContextMenu = useCallback((e: MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
     setMenuOpen(true);
     setMenuPos({ x: e.clientX, y: e.clientY });
@@ -138,7 +144,7 @@ export function AvatarInteractive(props: { children: React.ReactNode; className?
     setMenuOpen(false);
   }, []);
 
-  const onKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
+  const onKeyDown = useCallback((e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === ' ') {
       e.preventDefault();
       dispatchAvatarIntent('voice_ptt_start', { hoverProximity, pressed });
@@ -160,7 +166,7 @@ export function AvatarInteractive(props: { children: React.ReactNode; className?
     }
   }, [closeMenu, hoverProximity, pressed]);
 
-  const onKeyUp = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
+  const onKeyUp = useCallback((e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === ' ') {
       e.preventDefault();
       dispatchAvatarIntent('voice_ptt_stop', { hoverProximity, pressed: false });
