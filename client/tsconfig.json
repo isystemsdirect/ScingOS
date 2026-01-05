@@ -38,6 +38,36 @@
       "@rtsf/*": [
         "../src/*"
       ],
+      "@scingular/sdk": [
+        "../packages/scingular-sdk/src/index.ts"
+      ],
+      "@scingular/sdk/*": [
+        "../packages/scingular-sdk/src/*"
+      ],
+      "@scingular/policy": [
+        "../packages/scingular-policy/src/index.ts"
+      ],
+      "@scingular/policy/*": [
+        "../packages/scingular-policy/src/*"
+      ],
+      "@scingular/devkit": [
+        "../packages/scingular-devkit/src/index.ts"
+      ],
+      "@scingular/devkit/*": [
+        "../packages/scingular-devkit/src/*"
+      ],
+      "@scingular/bfi-intent": [
+        "../packages/bfi-intent/src/index.ts"
+      ],
+      "@scingular/bfi-intent/*": [
+        "../packages/bfi-intent/src/*"
+      ],
+      "@scingular/bfi-policy": [
+        "../packages/bfi-policy/src/index.ts"
+      ],
+      "@scingular/bfi-policy/*": [
+        "../packages/bfi-policy/src/*"
+      ],
       "react": [
         "./node_modules/@types/react/index.d.ts"
       ],

@@ -38,6 +38,13 @@ firestore-debug.log
 ui-debug.log
 .firebaserc
 
+# Local BFI/BDK ledgers (runtime memory)
+.scingular/
+
+# Nested repos (kept separate)
+scing-codex-foundation/
+scing-voice-interface/
+
 # Logs
 logs/
 *.log
