@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import AppShell from "../components/layout/AppShell";
 import { CREATOR_STAMP } from "../lib/shared/provenance/creatorStamp";
 import { mapScingToSrt } from "../lib/shared/srt/mapScingToSrt";
+import { hslToCss } from "../lib/shared/srt/colorFlux.utils";
 import {
   ScingAffect,
   ScingPhase,
@@ -109,6 +110,30 @@ export default function BfiPage() {
   ]);
 
   const srtControls = useMemo(() => mapScingToSrt(srtSignals), [srtSignals]);
+
+  const colorFlux = srtControls.colorFlux;
+
+  const colorFluxGradientCss = useMemo(() => {
+    if (!colorFlux) return "";
+    const layers = [colorFlux.lead, ...colorFlux.supports, ...colorFlux.accents]
+      .filter((l) => Number.isFinite(l.weight) && l.weight > 0)
+      .sort((a, b) => b.weight - a.weight);
+
+    const sum = layers.reduce((acc, l) => acc + l.weight, 0);
+    if (!layers.length || sum <= 0) return "";
+
+    let cursor = 0;
+    const stops: string[] = [];
+    for (const l of layers) {
+      const w = l.weight / sum;
+      const start = cursor;
+      cursor += w;
+      const color = hslToCss({ h: l.hueDeg, s: l.chroma, l: l.lightness, a: l.alpha });
+      stops.push(`${color} ${(start * 100).toFixed(2)}%`, `${color} ${(cursor * 100).toFixed(2)}%`);
+    }
+
+    return `linear-gradient(90deg, ${stops.join(", ")})`;
+  }, [colorFlux]);
 
   useEffect(() => {
     publishScingSignals(srtSignals);
@@ -1031,6 +1056,82 @@ export default function BfiPage() {
               </div>
             </div>
           </div>
+        </div>
+
+        <div className="bg-white rounded-xl border border-gray-200 p-6">
+          <h2 className="text-lg font-semibold text-gray-900">Color-Flux Console (Dev)</h2>
+          <p className="mt-1 text-sm text-gray-600">Lead color + delegated supports + accents (weighted gradient).</p>
+
+          {colorFlux ? (
+            <>
+              <div className="mt-4 rounded-lg border border-gray-200 bg-white p-3">
+                <div className="text-xs text-gray-600">Live bar</div>
+                <div
+                  className="mt-2 h-8 w-full rounded-md border border-gray-200"
+                  style={{ background: colorFluxGradientCss || undefined }}
+                />
+              </div>
+
+              <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="rounded-lg border border-gray-200 bg-white p-4">
+                  <div className="text-sm font-medium text-gray-900">Lead</div>
+                  <div className="mt-3 flex items-center gap-3">
+                    <div
+                      className="h-16 w-16 rounded-lg border border-gray-200"
+                      style={{
+                        background: hslToCss({
+                          h: colorFlux.lead.hueDeg,
+                          s: colorFlux.lead.chroma,
+                          l: colorFlux.lead.lightness,
+                          a: colorFlux.lead.alpha,
+                        }),
+                      }}
+                      title={`${colorFlux.lead.tag} w=${colorFlux.lead.weight.toFixed(3)}`}
+                    />
+                    <div className="text-xs text-gray-700">
+                      <div className="font-mono">tag: {colorFlux.lead.tag}</div>
+                      <div className="font-mono">w: {colorFlux.lead.weight.toFixed(3)}</div>
+                      <div className="font-mono">h: {colorFlux.lead.hueDeg.toFixed(1)}°</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="rounded-lg border border-gray-200 bg-white p-4">
+                  <div className="text-sm font-medium text-gray-900">Supports</div>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {colorFlux.supports.slice(0, 6).map((l) => (
+                      <div
+                        key={`sup-${l.tag}`}
+                        className="h-10 w-10 rounded-md border border-gray-200"
+                        style={{ background: hslToCss({ h: l.hueDeg, s: l.chroma, l: l.lightness, a: l.alpha }) }}
+                        title={`${l.tag} w=${l.weight.toFixed(3)}`}
+                      />
+                    ))}
+                    {!colorFlux.supports.length ? (
+                      <div className="text-xs text-gray-600">(none)</div>
+                    ) : null}
+                  </div>
+
+                  <div className="mt-4 text-sm font-medium text-gray-900">Accents</div>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {colorFlux.accents.slice(0, 3).map((l) => (
+                      <div
+                        key={`acc-${l.tag}`}
+                        className="h-6 w-6 rounded border border-gray-200"
+                        style={{ background: hslToCss({ h: l.hueDeg, s: l.chroma, l: l.lightness, a: l.alpha }) }}
+                        title={`${l.tag} w=${l.weight.toFixed(3)}`}
+                      />
+                    ))}
+                    {!colorFlux.accents.length ? (
+                      <div className="text-xs text-gray-600">(none)</div>
+                    ) : null}
+                  </div>
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="mt-4 text-sm text-gray-600">No colorFlux available.</div>
+          )}
         </div>
 
         <div className="bg-white rounded-xl border border-gray-200 p-6">

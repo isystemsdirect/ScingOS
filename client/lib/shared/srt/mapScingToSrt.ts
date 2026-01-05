@@ -1,5 +1,6 @@
 import { ScingSignals, clamp01, normalizeSignals } from "./scingSignals";
 import { SrtControls } from "./srtControls";
+import { mapScingToColorFlux } from "./mapScingToColorFlux";
 
 function mix(a: number, b: number, t: number) {
   return a * (1 - t) + b * t;
@@ -85,5 +86,6 @@ export function mapScingToSrt(raw: ScingSignals): SrtControls {
     pulseRate,
     breatheRate,
     modeTag,
+    colorFlux: mapScingToColorFlux(s),
   };
 }

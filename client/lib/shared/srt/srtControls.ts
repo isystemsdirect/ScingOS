@@ -1,3 +1,5 @@
+import type { ColorFlux } from "./colorFlux.types";
+
 export type SrtControls = {
   ts: number;
 
@@ -16,4 +18,7 @@ export type SrtControls = {
 
   // State tags for renderer (optional)
   modeTag: "idle" | "listen" | "think" | "speak" | "alert";
+
+  // Color is “what”, scalars are “how”
+  colorFlux?: ColorFlux;
 };
