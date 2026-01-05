@@ -40,6 +40,24 @@ export default function BfiPage() {
   const [execOut, setExecOut] = useState<any>(null);
   const [healthOut, setHealthOut] = useState<any>(null);
   const [insightsOut, setInsightsOut] = useState<any>(null);
+  const [coOut, setCoOut] = useState<any>(null);
+
+  const [iuPartnerId, setIuPartnerId] = useState<string>("iu-local-01");
+  const [proposeOut, setProposeOut] = useState<any>(null);
+  const [executeOut, setExecuteOut] = useState<any>(null);
+  const [auditOut, setAuditOut] = useState<any>(null);
+
+  const [mobiusConfigOut, setMobiusConfigOut] = useState<any>(null);
+  const [mobiusTickOut, setMobiusTickOut] = useState<any>(null);
+
+  const [mobiusEnabled, setMobiusEnabled] = useState<boolean>(false);
+  const [mobiusMode, setMobiusMode] = useState<"dormant" | "manual_tick">("dormant");
+  const [mobiusMinConfidenceToAct, setMobiusMinConfidenceToAct] = useState<number>(0.8);
+  const [mobiusMaxAutoRisk, setMobiusMaxAutoRisk] = useState<"low" | "medium" | "high" | "critical">("low");
+
+  const [coPhase, setCoPhase] = useState<"pre_imprint" | "imprinting" | "co_aware" | "suspended">("pre_imprint");
+  const [coMode, setCoMode] = useState<"manual" | "assisted" | "delegated">("assisted");
+  const [coBestOutcomeDefaults, setCoBestOutcomeDefaults] = useState<boolean>(false);
 
   const buildSha = process.env.NEXT_PUBLIC_BUILD_SHA || "unknown";
   const buildBranch = process.env.NEXT_PUBLIC_BUILD_BRANCH || "unknown";
@@ -72,7 +90,7 @@ export default function BfiPage() {
     setInsightsOut(null);
 
     try {
-      const data = await postJson("/api/bfi/simulate", token, { intentId });
+      const data = await postJson("/api/bfi/simulate", token, { intentId, iuPartnerId });
       setSimOut(data);
     } catch (e: any) {
       setSimOut({ ok: false, error: e?.message || String(e) });
@@ -133,6 +151,151 @@ export default function BfiPage() {
       setInsightsOut(data);
     } catch (e: any) {
       setInsightsOut({ ok: false, error: e?.message || String(e) });
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function loadCoAwareness() {
+    setBusy(true);
+    setCoOut(null);
+    try {
+      const data = await postJson("/api/scing/state", token, { iuPartnerId });
+      setCoOut(data);
+      if (data?.state) {
+        setCoPhase(data.state.phase);
+        setCoMode(data.state.delegation?.mode);
+        setCoBestOutcomeDefaults(Boolean(data.state.delegation?.bestOutcomeDefaults));
+      }
+    } catch (e: any) {
+      setCoOut({ ok: false, error: e?.message || String(e) });
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function updateCoAwareness(patch: any, devOverrideToCoAware?: boolean) {
+    setBusy(true);
+    setCoOut(null);
+    try {
+      const data = await postJson("/api/scing/state", token, { iuPartnerId, patch, devOverrideToCoAware });
+      setCoOut(data);
+      if (data?.state) {
+        setCoPhase(data.state.phase);
+        setCoMode(data.state.delegation?.mode);
+        setCoBestOutcomeDefaults(Boolean(data.state.delegation?.bestOutcomeDefaults));
+      }
+    } catch (e: any) {
+      setCoOut({ ok: false, error: e?.message || String(e) });
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function proposeFromSimulate() {
+    setBusy(true);
+    setProposeOut(null);
+    try {
+      if (!intentId) throw new Error("Declare intent first.");
+      const data = await postJson("/api/scing/actions/propose", token, {
+        iuPartnerId,
+        intentId,
+        description: "Run readiness checks and prepare a safe execution plan.",
+      });
+      setProposeOut(data);
+    } catch (e: any) {
+      setProposeOut({ ok: false, error: e?.message || String(e) });
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function executeRunTask() {
+    setBusy(true);
+    setExecuteOut(null);
+    try {
+      const actionPlan = proposeOut?.actionPlan || simOut?.actionPlan;
+      if (!actionPlan) throw new Error("No ActionPlan available (Propose first).");
+      const data = await postJson("/api/scing/actions/execute", token, { iuPartnerId, actionPlan });
+      setExecuteOut(data);
+    } catch (e: any) {
+      setExecuteOut({ ok: false, error: e?.message || String(e) });
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function loadAudit() {
+    setBusy(true);
+    setAuditOut(null);
+    try {
+      const data = await postJson("/api/scing/audit", token, { iuPartnerId, limit: 20 });
+      setAuditOut(data);
+    } catch (e: any) {
+      setAuditOut({ ok: false, error: e?.message || String(e) });
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function loadMobiusConfig() {
+    setBusy(true);
+    setMobiusConfigOut(null);
+    try {
+      const data = await postJson("/api/mobius/config", token, { iuPartnerId });
+      setMobiusConfigOut(data);
+      if (data?.config) {
+        setMobiusEnabled(Boolean(data.config.enabled));
+        if (data.config.mode === "manual_tick" || data.config.mode === "dormant") {
+          setMobiusMode(data.config.mode);
+        }
+        if (typeof data.config.minConfidenceToAct === "number") {
+          setMobiusMinConfidenceToAct(data.config.minConfidenceToAct);
+        }
+        if (data.config.maxAutoRisk) {
+          setMobiusMaxAutoRisk(data.config.maxAutoRisk);
+        }
+      }
+    } catch (e: any) {
+      setMobiusConfigOut({ ok: false, error: e?.message || String(e) });
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function saveMobiusConfig() {
+    setBusy(true);
+    setMobiusConfigOut(null);
+    try {
+      const data = await postJson("/api/mobius/config", token, {
+        iuPartnerId,
+        patch: {
+          enabled: mobiusEnabled,
+          mode: mobiusMode,
+          minConfidenceToAct: mobiusMinConfidenceToAct,
+          maxAutoRisk: mobiusMaxAutoRisk,
+        },
+      });
+      setMobiusConfigOut(data);
+    } catch (e: any) {
+      setMobiusConfigOut({ ok: false, error: e?.message || String(e) });
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function tickMobius() {
+    setBusy(true);
+    setMobiusTickOut(null);
+    try {
+      const data = await postJson("/api/mobius/tick", token, {
+        iuPartnerId,
+        intentId: intentId || undefined,
+        description: description.trim() || undefined,
+      });
+      setMobiusTickOut(data);
+    } catch (e: any) {
+      setMobiusTickOut({ ok: false, error: e?.message || String(e) });
     } finally {
       setBusy(false);
     }
@@ -269,6 +432,17 @@ export default function BfiPage() {
                   </div>
                 </div>
               )}
+
+              {simOut.actionPlan ? (
+                <div className="rounded-lg border border-gray-200 bg-white p-3">
+                  <div className="text-sm font-medium text-gray-900">Co-Aware ActionPlan (proposal)</div>
+                  <div className="mt-1 text-xs text-gray-700">
+                    Decision: <span className="font-mono">{simOut.actionPlan.decision}</span>
+                  </div>
+                  <div className="mt-1 text-xs text-gray-700">Why: {simOut.actionPlan.decisionWhy}</div>
+                  <pre className="mt-3 max-h-72 overflow-auto rounded-lg bg-gray-50 border border-gray-200 p-3 text-xs">{JSON.stringify(simOut.actionPlan, null, 2)}</pre>
+                </div>
+              ) : null}
             </div>
           )}
         </div>
@@ -319,7 +493,7 @@ export default function BfiPage() {
 
         <div className="bg-white rounded-xl border border-gray-200 p-6">
           <h2 className="text-lg font-semibold text-gray-900">Registry Health</h2>
-          <p className="mt-1 text-sm text-gray-600">Self-aware engine registry analysis (unused, orphaned, missing deps, overlap).</p>
+          <p className="mt-1 text-sm text-gray-600">Co-Aware engine registry analysis (unused, orphaned, missing deps, overlap).</p>
 
           <div className="mt-4">
             <button
@@ -386,6 +560,241 @@ export default function BfiPage() {
           ) : insightsOut ? (
             <pre className="mt-4 max-h-72 overflow-auto rounded-lg bg-gray-50 border border-gray-200 p-3 text-xs">{JSON.stringify(insightsOut, null, 2)}</pre>
           ) : null}
+        </div>
+
+        <div className="bg-white rounded-xl border border-gray-200 p-6">
+          <h2 className="text-lg font-semibold text-gray-900">Co-Aware / Imprinting / Delegated Autonomy (IU-first)</h2>
+          <p className="mt-1 text-sm text-gray-600">Load state → (dev override) → delegated → propose → execute run_task → audit tail.</p>
+
+          <div className="mt-4">
+            <label className="block text-sm font-medium text-gray-700">IU Partner ID</label>
+            <input
+              className="mt-1 w-full max-w-sm rounded-lg border border-gray-300 px-3 py-2 text-sm"
+              value={iuPartnerId}
+              onChange={(e) => setIuPartnerId(e.target.value)}
+              placeholder="iu-local-01"
+            />
+          </div>
+
+          <div className="mt-4 flex flex-wrap items-center gap-3">
+            <button
+              className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+              disabled={busy}
+              onClick={loadCoAwareness}
+            >
+              Load
+            </button>
+            <button
+              className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+              disabled={busy}
+              onClick={() =>
+                updateCoAwareness({
+                  phase: coPhase,
+                  delegation: { mode: coMode, bestOutcomeDefaults: coBestOutcomeDefaults },
+                })
+              }
+            >
+              Update
+            </button>
+
+            <button
+              className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+              disabled={busy}
+              onClick={() => updateCoAwareness({ phase: "co_aware" }, true)}
+            >
+              Dev Override → co_aware
+            </button>
+          </div>
+
+          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Phase</label>
+              <select
+                className="mt-1 w-full max-w-sm rounded-lg border border-gray-300 px-3 py-2 text-sm"
+                value={coPhase}
+                onChange={(e) => setCoPhase(e.target.value as any)}
+              >
+                <option value="pre_imprint">pre_imprint</option>
+                <option value="imprinting">imprinting</option>
+                <option value="co_aware">co_aware</option>
+                <option value="suspended">suspended</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Delegation mode</label>
+              <select
+                className="mt-1 w-full max-w-sm rounded-lg border border-gray-300 px-3 py-2 text-sm"
+                value={coMode}
+                onChange={(e) => setCoMode(e.target.value as any)}
+              >
+                <option value="manual">manual</option>
+                <option value="assisted">assisted</option>
+                <option value="delegated">delegated</option>
+              </select>
+            </div>
+
+            <div className="flex items-center">
+              <label className="mt-6 flex items-center gap-2 text-sm text-gray-700">
+                <input
+                  type="checkbox"
+                  checked={coBestOutcomeDefaults}
+                  onChange={(e) => setCoBestOutcomeDefaults(e.target.checked)}
+                />
+                Best-outcome defaults
+              </label>
+            </div>
+          </div>
+
+          <div className="mt-6 rounded-lg border border-gray-200 bg-white p-4 space-y-3">
+            <div className="text-sm font-medium text-gray-900">Propose / Execute / Audit</div>
+            <div className="flex flex-wrap items-center gap-3">
+              <button
+                className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+                disabled={busy || !intentId}
+                onClick={proposeFromSimulate}
+              >
+                Propose
+              </button>
+              <button
+                className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+                disabled={busy}
+                onClick={executeRunTask}
+              >
+                Execute (run_task)
+              </button>
+              <button
+                className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+                disabled={busy}
+                onClick={loadAudit}
+              >
+                Load Audit
+              </button>
+            </div>
+
+            {proposeOut ? (
+              <pre className="max-h-72 overflow-auto rounded-lg bg-gray-50 border border-gray-200 p-3 text-xs">{JSON.stringify(proposeOut, null, 2)}</pre>
+            ) : null}
+
+            {executeOut ? (
+              <pre className="max-h-72 overflow-auto rounded-lg bg-gray-50 border border-gray-200 p-3 text-xs">{JSON.stringify(executeOut, null, 2)}</pre>
+            ) : null}
+
+            {auditOut ? (
+              <pre className="max-h-72 overflow-auto rounded-lg bg-gray-50 border border-gray-200 p-3 text-xs">{JSON.stringify(auditOut, null, 2)}</pre>
+            ) : null}
+          </div>
+
+          {coOut ? (
+            <pre className="mt-4 max-h-72 overflow-auto rounded-lg bg-gray-50 border border-gray-200 p-3 text-xs">{JSON.stringify(coOut, null, 2)}</pre>
+          ) : null}
+        </div>
+
+        <div className="bg-white rounded-xl border border-gray-200 p-6">
+          <h2 className="text-lg font-semibold text-gray-900">Mobius (Managed Kernel)</h2>
+          <p className="mt-1 text-sm text-gray-600">Mobius is embedded but dormant until governance gates are satisfied.</p>
+
+          <div className="mt-4">
+            <label className="block text-sm font-medium text-gray-700">IU Partner ID</label>
+            <input
+              className="mt-1 w-full max-w-sm rounded-lg border border-gray-300 px-3 py-2 text-sm"
+              value={iuPartnerId}
+              onChange={(e) => setIuPartnerId(e.target.value)}
+              placeholder="iu-local-01"
+            />
+          </div>
+
+          <div className="mt-4 flex flex-wrap items-center gap-3">
+            <button
+              className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+              disabled={busy}
+              onClick={loadMobiusConfig}
+            >
+              Load Config
+            </button>
+
+            <button
+              className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+              disabled={busy}
+              onClick={saveMobiusConfig}
+            >
+              Save Config
+            </button>
+          </div>
+
+          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="flex items-center">
+              <label className="mt-6 flex items-center gap-2 text-sm text-gray-700">
+                <input
+                  type="checkbox"
+                  checked={mobiusEnabled}
+                  onChange={(e) => setMobiusEnabled(e.target.checked)}
+                />
+                Enabled (default off)
+              </label>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Mode</label>
+              <select
+                className="mt-1 w-full max-w-sm rounded-lg border border-gray-300 px-3 py-2 text-sm"
+                value={mobiusMode}
+                onChange={(e) => setMobiusMode(e.target.value as any)}
+              >
+                <option value="dormant">dormant</option>
+                <option value="manual_tick">manual_tick</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">minConfidenceToAct</label>
+              <input
+                className="mt-1 w-full max-w-sm rounded-lg border border-gray-300 px-3 py-2 text-sm"
+                type="number"
+                min={0}
+                max={1}
+                step={0.01}
+                value={mobiusMinConfidenceToAct}
+                onChange={(e) => setMobiusMinConfidenceToAct(Number(e.target.value))}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">maxAutoRisk</label>
+              <select
+                className="mt-1 w-full max-w-sm rounded-lg border border-gray-300 px-3 py-2 text-sm"
+                value={mobiusMaxAutoRisk}
+                onChange={(e) => setMobiusMaxAutoRisk(e.target.value as any)}
+              >
+                <option value="low">low</option>
+                <option value="medium">medium</option>
+                <option value="high">high</option>
+                <option value="critical">critical</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="mt-6 rounded-lg border border-gray-200 bg-white p-4 space-y-3">
+            <div className="text-sm font-medium text-gray-900">Tick</div>
+            <div className="text-xs text-gray-600">Run Mobius Tick (no auto-act unless enabled).</div>
+            <div className="flex flex-wrap items-center gap-3">
+              <button
+                className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+                disabled={busy}
+                onClick={tickMobius}
+              >
+                Run Mobius Tick
+              </button>
+            </div>
+
+            {mobiusConfigOut ? (
+              <pre className="max-h-72 overflow-auto rounded-lg bg-gray-50 border border-gray-200 p-3 text-xs">{JSON.stringify(mobiusConfigOut, null, 2)}</pre>
+            ) : null}
+
+            {mobiusTickOut ? (
+              <pre className="max-h-72 overflow-auto rounded-lg bg-gray-50 border border-gray-200 p-3 text-xs">{JSON.stringify(mobiusTickOut, null, 2)}</pre>
+            ) : null}
+          </div>
         </div>
 
         <div className="bg-white rounded-xl border border-gray-200 p-6">
