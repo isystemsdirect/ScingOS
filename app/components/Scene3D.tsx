@@ -3,10 +3,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
+import type { Mesh } from "three";
 import { subscribeToMockNeuralState, NeuralVisualState } from "../../neural/mockNeuralState";
 
 function SpinningCube({ state }: { state: NeuralVisualState }) {
-  const meshRef = useRef<any>();
+  const meshRef = useRef<Mesh | null>(null);
 
   // rotation speed based on intensity
   useFrame((_, delta) => {
@@ -27,7 +28,7 @@ function SpinningCube({ state }: { state: NeuralVisualState }) {
   const scale = 1 + state.intensity * 0.6;
 
   return (
-    <mesh ref={meshRef} scale={[scale, scale, scale] as any}>
+    <mesh ref={meshRef} scale={[scale, scale, scale]}>
       <boxGeometry args={[1.5, 1.5, 1.5]} />
       <meshStandardMaterial color={color} metalness={0.4} roughness={0.2} />
     </mesh>
