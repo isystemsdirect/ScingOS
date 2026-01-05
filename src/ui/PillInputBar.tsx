@@ -163,6 +163,8 @@ export default function PillInputBar(props: PillInputBarProps) {
       }
     } catch (err) {
       console.error(err);
+      // Revert toggle state so UI matches reality
+      setCamEnabled(false);
       setCamState("error");
       setStatusLine("Camera error.");
       if (typeof window !== "undefined") {

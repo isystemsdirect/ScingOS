@@ -50,14 +50,23 @@ export function computeModulationPolicy(params: {
     };
   }
 
-  if (state.energy === 'high' && state.load !== 'high') {
+  if (state.energy === 'high') {
+    const rawPaceDelta = state.load === 'low' ? 7 : 5;
     return {
       verbosityDelta: 0,
-      paceDeltaWpm: clampInt(5, 0, 10),
+      paceDeltaWpm: clampInt(rawPaceDelta, 0, 10),
       requireCheckpoints: false,
       reasons: [...state.reasons, 'policy: energy=high -> normal delivery'],
     };
   }
 
-  return null;
+  return {
+    verbosityDelta: 0,
+    paceDeltaWpm: 0,
+    requireCheckpoints: false,
+    preferCbFirst: false,
+    assumptionRateLimit: 'normal',
+    spokenChunkMaxCharsDelta: 0,
+    reasons: [...state.reasons, 'policy: no overlay'],
+  };
 }

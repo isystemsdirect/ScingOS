@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import PillInputBar, { CamState, MicState } from "./PillInputBar";
 
 import { submitTextToScing } from "../neural/runtime/neuralIngress";
@@ -21,6 +21,20 @@ export default function PillInputWiring() {
   const camStreamRef = useRef<MediaStream | null>(null);
   const [camOn, setCamOn] = useState(false);
 
+  const stopCamera = () => {
+    disableCameraWeb(camStreamRef.current);
+    camStreamRef.current = null;
+    setCamOn(false);
+  };
+
+  useEffect(() => {
+    return () => {
+      // Ensure camera shuts off if component unmounts while active
+      stopCamera();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const getMicState = (): MicState => {
     try {
       return vr.isListening() ? "listening" : "idle";
@@ -34,14 +48,29 @@ export default function PillInputWiring() {
   };
 
   const toggleCamera = async (next: boolean) => {
-    if (next) {
-      camStreamRef.current = await enableCameraWeb();
+    if (!next) {
+      stopCamera();
+      return;
+    }
+
+    // Guard: already active (avoid overwriting stream ref and leaking tracks)
+    if (camStreamRef.current) {
       setCamOn(true);
       return;
     }
-    disableCameraWeb(camStreamRef.current);
-    camStreamRef.current = null;
-    setCamOn(false);
+
+    try {
+      const stream = await enableCameraWeb();
+      camStreamRef.current = stream;
+      setCamOn(true);
+    } catch (err) {
+      // Permission denied / no device / etc.
+      disableCameraWeb(camStreamRef.current);
+      camStreamRef.current = null;
+      setCamOn(false);
+      console.error("enableCameraWeb failed:", err);
+      throw err;
+    }
   };
 
   const submitText = async (text: string) => {
@@ -69,7 +98,7 @@ export default function PillInputWiring() {
       getMicState={getMicState}
       getCamState={getCamState}
       toggleCamera={toggleCamera}
-      isDemoMode={(import.meta as any)?.env?.VITE_DEMO_MODE === "true"}
+      isDemoMode={(process.env.NEXT_PUBLIC_DEMO_MODE ?? "").toLowerCase() === "true"}
     />
   );
 }
