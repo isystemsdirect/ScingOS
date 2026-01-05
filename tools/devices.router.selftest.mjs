@@ -69,7 +69,13 @@ const router = createDeviceRouter({ captureStore: store });
 
 const allowCtx = {
   auth: { uid: 'u1', orgId: 'o1', deviceId: 'd1' },
-  session: { sessionId: 's1', inspectionId: 'i1', startedAt: new Date().toISOString(), mode: 'offline', activeEngines: [] },
+  session: {
+    sessionId: 's1',
+    inspectionId: 'i1',
+    startedAt: new Date().toISOString(),
+    mode: 'offline',
+    activeEngines: [],
+  },
   entitlements: () => ({ allow: true, reason: 'OK', key: 'vision' }),
   emit: () => {},
   nowIso: () => new Date().toISOString(),

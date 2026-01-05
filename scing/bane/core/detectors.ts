@@ -29,7 +29,11 @@ export function finding(params: {
   };
 }
 
-export function runDetectors(detectors: Detector[], input: BaneInput, hints: PolicyHints): BaneFinding[] {
+export function runDetectors(
+  detectors: Detector[],
+  input: BaneInput,
+  hints: PolicyHints
+): BaneFinding[] {
   const sorted = [...detectors].sort((a, b) => a.order - b.order || a.id.localeCompare(b.id));
   const out: BaneFinding[] = [];
   for (const d of sorted) {

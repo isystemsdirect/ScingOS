@@ -16,6 +16,10 @@ export function toAuditRecord(input: BaneInput, out: BaneOutput): BaneAuditRecor
     enforcementLevel: out.enforcementLevel,
     inputHash: sha256Hex(rawText),
     safeTextHash: typeof safeText === 'string' ? sha256Hex(safeText) : undefined,
-    findingsSummary: (out.findings ?? []).map((f) => ({ id: f.id, severity: f.severity, verdict: f.verdict })),
+    findingsSummary: (out.findings ?? []).map((f) => ({
+      id: f.id,
+      severity: f.severity,
+      verdict: f.verdict,
+    })),
   };
 }

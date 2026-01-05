@@ -10,7 +10,10 @@ export type ProviderDescriptor = {
 export type CapabilityRegistry = {
   list: () => ProviderDescriptor[];
   register: (d: ProviderDescriptor) => void;
-  findProviders: (params: { deviceKind: DeviceKind; captureKind: CaptureKind }) => ProviderDescriptor[];
+  findProviders: (params: {
+    deviceKind: DeviceKind;
+    captureKind: CaptureKind;
+  }) => ProviderDescriptor[];
 };
 
 export function createCapabilityRegistry(): CapabilityRegistry {
@@ -28,7 +31,7 @@ export function createCapabilityRegistry(): CapabilityRegistry {
         (p) =>
           p.capability.deviceKind === params.deviceKind &&
           (p.capability.captureKinds.includes(params.captureKind) ||
-            p.capability.captureKinds.includes('unknown')),
+            p.capability.captureKinds.includes('unknown'))
       ),
   };
 }

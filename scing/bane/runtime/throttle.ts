@@ -14,7 +14,11 @@ function key(identityId?: string, ipHash?: string): string {
   return identityId ? `id:${identityId}` : ipHash ? `ip:${ipHash}` : 'anon';
 }
 
-export function noteHostileAttempt(params: { identityId?: string; ipHash?: string; now?: number }): ThrottleState {
+export function noteHostileAttempt(params: {
+  identityId?: string;
+  ipHash?: string;
+  now?: number;
+}): ThrottleState {
   const now = params.now ?? Date.now();
   const k = key(params.identityId, params.ipHash);
   const prev = state.get(k);
@@ -25,7 +29,11 @@ export function noteHostileAttempt(params: { identityId?: string; ipHash?: strin
   return next;
 }
 
-export function decideThrottle(params: { identityId?: string; ipHash?: string; now?: number }): ThrottleDecision {
+export function decideThrottle(params: {
+  identityId?: string;
+  ipHash?: string;
+  now?: number;
+}): ThrottleDecision {
   const now = params.now ?? Date.now();
   const k = key(params.identityId, params.ipHash);
   const s = state.get(k);

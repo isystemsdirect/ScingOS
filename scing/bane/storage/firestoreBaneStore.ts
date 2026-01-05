@@ -49,10 +49,7 @@ export class FirestoreBaneStore implements BaneStore {
   }
 
   async getRecentAudits(limit: number): Promise<BaneAuditRecord[]> {
-    const q = this.db
-      .collection(BANE_COLLECTIONS.audits)
-      .orderBy?.('at', 'desc')
-      .limit?.(limit);
+    const q = this.db.collection(BANE_COLLECTIONS.audits).orderBy?.('at', 'desc').limit?.(limit);
 
     const snap = await (q ?? (this.db.collection(BANE_COLLECTIONS.audits) as any)).get();
     const docs = asArray<{ id: string; data: () => any }>((snap as any)?.docs ?? []);

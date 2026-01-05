@@ -15,7 +15,10 @@ export class InMemoryBaneStore implements BaneStore {
   }
 
   async getRecentAudits(limit: number): Promise<BaneAuditRecord[]> {
-    return this.audits.slice().sort((a, b) => b.at - a.at).slice(0, Math.max(1, Math.min(200, limit)));
+    return this.audits
+      .slice()
+      .sort((a, b) => b.at - a.at)
+      .slice(0, Math.max(1, Math.min(200, limit)));
   }
 
   async appendIncident(incident: BaneIncidentRecord): Promise<void> {

@@ -79,10 +79,16 @@ export function validateLariInput(
 
     const tol = m.value.tolerance;
     if (tol) {
-      if (tol.abs !== undefined && (typeof tol.abs !== 'number' || !Number.isFinite(tol.abs) || tol.abs < 0)) {
+      if (
+        tol.abs !== undefined &&
+        (typeof tol.abs !== 'number' || !Number.isFinite(tol.abs) || tol.abs < 0)
+      ) {
         errors.push(`MEAS_${idx}_INVALID_TOL_ABS`);
       }
-      if (tol.rel !== undefined && (typeof tol.rel !== 'number' || !Number.isFinite(tol.rel) || tol.rel < 0 || tol.rel > 1)) {
+      if (
+        tol.rel !== undefined &&
+        (typeof tol.rel !== 'number' || !Number.isFinite(tol.rel) || tol.rel < 0 || tol.rel > 1)
+      ) {
         errors.push(`MEAS_${idx}_INVALID_TOL_REL`);
       }
     }
@@ -113,8 +119,10 @@ export function validateLariInput(
       errors.push(`SENSORCAPTURE_${idx}_INVALID`);
       continue;
     }
-    if (!isNonEmptyString((s as any).providerId)) errors.push(`SENSORCAPTURE_${idx}_MISSING_PROVIDER`);
-    if (!isNonEmptyString((s as any).captureId)) errors.push(`SENSORCAPTURE_${idx}_MISSING_CAPTURE`);
+    if (!isNonEmptyString((s as any).providerId))
+      errors.push(`SENSORCAPTURE_${idx}_MISSING_PROVIDER`);
+    if (!isNonEmptyString((s as any).captureId))
+      errors.push(`SENSORCAPTURE_${idx}_MISSING_CAPTURE`);
   }
 
   return errors.length ? { ok: false, errors } : { ok: true };

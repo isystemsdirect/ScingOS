@@ -1,6 +1,4 @@
-export type CriticDecision =
-  | { allow: true }
-  | { allow: false; reason: string };
+export type CriticDecision = { allow: true } | { allow: false; reason: string };
 
 export type CriticResult = {
   findingId: string;

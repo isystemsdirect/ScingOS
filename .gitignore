@@ -138,3 +138,10 @@ emulator/
 **/.emulator/
 *.log
 *.tmp
+
+# --- Local workspace-only directories ---
+.scingular/
+_reports/
+client/.scing/
+scing-codex-foundation/
+scing-voice-interface/

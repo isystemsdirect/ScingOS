@@ -46,7 +46,8 @@ export function makeBaneHttpGuard(config: BaneRuntimeConfig) {
         status,
         message: out.publicMessage ?? 'Access denied by policy.',
         traceId: out.traceId,
-        retryAfterMs: out.throttle && out.throttle.action === 'block' ? out.throttle.retryAfterMs : undefined,
+        retryAfterMs:
+          out.throttle && out.throttle.action === 'block' ? out.throttle.retryAfterMs : undefined,
       };
     }
 

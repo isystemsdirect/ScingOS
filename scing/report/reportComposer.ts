@@ -134,26 +134,29 @@ function deterministicReportId(params: {
         relatedArtifactIds: [...f.relatedArtifactIds].sort(),
         codeRefs: f.codeRefs,
       })),
-    classifications: stableSort(params.classifications, (c) => `${c.createdAt}|${c.classificationId}`).map(
-      (c) => ({
-        classificationId: c.classificationId,
-        createdAt: c.createdAt,
-        engineId: c.engineId,
-        label: c.label,
-        confidence: c.confidence,
-        relatedArtifactIds: [...c.relatedArtifactIds].sort(),
-        metadata: c.metadata ?? null,
+    classifications: stableSort(
+      params.classifications,
+      (c) => `${c.createdAt}|${c.classificationId}`
+    ).map((c) => ({
+      classificationId: c.classificationId,
+      createdAt: c.createdAt,
+      engineId: c.engineId,
+      label: c.label,
+      confidence: c.confidence,
+      relatedArtifactIds: [...c.relatedArtifactIds].sort(),
+      metadata: c.metadata ?? null,
+    })),
+    mapLayers: stableSort(params.mapLayers ?? [], (m) => `${m.createdAt}|${m.layerId}`).map(
+      (m) => ({
+        layerId: m.layerId,
+        createdAt: m.createdAt,
+        engineId: m.engineId,
+        name: m.name,
+        kind: m.kind,
+        relatedArtifactIds: [...m.relatedArtifactIds].sort(),
+        storage: m.storage ?? null,
       })
     ),
-    mapLayers: stableSort(params.mapLayers ?? [], (m) => `${m.createdAt}|${m.layerId}`).map((m) => ({
-      layerId: m.layerId,
-      createdAt: m.createdAt,
-      engineId: m.engineId,
-      name: m.name,
-      kind: m.kind,
-      relatedArtifactIds: [...m.relatedArtifactIds].sort(),
-      storage: m.storage ?? null,
-    })),
   };
 
   return `report_${sha256Hex(stableJsonDeep(payload))}`;
@@ -306,7 +309,10 @@ export function composeDeterministicReport(params: {
             sensorCaptures: params.inspection.sensorCaptures,
           }) as any
         );
-        if (domain.reportRequirements?.includeDisclaimer && domain.reportRequirements?.disclaimerText) {
+        if (
+          domain.reportRequirements?.includeDisclaimer &&
+          domain.reportRequirements?.disclaimerText
+        ) {
           sections.push({
             section: 'disclaimer',
             title: 'Disclaimer',

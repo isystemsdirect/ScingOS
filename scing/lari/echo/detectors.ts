@@ -38,7 +38,11 @@ export function detectThreshold(params: {
     type: 'threshold_exceeded',
     title: `${params.measurement.name} threshold exceeded`,
     description: `${params.measurement.name} is ${v}${params.measurement.unit} which violates limit ${params.comparator}${params.limit}${params.measurement.unit}.`,
-    threshold: { limit: params.limit, unit: params.measurement.unit, comparator: params.comparator },
+    threshold: {
+      limit: params.limit,
+      unit: params.measurement.unit,
+      comparator: params.comparator,
+    },
     evidence: [{ kind: 'measurement', refId: params.measurement.measurementId }],
     confidence: { confidenceScore: 0.9, uncertaintyScore: 0.1, uncertaintyDrivers: [] },
     nextChecks: [
@@ -79,7 +83,10 @@ export function detectMissingRequired(params: {
         },
       ],
       confidence: { confidenceScore: 0.95, uncertaintyScore: 0.05, uncertaintyDrivers: [] },
-      nextChecks: [`Capture measurement "${name}" with unit and tolerance`, 'Log method and provenance'],
+      nextChecks: [
+        `Capture measurement "${name}" with unit and tolerance`,
+        'Log method and provenance',
+      ],
     };
   });
 }

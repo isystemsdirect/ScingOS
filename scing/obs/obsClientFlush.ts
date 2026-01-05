@@ -1,10 +1,7 @@
 import type { ObsEvent } from './obsTypes';
 import { peekObs, dropObs } from './obsClientQueue';
 
-export async function flushObs(
-  writeFn: (evt: ObsEvent) => Promise<void>,
-  limit: number = 50
-) {
+export async function flushObs(writeFn: (evt: ObsEvent) => Promise<void>, limit: number = 50) {
   const batch = peekObs(limit);
   if (batch.length === 0) return { ok: true, flushed: 0 };
 

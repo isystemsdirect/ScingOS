@@ -20,7 +20,13 @@ export type ExportManifest = {
   }>;
 
   // custody anchors
-  wormHeads: Array<{ scope: string; scopeId: string; thisHash: string; index: number; prevHash?: string }>;
+  wormHeads: Array<{
+    scope: string;
+    scopeId: string;
+    thisHash: string;
+    index: number;
+    prevHash?: string;
+  }>;
 };
 
 export function buildManifest(params: {
@@ -29,8 +35,19 @@ export function buildManifest(params: {
   reportId: string;
   createdAt: string;
   blobs: Array<{ name: string; json: unknown }>;
-  artifacts: Array<{ artifactId: string; contentHash: string; integrityState: string; finalized: boolean }>;
-  wormHeads: Array<{ scope: string; scopeId: string; thisHash: string; index: number; prevHash?: string }>;
+  artifacts: Array<{
+    artifactId: string;
+    contentHash: string;
+    integrityState: string;
+    finalized: boolean;
+  }>;
+  wormHeads: Array<{
+    scope: string;
+    scopeId: string;
+    thisHash: string;
+    index: number;
+    prevHash?: string;
+  }>;
 }): ExportManifest {
   const hashes = params.blobs.map((b) => ({
     name: b.name,

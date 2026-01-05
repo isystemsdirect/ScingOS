@@ -22,7 +22,10 @@ function traceIdFromEntropy(): string {
   return crypto.randomBytes(16).toString('hex');
 }
 
-function publicMessageFor(params: { verdict: BaneOutput['verdict']; enforcementLevel: number }): string | undefined {
+function publicMessageFor(params: {
+  verdict: BaneOutput['verdict'];
+  enforcementLevel: number;
+}): string | undefined {
   if (params.verdict === 'deny') {
     return params.enforcementLevel >= 4
       ? 'Access revoked temporarily due to policy violations. Contact an authorized administrator.'
@@ -65,7 +68,13 @@ export function createLiveBaneEngine(config: BaneRuntimeConfig) {
       const agg = aggregate(findings);
 
       let enforcementLevel: BaneOutput['enforcementLevel'] =
-        agg.verdict === 'deny' ? 3 : agg.verdict === 'review' ? 2 : agg.verdict === 'sanitize' ? 1 : 0;
+        agg.verdict === 'deny'
+          ? 3
+          : agg.verdict === 'review'
+            ? 2
+            : agg.verdict === 'sanitize'
+              ? 1
+              : 0;
 
       const identityId = input.req?.auth?.identityId;
       if (agg.verdict === 'deny' && identityId && hints.escalationEnabled) {

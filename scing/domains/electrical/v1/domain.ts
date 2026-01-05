@@ -9,7 +9,10 @@ export const ELECTRICAL_DOMAIN_V1 = {
     },
     { key: 'panel_labeling', description: 'Close-up of labeling / circuit directory' },
     { key: 'breaker_detail', description: 'Close-up of breakers and any suspected defects' },
-    { key: 'outlet_sample', description: 'Representative outlet/switch sample photos for the area' },
+    {
+      key: 'outlet_sample',
+      description: 'Representative outlet/switch sample photos for the area',
+    },
   ],
   requiredMeasurements: [
     { name: 'line_voltage', unit: 'v', tolerancePlusMinus: 2, method: 'manual' },

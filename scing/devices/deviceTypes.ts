@@ -3,13 +3,7 @@ import type { BaneKey, Stage } from '../bane/baneTypes';
 
 export type DeviceKind = 'camera' | 'drone' | 'spectrometer' | 'sonar' | 'unknown';
 
-export type CaptureKind =
-  | 'photo'
-  | 'video'
-  | 'telemetry'
-  | 'spectrum'
-  | 'sonar_scan'
-  | 'unknown';
+export type CaptureKind = 'photo' | 'video' | 'telemetry' | 'spectrum' | 'sonar_scan' | 'unknown';
 
 export type CaptureStatus = 'ok' | 'queued' | 'rejected';
 

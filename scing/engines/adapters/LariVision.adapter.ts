@@ -26,12 +26,27 @@ function artifactMatchesKey(params: {
 
   // Deterministic heuristic mapping for common IDs/types (keeps gold sets simple).
   if (k === 'roof_overview' && (a.includes('overview') || a.includes('roof_overview'))) return true;
-  if (k === 'penetration_detail' && (a.includes('penetration') || a.includes('vent') || a.includes('chimney') || a.includes('flashing'))) return true;
-  if (k === 'damage_closeup' && (a.includes('damage') || a.includes('closeup') || a.includes('crack') || a.includes('missing'))) return true;
+  if (
+    k === 'penetration_detail' &&
+    (a.includes('penetration') ||
+      a.includes('vent') ||
+      a.includes('chimney') ||
+      a.includes('flashing'))
+  )
+    return true;
+  if (
+    k === 'damage_closeup' &&
+    (a.includes('damage') || a.includes('closeup') || a.includes('crack') || a.includes('missing'))
+  )
+    return true;
   if (k === 'slope_edge' && (a.includes('slope') || a.includes('edge'))) return true;
 
-  if (k === 'panel_overview' && (a.includes('panel') && a.includes('overview'))) return true;
-  if (k === 'breaker_detail' && (a.includes('breaker') || a.includes('arcing') || a.includes('burn'))) return true;
+  if (k === 'panel_overview' && a.includes('panel') && a.includes('overview')) return true;
+  if (
+    k === 'breaker_detail' &&
+    (a.includes('breaker') || a.includes('arcing') || a.includes('burn'))
+  )
+    return true;
 
   return false;
 }
@@ -51,9 +66,7 @@ function requiredArtifactKeys(params: {
     }
   }
 
-  const missingKeys = params.domainArtifacts
-    .map((r) => r.key)
-    .filter((k) => !presentKeys.has(k));
+  const missingKeys = params.domainArtifacts.map((r) => r.key).filter((k) => !presentKeys.has(k));
 
   return { missingKeys, presentKeys };
 }
@@ -61,11 +74,18 @@ function requiredArtifactKeys(params: {
 function pickRoofingFinding(params: {
   domainTaxonomy: ReadonlyArray<{ code: string; label: string; defaultSeverity: string }>;
   artifacts: Array<{ artifactId: string; type: string }>;
-}): { title: string; code: string; severity: LariFinding['severity']; evidenceArtifactId: string } | null {
+}): {
+  title: string;
+  code: string;
+  severity: LariFinding['severity'];
+  evidenceArtifactId: string;
+} | null {
   const rf02 = params.domainTaxonomy.find((t) => t.code === 'RF-02');
   if (!rf02) return null;
 
-  const damage = params.artifacts.find((a) => artifactMatchesKey({ artifact: a, key: 'damage_closeup' }));
+  const damage = params.artifacts.find((a) =>
+    artifactMatchesKey({ artifact: a, key: 'damage_closeup' })
+  );
   if (!damage) return null;
 
   return {
@@ -80,7 +100,11 @@ export async function handle(params: {
   input: LariEngineInput;
   fields: { domainKey?: string };
 }): Promise<
-  | { blocked: true; reason: 'INPUT_SCHEMA_VIOLATION' | 'OUTPUT_SCHEMA_VIOLATION'; errors: string[] }
+  | {
+      blocked: true;
+      reason: 'INPUT_SCHEMA_VIOLATION' | 'OUTPUT_SCHEMA_VIOLATION';
+      errors: string[];
+    }
   | { blocked: false; output: LariEngineOutput }
 > {
   const i = params.input;
@@ -166,7 +190,11 @@ export async function handle(params: {
         severity: f.severity,
         description: `Taxonomy-constrained roofing finding.${verificationNote}`,
         evidence: [{ kind: 'artifact', refId: f.evidenceArtifactId }],
-        confidence: { confidenceScore: 0.6, uncertaintyScore: 0.4, uncertaintyDrivers: ['heuristic_baseline'] },
+        confidence: {
+          confidenceScore: 0.6,
+          uncertaintyScore: 0.4,
+          uncertaintyDrivers: ['heuristic_baseline'],
+        },
       });
     }
   }

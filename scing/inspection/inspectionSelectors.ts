@@ -2,7 +2,9 @@ import type { InspectionRecord } from './inspectionTypes';
 import type { ArtifactRecord, FindingRecord, ClassificationRecord } from '../evidence';
 
 export function sortByCreatedAt<T extends { createdAt: string }>(items: T[]): T[] {
-  return [...items].sort((a, b) => (a.createdAt < b.createdAt ? -1 : a.createdAt > b.createdAt ? 1 : 0));
+  return [...items].sort((a, b) =>
+    a.createdAt < b.createdAt ? -1 : a.createdAt > b.createdAt ? 1 : 0
+  );
 }
 
 export function selectSummary(params: {

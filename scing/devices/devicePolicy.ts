@@ -27,7 +27,8 @@ function defaultExternalHardware(deviceKind: CaptureRequest['deviceKind']): bool
 
 export function decideDevicePolicy(ctx: BusContext, req: CaptureRequest): DevicePolicyDecision {
   const key = mapEngineToBaneKey(req.engineId);
-  const requiresExternalHardware = req.requiresExternalHardware ?? defaultExternalHardware(req.deviceKind);
+  const requiresExternalHardware =
+    req.requiresExternalHardware ?? defaultExternalHardware(req.deviceKind);
 
   const decision = ctx.entitlements({
     key,

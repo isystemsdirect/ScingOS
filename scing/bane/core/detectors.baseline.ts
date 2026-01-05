@@ -21,11 +21,25 @@ const INTRUSION_HINTS = [
   'act as',
 ];
 
-const EXFIL_HINTS = ['api key', 'secret', 'token', 'password', 'credentials', 'private key', 'dump'];
+const EXFIL_HINTS = [
+  'api key',
+  'secret',
+  'token',
+  'password',
+  'credentials',
+  'private key',
+  'dump',
+];
 
 const MALWARE_HINTS = ['malware', 'ransomware', 'keylogger', 'exploit', 'payload', 'backdoor'];
 
-const PRIV_ESC_HINTS = ['admin', 'elevate privilege', 'root access', 'operator mode', 'policy admin'];
+const PRIV_ESC_HINTS = [
+  'admin',
+  'elevate privilege',
+  'root access',
+  'operator mode',
+  'policy admin',
+];
 
 export function baselineDetectors(): Detector[] {
   return [
@@ -63,7 +77,8 @@ export function baselineDetectors(): Detector[] {
               title: 'Potential data exfiltration intent detected',
               severity: 'high',
               verdict: 'deny',
-              rationale: 'Input suggests an attempt to obtain sensitive credentials or restricted data.',
+              rationale:
+                'Input suggests an attempt to obtain sensitive credentials or restricted data.',
               tags: ['exfil', 'baseline'],
             }),
           ];

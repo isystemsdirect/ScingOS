@@ -39,7 +39,11 @@ export function makeBaneToolGuard(config: BaneRuntimeConfig) {
 
     const out = engine.evaluate(input);
     if (out.verdict === 'deny' || out.verdict === 'review') {
-      return { ok: false, traceId: out.traceId, message: out.publicMessage ?? 'Tool invocation blocked by policy.' };
+      return {
+        ok: false,
+        traceId: out.traceId,
+        message: out.publicMessage ?? 'Tool invocation blocked by policy.',
+      };
     }
 
     return { ok: true, traceId: out.traceId };

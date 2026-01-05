@@ -34,7 +34,12 @@ function deny(params: {
   };
 }
 
-export function banePreflight(config: BaneRuntimeConfig, input: BaneInput, traceId: string, t0: number): BaneOutput | null {
+export function banePreflight(
+  config: BaneRuntimeConfig,
+  input: BaneInput,
+  traceId: string,
+  t0: number
+): BaneOutput | null {
   const hints = policyForProfile(config.profileId);
   const lockdown = isGlobalLockdown();
   if (lockdown.active) {
@@ -77,7 +82,8 @@ export function banePreflight(config: BaneRuntimeConfig, input: BaneInput, trace
     return deny({
       traceId,
       enforcementLevel: 4,
-      message: 'Access revoked temporarily due to policy violations. Contact an authorized administrator.',
+      message:
+        'Access revoked temporarily due to policy violations. Contact an authorized administrator.',
       id: 'REPLAY_DETECTED',
       title: 'Replay detected',
       rationale: 'Request nonce has been seen recently.',
@@ -102,7 +108,8 @@ export function banePreflight(config: BaneRuntimeConfig, input: BaneInput, trace
       traceId,
       timingMs: Date.now() - t0,
       enforcementLevel: 4,
-      publicMessage: 'Access revoked temporarily due to policy violations. Contact an authorized administrator.',
+      publicMessage:
+        'Access revoked temporarily due to policy violations. Contact an authorized administrator.',
     };
   }
 

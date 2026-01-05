@@ -16,7 +16,10 @@ export function makeBaneOperatorApi(store: BaneStore) {
       }
     },
 
-    async unlockIdentity(auth: OperatorAuth, identityId: string): Promise<OperatorResult<{ identityId: string }>> {
+    async unlockIdentity(
+      auth: OperatorAuth,
+      identityId: string
+    ): Promise<OperatorResult<{ identityId: string }>> {
       const authz = requireCapability(auth, 'bane:operator');
       if (authz.ok === false) return authz;
       try {

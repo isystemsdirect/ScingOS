@@ -110,7 +110,11 @@ const classificationsA = [
   },
 ];
 
-const g1 = buildPrismGraph({ artifacts: artifactsA, findings: findingsA, classifications: classificationsA });
+const g1 = buildPrismGraph({
+  artifacts: artifactsA,
+  findings: findingsA,
+  classifications: classificationsA,
+});
 
 // Reorder inputs and ensure deterministic graphHash.
 const g2 = buildPrismGraph({

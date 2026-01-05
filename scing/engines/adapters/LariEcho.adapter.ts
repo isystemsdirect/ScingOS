@@ -16,7 +16,11 @@ export async function handle(params: {
   input: LariEngineInput;
   fields: { domainKey?: string };
 }): Promise<
-  | { blocked: true; reason: 'INPUT_SCHEMA_VIOLATION' | 'OUTPUT_SCHEMA_VIOLATION'; errors: string[] }
+  | {
+      blocked: true;
+      reason: 'INPUT_SCHEMA_VIOLATION' | 'OUTPUT_SCHEMA_VIOLATION';
+      errors: string[];
+    }
   | { blocked: false; output: LariEngineOutput }
 > {
   const i = params.input;
@@ -58,7 +62,9 @@ export async function handle(params: {
       confidence: a.confidence,
     })),
     assumptions: ['Echo flags indicators only; it does not assert cause.'],
-    limitations: ['Echo operates on structured measurements, artifacts metadata, and stored snapshots only.'],
+    limitations: [
+      'Echo operates on structured measurements, artifacts metadata, and stored snapshots only.',
+    ],
     engineWarnings,
     schemaVersion: '1.0.0',
   };

@@ -6,7 +6,6 @@ export function prismGraphSection(graph: PrismGraph): {
 } {
   return {
     graph,
-    note:
-      'Prism graph is a deterministic causal/evidence structure linking findings and classifications to specific artifacts.',
+    note: 'Prism graph is a deterministic causal/evidence structure linking findings and classifications to specific artifacts.',
   };
 }

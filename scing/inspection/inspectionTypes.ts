@@ -1,11 +1,6 @@
 import type { GeoPoint } from '../evidence';
 
-export type InspectionStatus =
-  | 'open'
-  | 'in_progress'
-  | 'ready_to_finalize'
-  | 'final'
-  | 'archived';
+export type InspectionStatus = 'open' | 'in_progress' | 'ready_to_finalize' | 'final' | 'archived';
 
 export type InspectionRecord = {
   inspectionId: string;

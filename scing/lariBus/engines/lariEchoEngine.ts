@@ -11,16 +11,22 @@ type EchoTelemetryMeasurement = {
   observedAt?: string;
   value?: number;
   unit?: string;
-  evidence?: Array<{ kind: 'artifact' | 'measurement' | 'field_input' | 'external_standard'; refId: string; note?: string }>;
+  evidence?: Array<{
+    kind: 'artifact' | 'measurement' | 'field_input' | 'external_standard';
+    refId: string;
+    note?: string;
+  }>;
 };
 
 const nowIso = (): string => new Date().toISOString();
 
 const normalizeMeasurement = (m: EchoTelemetryMeasurement): LariInputMeasurement | null => {
   if (!m) return null;
-  const measurementId = typeof m.measurementId === 'string' && m.measurementId.length > 0 ? m.measurementId : null;
+  const measurementId =
+    typeof m.measurementId === 'string' && m.measurementId.length > 0 ? m.measurementId : null;
   const name = typeof m.name === 'string' && m.name.length > 0 ? m.name : null;
-  const observedAt = typeof m.observedAt === 'string' && m.observedAt.length > 0 ? m.observedAt : nowIso();
+  const observedAt =
+    typeof m.observedAt === 'string' && m.observedAt.length > 0 ? m.observedAt : nowIso();
   const value = typeof m.value === 'number' && Number.isFinite(m.value) ? m.value : null;
   const unit = typeof m.unit === 'string' ? m.unit : null;
 
@@ -54,9 +60,7 @@ const extractMeasurementsFromTelemetry = (payload: any): LariInputMeasurement[] 
   return out;
 };
 
-const mapEchoTypeToSeverity = (
-  t: string
-): 'info' | 'minor' | 'major' | 'critical' => {
+const mapEchoTypeToSeverity = (t: string): 'info' | 'minor' | 'major' | 'critical' => {
   switch (t) {
     case 'missing_required_measurement':
       return 'minor';
@@ -122,7 +126,11 @@ export function createLariEchoEngine(): EngineContract {
           // Latest snapshot semantics (deterministic ordering by name then id).
           state.measurements = ms
             .slice()
-            .sort((a, b) => (a.name === b.name ? a.measurementId.localeCompare(b.measurementId) : a.name.localeCompare(b.name)));
+            .sort((a, b) =>
+              a.name === b.name
+                ? a.measurementId.localeCompare(b.measurementId)
+                : a.name.localeCompare(b.name)
+            );
         }
         return [];
       }

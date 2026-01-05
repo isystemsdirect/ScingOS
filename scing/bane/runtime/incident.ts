@@ -25,6 +25,10 @@ export function toIncidentRecord(
     enforcementLevel: out.enforcementLevel ?? 0,
     verdict: out.verdict,
     severity: out.severity,
-    findingsSummary: (out.findings ?? []).map((f) => ({ id: f.id, severity: f.severity, verdict: f.verdict })),
+    findingsSummary: (out.findings ?? []).map((f) => ({
+      id: f.id,
+      severity: f.severity,
+      verdict: f.verdict,
+    })),
   };
 }

@@ -21,7 +21,10 @@ function baseSeverity(f: LariFinding): DoseFinding['normalizedSeverity'] {
   return f.severity ?? 'info';
 }
 
-function defaultScores(sev: DoseFinding['normalizedSeverity']): { exposure: number; likelihood: number } {
+function defaultScores(sev: DoseFinding['normalizedSeverity']): {
+  exposure: number;
+  likelihood: number;
+} {
   if (sev === 'critical') return { exposure: 5, likelihood: 4 };
   if (sev === 'major') return { exposure: 4, likelihood: 3 };
   if (sev === 'moderate') return { exposure: 3, likelihood: 3 };
@@ -29,10 +32,7 @@ function defaultScores(sev: DoseFinding['normalizedSeverity']): { exposure: numb
   return { exposure: 1, likelihood: 1 };
 }
 
-function guidanceNotes(params: {
-  domainKey?: string;
-  finding: LariFinding;
-}): string[] {
+function guidanceNotes(params: { domainKey?: string; finding: LariFinding }): string[] {
   if (!params.domainKey) return [];
   const domain = getDomain(params.domainKey);
   if (!domain?.severityGuidance?.length) return [];
@@ -43,16 +43,23 @@ function guidanceNotes(params: {
   const triggers = new Set<string>();
 
   if (domain.domainKey === 'roofing') {
-    if (title.includes('missing shingles') || title.includes('cracked')) triggers.add('missing_shingles_present');
+    if (title.includes('missing shingles') || title.includes('cracked'))
+      triggers.add('missing_shingles_present');
     if (title.includes('flashing')) triggers.add('flashing_compromised');
     if (title.includes('leak')) triggers.add('active_leak_signs');
   }
 
   if (domain.domainKey === 'electrical') {
-    if (title.includes('burn') || title.includes('arcing') || desc.includes('burn') || desc.includes('arcing')) {
+    if (
+      title.includes('burn') ||
+      title.includes('arcing') ||
+      desc.includes('burn') ||
+      desc.includes('arcing')
+    ) {
       triggers.add('burn_marks_present');
     }
-    if (title.includes('line_voltage') || desc.includes('voltage')) triggers.add('line_voltage_out_of_range');
+    if (title.includes('line_voltage') || desc.includes('voltage'))
+      triggers.add('line_voltage_out_of_range');
     if (title.includes('gfci') || desc.includes('gfci')) triggers.add('gfci_fails_trip_test');
   }
 
@@ -64,10 +71,7 @@ function guidanceNotes(params: {
   return notes;
 }
 
-export function computeDose(params: {
-  findings: LariFinding[];
-  domainKey?: string;
-}): DoseOutput {
+export function computeDose(params: { findings: LariFinding[]; domainKey?: string }): DoseOutput {
   const domain = params.domainKey ? getDomain(params.domainKey) : null;
 
   const doseFindings: DoseFinding[] = (params.findings ?? []).map((f) => {
@@ -84,7 +88,12 @@ export function computeDose(params: {
 
     // Electrical safety escalation (deterministic override).
     if (domain?.domainKey === 'electrical') {
-      if (title.includes('burn') || title.includes('arcing') || desc.includes('burn') || desc.includes('arcing')) {
+      if (
+        title.includes('burn') ||
+        title.includes('arcing') ||
+        desc.includes('burn') ||
+        desc.includes('arcing')
+      ) {
         normalizedSeverity = 'critical';
         exposure = 5;
         likelihood = Math.max(likelihood, 4);

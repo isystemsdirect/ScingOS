@@ -4,16 +4,23 @@ import type { CaptureRecord, CaptureRequest, CaptureResult } from './deviceTypes
 import type { DeviceProvider } from './providers';
 import type { CaptureStore } from './captureStore';
 import { decideDevicePolicy } from './devicePolicy';
-import { DevicePolicyDeniedError, DeviceUnavailableError, CaptureFailedError } from './deviceErrors';
+import {
+  DevicePolicyDeniedError,
+  DeviceUnavailableError,
+  CaptureFailedError,
+} from './deviceErrors';
 
 export type DeviceRouter = {
-  registerProvider: (provider: DeviceProvider, capability: {
-    deviceKind: CaptureRequest['deviceKind'];
-    captureKinds: CaptureRequest['captureKind'][];
-    label?: string;
-    requiresExternalHardware?: boolean;
-    requiresPhysicalControl?: boolean;
-  }) => void;
+  registerProvider: (
+    provider: DeviceProvider,
+    capability: {
+      deviceKind: CaptureRequest['deviceKind'];
+      captureKinds: CaptureRequest['captureKind'][];
+      label?: string;
+      requiresExternalHardware?: boolean;
+      requiresPhysicalControl?: boolean;
+    }
+  ) => void;
   capture: (ctx: BusContext, req: CaptureRequest) => Promise<CaptureResult>;
   registry: CapabilityRegistry;
 };
@@ -69,7 +76,10 @@ export function createDeviceRouter(params?: {
         throw new DevicePolicyDeniedError(policy.reason, { record, policy });
       }
 
-      const candidates = registry.findProviders({ deviceKind: req.deviceKind, captureKind: req.captureKind });
+      const candidates = registry.findProviders({
+        deviceKind: req.deviceKind,
+        captureKind: req.captureKind,
+      });
       const provider = candidates
         .map((c) => providers.get(c.providerId))
         .find((p) => !!p && p.supports(req));

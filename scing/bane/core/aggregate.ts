@@ -14,7 +14,10 @@ const verdictRank: Record<BaneVerdict, number> = {
   deny: 4,
 };
 
-export function aggregate(findings: BaneFinding[]): { verdict: BaneVerdict; severity: BaneSeverity } {
+export function aggregate(findings: BaneFinding[]): {
+  verdict: BaneVerdict;
+  severity: BaneSeverity;
+} {
   if (!findings.length) return { verdict: 'allow', severity: 'low' };
 
   let maxSeverity: BaneSeverity = 'low';

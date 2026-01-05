@@ -4,7 +4,10 @@ export const PLUMBING_DOMAIN_V1 = {
   title: 'Plumbing Inspection Domain',
   requiredArtifacts: [
     { key: 'under_sink_overview', description: 'Under-sink wide photo showing supply + drain' },
-    { key: 'fixture_closeup', description: 'Close-up of fixture/valve/connection with scale reference' },
+    {
+      key: 'fixture_closeup',
+      description: 'Close-up of fixture/valve/connection with scale reference',
+    },
     { key: 'water_heater_label', description: 'Water heater label/model/serial if applicable' },
   ],
   requiredMeasurements: [],

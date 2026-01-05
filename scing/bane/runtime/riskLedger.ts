@@ -10,7 +10,11 @@ export type RiskRecord = {
 
 const ledger = new Map<string, RiskRecord>();
 
-export function recordStrike(identityId: string, severity: BaneSeverity, now = Date.now()): RiskRecord {
+export function recordStrike(
+  identityId: string,
+  severity: BaneSeverity,
+  now = Date.now()
+): RiskRecord {
   const prev = ledger.get(identityId);
   const strikes = (prev?.strikes ?? 0) + 1;
 
