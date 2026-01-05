@@ -36,11 +36,12 @@ function jaccardTokens(a: string[], b: string[]) {
 
 export async function getMemoryStatsForIntent(repoRoot: string, intent: BFIIntent): Promise<MemoryStats | null> {
   const mem = await readCognitiveMemory(repoRoot, { limit: 600 });
-  if (!mem.length) return null;
+  const executed = mem.filter((r) => !!r.execution);
+  if (!executed.length) return null;
 
   const intentTokens = tokenize(intent.description);
 
-  const scored = mem
+  const scored = executed
     .map((r) => {
       const tok = tokenize(r.intent.description);
       const sim = jaccardTokens(intentTokens, tok);
@@ -53,7 +54,7 @@ export async function getMemoryStatsForIntent(repoRoot: string, intent: BFIInten
     .slice(0, 40)
     .filter((x) => x.score >= 0.15);
 
-  const sample = scored.length ? scored.map((x) => x.r) : mem.slice(-40);
+  const sample = scored.length ? scored.map((x) => x.r) : executed.slice(-40);
 
   const total = sample.length;
   const ok = sample.filter((r) => !!r.execution?.ok).length;
@@ -67,16 +68,17 @@ export async function getMemoryStatsForIntent(repoRoot: string, intent: BFIInten
 
 export async function computeInsights(repoRoot: string) {
   const mem = await readCognitiveMemory(repoRoot, { limit: 400 });
+  const executed = mem.filter((r) => !!r.execution);
 
   const insights: BfiInsight[] = [];
-  if (mem.length < 3) {
+  if (executed.length < 3) {
     insights.push({
       what: "Not enough memory yet",
       why: "BFI needs at least a few executed intents to learn success/failure patterns.",
       confidence: 0.6,
       suggestedAction: "Run the Phase 2 demo flow 3–5 times, then re-check insights.",
     });
-    return { insights, stats: { samples: mem.length } };
+    return { insights, stats: { samples: mem.length, executedSamples: executed.length } };
   }
 
   const byScope = new Map<string, { ok: number; total: number }>();
@@ -87,12 +89,6 @@ export async function computeInsights(repoRoot: string) {
 
   for (const r of mem) {
     const scope = r.intent.scope;
-    const ok = !!r.execution?.ok;
-
-    const prev = byScope.get(scope) || { ok: 0, total: 0 };
-    prev.total += 1;
-    if (ok) prev.ok += 1;
-    byScope.set(scope, prev);
 
     const affectedNodes = r.simulation?.output?.affectedFiles?.length || 0;
     const blast = blastByScope.get(scope) || { totalNodes: 0, total: 0 };
@@ -100,12 +96,22 @@ export async function computeInsights(repoRoot: string) {
     blast.totalNodes += affectedNodes;
     blastByScope.set(scope, blast);
 
-    denyCount.total += 1;
-    if (r.policy?.decision?.decision === "deny") denyCount.deny += 1;
+    if (r.policy) {
+      denyCount.total += 1;
+      if (r.policy.decision?.decision === "deny") denyCount.deny += 1;
+    }
 
-    if (!ok) {
-      for (const t of tokenize(r.intent.description)) {
-        failTokens.set(t, (failTokens.get(t) || 0) + 1);
+    if (r.execution) {
+      const ok = !!r.execution.ok;
+      const prev = byScope.get(scope) || { ok: 0, total: 0 };
+      prev.total += 1;
+      if (ok) prev.ok += 1;
+      byScope.set(scope, prev);
+
+      if (!ok) {
+        for (const t of tokenize(r.intent.description)) {
+          failTokens.set(t, (failTokens.get(t) || 0) + 1);
+        }
       }
     }
   }
@@ -172,5 +178,5 @@ export async function computeInsights(repoRoot: string) {
     });
   }
 
-  return { insights, stats: { samples: mem.length } };
+  return { insights, stats: { samples: mem.length, executedSamples: executed.length } };
 }
