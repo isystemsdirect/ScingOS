@@ -15,6 +15,7 @@
   },
   "scripts": {
     "dev": "npm --prefix client run dev",
+    "type-check": "tsc -p tsconfig.json",
     "typecheck:scing": "tsc -p tools/tmp-tsconfig.json",
     "lint:scing": "eslint \"scing/**/*.{ts,tsx}\" \"tools/**/*.{js,mjs}\" --max-warnings=0",
     "test:scing:attractors": "node tools/attractors.selftest.mjs",
