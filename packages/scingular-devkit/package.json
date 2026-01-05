@@ -1,0 +1,12 @@
+{
+  "name": "@scingular/devkit",
+  "version": "0.0.1",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "dependencies": {
+    "zod": "^3.24.0",
+    "@scingular/sdk": "0.0.1",
+    "@scingular/policy": "0.0.1"
+  }
+}

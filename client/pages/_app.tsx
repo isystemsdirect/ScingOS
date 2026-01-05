@@ -11,6 +11,9 @@ import { DeviceBoot } from '../src/devices';
 import { initAvatarIntentWiring } from '@rtsf/avatar/wireAvatarIntents';
 import { startSrtTruthAdapter } from '@rtsf/srt/feedback/truthAdapter';
 import { startRtsfLiveAdapter } from '@rtsf/sensors/runtime/rtsfLiveAdapter';
+import { assertProvenance } from '../lib/shared/provenance/assertProvenance';
+
+assertProvenance();
 
 export default function App({ Component, pageProps }: AppProps) {
   const setUser = useAuthStore((state) => state.setUser);
