@@ -330,6 +330,10 @@ Comprehensive documentation is available in the `/docs` directory:
 - **[Deployment Guide](docs/DEPLOYMENT.md)** - Production deployment
 - **[AI Assistant Access](docs/AI-ASSISTANT-ACCESS.md)** - Guide for using ChatGPT and other AI assistants with this repository
 
+## Canon Glossary
+
+- **[SCINGULAR Canon Glossary](docs/glossary/SCINGULAR_GLOSSARY.md)** - Single source of truth for proprietary SCINGULAR terminology
+
 ---
 
 ## Status
