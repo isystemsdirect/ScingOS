@@ -5,8 +5,83 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>ScingR</title>
     <style>
-      :root { color-scheme: light dark; }
-      body { font-family: system-ui, sans-serif; margin: 16px; }
+      :root {
+        color-scheme: light dark;
+        --bg0: #040406;
+        --bg1: #07070b;
+        --glow: 0.85;
+        --pulse: 1.0;
+        --hue: 38deg;
+        --sat: 1.15;
+      }
+
+      body {
+        margin: 0;
+        background: radial-gradient(1200px 700px at 50% 55%, var(--bg1), var(--bg0));
+        color: #eaeaf2;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      }
+
+      #scing-app { padding: 16px; }
+
+      #scing-stage {
+        position: relative;
+        height: 420px;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+      }
+
+      #scing-floor {
+        position: absolute;
+        width: 820px;
+        height: 220px;
+        bottom: -120px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: radial-gradient(closest-side, rgba(255,180,70,0.18), rgba(0,0,0,0));
+        filter: blur(18px);
+        opacity: calc(0.65 * var(--glow));
+      }
+
+      #scing-avatar-wrap {
+        position: relative;
+        width: 220px;
+        height: 220px;
+        display: grid;
+        place-items: center;
+        transform: scale(var(--pulse));
+        transition: transform 120ms ease;
+        filter: hue-rotate(var(--hue)) saturate(var(--sat));
+      }
+
+      #scing-avatar {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        image-rendering: auto;
+        filter:
+          drop-shadow(0 0 18px rgba(255, 170, 60, calc(0.55 * var(--glow))))
+          drop-shadow(0 0 44px rgba(255, 70, 160, calc(0.25 * var(--glow))));
+        animation: scingBreath 2.7s ease-in-out infinite;
+      }
+
+      @keyframes scingBreath {
+        0%, 100% { transform: translateY(0px) scale(1.00); opacity: 0.98; }
+        50%      { transform: translateY(-3px) scale(1.02); opacity: 1.00; }
+      }
+
+      #scing-caption {
+        position: absolute;
+        bottom: 18px;
+        display: flex;
+        gap: 10px;
+        align-items: baseline;
+        opacity: 0.85;
+      }
+      #scing-caption .name { font-size: 16px; letter-spacing: 0.18em; text-transform: uppercase; }
+      #scing-caption .tag  { font-size: 12px; opacity: 0.7; }
+
       header { display: flex; gap: 12px; align-items: baseline; }
       .grid { display: grid; grid-template-columns: 220px 1fr; gap: 8px 12px; max-width: 900px; }
       .k { opacity: 0.7; }
@@ -17,6 +92,18 @@
     </style>
   </head>
   <body>
+    <div id="scing-stage">
+      <div id="scing-floor"></div>
+      <div id="scing-avatar-wrap">
+        <img id="scing-avatar" src="./assets/scing-avatar.svg" alt="Scing" />
+      </div>
+      <div id="scing-caption">
+        <span class="name">ScingR</span>
+        <span class="tag">Powered by ScingOS</span>
+      </div>
+    </div>
+
+    <div id="scing-app">
     <header>
       <h1 style="margin:0">ScingR</h1>
       <span class="k">Powered by ScingOS</span>
@@ -71,5 +158,6 @@
     </section>
 
     <script type="module" src="./app.js"></script>
+    </div>
   </body>
 </html>

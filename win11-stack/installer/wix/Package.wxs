@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui"
+     xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util">
+
+  <Package
+    Name="ScingR"
+    Manufacturer="Inspection Systems Direct LLC"
+    Version="$(var.ProductVersion)"
+    UpgradeCode="{2A8628E8-CE39-4E5D-9D37-8C5A9A88E5F3}"
+    Compressed="yes"
+    Scope="perMachine">
+
+    <SummaryInformation Description="ScingR — Powered by ScingOS" />
+
+    <Property Id="INSTALLMODE" Value="runtime" />
+    <Property Id="SCING_PORT" Value="3333" />
+    <Property Id="START_SERVICE" Value="1" />
+    <Property Id="PRESERVE_DATA" Value="1" />
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of ScingR is already installed." />
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="ScingR">
+        <Directory Id="RuntimeDir" Name="runtime">
+          <Directory Id="RuntimeServiceDir" Name="service" />
+          <Directory Id="RuntimeUiDir" Name="ui" />
+          <Directory Id="RuntimeShellDir" Name="shell" />
+        </Directory>
+
+        <Directory Id="DeveloperDir" Name="developer">
+          <Directory Id="DeveloperBinDir" Name="bin" />
+          <Directory Id="DeveloperSdkDir" Name="sdk" />
+        </Directory>
+      </Directory>
+    </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ProgramMenuScingRDir" Name="ScingR" />
+    </StandardDirectory>
+
+    <StandardDirectory Id="CommonAppDataFolder">
+      <Directory Id="ScingOSDataDir" Name="ScingOS" />
+    </StandardDirectory>
+
+    <Feature Id="Feature_Runtime" Title="ScingR Runtime" Level="1" Display="expand">
+      <ComponentGroupRef Id="CG_Runtime_Service" />
+      <ComponentGroupRef Id="CG_Runtime_Ui" />
+      <ComponentGroupRef Id="CG_Runtime_Shell" />
+      <ComponentGroupRef Id="CG_Runtime_Shortcuts" />
+      <ComponentGroupRef Id="CG_Runtime_Env" />
+      <ComponentGroupRef Id="CG_Runtime_Uninstall" />
+    </Feature>
+
+    <Feature Id="Feature_Developer" Title="ScingR Developer" Level="0" Display="expand">
+      <Level Value="1" Condition='INSTALLMODE = "developer"' />
+      <ComponentGroupRef Id="CG_Developer_Cli" />
+      <ComponentGroupRef Id="CG_Developer_Sdk" />
+      <ComponentGroupRef Id="CG_Developer_Env" />
+      <ComponentGroupRef Id="CG_Developer_Shortcuts" />
+    </Feature>
+
+    <ui:WixUI Id="WixUI_FeatureTree" />
+
+    <!-- START_SERVICE=1 uses WixQuietExec64 to start the installed service. -->
+    <CustomAction Id="SetStartServiceCmd"
+                  Property="WixQuietExec64CmdLine"
+                  Value="&quot;[SystemFolder]sc.exe&quot; start ScingEmulatorService" />
+
+    <CustomAction Id="CA_StartService"
+                  BinaryRef="Wix4UtilCA_X64"
+                  DllEntry="WixQuietExec64"
+                  Execute="deferred"
+                  Return="ignore"
+                  Impersonate="no" />
+
+    <InstallExecuteSequence>
+      <Custom Action="SetStartServiceCmd" After="InstallServices" Condition="START_SERVICE = 1 AND NOT Installed" />
+      <Custom Action="CA_StartService" After="SetStartServiceCmd" Condition="START_SERVICE = 1 AND NOT Installed" />
+    </InstallExecuteSequence>
+
+  </Package>
+
+  <Fragment>
+    <ComponentGroup Id="CG_Runtime_Service" Directory="RuntimeServiceDir">
+      <Component Id="Cmp_Runtime_Service" Guid="*">
+        <File Id="ScingServiceExe" Source="$(var.StagingRoot)\runtime\service\Scing.Emulator.Service.exe" KeyPath="yes" />
+
+        <ServiceInstall Id="SvcInstall"
+                        Name="ScingEmulatorService"
+                        DisplayName="ScingR Runtime Service"
+                        Description="ScingR — Powered by ScingOS"
+                        Start="auto"
+                        Type="ownProcess"
+                        ErrorControl="normal" />
+
+        <ServiceControl Id="SvcControl"
+                        Name="ScingEmulatorService"
+                        Stop="both"
+                        Start="install"
+                        Remove="uninstall"
+                        Wait="yes" />
+
+        <File Source="$(var.StagingRoot)\runtime\service\appsettings.json" />
+        <File Source="$(var.StagingRoot)\runtime\service\version.json" />
+        <File Source="$(var.StagingRoot)\runtime\service\openapi.yaml" />
+        <File Source="$(var.StagingRoot)\runtime\service\scing.schema.json" />
+        <File Source="$(var.StagingRoot)\runtime\service\plugin.schema.json" />
+      </Component>
+    </ComponentGroup>
+
+    <ComponentGroup Id="CG_Runtime_Ui" Directory="RuntimeUiDir">
+      <Component Id="Cmp_Runtime_Ui_Index" Guid="*">
+        <File Id="UiIndexHtml" Source="$(var.StagingRoot)\runtime\ui\index.html" KeyPath="yes" />
+      </Component>
+      <Component Id="Cmp_Runtime_Ui_AppJs" Guid="*">
+        <File Id="UiAppJs" Source="$(var.StagingRoot)\runtime\ui\app.js" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <ComponentGroup Id="CG_Runtime_Env" Directory="INSTALLFOLDER">
+      <Component Id="Cmp_Runtime_Env" Guid="{B75E2B2D-4E15-4E8D-8B5B-7B4CFB2F08D1}">
+        <Environment Id="EnvUiDir" Name="SCING_EMULATOR_UI_DIR" Value="[RuntimeUiDir]" System="yes" Action="set" />
+        <Environment Id="EnvPort" Name="ScingEmulator__Port" Value="[SCING_PORT]" System="yes" Action="set" />
+      </Component>
+    </ComponentGroup>
+
+    <ComponentGroup Id="CG_Runtime_Shortcuts" Directory="ProgramMenuScingRDir">
+      <Component Id="Cmp_Runtime_Shortcuts" Guid="*">
+        <Shortcut Id="StartMenu_ScingR"
+                  Name="ScingR"
+                  Target="[RuntimeShellDir]ScingR.exe"
+                  WorkingDirectory="RuntimeShellDir" />
+        <RemoveFolder Id="Remove_StartMenuFolder" On="uninstall" />
+        <RegistryValue Root="HKCU" Key="Software\Inspection Systems Direct LLC\ScingR" Name="installed" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <ComponentGroup Id="CG_Runtime_Uninstall" Directory="INSTALLFOLDER">
+      <Component Id="Cmp_Runtime_Uninstall" Guid="{0B80BDE6-8E4A-4B9F-A5E9-6B5964F66D5B}">
+        <util:RemoveFolderEx Id="RemoveScingOSData" On="uninstall" Property="ScingOSDataDir" Condition="REMOVE = 'ALL' AND PRESERVE_DATA = 0" />
+        <RegistryValue Root="HKLM" Key="Software\Inspection Systems Direct LLC\ScingR" Name="preserveDataDefault" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <ComponentGroup Id="CG_Developer_Cli" Directory="DeveloperBinDir">
+      <Component Id="Cmp_Developer_Cli" Guid="*">
+        <File Source="$(var.StagingRoot)\developer\cli\scingos.exe" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <ComponentGroup Id="CG_Developer_Env" Directory="DeveloperBinDir">
+      <Component Id="Cmp_Developer_Env" Guid="{13F4A105-3F57-46B8-A3F4-93FA9F7E9B05}">
+        <Environment Id="EnvPath" Name="PATH" Value="[DeveloperBinDir]" Part="last" System="yes" Action="set" />
+      </Component>
+    </ComponentGroup>
+
+    <ComponentGroup Id="CG_Developer_Shortcuts" Directory="ProgramMenuScingRDir">
+      <Component Id="Cmp_Developer_Shortcuts" Guid="*">
+        <Shortcut Id="StartMenu_DeveloperCenter"
+                  Name="ScingR Developer Center"
+                  Target="[WindowsFolder]explorer.exe"
+                  Arguments="&quot;[DeveloperSdkDir]&quot;"
+                  WorkingDirectory="DeveloperSdkDir" />
+        <RegistryValue Root="HKCU" Key="Software\Inspection Systems Direct LLC\ScingR" Name="devFeature" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <ComponentGroup Id="CG_Runtime_Shell" Directory="RuntimeShellDir" Source="$(var.StagingRoot)\runtime\shell">
+      <Component Id="Cmp_Runtime_Shell" Guid="*">
+        <File Id="ScingRShellExe" Source="$(var.StagingRoot)\runtime\shell\ScingR.exe" KeyPath="yes" />
+      </Component>
+
+      <Files Include="**">
+        <Exclude Files="ScingR.exe" />
+      </Files>
+    </ComponentGroup>
+
+    <ComponentGroup Id="CG_Developer_Sdk" Directory="DeveloperSdkDir" Source="$(var.StagingRoot)\developer\sdk">
+      <Files Include="**" />
+    </ComponentGroup>
+
+  </Fragment>
+
+</Wix>

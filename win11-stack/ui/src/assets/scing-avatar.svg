@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-label="Scing">
+  <defs>
+    <radialGradient id="g" cx="50%" cy="45%" r="60%">
+      <stop offset="0%" stop-color="#ffd18a" stop-opacity="1" />
+      <stop offset="55%" stop-color="#ff9b3a" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#2b1630" stop-opacity="0.25" />
+    </radialGradient>
+    <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffb44a" stop-opacity="0.95" />
+      <stop offset="100%" stop-color="#ff46a0" stop-opacity="0.55" />
+    </linearGradient>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="2.5" result="b" />
+      <feColorMatrix in="b" type="matrix"
+        values="1 0 0 0 0
+                0 1 0 0 0
+                0 0 1 0 0
+                0 0 0 0.85 0" />
+      <feMerge>
+        <feMergeNode />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <circle cx="128" cy="128" r="108" fill="url(#g)" opacity="0.95" />
+  <circle cx="128" cy="128" r="106" fill="none" stroke="url(#ring)" stroke-width="4" opacity="0.85" />
+  <circle cx="128" cy="128" r="82" fill="none" stroke="url(#ring)" stroke-width="2" opacity="0.35" />
+
+  <!-- stylized core mark (abstract, no brand dependency) -->
+  <g filter="url(#soft)" opacity="0.95">
+    <path d="M128 66c-22 0-40 12-40 30 0 14 10 23 28 28l24 6c10 2 14 6 14 12 0 9-10 16-26 16-13 0-24-4-35-12l-9 14c13 10 28 15 46 15 26 0 44-14 44-33 0-15-10-25-30-30l-24-6c-9-2-12-6-12-11 0-8 9-14 22-14 11 0 21 3 31 10l8-14c-12-8-25-11-41-11z"
+      fill="#ffffff" fill-opacity="0.78" />
+  </g>
+</svg>

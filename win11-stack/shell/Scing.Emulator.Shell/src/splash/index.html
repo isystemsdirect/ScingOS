@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ScingR Loading</title>
+  <style>
+    :root {
+      --bg0:#030306;
+      --bg1:#070711;
+      --glass: rgba(14, 14, 22, 0.72);
+      --stroke: rgba(255,255,255,0.10);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.62);
+      --accent: rgba(255, 170, 60, 0.95);
+      --accent2: rgba(255, 70, 160, 0.75);
+      --bar: 0%;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: transparent;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    /* cinematic background */
+    .bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(900px 600px at 25% 20%, rgba(255,170,60,0.22), transparent 60%),
+        radial-gradient(800px 520px at 78% 35%, rgba(255,70,160,0.16), transparent 62%),
+        radial-gradient(900px 760px at 50% 85%, rgba(60,180,255,0.10), transparent 65%),
+        linear-gradient(180deg, rgba(5,5,10,0.92), rgba(2,2,4,0.92));
+      filter: saturate(1.2) contrast(1.06);
+    }
+    .grain {
+      position:absolute; inset:-30%;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+      opacity: 0.12;
+      mix-blend-mode: overlay;
+      transform: rotate(8deg);
+      animation: drift 10s linear infinite;
+    }
+    @keyframes drift { 0% { transform: translate(0,0) rotate(8deg); } 100% { transform: translate(-4%, 3%) rotate(8deg); } }
+
+    .wrap {
+      position: absolute; inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 22px;
+    }
+
+    /* card */
+    .card {
+      width: 640px;
+      max-width: calc(100vw - 44px);
+      border-radius: 22px;
+      background: var(--glass);
+      border: 1px solid var(--stroke);
+      box-shadow:
+        0 30px 90px rgba(0,0,0,0.55),
+        0 0 0 1px rgba(255,255,255,0.04) inset;
+      backdrop-filter: blur(18px);
+      overflow: hidden;
+    }
+
+    .top {
+      padding: 22px 22px 16px 22px;
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .logo {
+      width: 80px; height: 80px;
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at 35% 30%, rgba(255,170,60,0.50), transparent 55%),
+        radial-gradient(circle at 70% 65%, rgba(255,70,160,0.35), transparent 60%),
+        radial-gradient(circle at 45% 78%, rgba(60,180,255,0.20), transparent 55%),
+        rgba(10,10,16,0.6);
+      border: 1px solid rgba(255,255,255,0.10);
+      box-shadow: 0 18px 55px rgba(0,0,0,0.45);
+      position: relative;
+    }
+    .logo:after{
+      content:"";
+      position:absolute; inset:-18px;
+      background: radial-gradient(circle, rgba(255,170,60,0.16), transparent 60%);
+      filter: blur(10px);
+      opacity: 0.8;
+    }
+
+    .title {
+      display:flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .title .name {
+      font-size: 18px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .title .tag {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .mid {
+      padding: 0 22px 14px 22px;
+      color: var(--muted);
+      font-size: 12px;
+      display:flex;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    /* progress */
+    .barWrap {
+      position: relative;
+      height: 10px;
+      margin: 0 22px 22px 22px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.08);
+      overflow: hidden;
+    }
+    .bar {
+      height: 100%;
+      width: var(--bar);
+      background:
+        linear-gradient(90deg, rgba(255,170,60,0.95), rgba(255,70,160,0.75), rgba(60,180,255,0.55));
+      border-radius: 999px;
+      transition: width 180ms ease;
+      box-shadow: 0 0 18px rgba(255,170,60,0.20);
+    }
+    .shine {
+      position:absolute; inset:0;
+      background: linear-gradient(110deg, transparent 0%, rgba(255,255,255,0.18) 40%, transparent 60%);
+      transform: translateX(-60%);
+      animation: shine 1.3s ease-in-out infinite;
+      opacity: 0.6;
+      mix-blend-mode: overlay;
+      pointer-events:none;
+    }
+    @keyframes shine { 0%{transform:translateX(-60%)} 100%{transform:translateX(160%)} }
+
+    .foot {
+      padding: 0 22px 18px 22px;
+      display:flex;
+      justify-content: space-between;
+      color: rgba(255,255,255,0.50);
+      font-size: 11px;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="grain"></div>
+
+  <div class="wrap">
+    <div class="card">
+      <div class="top">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="title">
+          <div class="name">ScingR</div>
+          <div class="tag">Powered by ScingOS • Initializing runtime</div>
+        </div>
+      </div>
+
+      <div class="mid">
+        <div id="status">Booting…</div>
+        <div id="pct">0%</div>
+      </div>
+
+      <div class="barWrap">
+        <div class="bar" id="bar"></div>
+        <div class="shine"></div>
+      </div>
+
+      <div class="foot">
+        <div>© Inspection Systems Direct LLC</div>
+        <div id="detail">Starting services</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function setProgress(pct, status, detail) {
+      const clamped = Math.max(0, Math.min(100, pct|0));
+      document.documentElement.style.setProperty('--bar', clamped + '%');
+      document.getElementById('pct').textContent = clamped + '%';
+      if (status) document.getElementById('status').textContent = status;
+      if (detail) document.getElementById('detail').textContent = detail;
+    }
+
+    // Accept progress events from Rust (Tauri)
+    window.__SCINGR_SPLASH__ = { setProgress };
+
+    // Default animation if no events yet
+    let t = 0;
+    setInterval(() => {
+      t = (t + 1) % 40;
+      // gentle "alive" motion (won't exceed 18%)
+      const base = Math.min(18, 6 + t * 0.3);
+      if (parseInt(getComputedStyle(document.documentElement).getPropertyValue('--bar')) < 10) {
+        setProgress(base, 'Booting…', 'Starting services');
+      }
+    }, 220);
+  </script>
+</body>
+</html>

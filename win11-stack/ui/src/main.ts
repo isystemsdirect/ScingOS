@@ -11,6 +11,50 @@ const state = {
 
 const client = createClient({ baseUrl: state.baseUrl });
 
+const root = document.documentElement;
+
+function setVisual(vars: Partial<{ pulse: number; glow: number; hue: string; sat: number }>) {
+  if (vars.pulse !== undefined) root.style.setProperty('--pulse', String(vars.pulse));
+  if (vars.glow !== undefined) root.style.setProperty('--glow', String(vars.glow));
+  if (vars.hue !== undefined) root.style.setProperty('--hue', vars.hue);
+  if (vars.sat !== undefined) root.style.setProperty('--sat', String(vars.sat));
+}
+
+function bump(pulse = 1.06, glow = 1.0) {
+  setVisual({ pulse, glow });
+  window.setTimeout(() => setVisual({ pulse: 1.0, glow: 0.85 }), 180);
+}
+
+function applyEventMood(type: string) {
+  const t = (type || '').toLowerCase();
+
+  if (t.startsWith('bane.') || t.includes('alert') || t.includes('security')) {
+    setVisual({ hue: '320deg', sat: 1.25 });
+    bump(1.08, 1.10);
+    return;
+  }
+
+  if (t.startsWith('lari.') || t.includes('think') || t.includes('plan')) {
+    setVisual({ hue: '38deg', sat: 1.18 });
+    bump(1.05, 0.98);
+    return;
+  }
+
+  if (t.includes('heartbeat')) {
+    setVisual({ hue: '45deg', sat: 1.12 });
+    bump(1.03, 0.92);
+    return;
+  }
+
+  if (t.includes('neural') || t.startsWith('srt.') || t.startsWith('scing.')) {
+    setVisual({ hue: '210deg', sat: 1.15 });
+    bump(1.06, 1.02);
+    return;
+  }
+
+  setVisual({ hue: '38deg', sat: 1.15 });
+}
+
 function $(id: string): HTMLElement {
   const el = document.getElementById(id);
   if (!el) throw new Error(`Missing element: ${id}`);
@@ -57,6 +101,7 @@ function stopStreams() {
   state.stream?.close();
   state.stream = null;
   setPill('transport', 'disconnected');
+  setVisual({ glow: 0.55, pulse: 1.0 });
 }
 
 function connectWsThenSse() {
@@ -66,15 +111,28 @@ function connectWsThenSse() {
     prefer: 'ws',
     fallback: 'sse',
     preferJson: true,
-    onStatus: (s: any) => setPill('transport', s.transport),
+    onStatus: (s: any) => {
+      const transport = String(s?.transport ?? 'disconnected');
+      setPill('transport', transport);
+      if (transport === 'ws' || transport === 'sse') setVisual({ glow: 0.85 });
+      else setVisual({ glow: 0.55, pulse: 1.0 });
+    },
     onEvent: (ev: any) => {
       state.lastMessageAt = new Date();
       setText('lastMsg', isoOrDash(state.lastMessageAt));
 
       const j: any = ev?.json;
       const payload = j?.payload ?? null;
-      const envelopeType = payload?.type ?? '-';
-      setText('lastEventType', String(envelopeType));
+      const envelopeType = String(
+        payload?.type ??
+          payload?.eventType ??
+          j?.type ??
+          j?.eventType ??
+          '-'
+      );
+
+      setText('lastEventType', envelopeType);
+      applyEventMood(envelopeType);
 
       const display = payload ?? j ?? { raw: ev?.raw ?? '' };
       setText('lastEvent', JSON.stringify(display, null, 2));

@@ -1,0 +1,13 @@
+# Installer build artifacts
+/staging/
+/out/
+/*.log
+
+# Local scratch
+/termtest2/
+
+# Diagnostic evidence (stdout can be flaky in some terminals)
+/_evidence/
+
+# WiX intermediates
+/wix/obj/

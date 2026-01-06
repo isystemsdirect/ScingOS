@@ -1,0 +1,64 @@
+name: ScingR Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build-release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Phase 6 gate (build + MSI)
+        shell: pwsh
+        run: |
+          Set-Location "$env:GITHUB_WORKSPACE"
+          powershell -NoProfile -ExecutionPolicy Bypass -File .\win11-stack\scripts\validate-phase6.ps1
+
+      - name: Generate SHA256SUMS.txt
+        shell: pwsh
+        run: |
+          Set-Location "$env:GITHUB_WORKSPACE"
+          $outDir = Join-Path $PWD "win11-stack\installer\out"
+          $msi = Get-ChildItem -Path $outDir -Filter "ScingR-*.msi" -File | Select-Object -First 1
+          if ($null -eq $msi) { throw "No ScingR MSI found in $outDir" }
+
+          $shaLines = @()
+          $shaLines += "{0}  {1}" -f (Get-FileHash $msi.FullName -Algorithm SHA256).Hash.ToLowerInvariant(), $msi.Name
+          Set-Content -Path (Join-Path $outDir "SHA256SUMS.txt") -Value $shaLines -Encoding ascii
+
+      - name: Generate SBOM (CycloneDX .NET)
+        shell: pwsh
+        run: |
+          Set-Location "$env:GITHUB_WORKSPACE"
+          dotnet tool install --global CycloneDX
+
+          $outDir = Join-Path $PWD "win11-stack\installer\out"
+          New-Item -ItemType Directory -Force -Path $outDir | Out-Null
+
+          dotnet-CycloneDX .\win11-stack\backend\Scing.Emulator.Service\Scing.Emulator.Service.csproj -o $outDir -F json -fn SBOM.json
+
+      - name: Create GitHub Release + upload artifacts
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            win11-stack/installer/out/ScingR-*.msi
+            win11-stack/installer/out/SHA256SUMS.txt
+            win11-stack/installer/out/SBOM.json

@@ -1,22 +1,36 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "ScingR Runtime Shell",
+  "productName": "ScingR",
   "version": "0.1.0",
   "identifier": "com.scingos.emulator.shell",
   "build": {
     "beforeDevCommand": "powershell -NoProfile -ExecutionPolicy Bypass -File ..\\..\\scripts\\ui-build.ps1",
     "beforeBuildCommand": "powershell -NoProfile -ExecutionPolicy Bypass -File ..\\..\\scripts\\ui-build.ps1",
     "devUrl": "http://127.0.0.1:3333/ui",
-    "frontendDist": "..\\..\\ui\\dist"
+    "frontendDist": "..\\..\\..\\ui\\dist"
   },
   "app": {
     "windows": [
       {
+        "label": "main",
         "title": "ScingR",
         "width": 1280,
         "height": 720,
         "resizable": true,
+        "visible": false,
         "url": "http://127.0.0.1:3333/ui"
+      },
+      {
+        "label": "splash",
+        "title": "ScingR Loading",
+        "width": 720,
+        "height": 480,
+        "resizable": false,
+        "decorations": false,
+        "transparent": true,
+        "alwaysOnTop": true,
+        "center": true,
+        "url": "splash/index.html"
       }
     ],
     "security": {

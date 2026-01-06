@@ -1,0 +1,19 @@
+<Project Sdk="WixToolset.Sdk/6.0.2">
+  <PropertyGroup>
+    <OutputType>Package</OutputType>
+    <Platform>x64</Platform>
+
+    <ProductVersion Condition="'$(ProductVersion)'==''">0.1.0</ProductVersion>
+    <StagingRoot Condition="'$(StagingRoot)'==''">$(MSBuildProjectDirectory)\..\staging</StagingRoot>
+
+    <OutputPath>$(MSBuildProjectDirectory)\..\out\</OutputPath>
+    <OutputName>ScingR-$(ProductVersion)</OutputName>
+
+    <DefineConstants>ProductVersion=$(ProductVersion);StagingRoot=$(StagingRoot)</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WixToolset.UI.wixext" Version="6.0.2" />
+    <PackageReference Include="WixToolset.Util.wixext" Version="6.0.2" />
+  </ItemGroup>
+</Project>
