@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>ScingOS Emulator</title>
+    <style>
+      :root { color-scheme: light dark; }
+      body { font-family: system-ui, sans-serif; margin: 16px; }
+      header { display: flex; gap: 12px; align-items: baseline; }
+      .grid { display: grid; grid-template-columns: 220px 1fr; gap: 8px 12px; max-width: 900px; }
+      .k { opacity: 0.7; }
+      pre { white-space: pre-wrap; word-break: break-word; }
+      button { padding: 6px 10px; }
+      .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+      .pill { padding: 2px 8px; border: 1px solid currentColor; border-radius: 999px; opacity: 0.85; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1 style="margin:0">ScingOS Emulator</h1>
+      <span class="pill" id="transport">disconnected</span>
+      <span class="pill" id="service">unknown</span>
+    </header>
+
+    <section style="margin-top:12px" class="row">
+      <button id="btnReconnect" type="button">Reconnect</button>
+      <button id="btnDiagnostics" type="button">Diagnostics snapshot</button>
+    </section>
+
+    <section style="margin-top:16px" class="grid">
+      <div class="k">Base URL</div>
+      <div id="baseUrl"></div>
+
+      <div class="k">Uptime (seconds)</div>
+      <div id="uptime">-</div>
+
+      <div class="k">Last message at</div>
+      <div id="lastMsg">-</div>
+
+      <div class="k">Version</div>
+      <pre id="version">-</pre>
+
+      <div class="k">Compat</div>
+      <pre id="compat">-</pre>
+    </section>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

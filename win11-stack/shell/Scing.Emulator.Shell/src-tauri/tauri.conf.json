@@ -1,0 +1,26 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Scing Emulator Shell",
+  "version": "0.1.0",
+  "identifier": "com.scingos.emulator.shell",
+  "build": {
+    "beforeDevCommand": "powershell -NoProfile -ExecutionPolicy Bypass -File ..\\..\\scripts\\ui-build.ps1",
+    "beforeBuildCommand": "powershell -NoProfile -ExecutionPolicy Bypass -File ..\\..\\scripts\\ui-build.ps1",
+    "devUrl": "http://127.0.0.1:3333/ui",
+    "frontendDist": "..\\..\\ui\\dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "ScingOS Emulator",
+        "width": 1280,
+        "height": 720,
+        "resizable": true,
+        "url": "http://127.0.0.1:3333/ui"
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  }
+}

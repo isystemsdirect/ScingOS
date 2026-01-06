@@ -1,6 +1,7 @@
 using System.Net.WebSockets;
 using System.Text.Json;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.Extensions.FileProviders;
 using Serilog;
 using Serilog.Events;
 using Scing.Emulator.Service.Models;
@@ -114,6 +115,25 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 
 app.UseCors();
 app.UseWebSockets();
+
+// Static UI hosting (Phase 3): serve built assets at http://127.0.0.1:3333/ui
+// Source directory is provided at runtime to avoid committing build outputs.
+var uiDistDir = builder.Configuration["ScingEmulator:UiDistDir"]
+  ?? Environment.GetEnvironmentVariable("SCING_EMULATOR_UI_DIR");
+if (!string.IsNullOrWhiteSpace(uiDistDir) && Directory.Exists(uiDistDir))
+{
+  var uiProvider = new PhysicalFileProvider(uiDistDir);
+  app.UseDefaultFiles(new DefaultFilesOptions
+  {
+    FileProvider = uiProvider,
+    RequestPath = "/ui"
+  });
+  app.UseStaticFiles(new StaticFileOptions
+  {
+    FileProvider = uiProvider,
+    RequestPath = "/ui"
+  });
+}
 
 var startedAt = DateTimeOffset.UtcNow;
 var versionManifest = LoadVersionManifest(app.Environment.ContentRootPath);

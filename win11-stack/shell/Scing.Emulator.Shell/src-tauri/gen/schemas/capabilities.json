@@ -1,0 +1,1 @@
+{"main":{"identifier":"main","description":"Default capability set for the shell.","local":true,"windows":["main"],"permissions":["core:default"]}}

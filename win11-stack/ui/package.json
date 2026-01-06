@@ -1,0 +1,14 @@
+{
+  "name": "@scingos/win11-ui",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "clean": "node -e \"import('fs').then(fs=>fs.rmSync('dist',{recursive:true,force:true}))\""
+  },
+  "devDependencies": {
+    "esbuild": "^0.20.2",
+    "typescript": "^5.6.3"
+  }
+}

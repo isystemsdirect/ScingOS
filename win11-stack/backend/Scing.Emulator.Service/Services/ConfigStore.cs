@@ -28,13 +28,13 @@ public sealed class ConfigStore
     {
       if (!File.Exists(_paths.ConfigPath))
       {
-        using var doc = JsonDocument.Parse("{}");
-        return doc.RootElement.Clone();
+        using var emptyDoc = JsonDocument.Parse("{}");
+        return emptyDoc.RootElement.Clone();
       }
 
       await using var stream = File.OpenRead(_paths.ConfigPath);
-      using var doc = await JsonDocument.ParseAsync(stream, cancellationToken: cancellationToken);
-      return doc.RootElement.Clone();
+      using var configDoc = await JsonDocument.ParseAsync(stream, cancellationToken: cancellationToken);
+      return configDoc.RootElement.Clone();
     }
     finally
     {
