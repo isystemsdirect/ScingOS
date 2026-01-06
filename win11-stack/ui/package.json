@@ -4,8 +4,12 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
+    "postinstall": "npm.cmd --prefix ../sdk/ts/packages/scingos-sdk install && npm.cmd --prefix ../sdk/ts/packages/scingos-sdk run build",
     "build": "node build.mjs",
     "clean": "node -e \"import('fs').then(fs=>fs.rmSync('dist',{recursive:true,force:true}))\""
+  },
+  "dependencies": {
+    "@scingos/sdk": "file:../sdk/ts/packages/scingos-sdk"
   },
   "devDependencies": {
     "esbuild": "^0.20.2",

@@ -64,6 +64,10 @@ Thumbs.db
 # TypeScript
 *.tsbuildinfo
 
+# .NET
+**/bin/
+**/obj/
+
 # TypeScript build output (Cloud Functions)
 cloud/functions/lib/
 

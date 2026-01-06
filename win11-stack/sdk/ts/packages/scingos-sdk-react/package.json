@@ -1,0 +1,27 @@
+{
+  "name": "@scingos/sdk-react",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "npx.cmd --yes tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@scingos/sdk": "file:../scingos-sdk"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "typescript": "^5.6.3"
+  }
+}
