@@ -9,7 +9,21 @@
     Version="$(var.ProductVersion)"
     UpgradeCode="{2A8628E8-CE39-4E5D-9D37-8C5A9A88E5F3}"
     Compressed="yes"
-    Scope="perMachine">
+    Scope="perMachine"
+    InstallScope="perMachine"
+    ARPCOMMENTS="ScingR — Powered by ScingOS"
+    ARPURLINFOABOUT="https://scingos.com"
+    ARPHELPLINK="https://scingos.com/support"
+    ARPURLUPDATEINFO="https://scingos.com/downloads"
+    ARPPRODUCTICON="[INSTALLFOLDER]ScingR.exe"
+    ARPINSTALLLOCATION="[INSTALLFOLDER]"
+    ARPNOREPAIR="yes"
+    ARPNOMODIFY="yes"
+    ARPPUBLISHER="Inspection Systems Direct LLC"
+    ARPDISPLAYNAME="ScingR"
+    ARPDISPLAYVERSION="$(var.ProductVersion)"
+    ARPUNINSTALLSTRING="msiexec.exe /x [ProductCode]"
+    ProductCode="*">
 
     <SummaryInformation Description="ScingR — Powered by ScingOS" />
 
@@ -138,7 +152,7 @@
 
     <ComponentGroup Id="CG_Runtime_Uninstall" Directory="INSTALLFOLDER">
       <Component Id="Cmp_Runtime_Uninstall" Guid="{0B80BDE6-8E4A-4B9F-A5E9-6B5964F66D5B}">
-        <util:RemoveFolderEx Id="RemoveScingOSData" On="uninstall" Property="ScingOSDataDir" Condition="REMOVE = 'ALL' AND PRESERVE_DATA = 0" />
+        <util:RemoveFolderEx Id="RemoveScingOSData" On="uninstall" Property="ScingOSDataDir" Condition='REMOVE="ALL" AND PRESERVE_DATA=0' />
         <RegistryValue Root="HKLM" Key="Software\Inspection Systems Direct LLC\ScingR" Name="preserveDataDefault" Type="integer" Value="1" KeyPath="yes" />
       </Component>
     </ComponentGroup>

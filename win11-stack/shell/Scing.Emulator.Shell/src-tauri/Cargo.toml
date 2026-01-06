@@ -1,4 +1,6 @@
 [package]
+# Force GUI subsystem (no console window)
+windows_subsystem = "windows"
 name = "scing-emulator-shell"
 version = "0.1.0"
 edition = "2021"
@@ -15,3 +17,4 @@ tokio = { version = "1", features = ["time"] }
 
 [features]
 custom-protocol = ["tauri/custom-protocol"]
+

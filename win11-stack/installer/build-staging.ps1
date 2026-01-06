@@ -66,12 +66,12 @@ if (-not (Test-Path $serviceExe)) {
     # Temporarily relax error handling here and fail based on $LASTEXITCODE instead.
     $ErrorActionPreference = 'Continue'
 
-    & npm.cmd --prefix $shellDir install 2>&1 | Out-Host
+    & cmd.exe /d /c ("npm.cmd --prefix ""$shellDir"" install 2>&1") | Out-Host
     if ($LASTEXITCODE -ne 0) {
       throw "Shell deps install failed (exit $LASTEXITCODE)."
     }
 
-    & npm.cmd --prefix $shellDir run tauri:build 2>&1 | Out-Host
+    & cmd.exe /d /c ("npm.cmd --prefix ""$shellDir"" run tauri:build 2>&1") | Out-Host
     if ($LASTEXITCODE -ne 0) {
       throw "Shell build failed (exit $LASTEXITCODE)."
     }
