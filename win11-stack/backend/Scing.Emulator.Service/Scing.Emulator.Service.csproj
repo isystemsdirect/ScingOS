@@ -18,5 +18,10 @@
     <None Include="..\..\sdk\core\version.json" Link="version.json" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\sdk\core\openapi.yaml" Link="openapi.yaml" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\sdk\core\scing.schema.json" Link="scing.schema.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\sdk\core\plugin.schema.json" Link="plugin.schema.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\sdk\dotnet\ScingOS.Sdk.Abstractions\ScingOS.Sdk.Abstractions.csproj" />
   </ItemGroup>
 </Project>

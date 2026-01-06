@@ -13,7 +13,7 @@ Token-gated endpoints (baseline):
 - Administrative diagnostics (logs tail)
 - Future: plugin install/enable/disable, device hooks
 
-Token transport: `X-Scing-Dev-Token` header.
+Token transport: `X-Scing-Admin-Token` header.
 
 ## Future (designed now)
 

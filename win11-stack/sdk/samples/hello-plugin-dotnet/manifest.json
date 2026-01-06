@@ -1,0 +1,13 @@
+{
+  "$schema": "../../core/plugin.schema.json",
+  "id": "hello-heartbeat",
+  "name": "Hello Heartbeat",
+  "version": "0.1.0",
+  "target": "win11-service",
+  "description": "Sample plugin that emits a heartbeat and responds to pings.",
+  "entrypoint": "HelloHeartbeatPlugin.dll",
+  "capabilities": [
+    "events.subscribe",
+    "events.publish"
+  ]
+}

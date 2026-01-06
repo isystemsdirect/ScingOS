@@ -40,8 +40,7 @@ public sealed class ScingClient
 
     if (!string.IsNullOrWhiteSpace(_adminToken))
     {
-      // Current service uses X-Scing-Dev-Token for dev-gated endpoints.
-      req.Headers.TryAddWithoutValidation("X-Scing-Dev-Token", _adminToken);
+      req.Headers.TryAddWithoutValidation("X-Scing-Admin-Token", _adminToken);
     }
 
     using var res = await _http.SendAsync(req, cancellationToken);
@@ -80,7 +79,7 @@ public sealed class ScingClient
     var req = new HttpRequestMessage(HttpMethod.Get, new Uri(_baseUri, relativePath));
     if (!string.IsNullOrWhiteSpace(_adminToken))
     {
-      req.Headers.TryAddWithoutValidation("X-Scing-Dev-Token", _adminToken);
+      req.Headers.TryAddWithoutValidation("X-Scing-Admin-Token", _adminToken);
     }
 
     using var res = await _http.SendAsync(req, cancellationToken);

@@ -46,7 +46,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 var bindHost = builder.Configuration["ScingEmulator:BindHost"] ?? "127.0.0.1";
 var port = int.TryParse(builder.Configuration["ScingEmulator:Port"], out var p) ? p : 3333;
-var serviceName = builder.Configuration["ScingEmulator:ServiceName"] ?? "ScingEmulatorService";
+var serviceName = builder.Configuration["ScingEmulator:ServiceName"] ?? "ScingRRuntimeService";
 
 // Default to localhost-only if URLs are not explicitly configured.
 if (string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("ASPNETCORE_URLS")))
@@ -63,6 +63,10 @@ builder.Services.AddSingleton<AppPaths>();
 builder.Services.AddSingleton<ConfigStore>();
 builder.Services.AddSingleton<NeuralStreamHub>();
 builder.Services.AddSingleton<LogTailer>();
+builder.Services.AddSingleton<AuditLog>();
+builder.Services.AddSingleton<PluginLoader>();
+builder.Services.AddSingleton<PluginHost>();
+builder.Services.AddHostedService(sp => sp.GetRequiredService<PluginHost>());
 
 builder.Services.AddCors(options =>
 {
@@ -76,7 +80,7 @@ builder.Services.AddCors(options =>
   });
 });
 
-// Serilog file logging -> %ProgramData%\ScingOS\Logs\ScingEmulatorService-YYYYMMDD.log
+// Serilog file logging -> %ProgramData%\ScingOS\Logs\ScingRRuntimeService-YYYYMMDD.log
 builder.Services.AddSingleton(provider =>
 {
   var config = provider.GetRequiredService<IConfiguration>();
@@ -84,7 +88,7 @@ builder.Services.AddSingleton(provider =>
   var paths = provider.GetRequiredService<AppPaths>();
   paths.EnsureCreated();
 
-  var logPath = Path.Combine(paths.LogsDir, "ScingEmulatorService-.log");
+  var logPath = Path.Combine(paths.LogsDir, serviceName + "-.log");
 
   return new LoggerConfiguration()
     .MinimumLevel.Is(env.IsDevelopment() ? LogEventLevel.Debug : LogEventLevel.Information)
@@ -209,14 +213,14 @@ app.MapPost("/config", async (HttpContext http, IWebHostEnvironment env, IConfig
 {
   if (!DevAuth.IsAllowed(http, env, cfg))
   {
-    return Results.Unauthorized();
+    return Results.Json(new { error = "forbidden" }, statusCode: StatusCodes.Status403Forbidden);
   }
 
   await store.WriteAsync(body, ct);
   return Results.Ok(new { ok = true });
 });
 
-app.MapPost("/event", async (NeuralStreamHub hub, JsonElement body, CancellationToken ct) =>
+app.MapPost("/event", async (NeuralStreamHub hub, PluginHost plugins, JsonElement body, CancellationToken ct) =>
 {
   var ev = new EmulatorEvent(
     Type: "event",
@@ -226,6 +230,16 @@ app.MapPost("/event", async (NeuralStreamHub hub, JsonElement body, Cancellation
 
   var json = JsonSerializer.Serialize(ev, new JsonSerializerOptions(JsonSerializerDefaults.Web));
   await hub.BroadcastAsync(json, ct);
+
+  // Best-effort plugin routing; faults are handled inside PluginHost.
+  try
+  {
+    await plugins.RouteEventAsync(body, ct);
+  }
+  catch
+  {
+    // ignore
+  }
 
   return Results.Accepted();
 });
@@ -313,10 +327,113 @@ app.MapGet("/logs/tail", (HttpContext http, IWebHostEnvironment env, IConfigurat
 {
   if (!DevAuth.IsAllowed(http, env, cfg))
   {
-    return Results.Unauthorized();
+    return Results.Json(new { error = "forbidden" }, statusCode: StatusCodes.Status403Forbidden);
   }
 
   var text = tailer.Tail(lines ?? 200);
+  return Results.Text(text, "text/plain");
+});
+
+// -----------------------------
+// Phase 5: Plugin lifecycle API
+// -----------------------------
+
+app.MapGet("/plugins", (HttpContext http, IWebHostEnvironment env, IConfiguration cfg, PluginHost plugins) =>
+{
+  if (!DevAuth.IsAllowed(http, env, cfg))
+  {
+    return Results.Json(new { error = "forbidden" }, statusCode: StatusCodes.Status403Forbidden);
+  }
+
+  return Results.Ok(plugins.List());
+});
+
+app.MapPost("/plugins/install", async (HttpContext http, IWebHostEnvironment env, IConfiguration cfg, PluginHost plugins, IFormFile file, CancellationToken ct) =>
+{
+  if (!DevAuth.IsAllowed(http, env, cfg))
+  {
+    return Results.Json(new { error = "forbidden" }, statusCode: StatusCodes.Status403Forbidden);
+  }
+
+  if (file is null || file.Length == 0)
+  {
+    return Results.BadRequest(new { error = "file required" });
+  }
+
+  try
+  {
+    await using var stream = file.OpenReadStream();
+    var record = await plugins.InstallAsync(stream, ct);
+    return Results.Ok(record);
+  }
+  catch (Exception ex)
+  {
+    return Results.BadRequest(new { error = ex.Message });
+  }
+});
+
+app.MapPost("/plugins/enable/{pluginId}", async (HttpContext http, IWebHostEnvironment env, IConfiguration cfg, PluginHost plugins, string pluginId, CancellationToken ct) =>
+{
+  if (!DevAuth.IsAllowed(http, env, cfg))
+  {
+    return Results.Json(new { error = "forbidden" }, statusCode: StatusCodes.Status403Forbidden);
+  }
+
+  try
+  {
+    await plugins.EnableAsync(pluginId, ct);
+    return Results.Ok(new { ok = true });
+  }
+  catch (Exception ex)
+  {
+    return Results.BadRequest(new { error = ex.Message });
+  }
+});
+
+app.MapPost("/plugins/disable/{pluginId}", async (HttpContext http, IWebHostEnvironment env, IConfiguration cfg, PluginHost plugins, string pluginId, CancellationToken ct) =>
+{
+  if (!DevAuth.IsAllowed(http, env, cfg))
+  {
+    return Results.Json(new { error = "forbidden" }, statusCode: StatusCodes.Status403Forbidden);
+  }
+
+  try
+  {
+    await plugins.DisableAsync(pluginId, ct);
+    return Results.Ok(new { ok = true });
+  }
+  catch (Exception ex)
+  {
+    return Results.BadRequest(new { error = ex.Message });
+  }
+});
+
+app.MapPost("/plugins/uninstall/{pluginId}", async (HttpContext http, IWebHostEnvironment env, IConfiguration cfg, PluginHost plugins, string pluginId, CancellationToken ct) =>
+{
+  if (!DevAuth.IsAllowed(http, env, cfg))
+  {
+    return Results.Json(new { error = "forbidden" }, statusCode: StatusCodes.Status403Forbidden);
+  }
+
+  try
+  {
+    await plugins.UninstallAsync(pluginId, ct);
+    return Results.Ok(new { ok = true });
+  }
+  catch (Exception ex)
+  {
+    return Results.BadRequest(new { error = ex.Message });
+  }
+});
+
+app.MapGet("/plugins/logs/{pluginId}", (HttpContext http, IWebHostEnvironment env, IConfiguration cfg, PluginHost plugins, string pluginId, int? lines) =>
+{
+  if (!DevAuth.IsAllowed(http, env, cfg))
+  {
+    return Results.Json(new { error = "forbidden" }, statusCode: StatusCodes.Status403Forbidden);
+  }
+
+  var text = plugins.TailPluginLog(pluginId, lines ?? 200);
   return Results.Text(text, "text/plain");
 });
 

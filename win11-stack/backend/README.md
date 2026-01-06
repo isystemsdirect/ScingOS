@@ -11,7 +11,7 @@ This folder will hold Windows-native backend components for the ScingOS Win11 em
 
 - `GET /health`
 - `GET /config`
-- `POST /config` (dev-gated; requires `X-Scing-Dev-Token` if `SCING_EMULATOR_DEV_TOKEN` is set)
+- `POST /config` (token-gated; uses `X-Scing-Admin-Token` if `SCING_EMULATOR_DEV_TOKEN` is set)
 - `POST /event` (broadcasts to WS/SSE)
 - `GET /ws/neural` (WebSocket)
 - `GET /sse/neural` (Server-Sent Events)

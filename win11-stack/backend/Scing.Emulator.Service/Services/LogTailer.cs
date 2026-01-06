@@ -5,10 +5,12 @@ namespace Scing.Emulator.Service.Services;
 public sealed class LogTailer
 {
   private readonly AppPaths _paths;
+  private readonly string _serviceName;
 
-  public LogTailer(AppPaths paths)
+  public LogTailer(AppPaths paths, IConfiguration config)
   {
     _paths = paths;
+    _serviceName = config["ScingEmulator:ServiceName"] ?? "ScingRRuntimeService";
   }
 
   public string Tail(int lines = 200)
@@ -21,7 +23,7 @@ public sealed class LogTailer
       return string.Empty;
     }
 
-    var file = dir.GetFiles("ScingEmulatorService-*.log")
+    var file = dir.GetFiles(_serviceName + "-*.log")
       .OrderByDescending(f => f.LastWriteTimeUtc)
       .FirstOrDefault();
 

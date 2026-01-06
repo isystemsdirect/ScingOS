@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://scingos.local/schema/scing-plugin-manifest.json",
+  "title": "ScingOS Plugin Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "version", "entrypoint", "target", "capabilities", "description"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Stable plugin identifier.",
+      "pattern": "^[a-z0-9][a-z0-9._-]{2,63}$"
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable plugin name.",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "version": {
+      "type": "string",
+      "description": "Plugin version (SemVer).",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(-[A-Za-z0-9._-]+)?$"
+    },
+    "entrypoint": {
+      "type": "string",
+      "description": "Relative path under /bin/ to the entry assembly (DLL).",
+      "minLength": 1
+    },
+    "target": {
+      "type": "string",
+      "description": "Runtime target for compatibility checks.",
+      "enum": ["win11-service"]
+    },
+    "capabilities": {
+      "type": "array",
+      "description": "Capability-based permissions requested by the plugin.",
+      "minItems": 0,
+      "items": {
+        "type": "string",
+        "enum": [
+          "events.publish",
+          "events.subscribe",
+          "config.read",
+          "config.write",
+          "logs.read",
+          "ui.panel"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "description": {
+      "type": "string",
+      "description": "Short description of the plugin.",
+      "minLength": 1,
+      "maxLength": 1024
+    }
+  }
+}

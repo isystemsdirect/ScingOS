@@ -1,6 +1,6 @@
 # win11-stack Shell (Tauri v2)
 
-This shell is a thin native wrapper around the local emulator UI.
+This shell is a thin native wrapper around the local ScingR runtime UI.
 
 - Dev/prod URL: `http://127.0.0.1:3333/ui`
 - The backend service is responsible for serving the static UI.

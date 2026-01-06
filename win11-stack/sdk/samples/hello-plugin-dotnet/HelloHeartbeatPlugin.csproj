@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>HelloHeartbeatPlugin</AssemblyName>
+    <RootNamespace>ScingOS.Plugins.HelloHeartbeat</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\dotnet\ScingOS.Sdk.Abstractions\ScingOS.Sdk.Abstractions.csproj" />
+  </ItemGroup>
+</Project>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>ScingOS Emulator</title>
+    <title>ScingR</title>
     <style>
       :root { color-scheme: light dark; }
       body { font-family: system-ui, sans-serif; margin: 16px; }
@@ -18,7 +18,8 @@
   </head>
   <body>
     <header>
-      <h1 style="margin:0">ScingOS Emulator</h1>
+      <h1 style="margin:0">ScingR</h1>
+      <span class="k">Powered by ScingOS</span>
       <span class="pill" id="transport">disconnected</span>
       <span class="pill" id="service">unknown</span>
     </header>
@@ -38,11 +39,35 @@
       <div class="k">Last message at</div>
       <div id="lastMsg">-</div>
 
+      <div class="k">Last event type</div>
+      <div id="lastEventType">-</div>
+
+      <div class="k">Last event</div>
+      <pre id="lastEvent">-</pre>
+
       <div class="k">Version</div>
       <pre id="version">-</pre>
 
       <div class="k">Compat</div>
       <pre id="compat">-</pre>
+    </section>
+
+    <hr style="margin:24px 0" />
+
+    <section>
+      <h2 style="margin:0 0 8px 0">Plugins</h2>
+      <div class="row" style="margin-bottom: 8px">
+        <label for="adminToken" class="k">Admin Token (X-Scing-Admin-Token)</label>
+        <input id="adminToken" type="password" placeholder="X-Scing-Admin-Token" style="padding:6px 10px; min-width: 320px" />
+        <button id="btnPluginsRefresh" type="button">Refresh plugins</button>
+      </div>
+
+      <div id="pluginsList" class="grid"></div>
+
+      <div style="margin-top: 12px">
+        <div class="k">Plugin logs</div>
+        <pre id="pluginLogs">-</pre>
+      </div>
     </section>
 
     <script type="module" src="./app.js"></script>

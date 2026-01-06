@@ -31,4 +31,4 @@ await client.PublishEventAsync(new ScingEnvelope<object>(
 - `dotnet run --project win11-stack/sdk/cli/ScingOS.Cli/ScingOS.Cli.csproj -- version`
 - `dotnet run --project win11-stack/sdk/cli/ScingOS.Cli/ScingOS.Cli.csproj -- logs tail --lines 200 --token <token>`
 
-Note: current service uses header `X-Scing-Dev-Token` for dev-gated endpoints.
+Note: current service uses header `X-Scing-Admin-Token` for token-gated endpoints.

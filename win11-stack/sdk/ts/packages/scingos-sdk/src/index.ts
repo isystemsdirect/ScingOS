@@ -159,7 +159,7 @@ export function createClient(opts: CreateClientOptions = {}): ScingClient {
     await httpJson(baseUrl, '/event', {
       method: 'POST',
       body: JSON.stringify(env),
-      headers: adminToken ? { 'X-Scing-Dev-Token': adminToken } : undefined
+      headers: adminToken ? { 'X-Scing-Admin-Token': adminToken } : undefined
     });
   };
 

@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Scing Emulator Shell",
+  "productName": "ScingR Runtime Shell",
   "version": "0.1.0",
   "identifier": "com.scingos.emulator.shell",
   "build": {
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "ScingOS Emulator",
+        "title": "ScingR",
         "width": 1280,
         "height": 720,
         "resizable": true,

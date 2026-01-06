@@ -2,6 +2,8 @@ namespace Scing.Emulator.Service.Services;
 
 public static class DevAuth
 {
+  public const string CanonicalAdminTokenHeader = "X-Scing-Admin-Token";
+
   public static bool IsAllowed(HttpContext httpContext, IWebHostEnvironment env, IConfiguration config)
   {
     if (env.IsDevelopment())
@@ -24,11 +26,38 @@ public static class DevAuth
 
   private static bool HasToken(HttpContext ctx, string required)
   {
-    if (!ctx.Request.Headers.TryGetValue("X-Scing-Dev-Token", out var provided))
+    if (TryGetProvidedToken(ctx, out var provided))
     {
-      return false;
+      return string.Equals(provided, required, StringComparison.Ordinal);
     }
 
-    return string.Equals(provided.ToString(), required, StringComparison.Ordinal);
+    return false;
+  }
+
+  private static bool TryGetProvidedToken(HttpContext ctx, out string provided)
+  {
+    provided = string.Empty;
+
+    // Canonical header.
+    if (ctx.Request.Headers.TryGetValue(CanonicalAdminTokenHeader, out var v1) && !string.IsNullOrWhiteSpace(v1.ToString()))
+    {
+      provided = v1.ToString();
+      return true;
+    }
+
+    // Optional back-compat headers.
+    if (ctx.Request.Headers.TryGetValue("X-Scing-Dev-Token", out var v2) && !string.IsNullOrWhiteSpace(v2.ToString()))
+    {
+      provided = v2.ToString();
+      return true;
+    }
+
+    if (ctx.Request.Headers.TryGetValue("x-bdk-token", out var v3) && !string.IsNullOrWhiteSpace(v3.ToString()))
+    {
+      provided = v3.ToString();
+      return true;
+    }
+
+    return false;
   }
 }
