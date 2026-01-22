@@ -19,10 +19,10 @@ import Floor from './visual/Floor'
 import { FloorShine } from './visual/FloorShine'
 import { useLightRig } from './visual/lightRig/useLightRig'
 
-import type { MobiusState } from '../../../mobius/types'
-import type { NeuralSignal } from '../../../mobius/signal'
-import { tickMobius } from '../../../mobius/runtime'
-import { applyIntensity, colorFromPhase } from '../../../mobius/palettes'
+import type { MobiusState } from '@scingos/mobius/types'
+import type { NeuralSignal } from '@scingos/mobius/signal'
+import { tickMobius } from '@scingos/mobius/runtime'
+import { applyIntensity, colorFromPhase } from '@scingos/mobius/palettes'
 
 import { connectNeural } from './neural/client'
 import { neuralEventToSignal } from './neural/mapToMobius'
@@ -620,7 +620,7 @@ export default function App() {
               textAlign: 'center',
             }}
           >
-            Renderer crashed. See “RUNTIME CRASH CAPTURE”.
+            Renderer crashed. See â€œRUNTIME CRASH CAPTUREâ€.
           </div>
         }
       >

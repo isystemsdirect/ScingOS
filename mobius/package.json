@@ -1,0 +1,12 @@
+{
+    "name":  "@scingos/mobius",
+    "private":  true,
+    "version":  "0.0.0",
+    "type":  "module",
+    "exports":  {
+                    "./runtime":  "./runtime.ts",
+                    "./palettes":  "./palettes.ts",
+                    "./types":  "./types.ts",
+                    "./signal":  "./signal.ts"
+                }
+}
