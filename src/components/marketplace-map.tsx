@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation';
-import { GoogleMap, useJsApiLoader, MarkerF, InfoWindowF, WeatherLayer, CloudLayer } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, MarkerF, InfoWindowF } from '@react-google-maps/api';
 import type { Inspector, Client } from '@/lib/types';
 import { Loader2, AlertTriangle, Layers, Cloud, Wind } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
@@ -127,7 +127,7 @@ export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
-    libraries: ['places', 'weather'],
+    libraries: ['places'],
     preventGoogleFontsLoading: true,
   });
 
@@ -136,11 +136,12 @@ export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
   const [zoom, setZoom] = useState(10);
   const [activeInspector, setActiveInspector] = useState<Inspector | null>(null);
   const [activeClient, setActiveClient] = useState<Client | null>(null);
-  const [weatherLayers, setWeatherLayers] = useState({
-    precipitation: false,
-    clouds: false,
-    wind: false,
-  });
+  // Weather layers support removed from @react-google-maps/api
+  // const [weatherLayers, setWeatherLayers] = useState({
+  //   precipitation: false,
+  //   clouds: false,
+  //   wind: false,
+  // });
   const [mapTypeId, setMapTypeId] = useState('roadmap');
 
   const onLoad = React.useCallback(function callback(map: any) {
@@ -164,9 +165,9 @@ export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
     }
   }, []);
 
-  const toggleWeatherLayer = (layer: keyof typeof weatherLayers) => {
-    setWeatherLayers(prev => ({...prev, [layer]: !prev[layer]}));
-  };
+  // const toggleWeatherLayer = (layer: keyof typeof weatherLayers) => {
+  //   setWeatherLayers(prev => ({...prev, [layer]: !prev[layer]}));
+  // };
 
   if (loadError) {
     return (
@@ -193,10 +194,7 @@ export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
           options={{...mapOptions, mapTypeId}}
           onLoad={onLoad}
         >
-            {weatherLayers.precipitation && <WeatherLayer />}
-            {weatherLayers.clouds && <CloudLayer />}
             
-
           {inspectors.map(inspector => (
               <MarkerF 
                   key={`inspector-${inspector.id}`} 
@@ -272,33 +270,7 @@ export function MarketplaceMap({ inspectors, clients }: MarketplaceMapProps) {
                     </TooltipTrigger>
                     <TooltipContent><p>Toggle Map Type</p></TooltipContent>
                  </Tooltip>
-                 <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant="outline" size="icon" onClick={() => toggleWeatherLayer('precipitation')}
-                        className={cn(weatherLayers.precipitation && 'bg-primary/20 border-primary')}>
-                          <Cloud className="h-4 w-4"/>
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent><p>Toggle Precipitation</p></TooltipContent>
-                 </Tooltip>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant="outline" size="icon" onClick={() => toggleWeatherLayer('clouds')}
-                        className={cn(weatherLayers.clouds && 'bg-primary/20 border-primary')}>
-                          <Cloud className="h-4 w-4"/>
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent><p>Toggle Cloud Cover</p></TooltipContent>
-                 </Tooltip>
-                 <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant="outline" size="icon" onClick={() => toggleWeatherLayer('wind')}
-                        className={cn(weatherLayers.wind && 'bg-primary/20 border-primary')}>
-                          <Wind className="h-4 w-4"/>
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent><p>Toggle Wind Speed</p></TooltipContent>
-                 </Tooltip>
+                 
             </div>
         </TooltipProvider>
       </div>
