@@ -4,6 +4,11 @@
     "useDefineForClassFields": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "types": ["vite/client", "node"],
+    "baseUrl": ".",
+    "paths": {
+      "@scingos-src/*": ["../../src/*"],
+      "@scingos/mobius/*": ["../../mobius/*"]
+    },
     "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": false,

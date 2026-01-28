@@ -1,0 +1,8 @@
+# Minimal Data Connect schema scaffold for Scingular AI.
+# This is just enough to light up Data Connect Studio; evolve it as needed.
+
+type AvatarState @table {
+  # Each table has an implicit UUID primary key.
+  label: String!
+  updatedAt: Date! @default(expr: "request.time")
+}

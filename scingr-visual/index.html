@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>ScingR</title>
+  <style>
+    :root{
+      --c:#00ffff; --bg:#000; --muted:#8aa;
+      --err:#ff4d6d; --ok:#7CFC00; --warn:#ffd166;
+      --halo: rgba(0,255,255,.18);
+    }
+    html,body{margin:0;height:100%;background:var(--bg);font-family:Arial, sans-serif;color:var(--c);}
+    .wrap{display:grid;grid-template-columns: 420px 1fr; height:100%;}
+    .left{padding:22px;border-right:1px solid #0b2b2b;}
+    .right{padding:22px;}
+    .title{font-size:22px;letter-spacing:1px;margin:0 0 10px 0;}
+    .sub{color:var(--muted);font-size:12px;margin-bottom:14px;}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid #0b2b2b;border-radius:999px;font-size:12px;}
+    .dot{width:10px;height:10px;border-radius:50%;background:#2b3a3a;}
+    .row{display:flex;gap:10px;align-items:center;margin:12px 0;}
+    input{flex:1;background:#020b0b;border:1px solid #0b2b2b;color:var(--c);padding:10px;border-radius:10px;outline:none;}
+    button{background:#021515;border:1px solid #0b2b2b;color:var(--c);padding:10px 12px;border-radius:10px;cursor:pointer;}
+    button:disabled{opacity:.4;cursor:not-allowed;}
+    .panel{border:1px solid #0b2b2b;border-radius:14px;padding:14px;background:#010909;}
+    .log{height:520px;overflow:auto;font-family:Consolas, monospace;font-size:12px;color:#c9ffff;white-space:pre-wrap;}
+    .hint{color:var(--muted);font-size:12px;margin-top:10px;}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px;}
+    .mini{padding:10px;border-radius:12px;border:1px solid #0b2b2b;background:#010b0b;}
+    .lbl{font-size:11px;color:var(--muted);margin-bottom:8px;}
+    .btnbar{display:flex;flex-wrap:wrap;gap:8px;}
+    .btnsmall{padding:8px 10px;border-radius:10px;font-size:12px;}
+    input[type="range"]{width:100%;}
+    .kv{font-family:Consolas, monospace;font-size:12px;color:#c9ffff;}
+
+    /* Avatar surface */
+    .avatarWrap{margin-top:16px;}
+    .avatar{
+      width:320px;height:320px;border-radius:50%;
+      border:2px solid var(--c);
+      display:flex;align-items:center;justify-content:center;
+      font-size:22px;opacity:.98;
+      position:relative;
+      user-select:none;
+    }
+    .halo{
+      position:absolute; inset:-26px;
+      border-radius:50%;
+      background: radial-gradient(circle, var(--halo) 0%, rgba(0,0,0,0) 60%);
+      filter: blur(2px);
+      opacity: .5;
+      transform: scale(1);
+      pointer-events:none;
+    }
+    .ringGlow{
+      position:absolute; inset:-10px;
+      border-radius:50%;
+      box-shadow: 0 0 26px rgba(0,255,255,.16);
+      pointer-events:none;
+    }
+
+    /* SRT motion (repetitive randomness bounded) */
+    @keyframes srtPulse { 0%{transform:scale(1)} 50%{transform:scale(1.02)} 100%{transform:scale(1)} }
+    @keyframes srtBreathe { 0%{opacity:.35} 50%{opacity:.6} 100%{opacity:.35} }
+    @keyframes srtJitter { 0%{transform:translate(0,0)} 20%{transform:translate(0.6px,-0.4px)} 40%{transform:translate(-0.5px,0.4px)} 60%{transform:translate(0.5px,0.2px)} 80%{transform:translate(-0.4px,-0.2px)} 100%{transform:translate(0,0)} }
+    .pulse{animation: srtPulse var(--pulseMs) infinite ease-in-out;}
+    .breathe{animation: srtBreathe var(--breatheMs) infinite ease-in-out;}
+    .jitter{animation: srtJitter var(--jitterMs) infinite linear;}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="left">
+      <h1 class="title">ScingR</h1>
+      <div class="sub">Native Scing interface shell. SRT behavior is rendered locally.</div>
+
+      <div class="pill" id="linkPill">
+        <span class="dot" id="linkDot"></span>
+        <span id="linkText">DISCONNECTED</span>
+      </div>
+
+      <div class="row">
+        <input id="endpoint" value="ws://127.0.0.1:8787" />
+      </div>
+
+      <div class="row">
+        <button id="btnConnect">Connect</button>
+        <button id="btnDisconnect" disabled>Disconnect</button>
+      </div>
+
+      <div class="avatarWrap">
+        <div class="avatar" id="avatar">
+          <div class="halo" id="halo"></div>
+          <div class="ringGlow" id="ringGlow"></div>
+          <div id="avatarText">SCINGR</div>
+        </div>
+        <div class="hint">SRT: use buttons below or receive SRT packets over the link.</div>
+      </div>
+
+      <div class="grid">
+        <div class="mini">
+          <div class="lbl">SRT State</div>
+          <div class="btnbar">
+            <button class="btnsmall" data-srt="IDLE">IDLE</button>
+            <button class="btnsmall" data-srt="LISTENING">LISTENING</button>
+            <button class="btnsmall" data-srt="THINKING">THINKING</button>
+            <button class="btnsmall" data-srt="SPEAKING">SPEAKING</button>
+            <button class="btnsmall" data-srt="ALERT">ALERT</button>
+          </div>
+        </div>
+        <div class="mini">
+          <div class="lbl">SRT Intensity</div>
+          <input id="intensity" type="range" min="0" max="100" value="55" />
+          <div class="kv" id="intensityReadout">0.55</div>
+        </div>
+      </div>
+
+      <div class="mini" style="margin-top:10px;">
+        <div class="lbl">SRT Live</div>
+        <div class="kv" id="srtReadout">STATE=IDLE  INTENSITY=0.55</div>
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="panel">
+        <div class="sub">Link Events</div>
+        <div class="log" id="log"></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // ---------- utilities ----------
+  const logEl = document.getElementById("log");
+  const linkText = document.getElementById("linkText");
+  const linkDot = document.getElementById("linkDot");
+  const btnConnect = document.getElementById("btnConnect");
+  const btnDisconnect = document.getElementById("btnDisconnect");
+  const endpointEl = document.getElementById("endpoint");
+
+  const avatar = document.getElementById("avatar");
+  const halo = document.getElementById("halo");
+  const ringGlow = document.getElementById("ringGlow");
+  const avatarText = document.getElementById("avatarText");
+
+  const intensityEl = document.getElementById("intensity");
+  const intensityReadout = document.getElementById("intensityReadout");
+  const srtReadout = document.getElementById("srtReadout");
+
+  let ws = null;
+
+  function log(msg){
+    const line = `[${new Date().toLocaleTimeString()}] ${msg}\n`;
+    logEl.textContent += line;
+    logEl.scrollTop = logEl.scrollHeight;
+  }
+
+  function setLink(state){
+    linkText.textContent = state;
+    linkDot.style.background = "#2b3a3a";
+    if(state === "CONNECTING") linkDot.style.background = "var(--warn)";
+    if(state === "LINKED")     linkDot.style.background = "var(--ok)";
+    if(state === "ERROR")      linkDot.style.background = "var(--err)";
+    if(state === "DISCONNECTED") linkDot.style.background = "#2b3a3a";
+  }
+
+  // ---------- SRT core (repetitive randomness bounded) ----------
+  const SRT = {
+    state: "IDLE",
+    intensity: 0.55,
+    // derived params (ms)
+    pulseMs: 2200,
+    breatheMs: 2200,
+    jitterMs: 1200,
+    jitterOn: false,
+    apply(){
+      // clamp
+      this.intensity = Math.max(0, Math.min(1, this.intensity));
+
+      // map state->base tempo
+      let basePulse = 2200, baseBreathe = 2400, baseJitter = 1200, jitter = false;
+      let haloAlpha = 0.18;
+
+      switch(this.state){
+        case "IDLE":
+          basePulse = 2400; baseBreathe = 2600; baseJitter = 1400; jitter = false; haloAlpha = 0.16;
+          avatarText.textContent = "SCINGR";
+          break;
+        case "LISTENING":
+          basePulse = 1500; baseBreathe = 1700; baseJitter = 900; jitter = true; haloAlpha = 0.22;
+          avatarText.textContent = "LISTENING";
+          break;
+        case "THINKING":
+          basePulse = 1100; baseBreathe = 1800; baseJitter = 1200; jitter = true; haloAlpha = 0.20;
+          avatarText.textContent = "THINKING";
+          break;
+        case "SPEAKING":
+          basePulse = 900; baseBreathe = 1200; baseJitter = 800; jitter = true; haloAlpha = 0.24;
+          avatarText.textContent = "SPEAKING";
+          break;
+        case "ALERT":
+          basePulse = 650; baseBreathe = 900; baseJitter = 500; jitter = true; haloAlpha = 0.30;
+          avatarText.textContent = "ALERT";
+          break;
+      }
+
+      // intensity scales (faster/stronger)
+      const k = 1 - (this.intensity * 0.45); // 1.0 down to ~0.55
+      this.pulseMs = Math.round(basePulse * k);
+      this.breatheMs = Math.round(baseBreathe * k);
+      this.jitterMs = Math.round(baseJitter * k);
+      this.jitterOn = jitter;
+
+      // bounded micro-variation: recognizable motif, never identical
+      const drift = (Math.sin(Date.now()/3500) + 1) * 0.5; // 0..1 slow drift
+      const pulseMs = Math.round(this.pulseMs * (0.94 + drift*0.12));
+      const breatheMs = Math.round(this.breatheMs * (0.94 + (1-drift)*0.12));
+      const jitterMs = Math.round(this.jitterMs * (0.96 + drift*0.10));
+
+      avatar.style.setProperty("--pulseMs", `${pulseMs}ms`);
+      avatar.style.setProperty("--breatheMs", `${breatheMs}ms`);
+      avatar.style.setProperty("--jitterMs", `${jitterMs}ms`);
+
+      // apply classes
+      avatar.classList.remove("pulse","breathe","jitter");
+      halo.classList.remove("breathe");
+      ringGlow.classList.remove("pulse");
+
+      avatar.classList.add("pulse");
+      halo.classList.add("breathe");
+      ringGlow.classList.add("pulse");
+      if(this.jitterOn) avatar.classList.add("jitter");
+
+      // visual intensity: halo opacity + ring glow strength
+      halo.style.opacity = String(0.25 + this.intensity * 0.55);
+      ringGlow.style.boxShadow = `0 0 ${18 + Math.round(this.intensity*36)}px rgba(0,255,255,${0.12 + this.intensity*0.22})`;
+      halo.style.setProperty("--halo", `rgba(0,255,255,${haloAlpha})`);
+
+      // update readouts
+      intensityReadout.textContent = this.intensity.toFixed(2);
+      srtReadout.textContent = `STATE=${this.state}  INTENSITY=${this.intensity.toFixed(2)}`;
+    },
+    set(state, intensity){
+      if(state) this.state = String(state).toUpperCase();
+      if(typeof intensity === "number") this.intensity = intensity;
+      this.apply();
+    }
+  };
+
+  // refresh SRT drift periodically (keeps motion alive)
+  setInterval(() => SRT.apply(), 900);
+
+  // UI controls
+  intensityEl.addEventListener("input", () => {
+    SRT.set(SRT.state, parseInt(intensityEl.value,10)/100);
+    log(`SRT local: state=${SRT.state} intensity=${SRT.intensity.toFixed(2)}`);
+  });
+
+  document.querySelectorAll("button[data-srt]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      SRT.set(btn.getAttribute("data-srt"), SRT.intensity);
+      log(`SRT local: state=${SRT.state} intensity=${SRT.intensity.toFixed(2)}`);
+      // optionally broadcast to server for roundtrip visibility
+      if(ws && ws.readyState === 1){
+        ws.send(JSON.stringify({ type:"srt", state:SRT.state, intensity:SRT.intensity, source:"local-ui", ts:Date.now() }));
+      }
+    });
+  });
+
+  // ---------- Link (WebSocket) ----------
+  btnConnect.onclick = () => {
+    const url = endpointEl.value.trim();
+    if(!url) return;
+
+    if(ws){ try{ ws.close(); }catch(e){} ws=null; }
+
+    setLink("CONNECTING");
+    btnConnect.disabled = true;
+    btnDisconnect.disabled = false;
+
+    log(`Connecting to ${url} ...`);
+    ws = new WebSocket(url);
+
+    ws.onopen = () => {
+      setLink("LINKED");
+      log("LINKED.");
+      ws.send(JSON.stringify({ type:"hello", agent:"ScingR", ts: Date.now() }));
+      // send current SRT state as handshake
+      ws.send(JSON.stringify({ type:"srt", state:SRT.state, intensity:SRT.intensity, source:"handshake", ts: Date.now() }));
+    };
+
+    ws.onmessage = (ev) => {
+      log(`RX: ${ev.data}`);
+
+      // try parse and apply SRT packets
+      try{
+        const msg = JSON.parse(ev.data);
+        if(msg && msg.type === "srt"){
+          const st = msg.state || msg.mode;
+          const it = (typeof msg.intensity === "number") ? msg.intensity : undefined;
+          if(st) SRT.set(st, (typeof it === "number" ? it : SRT.intensity));
+          log(`SRT rx applied: state=${SRT.state} intensity=${SRT.intensity.toFixed(2)}`);
+        }
+      }catch(_){ }
+    };
+
+    ws.onerror = () => {
+      setLink("ERROR");
+      log("ERROR: WebSocket error");
+    };
+
+    ws.onclose = () => {
+      setLink("DISCONNECTED");
+      log("DISCONNECTED");
+      btnConnect.disabled = false;
+      btnDisconnect.disabled = true;
+      ws = null;
+    };
+  };
+
+  btnDisconnect.onclick = () => {
+    if(ws){ log("Disconnect requested."); ws.close(); }
+  };
+
+  // boot
+  setLink("DISCONNECTED");
+  log(`Boot: ${window.scingr?.now?.() || "ready"}`);
+  SRT.apply();
+</script>
+</body>
+</html>

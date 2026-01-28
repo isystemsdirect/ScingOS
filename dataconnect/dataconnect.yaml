@@ -1,0 +1,27 @@
+# Firebase Data Connect configuration for Scingular AI (SCINGR / ScingOS)
+# Docs: https://firebase.google.com/docs/data-connect/configuration-reference
+
+specVersion: v1beta
+
+# Your Data Connect service id (resource name within the Firebase project).
+serviceId: scingular-ai
+
+# Pick the region you intend to run Cloud SQL + Data Connect in.
+location: us-central1
+
+schema:
+  # Recursively loads all .gql files in this directory.
+  source: schema
+
+  # Datasource connection information (required by the config schema).
+  # These values can be updated later to match your Cloud SQL instance/database.
+  datasource:
+    postgresql:
+      database: scingular_ai
+      cloudSql:
+        instanceId: scingular-ai-postgres
+        # schemaValidation: COMPATIBLE
+
+# Connector directories; each directory must contain a connector.yaml.
+connectorDirs:
+  - example

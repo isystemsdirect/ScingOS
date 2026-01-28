@@ -13,6 +13,7 @@ export type EngineId =
   | 'bane-core'
   | 'provider-openai'
   | 'provider-anthropic'
+  | 'provider-anthropic-haiku'
   | 'provider-gemini'
   | 'system-metrics'
   | (string & {}); // allow future extension
@@ -76,6 +77,20 @@ export const ENGINES: Record<string, EngineConfig> = {
       'semantic-governance',
       'docs-intelligence',
     ],
+  },
+
+  'provider-anthropic-haiku': {
+    id: 'provider-anthropic-haiku',
+    family: 'provider',
+    displayName: 'Claude 3.5 Haiku (Anthropic)',
+    description:
+      'Fast, efficient reasoning and analysis via Anthropic Claude 3.5 Haiku. Default provider for general-purpose LARI tasks.',
+    provider: 'internal',
+    model: 'claude-3-5-haiku-20241022',
+    supportsLongContext: true,
+    supportsTools: false,
+    supportsStreaming: true,
+    tags: ['anthropic', 'claude', 'recommended', 'default'],
   },
 };
 

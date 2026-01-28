@@ -134,7 +134,7 @@ At the heart of ScingOS is the philosophy of **Bona Fide Intelligence**. In this
 
 - **Frontend**: Next.js / React
 - **Backend**: Firebase (Authentication, Firestore, Cloud Functions, Storage)
-- **AI Platform**: SCINGULAR AI cloud services
+- **AI Models**: Claude 3.5 Haiku (Anthropic) — **Default**; OpenAI (legacy support)
 - **Security**: BANE governance layer with cryptographic verification
 - **Protocol**: AIP (proprietary real-time protocol)
 

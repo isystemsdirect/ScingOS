@@ -1,0 +1,11 @@
+# Firebase Data Connect connector configuration
+# Docs: https://firebase.google.com/docs/data-connect/configuration-reference
+
+connectorId: example
+
+# Optional SDK generation config can go here later.
+# generate:
+#   javascriptSdk:
+#     - outputDir: ../client/src/generated/dataconnect
+#       package: "@dataconnect/generated"
+#       packageJsonDir: ../client

@@ -1,0 +1,9 @@
+# Example operation for Data Connect Studio.
+# You can run this locally in the emulator from VS Code CodeLens.
+
+query ListAvatarStates @auth(level: PUBLIC, insecureReason: "Local dev scaffold") {
+  avatarStates {
+    label
+    updatedAt
+  }
+}

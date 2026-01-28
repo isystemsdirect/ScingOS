@@ -79,10 +79,21 @@ NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 Optional variables:
 
 ```bash
-NEXT_PUBLIC_USE_FIREBASE_NEURAL=true
+# AI Providers (select one or both)
+# Default: Claude 3.5 Haiku (Anthropic) is now recommended
+ANTHROPIC_API_KEY=your_anthropic_api_key
+
+# Legacy OpenAI support (if needed)
 OPENAI_KEY=your_openai_key
-ANTHROPIC_API_KEY=your_anthropic_key
+
+# Firebase Neural integration
+NEXT_PUBLIC_USE_FIREBASE_NEURAL=true
 ```
+
+**Getting API Keys:**
+
+- **Anthropic (Claude Haiku - Recommended)**: Visit [console.anthropic.com](https://console.anthropic.com) and create an API key
+- **OpenAI (Legacy)**: Visit [platform.openai.com/api-keys](https://platform.openai.com/api-keys)
 
 ### Running Locally
 

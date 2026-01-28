@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <!--
+    ScingR Installer (Scaffold)
+    Windows 10 Pro compatible.
+
+    This is a buildable skeleton MSI with no payload.
+    Add files/components once the real ScingR deliverable(s) are known.
+  -->
+
+  <Package
+    Name="ScingR"
+    Manufacturer="Inspection Systems Direct LLC"
+    Version="0.0.1"
+    UpgradeCode="{42211177-2977-4a25-a66b-548c95088a10}"
+    Scope="perUser">
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of ScingR is already installed." />
+    <MediaTemplate />
+
+    <StandardDirectory Id="LocalAppDataFolder">
+      <Directory Id="INSTALLFOLDER" Name="ScingR" />
+    </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="AppProgramsFolder" Name="ScingR" />
+    </StandardDirectory>
+
+    <DirectoryRef Id="INSTALLFOLDER">
+      <Component Id="PayloadRunComponent" Guid="*">
+        <File Id="fil_scingr_run" Source="..\payload\scingr-run.cmd" KeyPath="yes" />
+      </Component>
+
+      <Component Id="PayloadVersionComponent" Guid="*">
+        <File Id="fil_scingr_ver" Source="..\payload\scingr.version.txt" KeyPath="yes" />
+      </Component>
+
+      <Component Id="RegistryComponent" Guid="*">
+        <RegistryValue
+          Root="HKCU"
+          Key="Software\\Inspection Systems Direct LLC\\ScingR"
+          Name="Installed"
+          Type="integer"
+          Value="1"
+          KeyPath="yes" />
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="AppProgramsFolder">
+      <Component Id="StartMenuComponent" Guid="*">
+        <Shortcut
+          Id="scut_RunScingR"
+          Name="Run ScingR"
+          Description="Launch ScingR"
+          Target="[INSTALLFOLDER]scingr-run.cmd"
+          WorkingDirectory="INSTALLFOLDER" />
+                                                <Shortcut
+          Id="scut_UninstallScingR"
+          Name="Uninstall ScingR"
+          Description="Open Programs and Features to uninstall ScingR"
+          Target="[SystemFolder]control.exe"
+          Arguments="appwiz.cpl"
+          WorkingDirectory="INSTALLFOLDER" /><RemoveFolder Id="rm_AppProgramsFolder" Directory="AppProgramsFolder" On="uninstall" />
+        <RegistryValue Root="HKCU" Key="Software\\Inspection Systems Direct LLC\\ScingR" Name="StartMenu" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </DirectoryRef>
+
+    <Feature Id="MainFeature" Title="ScingR" Level="1">
+      <ComponentRef Id="PayloadRunComponent" />
+      <ComponentRef Id="PayloadVersionComponent" />
+      <ComponentRef Id="StartMenuComponent" />
+      <ComponentRef Id="RegistryComponent" />
+    </Feature>
+  </Package>
+</Wix>
+
+
+
+
+
+
