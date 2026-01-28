@@ -23,6 +23,8 @@ users/
 
 Stores per-device metadata and registration status.
 
+### Phase 1 Fields (MVP)
+
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `deviceId` | string | ✓ | UUID; locally generated on client, immutable |
@@ -32,7 +34,14 @@ Stores per-device metadata and registration status.
 | `lastSeenAt` | timestamp | ✓ | Last active timestamp |
 | `status` | string | ✓ | `"active"` \| `"revoked"` (Phase 1: default `"active"`) |
 
-**Example:**
+### Phase 2A Fields (E2EE + Signatures)
+
+| Field | Type | Required | Description | Phase |
+|-------|------|----------|-------------|-------|
+| `pubSignKey` | string (base64) | ✓ Phase 2A | Ed25519 public key (32 bytes, base64 encoded) | 2A+ |
+| `pubBoxKey` | string (base64) | ✓ Phase 2A | X25519 public key (32 bytes, base64 encoded) | 2A+ |
+
+**Example (Phase 1):**
 ```json
 {
   "deviceId": "550e8400-e29b-41d4-a716-446655440000",
@@ -44,11 +53,27 @@ Stores per-device metadata and registration status.
 }
 ```
 
+**Example (Phase 2A):**
+```json
+{
+  "deviceId": "550e8400-e29b-41d4-a716-446655440000",
+  "platform": "android",
+  "name": "My Pixel 8",
+  "createdAt": "2026-01-28T15:30:00Z",
+  "lastSeenAt": "2026-01-28T16:45:00Z",
+  "status": "active",
+  "pubSignKey": "aBcDeFgHiJkLmNoPqRsTuVwXyZaBcDeFgHiJkLmN=",
+  "pubBoxKey": "xYzAbCdEfGhIjKlMnOpQrStUvWxYzAbCdEfGhIjK="
+}
+```
+
 ---
 
 ## Collection: `users/{uid}/messages/{messageId}`
 
 Stores message metadata and references to payloads in Cloud Storage.
+
+### Phase 1 Fields (MVP)
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
@@ -57,17 +82,20 @@ Stores message metadata and references to payloads in Cloud Storage.
 | `type` | string | ✓ | `"text"` (Phase 1), later: `"image"`, `"file"` |
 | `createdAt` | timestamp | ✓ | Message sent timestamp |
 | `recipients` | string \| array | ✓ | `"all"` (all user's devices) or array of deviceIds |
-| `storagePath` | string | ✓ | Cloud Storage path: `users/{uid}/messages/{messageId}.txt` |
-| `mime` | string | ✓ | MIME type: `"text/plain"` (Phase 1) |
+| `storagePath` | string | ✓ | Cloud Storage path: `users/{uid}/messages/{messageId}.txt` (Phase 1) or `.bin` (Phase 2A+) |
+| `mime` | string | ✓ | MIME type: `"text/plain"` (Phase 1) or `"application/octet-stream"` (Phase 2A+) |
 | `sizeBytes` | number | ✓ | Payload size in bytes |
 
-**Future Fields (Phase 2+, Encryption)**:
-| Field | Type | Description |
-|-------|------|-------------|
-| `envelopes` | map | Per-device encrypted symmetric key envelopes (ECDH) |
-| `nonce` | string | Base64-encoded nonce for AEAD |
-| `signature` | string | Ed25519 message signature (base64) |
-| `metaHash` | string | BLAKE3 hash of plaintext for verification |
+### Phase 2A Fields (E2EE + Signatures)
+
+| Field | Type | Required | Description | Phase |
+|-------|------|----------|-------------|-------|
+| `nonce` | string (base64) | ✓ Phase 2A | XChaCha20 nonce (24 bytes, base64 encoded) | 2A+ |
+| `envelopes` | map<string, string> | ✓ Phase 2A | `{ deviceId: base64(sealedBox(DEK)) }` per recipient | 2A+ |
+| `metaHash` | string (base64) | ✓ Phase 2A | SHA256(canonicalMetaJson) for integrity verification | 2A+ |
+| `signature` | string (base64) | ✓ Phase 2A | Ed25519 signature over metaHash (64 bytes, base64 encoded) | 2A+ |
+| `version` | string | ✓ Phase 2A | Schema version marker: `"2A"` | 2A+ |
+| `alg` | object | ✗ (optional) | Algorithm descriptors (informational) | 2A+ |
 
 **Example (Phase 1):**
 ```json
@@ -83,15 +111,43 @@ Stores message metadata and references to payloads in Cloud Storage.
 }
 ```
 
+**Example (Phase 2A):**
+```json
+{
+  "messageId": "660e8400-e29b-41d4-a716-446655440111",
+  "senderDeviceId": "550e8400-e29b-41d4-a716-446655440000",
+  "type": "text",
+  "createdAt": "2026-01-28T16:45:00Z",
+  "recipients": ["550e8400-e29b-41d4-a716-446655440000", "660e8400-e29b-41d4-a716-446655440222"],
+  "storagePath": "users/user-123/messages/660e8400-e29b-41d4-a716-446655440111.bin",
+  "mime": "application/octet-stream",
+  "sizeBytes": 512,
+  "nonce": "abc123...==",
+  "envelopes": {
+    "550e8400-e29b-41d4-a716-446655440000": "base64(sealedBox_for_device_A)",
+    "660e8400-e29b-41d4-a716-446655440222": "base64(sealedBox_for_device_B)"
+  },
+  "metaHash": "sha256(canonical)==",
+  "signature": "ed25519_sig==",
+  "version": "2A",
+  "alg": {
+    "aead": "xchacha20poly1305",
+    "wrap": "sealedbox-x25519",
+    "sig": "ed25519"
+  }
+}
+```
+
 ---
 
 ## Cloud Storage Structure
 
-### Path: `users/{uid}/messages/{messageId}.txt`
+### Phase 1 Path: `users/{uid}/messages/{messageId}.txt`
 
-Message payload stored in Cloud Storage:
-- **Phase 1 MVP**: Plain UTF-8 text file (`.txt`), readable as plaintext
-- **Phase 2+**: XChaCha20-Poly1305 encrypted blob (`.bin`), with encryption envelope in Firestore
+Message payload stored in Cloud Storage (plaintext, MVP):
+- Format: Plain UTF-8 text file
+- Readable as plaintext
+- No encryption
 
 **Example:**
 ```
@@ -101,6 +157,35 @@ gs://spectrocap.appspot.com/
       messages/
         660e8400-e29b-41d4-a716-446655440111.txt   (plaintext in Phase 1)
 ```
+
+### Phase 2A Path: `users/{uid}/messages/{messageId}.bin`
+
+Message payload stored as encrypted blob (Phase 2A+):
+- Format: Binary encrypted blob (XChaCha20-Poly1305)
+- Structure: Magic (6 bytes) + Nonce (24 bytes) + Ciphertext (variable)
+- Not readable without decryption key (DEK)
+
+**Phase 2A Blob Format:**
+
+```
+┌─────────────────┬──────────────────┬─────────────────────┐
+│ Magic (6 bytes) │ Nonce (24 bytes) │ Ciphertext (var)    │
+│   "SCAP2A"      │ XChaCha20 nonce  │ AEAD encrypted data │
+└─────────────────┴──────────────────┴─────────────────────┘
+```
+
+**Total size:** 6 + 24 + len(ciphertext) → stored in Firestore `sizeBytes`
+
+**Example:**
+```
+gs://spectrocap.appspot.com/
+  users/
+    user-123/
+      messages/
+        660e8400-e29b-41d4-a716-446655440111.bin   (encrypted in Phase 2A+)
+```
+
+**Security Note:** Server never decrypts. Storage layer is untrusted.
 
 ### Storage Permissions
 
@@ -239,31 +324,38 @@ After deploying rules and creating indexes, validate:
 
 - **Messages**: Keep indefinitely (users can delete manually)
 - **Devices**: Keep while active; mark inactive after 30 days no contact
-- **Storage**: Delete message payload 90 days after creation (configurable via Cloud Storage lifecycle policies)
-
-```
-
-- **No encryption** in Phase 1 (plaintext in Storage)
-- **No signatures** (trust Firestore rules + Auth)
-- **All devices receive all messages** (`"recipients": "all"`)
-- **Single device per user** (Android OR Windows, for MVP simplicity)
-
----
-
-## Phase 2+ Enhancements
-
-- E2EE: XChaCha20-Poly1305 symmetric encryption
-- Per-device key envelopes (ECDH encryption of symmetric key)
-- Message signatures (Ed25519)
-- Selective recipient lists
-- Image/media support
-- Resumable uploads
-- Message expiration (TTL)
-
----
-
-## Data Retention
-
-- **Messages**: Keep indefinitely (users can delete manually)
-- **Devices**: Keep while active; mark inactive after 30 days no contact
 - **Storage**: Delete message payload 90 days after creation (configurable)
+
+---
+
+## Phase 2A: End-to-End Encryption + Signatures
+
+### Overview
+
+**Phase 2A** introduces full E2EE with message signatures and device trust controls:
+
+- **No plaintext** stored in Cloud Storage (all `.bin` encrypted)
+- **Per-device key envelopes**: DEK encrypted per recipient using X25519 sealed box
+- **Message signatures**: Ed25519 over canonical metadata hash
+- **Device trust**: Status enforcement (revoked devices cannot decrypt)
+
+### Key Changes from Phase 1
+
+| Aspect | Phase 1 | Phase 2A |
+|--------|---------|---------|
+| **Storage** | `.txt` (plaintext) | `.bin` (encrypted) |
+| **Device Keypairs** | None | Ed25519 + X25519 |
+| **Message Field** | Recipients: `"all"` | Recipients: array of active deviceIds |
+| **Firestore** | Minimal (metadata) | Full E2EE fields (envelopes, signature, metaHash) |
+| **Verification** | None (plaintext trust) | Full (signature + metaHash integrity) |
+
+### Phase 2A Security Guarantees
+
+- ✅ **Confidentiality**: Only designated recipients can decrypt (X25519 sealed box per device)
+- ✅ **Authenticity**: Message signed by sender device (Ed25519)
+- ✅ **Integrity**: Metadata hash verified (SHA256 + canonical JSON)
+- ✅ **Device Trust**: Revoked devices excluded from recipients + cannot decrypt existing messages
+
+### For Complete Phase 2A Specification
+
+See: [PHASE_2A_E2EE.md](./PHASE_2A_E2EE.md)
