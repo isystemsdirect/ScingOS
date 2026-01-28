@@ -11,42 +11,79 @@
 ### Prerequisites
 
 - **Android**: Android Studio, Kotlin 1.9+, min SDK 26
-- **Windows**: Rust 1.70+, Node.js 18+, Tauri CLI
-- **Firebase**: Project `scing-remote-paste` (create one-time)
+- **Windows**: Rust 1.70+, Node.js 18+, npm 8+, WebView2 Runtime
+- **Firebase**: Project `spectrocap` with Auth + Firestore + Storage enabled
 
 ### Setup
 
 1. **Create Firebase Project**
    ```bash
    # Navigate to https://console.firebase.google.com
-   # Create project: scing-remote-paste
-   # Enable: Auth (email/password), Firestore, Storage
+   # Create project: spectrocap (or spectrocap-dev / spectrocap-prod)
+   # Enable: Authentication (Email/Password), Firestore, Storage
    ```
 
-2. **Android Setup**
+2. **Deploy Firestore + Storage Rules** (Lane 3)
    ```bash
-   cd apps/android
+   # Copy rules to Firebase Console or use Firebase CLI:
+   firebase deploy --only firestore:rules,storage
+   # Rules are in: cloud/firebase/firestore.rules and storage.rules
+   ```
+
+3. **Android Setup** (Lane 1)
+   ```bash
+   cd apps/android/spectrocap-android
    # Download google-services.json from Firebase Console → App settings
    # Place in app/ directory
    # Open in Android Studio
-   # Build and run
+   # Build and run on device/emulator
    ```
 
-3. **Windows Setup**
+4. **Windows Setup** (Lane 2 — This Document)
    ```bash
-   cd apps/windows
+   cd apps/windows/spectrocap-win
+   cp .env.example .env.local
+   # Edit .env.local with Firebase credentials
    npm install
-   npm run dev
-   # Tauri dev server starts
+   npm run dev           # Terminal 1: Vite dev server
+   npm run tauri:dev     # Terminal 2: Tauri window + app
    ```
 
-4. **Deploy Security Rules**
-   ```bash
-   firebase deploy --only firestore:rules,storage
-   # Uses rules from shared/remote-paste/
-   ```
+5. **Smoke Test**
+   - See `apps/windows/spectrocap-win/smoke-test.sh`
+   - Or see README.md in Windows client directory
 
 ---
+
+## Apps Directory
+
+```
+apps/
+├── android/
+│   └── spectrocap-android/     (Lane 1 — Kotlin + Jetpack Compose)
+│       ├── app/
+│       ├── build.gradle
+│       └── ...
+├── windows/
+│   └── spectrocap-win/         (Lane 2 — Tauri + Vite + TypeScript)
+│       ├── src/
+│       │   ├── main.ts
+│       │   ├── app.ts
+│       │   ├── firebase.ts
+│       │   ├── device.ts
+│       │   ├── receive.ts
+│       │   ├── clipboard.ts
+│       │   ├── historyStore.ts
+│       │   └── lariCap.ts
+│       ├── src-tauri/
+│       │   ├── src/
+│       │   │   ├── main.rs
+│       │   │   └── lib.rs
+│       │   └── tauri.conf.json
+│       ├── .env.example
+│       ├── README.md
+│       └── package.json
+└── README.md               (This file)
 
 ## File Structure
 
