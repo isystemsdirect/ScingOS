@@ -97,6 +97,17 @@ Stores message metadata and references to payloads in Cloud Storage.
 | `version` | string | ✓ Phase 2A | Schema version marker: `"2A"` | 2A+ |
 | `alg` | object | ✗ (optional) | Algorithm descriptors (informational) | 2A+ |
 
+### Phase 2B Fields (Media Support)
+
+| Field | Type | Required | Description | Phase |
+|-------|------|----------|-------------|-------|
+| `media` | object | ✗ Phase 2B | Media metadata (images, files) | 2B+ |
+| `media.width` | number | ✗ Phase 2B | Image width in pixels (if applicable) | 2B+ |
+| `media.height` | number | ✗ Phase 2B | Image height in pixels (if applicable) | 2B+ |
+| `media.filename` | string | ✗ Phase 2B | Original filename (optional) | 2B+ |
+| `media.ext` | string | ✗ Phase 2B | File extension: `"png"` \| `"jpg"` \| `"jpeg"` \| `"bin"` | 2B+ |
+| `sizeBytesPlain` | number | ✗ Phase 2B | Plaintext payload size before encryption | 2B+ |
+
 **Example (Phase 1):**
 ```json
 {
@@ -111,7 +122,7 @@ Stores message metadata and references to payloads in Cloud Storage.
 }
 ```
 
-**Example (Phase 2A):**
+**Example (Phase 2A - Text):**
 ```json
 {
   "messageId": "660e8400-e29b-41d4-a716-446655440111",
@@ -130,6 +141,39 @@ Stores message metadata and references to payloads in Cloud Storage.
   "metaHash": "sha256(canonical)==",
   "signature": "ed25519_sig==",
   "version": "2A",
+  "alg": {
+    "aead": "xchacha20poly1305",
+    "wrap": "sealedbox-x25519",
+    "sig": "ed25519"
+  }
+}
+```
+
+**Example (Phase 2B - Image PNG):**
+```json
+{
+  "messageId": "770e8400-e29b-41d4-a716-446655440222",
+  "senderDeviceId": "550e8400-e29b-41d4-a716-446655440000",
+  "type": "image",
+  "createdAt": "2026-01-28T16:46:00Z",
+  "recipients": ["550e8400-e29b-41d4-a716-446655440000", "660e8400-e29b-41d4-a716-446655440222"],
+  "storagePath": "users/user-123/messages/770e8400-e29b-41d4-a716-446655440222.bin",
+  "mime": "image/png",
+  "sizeBytesPlain": 123456,
+  "nonce": "def456...==",
+  "envelopes": {
+    "550e8400-e29b-41d4-a716-446655440000": "base64(sealedBox_for_device_A)",
+    "660e8400-e29b-41d4-a716-446655440222": "base64(sealedBox_for_device_B)"
+  },
+  "metaHash": "sha256(canonical)==",
+  "signature": "ed25519_sig==",
+  "version": "2A",
+  "media": {
+    "width": 1920,
+    "height": 1080,
+    "filename": "screenshot.png",
+    "ext": "png"
+  },
   "alg": {
     "aead": "xchacha20poly1305",
     "wrap": "sealedbox-x25519",
