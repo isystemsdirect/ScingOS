@@ -8,7 +8,7 @@
 import { onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { auth } from './firebase';
 import { registerDevice } from './device';
-import { subscribeToMessages, HistoryEntry as MessageEntry } from './receive';
+import { subscribeToMessages, type HistoryEntry } from './receive';
 import { copyToClipboard } from './clipboard';
 import { getHistory } from './historyStore';
 

@@ -18,8 +18,8 @@ import {
 } from 'firebase/firestore';
 import { ref, getBytes } from 'firebase/storage';
 import { db, storage } from './firebase';
-import { addToHistory, HistoryEntry } from './historyStore';
-import { displayImage, MediaDisplayResult } from './media';
+import { addToHistory, type HistoryEntry } from './historyStore';
+import { displayImage, type MediaDisplayResult } from './media';
 
 const LAST_RECEIVED_KEY = 'spectrocap.lastReceivedAt';
 

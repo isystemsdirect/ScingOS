@@ -14,8 +14,6 @@
  * 6. Negative: Unsupported format (BMP rejected)
  */
 
-import * as assert from 'assert';
-
 /**
  * Test 1: Happy Path - PNG Image Transfer
  * 
@@ -319,7 +317,8 @@ export async function runAllTests(): Promise<void> {
   console.log('\n=== All Phase 2B Tests Complete ===\n');
 }
 
-// Run tests if this file is executed directly
-if (require.main === module) {
-  runAllTests().catch(console.error);
+// Tests can be run via npm test or direct invocation
+// Skip in browser environment
+export async function runTests() {
+  return runAllTests();
 }

@@ -5,7 +5,7 @@
  * SpectroCAP™ Phase 1 — Windows Tauri Client
  */
 
-import { writeText } from '@tauri-apps/api/clipboard';
+import { writeText } from '@tauri-apps/api/core';
 import { finalizePaste } from './lariCap';
 
 /**

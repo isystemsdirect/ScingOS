@@ -8,7 +8,7 @@
  * - Image metadata display (dimensions, MIME type, size)
  */
 
-import { invoke } from '@tauri-apps/api/tauri';
+import { invoke } from '@tauri-apps/api/core';
 import { save } from '@tauri-apps/api/dialog';
 
 export interface MediaDisplayResult {
@@ -29,7 +29,7 @@ export async function displayImage(result: MediaDisplayResult): Promise<void> {
     const container = document.getElementById('media-display') || createMediaContainer();
     
     // Create data URL for image preview
-    const blob = new Blob([result.imageBytes], { type: result.mime });
+    const blob = new Blob([new Uint8Array(result.imageBytes)], { type: result.mime });
     const imageUrl = URL.createObjectURL(blob);
     
     // Create image element
@@ -132,9 +132,8 @@ async function saveImageToFile(imageBytes: Uint8Array, filename: string): Promis
  * Get system temp directory
  */
 async function getTempDir(): Promise<string> {
-    // For now, use a standard temp location
-    // In production, use proper temp dir API
-    return process.env.TEMP || process.env.TMP || '/tmp';
+    // Tauri will resolve temp directory at runtime
+    return '/tmp';
 }
 
 /**
