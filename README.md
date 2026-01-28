@@ -116,6 +116,8 @@ At the heart of ScingOS is the philosophy of **Bona Fide Intelligence**. In this
 - Multi-jurisdictional compliance verification
 - Inspection workflow automation
 
+**LARI–CAP** (Capture-Analysis-Provision) is the orchestration sub-engine for SpectroCAP™ and other native ScingOS tools.
+
 #### 🛡️ **BANE** - Backend Augmented Neural Engine (Security Governor)
 
 - Zero-trust security framework

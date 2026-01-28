@@ -15,7 +15,7 @@ User copies text on Android → taps "Send Copy" → Windows receives → user p
 - ❌ Cross-user sharing (Phase 3)
 - ❌ Windows shell extension (Phase 2)
 - ❌ Android background clipboard sync (explicit "Send Copy" action only)
-- ❌ AI content filtering (LARI integration Phase 3)
+- ❌ AI content filtering (LARI-CAP integration Phase 3)
 
 ---
 
@@ -277,3 +277,14 @@ remote-paste/
 - [Android Flow](./ANDROID_FLOW.md)
 - [Windows Flow](./WINDOWS_FLOW.md)
 - [Security Model](./SECURITY_MODEL.md) (Phase 2)
+- [SPECTROCAP Canon](../SPECTROCAP_CANON.md) — LARI-CAP orchestration engine (Phase 3+)
+
+## LARI-CAP Integration (Future)
+
+In Phase 3+, Remote Paste will integrate with **LARI-CAP** (the SpectroCAP™ orchestration sub-engine):
+
+```
+Remote Paste ← LARI-CAP → BANE → SCINGULAR™
+```
+
+**LARI-CAP** is the extensible orchestration engine that may be invoked by other native ScingOS tools beyond SpectroCAP™. Phase 1 MVP is standalone; Phase 3+ will leverage LARI-CAP for intelligent workflow coordination.

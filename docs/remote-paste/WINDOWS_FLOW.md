@@ -455,6 +455,18 @@ cargo tauri dev
 
 ---
 
+## LARI-CAP Checkpoints (Future Phase 3+)
+
+When Remote Paste integrates with **LARI-CAP** orchestration:
+
+- **LARI-CAP.verifyContext** → Validate paste context and destination
+- **LARI-CAP.evaluateRecipient** → Check if paste destination is trusted
+- **LARI-CAP.finalizePaste** → Record audit trail via BANE
+
+Phase 1 MVP: These are stubs; full integration Phase 3+.
+
+---
+
 ## Success Criteria
 
 1. ✅ Login window shows and accepts credentials

@@ -336,6 +336,18 @@ adb logcat | grep "RemotePaste"
 
 ---
 
+## LARI-CAP Checkpoints (Future Phase 3+)
+
+When Remote Paste integrates with **LARI-CAP** orchestration:
+
+- **LARI-CAP.prepareCopy** → Validate clipboard context before sending
+- **LARI-CAP.authorizeIntent** → Check user intent and policy compliance
+- **LARI-CAP.finalize** → Record audit trail via BANE
+
+Phase 1 MVP: These are stubs; full integration Phase 3+.
+
+---
+
 ## Success Criteria
 
 1. ✅ Login works; device registered in Firestore
