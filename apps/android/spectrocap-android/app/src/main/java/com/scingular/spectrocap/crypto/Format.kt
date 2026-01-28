@@ -80,11 +80,12 @@ object CanonicalMetadata {
     private val gson = Gson()
 
     /**
-     * Creates canonical metadata JSON object with fields in alphabetical order.
+     * Creates canonical metadata JSON for image messages (Phase 2B).
      *
-     * Order (MUST be alphabetical):
+     * Order (alphabetical):
      * - alg
      * - createdAtClient
+     * - media (nested object with width, height, filename, ext)
      * - messageId
      * - mime
      * - recipients (sorted array)
@@ -97,13 +98,57 @@ object CanonicalMetadata {
      * @param messageId Message UUID
      * @param senderDeviceId Sender device UUID
      * @param recipients List of recipient device UUIDs (will be sorted)
-     * @param storagePath Cloud Storage path (users/{uid}/messages/{messageId}.bin)
-     * @param sizeBytesPlain Size of plaintext in bytes
-     * @param createdAtClient ISO8601 timestamp of client creation
-     * @param mimeType MIME type (typically "application/octet-stream" for Phase 2A)
+     * @param storagePath Cloud Storage path
+     * @param sizeBytesPlain Size of plaintext image bytes
+     * @param createdAtClient ISO8601 timestamp
+     * @param mime MIME type (e.g., "image/png", "image/jpeg")
+     * @param width Image width in pixels
+     * @param height Image height in pixels
+     * @param filename Original filename
+     * @param ext File extension ("png", "jpg", "jpeg", "bin")
      * @return Canonical JSON string (deterministic)
      */
-    fun createCanonicalJson(
+    fun createCanonicalJsonForImage(
+        messageId: String,
+        senderDeviceId: String,
+        recipients: List<String>,
+        storagePath: String,
+        sizeBytesPlain: Int,
+        createdAtClient: String,
+        mime: String = "image/octet-stream",
+        width: Int = 0,
+        height: Int = 0,
+        filename: String? = null,
+        ext: String = "png"
+    ): String {
+        // Create ordered map manually to ensure alphabetical key order
+        val metadata = linkedMapOf<String, Any?>()
+
+        metadata["alg"] = "xchacha20poly1305+sealedbox-x25519+ed25519"
+        metadata["createdAtClient"] = createdAtClient
+        
+        // Media object (alphabetical order within)
+        val mediaMap = linkedMapOf<String, Any?>()
+        mediaMap["ext"] = ext
+        if (!filename.isNullOrEmpty()) {
+            mediaMap["filename"] = filename
+        }
+        mediaMap["height"] = height
+        mediaMap["width"] = width
+        metadata["media"] = mediaMap
+        
+        metadata["messageId"] = messageId
+        metadata["mime"] = mime
+        metadata["recipients"] = recipients.sorted()
+        metadata["senderDeviceId"] = senderDeviceId
+        metadata["sizeBytesPlain"] = sizeBytesPlain
+        metadata["storagePath"] = storagePath
+        metadata["type"] = "image"
+        metadata["version"] = "2A"
+
+        return gson.toJson(metadata)
+    }
+
         messageId: String,
         senderDeviceId: String,
         recipients: List<String>,
