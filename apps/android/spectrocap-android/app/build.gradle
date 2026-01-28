@@ -54,6 +54,16 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore-ktx'
     implementation 'com.google.firebase:firebase-storage-ktx'
     
+    // Security: Encrypted Shared Preferences (Phase 2A)
+    implementation 'androidx.security:security-crypto:1.1.0-alpha06'
+    
+    // Cryptography: LazySodium (libsodium wrapper for Android, Phase 2A)
+    implementation 'com.goterl:lazysodium-android:6.0.2'
+    
+    // Utilities
+    implementation 'commons-codec:commons-codec:1.15'
+    implementation 'com.google.code.gson:gson:2.10.1'
+    
     // Testing
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
