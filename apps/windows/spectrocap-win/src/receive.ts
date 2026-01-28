@@ -19,21 +19,31 @@ import {
 import { ref, getBytes } from 'firebase/storage';
 import { db, storage } from './firebase';
 import { addToHistory, HistoryEntry } from './historyStore';
+import { displayImage, MediaDisplayResult } from './media';
 
 const LAST_RECEIVED_KEY = 'spectrocap.lastReceivedAt';
 
 /**
- * Message document structure (matches Lane 3 Firestore schema)
+ * Message document structure (matches Firestore schema)
+ * Phase 2A: text messages only
+ * Phase 2B: text or image messages
  */
 export interface MessageDoc {
   messageId: string;
   senderDeviceId: string;
-  type: 'text'; // Phase 1 only
+  type: 'text' | 'image'; // Phase 2A/2B
   createdAt: Timestamp;
   recipients: 'all' | string[];
   storagePath: string;
-  mime: 'text/plain';
-  sizeBytes: number;
+  mime: 'text/plain' | 'image/png' | 'image/jpeg';
+  sizeBytes?: number;
+  // Phase 2B image fields
+  media?: {
+    width: number;
+    height: number;
+    filename: string;
+    ext: string;
+  };
 }
 
 /**
@@ -52,12 +62,27 @@ async function downloadMessageText(storagePath: string): Promise<string> {
 }
 
 /**
+ * Download image from Cloud Storage
+ */
+async function downloadMessageImage(storagePath: string): Promise<Uint8Array> {
+  try {
+    const fileRef = ref(storage, storagePath);
+    const bytes = await getBytes(fileRef);
+    return new Uint8Array(bytes);
+  } catch (error) {
+    console.error(`Failed to download ${storagePath}:`, error);
+    throw error;
+  }
+}
+
+/**
  * Subscribe to incoming messages
  * Filters by createdAt > lastReceivedAt to avoid reprocessing
  */
 export function subscribeToMessages(
   uid: string,
-  onNewMessage?: (entry: HistoryEntry) => void
+  onNewMessage?: (entry: HistoryEntry) => void,
+  onNewImage?: (result: MediaDisplayResult) => void
 ): () => void {
   const messagesCollection = collection(db, `users/${uid}/messages`);
   const lastReceivedStr = localStorage.getItem(LAST_RECEIVED_KEY);
@@ -81,26 +106,48 @@ export function subscribeToMessages(
       const messageDoc = docSnap.data() as MessageDoc;
 
       try {
-        // Download text from Storage
-        const text = await downloadMessageText(messageDoc.storagePath);
+        // Handle Phase 2A text messages
+        if (messageDoc.type === 'text') {
+          const text = await downloadMessageText(messageDoc.storagePath);
+          const entry: HistoryEntry = {
+            id: messageDoc.messageId,
+            createdAt: messageDoc.createdAt.toMillis(),
+            text,
+            senderDeviceId: messageDoc.senderDeviceId,
+          };
 
-        // Create history entry
-        const entry: HistoryEntry = {
-          id: messageDoc.messageId,
-          createdAt: messageDoc.createdAt.toMillis(),
-          text,
-          senderDeviceId: messageDoc.senderDeviceId,
-        };
+          addToHistory(entry);
+          localStorage.setItem(LAST_RECEIVED_KEY, String(entry.createdAt));
 
-        // Add to local history
-        addToHistory(entry);
+          if (onNewMessage) {
+            onNewMessage(entry);
+          }
+        }
+        // Handle Phase 2B image messages
+        else if (messageDoc.type === 'image') {
+          const imageBytes = await downloadMessageImage(messageDoc.storagePath);
+          
+          const result: MediaDisplayResult = {
+            imageBytes,
+            messageId: messageDoc.messageId,
+            senderDeviceId: messageDoc.senderDeviceId,
+            messageType: 'image',
+            mime: messageDoc.mime as 'image/png' | 'image/jpeg',
+            width: messageDoc.media?.width,
+            height: messageDoc.media?.height,
+            filename: messageDoc.media?.filename,
+          };
 
-        // Update lastReceivedAt
-        localStorage.setItem(LAST_RECEIVED_KEY, String(entry.createdAt));
+          // Update lastReceivedAt
+          localStorage.setItem(LAST_RECEIVED_KEY, String(messageDoc.createdAt.toMillis()));
 
-        // Callback for UI update
-        if (onNewMessage) {
-          onNewMessage(entry);
+          // Display image (Phase 2B UI)
+          await displayImage(result);
+
+          // Callback for UI update
+          if (onNewImage) {
+            onNewImage(result);
+          }
         }
       } catch (error) {
         console.error(`Failed to process message ${messageDoc.messageId}:`, error);
