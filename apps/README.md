@@ -30,14 +30,17 @@
    # Rules are in: cloud/firebase/firestore.rules and storage.rules
    ```
 
-3. **Android Setup** (Lane 1)
+3. **Android Setup** (Lane 1 — Kotlin Sender)
    ```bash
    cd apps/android/spectrocap-android
    # Download google-services.json from Firebase Console → App settings
    # Place in app/ directory
    # Open in Android Studio
-   # Build and run on device/emulator
+   ./gradlew build              # Build via Gradle
+   ./gradlew installDebug       # Install on device/emulator
+   # Or use Android Studio Run menu (Shift+F10)
    ```
+   See [apps/android/spectrocap-android/README.md](./android/spectrocap-android/README.md) for detailed setup.
 
 4. **Windows Setup** (Lane 2 — This Document)
    ```bash
@@ -124,18 +127,13 @@ remote-paste/
 - [x] Repo structure created
 - [x] Firebase schema documented
 - [x] Security rules written
-- [x] Android app scaffolded
+- [x] Android app scaffolded (Kotlin + Firebase + Device mgmt + Clipboard read + LARI-CAP adapter)
 - [x] Windows/Tauri app scaffolded
-- [x] Documentation written
+- [x] Documentation written (comprehensive)
 
 ### 🔄 In Progress
-- [ ] Android login screen implementation
-- [ ] Android device registration
-- [ ] Android "Send Clipboard Text" button
-- [ ] Windows login screen implementation
-- [ ] Windows Firestore listener
-- [ ] Windows local database (SQLite)
-- [ ] Windows tray menu & hotkeys
+- [ ] Android smoke test validation
+- [ ] Windows smoke test validation
 - [ ] E2E testing (send → receive → paste)
 
 ### ❌ Not Started (Phase 2+)
@@ -144,7 +142,7 @@ remote-paste/
 - [ ] Windows shell extension
 - [ ] Android Quick Settings tile
 - [ ] Cross-user sharing
-- [ ] LARI content filtering
+- [ ] LARI-CAP content filtering (Claude Haiku summarization)
 
 ---
 
@@ -183,17 +181,28 @@ See [PHASE_1_OVERVIEW.md](./docs/remote-paste/PHASE_1_OVERVIEW.md#acceptance-cri
 
 ## Development Commands
 
-### Android
+### Android (Lane 1)
 ```bash
-cd apps/android
-# Build in Android Studio or:
-./gradlew build
-./gradlew installDebug  # Install on device/emulator
+cd apps/android/spectrocap-android
+
+# Build
+./gradlew build                    # Compile app
+
+# Run on device or emulator
+./gradlew installDebug             # Install debug build
+./gradlew devices                  # List connected devices
+
+# Clean
+./gradlew clean                    # Remove build artifacts
+
+# Lint (optional)
+./gradlew lint                     # Check for code issues
+./gradlew ktlintCheck              # Kotlin style check
 ```
 
-### Windows
+### Windows (Lane 2)
 ```bash
-cd apps/windows
+cd apps/windows/spectrocap-win
 npm install              # Install deps
 npm run dev             # Tauri dev (hot reload)
 npm run build           # Build release

@@ -1,0 +1,44 @@
+# Android Gradle-specific ignores
+build/
+.gradle/
+.idea/
+*.iml
+*.iws
+*.ipr
+local.properties
+
+# Google Services (Firebase config with secrets)
+app/google-services.json
+
+# Build artifacts
+app/build/
+*.apk
+*.aar
+*.aab
+*.ap_
+
+# Local properties
+gradle.properties
+
+# IDE configuration
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS-specific
+.DS_Store
+Thumbs.db
+.AppleDouble
+.LSOverride
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Node modules (if using npm/yarn in root)
+node_modules/
+
+# Kotlin cache
+.kotlin/
