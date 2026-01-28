@@ -13,6 +13,7 @@ use base64::{Engine, engine::general_purpose};
 use super::primitives::CryptoPrimitives;
 use super::format::{BlobFormat, CanonicalMetadata};
 use super::key_mgmt::KeyManager;
+use super::media::ImageValidator;
 
 pub struct E2EEReceiver {
     key_manager: KeyManager,
@@ -20,7 +21,9 @@ pub struct E2EEReceiver {
 
 #[derive(Debug)]
 pub struct DecryptionResult {
-    pub plaintext: String,
+    pub plaintext: Option<String>,  // For text messages (Phase 2A)
+    pub image_bytes: Option<Vec<u8>>,  // For image messages (Phase 2B)
+    pub message_type: String,  // "text" or "image"
     pub message_id: String,
     pub sender_device_id: String,
 }
@@ -101,10 +104,36 @@ impl E2EEReceiver {
                 reason: "AEAD decryption failed (authentication failed or wrong key)".to_string(),
             })?;
 
-        let plaintext = String::from_utf8(plaintext_bytes)
-            .map_err(|e| DecryptionError {
-                reason: format!("Invalid UTF-8 in plaintext: {}", e),
-            })?;
+        // Step 8: Determine message type and validate accordingly
+        let message_type = message_doc.get("type")
+            .and_then(|v| v.as_str())
+            .unwrap_or("text")
+            .to_string();
+
+        let plaintext_opt = match message_type.as_str() {
+            "text" => {
+                // Phase 2A: Plain UTF-8 text
+                let plaintext = String::from_utf8(plaintext_bytes.clone())
+                    .map_err(|e| DecryptionError {
+                        reason: format!("Invalid UTF-8 in plaintext: {}", e),
+                    })?;
+                Some(plaintext)
+            },
+            "image" => {
+                // Phase 2B: Image with magic byte validation
+                if !ImageValidator::validate_image_magic(&plaintext_bytes) {
+                    return Err(DecryptionError {
+                        reason: "Image magic bytes validation failed; payload corrupted or tampered".to_string(),
+                    });
+                }
+                None  // Image bytes will be returned separately
+            },
+            _ => {
+                return Err(DecryptionError {
+                    reason: format!("Unsupported message type: {}", message_type),
+                });
+            }
+        };
 
         let message_id = message_doc.get("messageId")
             .and_then(|v| v.as_str())
@@ -121,7 +150,9 @@ impl E2EEReceiver {
             .to_string();
 
         Ok(DecryptionResult {
-            plaintext,
+            plaintext: plaintext_opt,
+            image_bytes: if message_type == "image" { Some(plaintext_bytes) } else { None },
+            message_type,
             message_id,
             sender_device_id,
         })

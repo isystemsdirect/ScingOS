@@ -12,11 +12,13 @@ pub mod key_mgmt;
 pub mod format;
 pub mod primitives;
 pub mod receiver;
+pub mod media;
 
 pub use key_mgmt::KeyManager;
 pub use format::BlobFormat;
 pub use primitives::CryptoPrimitives;
 pub use receiver::E2EEReceiver;
+pub use media::{ImageValidator, ClipboardImage};
 
 #[cfg(test)]
 mod tests {
