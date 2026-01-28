@@ -1,0 +1,19 @@
+/**
+ * Cloud Storage Security Rules for SCINGULAR Remote Paste
+ * Phase 1: Basic user-scoped access control
+ * Phase 2+: Add signature verification, device filters, etc.
+ */
+
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Only authenticated users can access their own messages
+    match /users/{uid}/messages/{allPaths=**} {
+      allow read, write: if request.auth.uid == uid;
+      
+      // Phase 2: Size limits, file type validation
+      // allow write: if request.auth.uid == uid &&
+      //              request.resource.size < 10 * 1024 * 1024  // 10 MB
+    }
+  }
+}

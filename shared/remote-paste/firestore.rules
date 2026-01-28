@@ -1,0 +1,30 @@
+/**
+ * Firestore Security Rules for SCINGULAR Remote Paste
+ * Phase 1: Basic user-scoped access control
+ * Phase 2+: Add E2EE signature verification, device filters, etc.
+ */
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Authenticated users only
+    match /users/{uid} {
+      // User can read/write only their own user document
+      allow read, write: if request.auth.uid == uid;
+      
+      // Devices subcollection
+      match /devices/{deviceId} {
+        allow read, write: if request.auth.uid == uid;
+      }
+      
+      // Messages subcollection
+      match /messages/{messageId} {
+        allow read, write: if request.auth.uid == uid;
+        
+        // Phase 2: Add signature verification before write
+        // allow write: if request.auth.uid == uid && 
+        //              validateSignature(request.resource.data.signature, ...)
+      }
+    }
+  }
+}

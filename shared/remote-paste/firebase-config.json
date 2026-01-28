@@ -1,0 +1,10 @@
+{
+  "projectId": "scing-remote-paste",
+  "apiKey": "SET_VIA_ENV_VAR",
+  "authDomain": "scing-remote-paste.firebaseapp.com",
+  "databaseURL": "https://scing-remote-paste.firebaseio.com",
+  "storageBucket": "scing-remote-paste.appspot.com",
+  "messagingSenderId": "SET_VIA_FIREBASE_CONSOLE",
+  "appId": "SET_VIA_FIREBASE_CONSOLE",
+  "measurementId": "SET_VIA_FIREBASE_CONSOLE"
+}
