@@ -15,6 +15,7 @@ mod commands;
 mod clipboard;
 mod db;
 mod hotkey;
+mod crypto;
 
 #[tauri::command]
 async fn get_last_message(app: AppHandle) -> Result<String, String> {
@@ -79,7 +80,10 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             get_last_message,
             paste_last,
-            get_history
+            get_history,
+            commands::copy_image_to_clipboard,
+            commands::save_image_to_file,
+            commands::detect_image_mime
         ])
         .build(tauri::generate_context!())
         .expect("error while running tauri application")
