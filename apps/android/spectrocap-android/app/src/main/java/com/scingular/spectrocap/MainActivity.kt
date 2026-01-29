@@ -2,122 +2,226 @@
 
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.scingular.spectrocap.spectrocap.ClipboardSync
 import com.scingular.spectrocap.spectrocap.ImageStore
-import com.scingular.spectrocap.spectrocap.SendQueue
-import com.scingular.spectrocap.spectrocap.Sender
 
+/**
+ * MainActivity: Real 3-mode controller for SpectroCAP UI shell
+ * - Mode 1: Capture → take photo → save PNG locally → display filename
+ * - Mode 2: Clipboard → import/copy/send to PC via /clip/push
+ * - Mode 3: Settings → configure receiver base URL + test connectivity
+ */
 class MainActivity : AppCompatActivity() {
 
-  private val prefs by lazy { getSharedPreferences("spectrocap_prefs", MODE_PRIVATE) }
+  private lateinit var statusText: TextView
+  private lateinit var panelCapture: View
+  private lateinit var panelClipboard: View
+  private lateinit var panelSettings: View
 
-  private fun updateCounters() {
-    val (q, s, f) = SendQueue.counts(this)
-    findViewById<TextView>(R.id.countersText)?.text = "Queued: $q | Sent: $s | Failed: $f"
+  private val requestCameraPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+    if (granted) {
+      setStatus("Camera permission granted • Ready to capture")
+    } else {
+      setStatus("Camera permission denied • Cannot capture photos")
+    }
   }
 
-  private fun getEndpointFromUIOrPrefs(): String {
-    val et = findViewById<EditText>(R.id.endpointText)
-    val ui = et?.text?.toString()?.trim().orEmpty()
-    if (ui.isNotEmpty()) return ui
-    return prefs.getString("endpoint", Sender.defaultEndpoint()) ?: Sender.defaultEndpoint()
+  // Capture mode
+  private val takePreview = registerForActivityResult(ActivityResultContracts.TakePicturePreview()) { bmp: Bitmap? ->
+    try {
+      if (bmp == null) {
+        setStatus("Capture cancelled.")
+        return@registerForActivityResult
+      }
+
+      val previewImage = findViewById<ImageView>(R.id.previewImage)
+      previewImage?.setImageBitmap(bmp)
+
+      val file = ImageStore.savePng(this, bmp)
+      setStatus("✓ Captured: ${file.name} (${file.length()} bytes)")
+    } catch (e: Exception) {
+      setStatus("Error saving image: ${e.message}")
+    }
   }
 
-  private fun persistEndpoint(endpoint: String) {
-    prefs.edit().putString("endpoint", endpoint).apply()
+  // ========== Helper Methods ==========
+
+  private fun prefs() = getSharedPreferences("spectrocap", MODE_PRIVATE)
+
+  private fun setStatus(msg: String) {
+    runOnUiThread {
+      statusText.text = msg
+    }
+  }
+
+  private fun showPanel(which: View) {
+    panelCapture.visibility = if (which === panelCapture) View.VISIBLE else View.GONE
+    panelClipboard.visibility = if (which === panelClipboard) View.VISIBLE else View.GONE
+    panelSettings.visibility = if (which === panelSettings) View.VISIBLE else View.GONE
+  }
+
+  private fun getReceiverBase(): String {
+    return prefs().getString("receiver_base", "http://192.168.0.2:8088")?.trim() ?: "http://192.168.0.2:8088"
+  }
+
+  private fun saveReceiverBase(base: String) {
+    prefs().edit().putString("receiver_base", base.trim()).apply()
   }
 
   private fun getSystemClipboardText(): String {
-    val cb = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-    val clip = cb.primaryClip ?: return ""
-    if (clip.itemCount <= 0) return ""
-    return clip.getItemAt(0).coerceToText(this).toString()
+    try {
+      val cb = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+      val clip = cb.primaryClip ?: return ""
+      if (clip.itemCount <= 0) return ""
+      return clip.getItemAt(0).coerceToText(this).toString()
+    } catch (e: Exception) {
+      return ""
+    }
   }
 
   private fun setSystemClipboardText(label: String, text: String) {
-    val cb = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-    cb.setPrimaryClip(ClipData.newPlainText(label, text))
-  }
-
-  private val takePreview = registerForActivityResult(ActivityResultContracts.TakePicturePreview()) { bmp: Bitmap? ->
-    if (bmp == null) {
-      findViewById<TextView>(R.id.statusText)?.text = "Capture cancelled."
-      return@registerForActivityResult
+    try {
+      val cb = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+      cb.setPrimaryClip(ClipData.newPlainText(label, text))
+    } catch (e: Exception) {
+      setStatus("Error copying to clipboard: ${e.message}")
     }
-
-    findViewById<ImageView>(R.id.previewImage)?.setImageBitmap(bmp)
-
-    val f = ImageStore.savePng(this, bmp)
-    SendQueue.enqueueFile(this, f.absolutePath)
-
-    findViewById<TextView>(R.id.statusText)?.text = "Saved + queued: ${f.name} (${f.length()} bytes)"
-    updateCounters()
   }
+
+  // ========== onCreate ==========
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    // Seed endpoint field
-    val seed = prefs.getString("endpoint", Sender.defaultEndpoint()) ?: Sender.defaultEndpoint()
-    findViewById<EditText>(R.id.endpointText)?.setText(seed)
+    // Cache views
+    statusText = findViewById(R.id.statusText)
+    panelCapture = findViewById(R.id.panelCapture)
+    panelClipboard = findViewById(R.id.panelClipboard)
+    panelSettings = findViewById(R.id.panelSettings)
 
-    updateCounters()
+    // Default to Capture mode
+    showPanel(panelCapture)
+    setStatus("Welcome to SpectroCAP • Select a mode")
 
-    findViewById<Button>(R.id.captureBtn)?.setOnClickListener {
-      findViewById<TextView>(R.id.statusText)?.text = "Opening camera..."
-      takePreview.launch(null)
+    // ========== Tab Navigation ==========
+    findViewById<Button>(R.id.tabCapture).setOnClickListener {
+      showPanel(panelCapture)
+      setStatus("Capture mode")
     }
 
-    findViewById<Button>(R.id.sendNowBtn)?.setOnClickListener {
-      val endpoint = getEndpointFromUIOrPrefs()
-      persistEndpoint(endpoint)
+    findViewById<Button>(R.id.tabClipboard).setOnClickListener {
+      showPanel(panelClipboard)
+      setStatus("Clipboard mode")
+    }
 
-      findViewById<TextView>(R.id.statusText)?.text = "Sending queued items..."
+    findViewById<Button>(R.id.tabSettings).setOnClickListener {
+      showPanel(panelSettings)
+      val base = getReceiverBase()
+      findViewById<EditText>(R.id.receiverBase).setText(base)
+      setStatus("Settings mode • Base: $base")
+    }
+
+    // ========== CAPTURE MODE ==========
+    findViewById<Button>(R.id.captureBtn).setOnClickListener {
+      try {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+          setStatus("Requesting camera permission...")
+          requestCameraPermission.launch(android.Manifest.permission.CAMERA)
+          return@setOnClickListener
+        }
+        setStatus("Opening camera...")
+        takePreview.launch(null)
+      } catch (e: Exception) {
+        setStatus("Camera error: ${e.message}")
+      }
+    }
+
+    // ========== CLIPBOARD MODE ==========
+
+    // Import: Read system clipboard into clipEdit field
+    findViewById<Button>(R.id.btnImportClip).setOnClickListener {
+      try {
+        val txt = getSystemClipboardText()
+        val clipEdit = findViewById<EditText>(R.id.clipEdit)
+        clipEdit.setText(txt)
+        setStatus(if (txt.isEmpty()) "System clipboard empty" else "✓ Imported ${txt.length} chars")
+      } catch (e: Exception) {
+        setStatus("Import error: ${e.message}")
+      }
+    }
+
+    // Copy: Write clipEdit field to system clipboard
+    findViewById<Button>(R.id.btnCopyClip).setOnClickListener {
+      try {
+        val txt = findViewById<EditText>(R.id.clipEdit).text.toString()
+        setSystemClipboardText("spectrocap", txt)
+        setStatus(if (txt.isEmpty()) "Clipboard is empty" else "✓ Copied ${txt.length} chars to system")
+      } catch (e: Exception) {
+        setStatus("Copy error: ${e.message}")
+      }
+    }
+
+    // Send: POST clipEdit to PC receiver /clip/push
+    findViewById<Button>(R.id.btnSendToPc).setOnClickListener {
+      val txt = findViewById<EditText>(R.id.clipEdit).text.toString()
+      if (txt.isEmpty()) {
+        setStatus("Clipboard field is empty")
+        return@setOnClickListener
+      }
+
+      val base = getReceiverBase()
+      setStatus("Sending ${ txt.length} chars to PC...")
+
       Thread {
-        val (sentNow, failedNow) = Sender.sendAllQueued(this, endpoint)
-        runOnUiThread {
-          updateCounters()
-          findViewById<TextView>(R.id.statusText)?.text =
-            "Send complete. Sent: $sentNow | Failed: $failedNow (endpoint: $endpoint)"
+        try {
+          val result = ClipboardSync.push(base, txt)
+          setStatus("✓ Sent to PC: $result")
+        } catch (e: Exception) {
+          setStatus("Send failed: ${e.message}")
         }
       }.start()
     }
 
-    // Clipboard: Import from system clipboard into SpectroCAP field
-    findViewById<Button>(R.id.importClipBtn)?.setOnClickListener {
-      val txt = getSystemClipboardText()
-      findViewById<EditText>(R.id.clipboardText)?.setText(txt)
-      findViewById<TextView>(R.id.statusText)?.text = if (txt.isBlank()) "System clipboard empty." else "Imported clipboard (${txt.length} chars)."
+    // ========== SETTINGS MODE ==========
+
+    // Save: Persist receiver URL to SharedPreferences
+    findViewById<Button>(R.id.btnSaveSettings).setOnClickListener {
+      try {
+        val newBase = findViewById<EditText>(R.id.receiverBase).text.toString().trim()
+        if (newBase.isEmpty()) {
+          setStatus("URL cannot be empty")
+          return@setOnClickListener
+        }
+        saveReceiverBase(newBase)
+        setStatus("✓ Saved receiver: $newBase")
+      } catch (e: Exception) {
+        setStatus("Save error: ${e.message}")
+      }
     }
 
-    // Clipboard: Copy SpectroCAP field to system clipboard (so you can paste anywhere on phone)
-    findViewById<Button>(R.id.copyClipBtn)?.setOnClickListener {
-      val txt = findViewById<EditText>(R.id.clipboardText)?.text?.toString().orEmpty()
-      setSystemClipboardText("spectrocap_clip", txt)
-      findViewById<TextView>(R.id.statusText)?.text = "Copied to system clipboard (${txt.length} chars)."
-    }
+    // Test: GET /health from receiver to verify connectivity
+    findViewById<Button>(R.id.btnTestReceiver).setOnClickListener {
+      val base = getReceiverBase()
+      setStatus("Testing receiver at $base...")
 
-    // Clipboard: Send SpectroCAP field to PC via receiver (/clip/push)
-    findViewById<Button>(R.id.sendClipBtn)?.setOnClickListener {
-      val endpoint = getEndpointFromUIOrPrefs()
-      persistEndpoint(endpoint)
-
-      val base = endpoint.substringBefore("/ingest").trim().trimEnd('/')
-      val txt = findViewById<EditText>(R.id.clipboardText)?.text?.toString().orEmpty()
-      findViewById<TextView>(R.id.statusText)?.text = "Sending clipboard to PC..."
       Thread {
-        val (ok, msg) = ClipboardSync.push(base, txt, "android")
-        runOnUiThread {
-          findViewById<TextView>(R.id.statusText)?.text = if (ok) "Clipboard sent to PC. ($msg)" else "Clipboard send failed: $msg"
+        try {
+          val result = ClipboardSync.health(base)
+          setStatus("✓ Receiver OK: $result")
+        } catch (e: Exception) {
+          setStatus("Test failed: ${e.message}")
         }
       }.start()
     }
