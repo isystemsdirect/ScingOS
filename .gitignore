@@ -138,3 +138,14 @@ emulator/
 **/.emulator/
 *.log
 *.tmp
+# --- build artifacts (DO NOT COMMIT) ---
+apps/windows/target/
+**/target/
+**/node_modules/
+**/.gradle/
+**/build/
+build_logs/
+*.rlib
+*.rmeta
+*.pdb
+*.exe
