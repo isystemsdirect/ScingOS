@@ -1,0 +1,22 @@
+# Normalize line endings for text files
+* text=auto
+
+# Enforce Unix line endings (LF) for critical build/source files
+*.gradle text eol=lf
+*.kt text eol=lf
+*.xml text eol=lf
+*.md text eol=lf
+*.ps1 text eol=crlf
+*.cmd text eol=crlf
+*.bat text eol=crlf
+*.json text eol=lf
+*.js text eol=lf
+*.ts text eol=lf
+
+# Binary files
+*.apk binary
+*.jar binary
+*.png binary
+*.jpg binary
+*.gif binary
+*.zip binary
