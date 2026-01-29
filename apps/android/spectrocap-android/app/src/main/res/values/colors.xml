@@ -1,27 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- IonMetal Material Language (dark graphite surfaces, restrained cyan accent) -->
+    <!-- IonMetal XML bridge (must NOT be Material blue/white) -->
+    <color name="im_bg_primary">#0E1113</color>
+    <color name="im_bg_surface">#14181B</color>
+    <color name="im_bg_elevated">#1A1F23</color>
 
-    <!-- Accent (Electric cyan / ion-blue) used ONLY for active/focus/armed -->
-    <color name="accent_primary">#10C7B8</color>
-    <color name="on_accent_primary">#081A1A</color>
+    <color name="im_text_primary">#E6E8EA</color>
+    <color name="im_text_secondary">#A8B0B6</color>
+    <color name="im_text_muted">#6E767C</color>
 
-    <!-- Surfaces (Neutral dominant) -->
-    <color name="surface">#1A1D20</color>
-    <color name="surface_alt">#202428</color>
-    <color name="background">#1A1D20</color>
-
-    <!-- Text -->
-    <color name="text_primary">#E9EDF2</color>
-    <color name="text_secondary">#C0C6CC</color>
-    <color name="text_disabled">#9AA3AD</color>
-
-    <!-- Borders / separators (soft charcoal) -->
-    <color name="border_neutral">#3A4046</color>
-
-    <!-- State colors -->
-    <color name="success">#28C773</color>
-    <color name="warning">#F5A623</color>
-    <color name="danger">#E14A4A</color>
-    <color name="info">#3BA0F0</color>
+    <color name="im_accent_primary">#7FAFB2</color>
+    <color name="im_accent_warning">#B89B5E</color>
+    <color name="im_accent_critical">#9E4A4A</color>
 </resources>

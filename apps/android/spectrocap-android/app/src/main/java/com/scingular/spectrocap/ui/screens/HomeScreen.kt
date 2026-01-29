@@ -1,6 +1,7 @@
 package com.scingular.spectrocap.ui.screens
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +16,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
+import com.scingular.spectrocap.BuildConfig
 import com.scingular.spectrocap.ui.theme.IonMetalColor
 import com.scingular.spectrocap.ui.theme.IonSurface
 
@@ -27,6 +29,28 @@ fun HomeScreen(onOpenSettings: () -> Unit) {
                 .padding(horizontal = 20.dp, vertical = 18.dp),
             verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(16.dp)
         ) {
+            // DEBUG THEME PROBE (remove anytime)
+            if (BuildConfig.DEBUG) {
+                Surface(color = IonMetalColor.BG_SURFACE, tonalElevation = 0.dp) {
+                    Row(
+                        modifier = androidx.compose.ui.Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp),
+                        horizontalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            "IONMETAL ACTIVE",
+                            color = IonMetalColor.TEXT_PRIMARY,
+                            style = MaterialTheme.typography.labelLarge
+                        )
+                        Text(
+                            "ACCENT",
+                            color = IonMetalColor.ACCENT_PRIMARY,
+                            style = MaterialTheme.typography.labelLarge
+                        )
+                    }
+                }
+            }
             // STATUS BAND
             Column(verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(4.dp)) {
                 Text("Device: Connected", color = IonMetalColor.TEXT_PRIMARY, style = MaterialTheme.typography.titleMedium)
