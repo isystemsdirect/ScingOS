@@ -1,31 +1,72 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:orientation="vertical"
-  android:padding="16dp">
+  android:layout_height="match_parent">
 
-  <Button
-    android:id="@+id/captureBtn"
+  <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="Capture Image" />
+    android:orientation="vertical"
+    android:padding="16dp">
 
-  <TextView
-    android:id="@+id/statusText"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingTop="12dp"
-    android:text="Ready."
-    android:textSize="16sp" />
+    <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="Spectrocap MVP"
+      android:textSize="18sp"
+      android:textStyle="bold" />
 
-  <ImageView
-    android:id="@+id/previewImage"
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_weight="1"
-    android:adjustViewBounds="true"
-    android:scaleType="fitCenter"
-    android:contentDescription="Preview" />
+    <Button
+      android:id="@+id/captureBtn"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="Capture Image"
+      android:layout_marginTop="12dp" />
 
-</LinearLayout>
+    <TextView
+      android:id="@+id/statusText"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingTop="12dp"
+      android:text="Ready."
+      android:textSize="16sp" />
+
+    <ImageView
+      android:id="@+id/previewImage"
+      android:layout_width="match_parent"
+      android:layout_height="240dp"
+      android:layout_marginTop="12dp"
+      android:adjustViewBounds="true"
+      android:scaleType="fitCenter"
+      android:contentDescription="Preview" />
+
+    <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="14dp"
+      android:text="Send Endpoint (PC receiver on your LAN):"
+      android:textSize="14sp" />
+
+    <EditText
+      android:id="@+id/endpointText"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:hint="http://[PC-LAN-IP]:8088/ingest"
+      android:inputType="textUri" />
+
+    <Button
+      android:id="@+id/sendNowBtn"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="Send Now"
+      android:layout_marginTop="10dp" />
+
+    <TextView
+      android:id="@+id/countersText"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:text="Queued: 0 | Sent: 0 | Failed: 0" />
+
+  </LinearLayout>
+</ScrollView>
