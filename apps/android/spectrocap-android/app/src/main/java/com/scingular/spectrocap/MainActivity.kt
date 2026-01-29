@@ -2,6 +2,7 @@
 
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -13,21 +14,21 @@ import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.preference.PreferenceManager
 import com.scingular.spectrocap.spectrocap.ClipboardSync
 import com.scingular.spectrocap.spectrocap.ImageStore
 
 /**
- * MainActivity: Real 3-mode controller for SpectroCAP UI shell
+ * MainActivity: Premium UI with 2-mode controller for SpectroCAP
  * - Mode 1: Capture → take photo → save PNG locally → display filename
  * - Mode 2: Clipboard → import/copy/send to PC via /clip/push
- * - Mode 3: Settings → configure receiver base URL + test connectivity
+ * - Settings moved to official SettingsActivity
  */
 class MainActivity : AppCompatActivity() {
 
   private lateinit var statusText: TextView
   private lateinit var panelCapture: View
   private lateinit var panelClipboard: View
-  private lateinit var panelSettings: View
 
   private val requestCameraPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
     if (granted) {
@@ -57,7 +58,16 @@ class MainActivity : AppCompatActivity() {
 
   // ========== Helper Methods ==========
 
-  private fun prefs() = getSharedPreferences("spectrocap", MODE_PRIVATE)
+  private fun prefs() = PreferenceManager.getDefaultSharedPreferences(this)
+
+  private fun getReceiverConfig(): String {
+    val host = prefs().getString("receiver_host", "192.168.0.37") ?: "192.168.0.37"
+    val port = prefs().getString("receiver_port", "8765") ?: "8765"
+    val path = prefs().getString("endpoint_path", "/clip") ?: "/clip"
+    val useHttps = prefs().getBoolean("use_https", false)
+    val protocol = if (useHttps) "https" else "http"
+    return "$protocol://$host:$port$path"
+  }
 
   private fun setStatus(msg: String) {
     runOnUiThread {
@@ -68,15 +78,6 @@ class MainActivity : AppCompatActivity() {
   private fun showPanel(which: View) {
     panelCapture.visibility = if (which === panelCapture) View.VISIBLE else View.GONE
     panelClipboard.visibility = if (which === panelClipboard) View.VISIBLE else View.GONE
-    panelSettings.visibility = if (which === panelSettings) View.VISIBLE else View.GONE
-  }
-
-  private fun getReceiverBase(): String {
-    return prefs().getString("receiver_base", "http://192.168.0.2:8088")?.trim() ?: "http://192.168.0.2:8088"
-  }
-
-  private fun saveReceiverBase(base: String) {
-    prefs().edit().putString("receiver_base", base.trim()).apply()
   }
 
   private fun getSystemClipboardText(): String {
@@ -99,8 +100,6 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
-  // ========== onCreate ==========
-
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
@@ -109,11 +108,16 @@ class MainActivity : AppCompatActivity() {
     statusText = findViewById(R.id.statusText)
     panelCapture = findViewById(R.id.panelCapture)
     panelClipboard = findViewById(R.id.panelClipboard)
-    panelSettings = findViewById(R.id.panelSettings)
 
     // Default to Capture mode
     showPanel(panelCapture)
-    setStatus("Welcome to SpectroCAP • Select a mode")
+    setStatus("Welcome to SpectroCAP(TM)")
+
+    // ========== Settings Button ==========
+    findViewById<Button>(R.id.btnSettings).setOnClickListener {
+      val intent = Intent(this, SettingsActivity::class.java)
+      startActivity(intent)
+    }
 
     // ========== Tab Navigation ==========
     findViewById<Button>(R.id.tabCapture).setOnClickListener {
@@ -124,13 +128,6 @@ class MainActivity : AppCompatActivity() {
     findViewById<Button>(R.id.tabClipboard).setOnClickListener {
       showPanel(panelClipboard)
       setStatus("Clipboard mode")
-    }
-
-    findViewById<Button>(R.id.tabSettings).setOnClickListener {
-      showPanel(panelSettings)
-      val base = getReceiverBase()
-      findViewById<EditText>(R.id.receiverBase).setText(base)
-      setStatus("Settings mode • Base: $base")
     }
 
     // ========== CAPTURE MODE ==========
@@ -181,47 +178,15 @@ class MainActivity : AppCompatActivity() {
         return@setOnClickListener
       }
 
-      val base = getReceiverBase()
-      setStatus("Sending ${ txt.length} chars to PC...")
+      val config = getReceiverConfig()
+      setStatus("Sending ${txt.length} chars to PC...")
 
       Thread {
         try {
-          val result = ClipboardSync.push(base, txt)
+          val result = ClipboardSync.push(config, txt)
           setStatus("✓ Sent to PC: $result")
         } catch (e: Exception) {
           setStatus("Send failed: ${e.message}")
-        }
-      }.start()
-    }
-
-    // ========== SETTINGS MODE ==========
-
-    // Save: Persist receiver URL to SharedPreferences
-    findViewById<Button>(R.id.btnSaveSettings).setOnClickListener {
-      try {
-        val newBase = findViewById<EditText>(R.id.receiverBase).text.toString().trim()
-        if (newBase.isEmpty()) {
-          setStatus("URL cannot be empty")
-          return@setOnClickListener
-        }
-        saveReceiverBase(newBase)
-        setStatus("✓ Saved receiver: $newBase")
-      } catch (e: Exception) {
-        setStatus("Save error: ${e.message}")
-      }
-    }
-
-    // Test: GET /health from receiver to verify connectivity
-    findViewById<Button>(R.id.btnTestReceiver).setOnClickListener {
-      val base = getReceiverBase()
-      setStatus("Testing receiver at $base...")
-
-      Thread {
-        try {
-          val result = ClipboardSync.health(base)
-          setStatus("✓ Receiver OK: $result")
-        } catch (e: Exception) {
-          setStatus("Test failed: ${e.message}")
         }
       }.start()
     }

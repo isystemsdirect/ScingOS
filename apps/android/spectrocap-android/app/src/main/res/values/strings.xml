@@ -1,5 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SpectroCAP</string>
-    <string name="app_version">Phase 1</string>
+    <!-- App Name & Branding -->
+    <string name="app_name">SpectroCAP™</string>
+    <string name="app_version">0.1.0-phase2c</string>
+    
+    <!-- Brand Footer (LOCKED) -->
+    <string name="brand_footer_line1">Powered by SCINGULAR™</string>
+    <string name="brand_footer_line2">© 2026 Inspection Systems Direct Inc.</string>
+    
+    <!-- Creation Date (LOCKED) -->
+    <string name="creation_date_iso">2026-01-28</string>
+    <string name="creation_date_long">January 28, 2026</string>
+    
+    <!-- Main Screens -->
+    <string name="settings_title">SpectroCAP™ Settings</string>
+    <string name="documents_legal_title">Documents &amp; Legal</string>
+    
+    <!-- Legal Documents -->
+    <string name="terms_title">Terms of Use</string>
+    <string name="privacy_title">Privacy Policy</string>
+    <string name="licenses_title">Open Source Licenses</string>
+    <string name="versioning_title">Versioning</string>
+    <string name="about_title">About</string>
+    
+    <!-- Menu Items -->
+    <string name="menu_terms">Terms of Use</string>
+    <string name="menu_privacy">Privacy Policy</string>
+    <string name="menu_licenses">OSS Licenses</string>
+    <string name="menu_versioning">Versioning &amp; Build Info</string>
+    
+    <!-- Copyright Notice -->
+    <string name="copyright_notice">© 2026 Inspection Systems Direct Inc.</string>
+    <string name="brand_full">SpectroCAP™ by SCINGULAR™</string>
 </resources>

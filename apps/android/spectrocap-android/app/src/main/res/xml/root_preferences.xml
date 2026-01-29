@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Receiver Configuration Section -->
+    <PreferenceCategory android:title="Receiver Configuration">
+
+        <EditTextPreference
+            android:key="receiver_host"
+            android:title="Receiver Host"
+            android:summary="IP address or hostname of PC"
+            android:defaultValue="192.168.0.37"
+            android:inputType="text" />
+
+        <EditTextPreference
+            android:key="receiver_port"
+            android:title="Receiver Port"
+            android:summary="Port number (default 8765)"
+            android:defaultValue="8765"
+            android:inputType="number" />
+
+        <EditTextPreference
+            android:key="endpoint_path"
+            android:title="Endpoint Path"
+            android:summary="API path (e.g., /clip)"
+            android:defaultValue="/clip"
+            android:inputType="text" />
+
+    </PreferenceCategory>
+
+    <!-- Transport & Security Section -->
+    <PreferenceCategory android:title="Transport">
+
+        <SwitchPreferenceCompat
+            android:key="allow_http_lan"
+            android:title="Allow HTTP on LAN"
+            android:summary="Allow unencrypted HTTP for local network (recommended for LAN)"
+            android:defaultValue="true" />
+
+    </PreferenceCategory>
+
+    <!-- Documents & Legal Section -->
+    <PreferenceCategory android:title="@string/documents_legal_title">
+
+        <Preference
+            android:key="terms"
+            android:title="@string/menu_terms" />
+
+        <Preference
+            android:key="privacy"
+            android:title="@string/menu_privacy" />
+
+        <Preference
+            android:key="licenses"
+            android:title="@string/menu_licenses" />
+
+        <Preference
+            android:key="versioning"
+            android:title="@string/menu_versioning" />
+
+    </PreferenceCategory>
+
+    <!-- About Section -->
+    <PreferenceCategory android:title="@string/about_title">
+
+        <Preference
+            android:key="app_version"
+            android:title="SpectroCAP(TM)"
+            android:summary="@string/app_version" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

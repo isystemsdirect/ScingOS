@@ -1,8 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- IonMetal Colorway Theme - Premium token-based design -->
+    
+    <!-- Main Theme (IonMetal) -->
     <style name="Theme.SpectroCAP" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">#007bff</item>
-        <item name="colorPrimaryDark">#0056b3</item>
-        <item name="colorAccent">#28a745</item>
+        <!-- Primary brand colors (Electric Blue) -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_container</item>
+        <item name="colorAccent">@color/accent_glow</item>
+        
+        <!-- Surfaces -->
+        <item name="android:windowBackground">@color/background</item>
+        
+        <!-- Premium Button Styling -->
+        <item name="android:buttonStyle">@style/PremiumButton</item>
+    </style>
+
+    <!-- Premium Button Base Style (52dp height, 20dp radius) -->
+    <style name="PremiumButton" parent="Widget.AppCompat.Button">
+        <item name="android:height">52dp</item>
+        <item name="android:minHeight">52dp</item>
+        <item name="android:paddingStart">24dp</item>
+        <item name="android:paddingEnd">24dp</item>
+        <item name="android:background">@drawable/btn_rounded_primary</item>
+        <item name="android:textColor">@color/on_primary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:letterSpacing">0.05</item>
+    </style>
+
+    <!-- Secondary Button (Outlined) -->
+    <style name="SecondaryButton" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:height">52dp</item>
+        <item name="android:minHeight">52dp</item>
+        <item name="android:paddingStart">24dp</item>
+        <item name="android:paddingEnd">24dp</item>
+        <item name="android:background">@drawable/btn_rounded_secondary</item>
+        <item name="android:textColor">@color/primary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:letterSpacing">0.05</item>
+    </style>
+
+    <!-- Nav Row Style (56dp height, uniform) -->
+    <style name="NavRowStyle">
+        <item name="android:layout_height">56dp</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:background">@color/surface</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <!-- Text Styles with proper typography -->
+    <style name="HeadlineStyle">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/on_background</item>
+        <item name="android:letterSpacing">0.01</item>
+    </style>
+
+    <style name="BodyStyle">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/on_surface</item>
+        <item name="android:lineSpacingMultiplier">1.5</item>
+    </style>
+
+    <style name="CaptionStyle">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/on_surface_variant</item>
     </style>
 </resources>

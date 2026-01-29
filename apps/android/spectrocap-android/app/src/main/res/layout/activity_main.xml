@@ -3,34 +3,64 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:orientation="vertical"
-  android:padding="14dp">
+  android:padding="0dp">
 
-  <!-- Top Mode Bar -->
+  <!-- Top App Bar with Settings Button (IonMetal) -->
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:padding="14dp"
+    android:background="@color/primary"
+    android:gravity="center_vertical">
+
+    <TextView
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:text="@string/app_name"
+      android:textColor="@color/on_primary"
+      android:textSize="20sp"
+      android:textStyle="bold"
+      android:letterSpacing="0.01" />
+
+    <Button
+      android:id="@+id/btnSettings"
+      android:layout_width="48dp"
+      android:layout_height="48dp"
+      android:text="⚙"
+      android:textSize="20sp"
+      android:background="?attr/selectableItemBackgroundBorderless"
+      android:textColor="@color/on_primary" />
+  </LinearLayout>
+
+  <!-- Mode Tab Bar (Rounded, Premium IonMetal) -->
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="14dp"
+    android:spacing="10dp">
 
     <Button
       android:id="@+id/tabCapture"
+      style="@style/PremiumButton"
       android:layout_width="0dp"
-      android:layout_height="wrap_content"
+      android:layout_height="52dp"
       android:layout_weight="1"
       android:text="Capture" />
 
-    <Button
-      android:id="@+id/tabClipboard"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_weight="1"
-      android:text="Clipboard" />
+    <Space
+      android:layout_width="10dp"
+      android:layout_height="match_parent" />
 
     <Button
-      android:id="@+id/tabSettings"
+      android:id="@+id/tabClipboard"
+      style="@style/PremiumButton"
       android:layout_width="0dp"
-      android:layout_height="wrap_content"
+      android:layout_height="52dp"
       android:layout_weight="1"
-      android:text="Settings" />
+      android:text="Clipboard" />
   </LinearLayout>
 
   <!-- Shared Status -->
@@ -38,9 +68,12 @@
     android:id="@+id/statusText"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingStart="14dp"
+    android:paddingEnd="14dp"
     android:paddingTop="10dp"
     android:text="Ready."
-    android:textSize="15sp" />
+    android:textSize="14sp"
+    android:textColor="@color/text_secondary" />
 
   <!-- ===================== CAPTURE PANEL ===================== -->
   <ScrollView
@@ -48,7 +81,8 @@
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:layout_weight="1"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:padding="14dp">
 
     <LinearLayout
       android:layout_width="match_parent"
@@ -57,15 +91,16 @@
 
       <Button
         android:id="@+id/captureBtn"
+        style="@style/PremiumButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="52dp"
         android:text="Capture Image (Preview)" />
 
       <ImageView
         android:id="@+id/previewImage"
         android:layout_width="match_parent"
         android:layout_height="360dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="18dp"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
         android:contentDescription="Preview" />
@@ -73,8 +108,10 @@
       <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:text="Tip: this uses the system camera preview. If a camera app is missing/blocked, we show a friendly error instead of crashing." />
+        android:paddingTop="16dp"
+        android:text="Tip: uses the system camera preview. If a camera app is missing/blocked, we show a friendly error."
+        android:textSize="13sp"
+        android:textColor="@color/text_secondary" />
     </LinearLayout>
   </ScrollView>
 
@@ -85,7 +122,8 @@
     android:layout_height="0dp"
     android:layout_weight="1"
     android:fillViewport="true"
-    android:visibility="gone">
+    android:visibility="gone"
+    android:padding="14dp">
 
     <LinearLayout
       android:layout_width="match_parent"
@@ -97,102 +135,66 @@
         android:layout_width="match_parent"
         android:layout_height="220dp"
         android:gravity="top|start"
-        android:hint="SpectroCAP Clipboard… paste or import here"
+        android:hint="SpectroCAP(TM) Clipboard… paste or import here"
         android:inputType="textMultiLine"
-        android:padding="10dp" />
+        android:padding="12dp"
+        android:background="@drawable/btn_rounded_secondary"
+        android:textColor="@color/text_primary" />
 
       <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingTop="10dp">
+        android:paddingTop="16dp"
+        android:spacing="10dp">
 
         <Button
           android:id="@+id/btnImportClip"
+          style="@style/PremiumButton"
           android:layout_width="0dp"
-          android:layout_height="wrap_content"
+          android:layout_height="52dp"
           android:layout_weight="1"
           android:text="Import" />
 
+        <Space
+          android:layout_width="10dp"
+          android:layout_height="match_parent" />
+
         <Button
           android:id="@+id/btnCopyClip"
+          style="@style/PremiumButton"
           android:layout_width="0dp"
-          android:layout_height="wrap_content"
+          android:layout_height="52dp"
           android:layout_weight="1"
           android:text="Copy" />
 
+        <Space
+          android:layout_width="10dp"
+          android:layout_height="match_parent" />
+
         <Button
           android:id="@+id/btnSendToPc"
+          style="@style/PremiumButton"
           android:layout_width="0dp"
-          android:layout_height="wrap_content"
+          android:layout_height="52dp"
           android:layout_weight="1"
-          android:text="Send to PC" />
+          android:text="Send" />
       </LinearLayout>
 
       <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:text="Goal: Copy on phone → Import → Send to PC → Right-click Paste on Windows." />
+        android:paddingTop="16dp"
+        android:text="Copy phone → Import → Send to PC → Right-click Paste on Windows"
+        android:textSize="13sp"
+        android:textColor="@color/text_secondary" />
     </LinearLayout>
   </ScrollView>
 
-  <!-- ===================== SETTINGS PANEL ===================== -->
-  <ScrollView
-    android:id="@+id/panelSettings"
+  <!-- Footer Branding -->
+  <include
+    layout="@layout/view_brand_footer"
     android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_weight="1"
-    android:fillViewport="true"
-    android:visibility="gone">
-
-    <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="vertical">
-
-      <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Receiver Base URL (PC):"
-        android:textSize="15sp"
-        android:paddingTop="4dp" />
-
-      <EditText
-        android:id="@+id/receiverBase"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="http://192.168.x.x:8088"
-        android:inputType="textUri"
-        android:padding="10dp" />
-
-      <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="10dp">
-
-        <Button
-          android:id="@+id/btnSaveSettings"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:text="Save" />
-
-        <Button
-          android:id="@+id/btnTestReceiver"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:text="Test" />
-      </LinearLayout>
-
-      <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:text="Test pings /health. Phone must be on same Wi-Fi as PC receiver." />
-    </LinearLayout>
-  </ScrollView>
+    android:layout_height="wrap_content" />
 
 </LinearLayout>

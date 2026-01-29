@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background">
+
+    <!-- Scrollable Content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- App Name -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp"
+                android:background="@drawable/btn_rounded_secondary"
+                android:layout_marginBottom="12dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="App Name"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/on_background" />
+                <TextView
+                    android:id="@+id/appNameValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="@color/on_background" />
+            </LinearLayout>
+
+            <!-- Version Name -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp"
+                android:background="@drawable/btn_rounded_secondary"
+                android:layout_marginBottom="12dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Version Name"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/on_background" />
+                <TextView
+                    android:id="@+id/versionNameValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="@color/on_background" />
+            </LinearLayout>
+
+            <!-- Version Code -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp"
+                android:background="@drawable/btn_rounded_secondary"
+                android:layout_marginBottom="12dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Version Code"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/on_background" />
+                <TextView
+                    android:id="@+id/versionCodeValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="@color/on_background" />
+            </LinearLayout>
+
+            <!-- Build Type -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp"
+                android:background="@drawable/btn_rounded_secondary"
+                android:layout_marginBottom="12dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Build Type"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/on_background" />
+                <TextView
+                    android:id="@+id/buildTypeValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="@color/on_background" />
+            </LinearLayout>
+
+            <!-- Package -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp"
+                android:background="@drawable/btn_rounded_secondary"
+                android:layout_marginBottom="12dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Package"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/on_background" />
+                <TextView
+                    android:id="@+id/packageNameValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="@color/on_background" />
+            </LinearLayout>
+
+            <!-- OS Version -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp"
+                android:background="@drawable/btn_rounded_secondary"
+                android:layout_marginBottom="12dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="OS Version"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/on_background" />
+                <TextView
+                    android:id="@+id/osVersionValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="@color/on_background" />
+            </LinearLayout>
+
+            <!-- Device -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp"
+                android:background="@drawable/btn_rounded_secondary"
+                android:layout_marginBottom="12dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Device"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/on_background" />
+                <TextView
+                    android:id="@+id/deviceValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="@color/on_background" />
+            </LinearLayout>
+
+            <!-- Creation Date -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp"
+                android:background="@drawable/btn_rounded_secondary"
+                android:layout_marginBottom="12dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Created"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/on_background" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/creation_date_long"
+                    android:textSize="12sp"
+                    android:textColor="@color/on_background" />
+            </LinearLayout>
+
+            <!-- Copyright -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12dp"
+                android:background="@drawable/btn_rounded_secondary">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Copyright"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/on_background"
+                    android:layout_marginBottom="8dp" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/copyright_notice"
+                    android:textSize="12sp"
+                    android:textColor="@color/on_surface_variant" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Footer -->
+    <include
+        layout="@layout/view_brand_footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
