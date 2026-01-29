@@ -18,6 +18,9 @@
         <item name="colorSurface">@color/im_bg_surface</item>
         <item name="colorOnSurface">@color/im_text_primary</item>
 
+        <!-- HARD LOCK: prevent OneUI forced-dark / contrast overrides -->
+        <item name="android:forceDarkAllowed">false</item>
+
         <!-- System UI -->
         <item name="android:statusBarColor">@color/im_bg_primary</item>
         <item name="android:navigationBarColor">@color/im_bg_primary</item>
@@ -25,6 +28,7 @@
         <item name="android:windowLightNavigationBar">false</item>
 
         <!-- Prevent bright launch flash -->
+        <item name="android:windowBackground">@color/im_bg_primary</item>
         <item name="android:windowSplashScreenBackground">@color/im_bg_primary</item>
         <item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="s">@android:color/transparent</item>
     </style>

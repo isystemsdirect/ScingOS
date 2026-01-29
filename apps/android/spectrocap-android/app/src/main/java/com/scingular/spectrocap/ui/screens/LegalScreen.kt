@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.scingular.spectrocap.ui.theme.IonMetalColor
 import com.scingular.spectrocap.ui.theme.IonDivider
+import com.scingular.spectrocap.ui.theme.ionEnter
 
 @Composable
 fun LegalScreen(onBack: () -> Unit) {
@@ -26,6 +27,7 @@ fun LegalScreen(onBack: () -> Unit) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 20.dp, vertical = 18.dp)
+                .ionEnter()
         ) {
             // Minimal top bar
             Row(

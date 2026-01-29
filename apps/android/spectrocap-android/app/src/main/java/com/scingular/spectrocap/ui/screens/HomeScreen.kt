@@ -19,6 +19,8 @@ import androidx.compose.ui.unit.dp
 import com.scingular.spectrocap.BuildConfig
 import com.scingular.spectrocap.ui.theme.IonMetalColor
 import com.scingular.spectrocap.ui.theme.IonSurface
+import com.scingular.spectrocap.ui.theme.IonPressable
+import com.scingular.spectrocap.ui.theme.ionEnter
 
 @Composable
 fun HomeScreen(onOpenSettings: () -> Unit) {
@@ -26,7 +28,8 @@ fun HomeScreen(onOpenSettings: () -> Unit) {
         Column(
             modifier = androidx.compose.ui.Modifier
                 .fillMaxSize()
-                .padding(horizontal = 20.dp, vertical = 18.dp),
+                .padding(horizontal = 20.dp, vertical = 18.dp)
+                .ionEnter(),
             verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(16.dp)
         ) {
             // DEBUG THEME PROBE (remove anytime)
@@ -57,20 +60,22 @@ fun HomeScreen(onOpenSettings: () -> Unit) {
                 Text("Mode: Clipboard Ready", color = IonMetalColor.TEXT_SECONDARY, style = MaterialTheme.typography.bodyMedium)
             }
 
-            // PRIMARY ACTION (Ion accent ring concept = outlined)
-            OutlinedButton(
-                onClick = { /* UI-only here */ },
-                colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = IonMetalColor.ACCENT_PRIMARY
-                ),
-                border = ButtonDefaults.outlinedButtonBorder.copy(
-                    width = 1.dp
-                ),
-                modifier = androidx.compose.ui.Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
-            ) {
-                Text("Send Clipboard", style = MaterialTheme.typography.titleMedium)
+            // PRIMARY ACTION (Ion accent ring concept = outlined + motion)
+            IonPressable(modifier = androidx.compose.ui.Modifier.fillMaxWidth().height(56.dp)) { interaction, _ ->
+                OutlinedButton(
+                    onClick = { /* UI-only here */ },
+                    interactionSource = interaction,
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = IonMetalColor.ACCENT_PRIMARY
+                    ),
+                    border = ButtonDefaults.outlinedButtonBorder.copy(
+                        width = 1.dp
+                    ),
+                    modifier = androidx.compose.ui.Modifier
+                        .fillMaxSize()
+                ) {
+                    Text("Send Clipboard", style = MaterialTheme.typography.titleMedium)
+                }
             }
 
             // CONTEXT PANEL

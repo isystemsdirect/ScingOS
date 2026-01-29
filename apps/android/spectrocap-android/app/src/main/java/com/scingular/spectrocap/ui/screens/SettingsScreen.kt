@@ -19,6 +19,8 @@ import androidx.compose.ui.unit.dp
 import com.scingular.spectrocap.ui.theme.IonMetalColor
 import com.scingular.spectrocap.ui.theme.IonDivider
 import com.scingular.spectrocap.ui.theme.IonSurface
+import com.scingular.spectrocap.ui.theme.IonPressable
+import com.scingular.spectrocap.ui.theme.ionEnter
 
 @Composable
 fun SettingsScreen(
@@ -29,7 +31,8 @@ fun SettingsScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 20.dp, vertical = 18.dp),
+                .padding(horizontal = 20.dp, vertical = 18.dp)
+                .ionEnter(),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             // HEADER
@@ -79,12 +82,14 @@ private fun IonSection(title: String, content: @Composable () -> Unit) {
 
 @Composable
 private fun IonRow(label: String, onClick: (() -> Unit)? = null) {
-    val rowMod = Modifier
+    val base = Modifier
         .fillMaxWidth()
         .then(if (onClick != null) Modifier.clickable { onClick() } else Modifier)
         .padding(horizontal = 16.dp, vertical = 14.dp)
 
-    Column(modifier = rowMod) {
-        Text(label, color = IonMetalColor.TEXT_PRIMARY, style = MaterialTheme.typography.bodyLarge)
+    IonPressable(modifier = base) { _, _ ->
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Text(label, color = IonMetalColor.TEXT_PRIMARY, style = MaterialTheme.typography.bodyLarge)
+        }
     }
 }
