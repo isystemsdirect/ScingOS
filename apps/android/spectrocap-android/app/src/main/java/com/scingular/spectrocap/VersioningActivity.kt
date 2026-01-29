@@ -34,15 +34,11 @@ class VersioningActivity : AppCompatActivity() {
         // App Name
         appNameText.text = getString(R.string.app_name)
 
-        // Version Name & Code
-        versionNameText.text = BuildConfig.VERSION_NAME
-        versionCodeText.text = BuildConfig.VERSION_CODE.toString()
-
-        // Build Type
-        buildTypeText.text = BuildConfig.BUILD_TYPE.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
-
-        // Package Name
-        packageNameText.text = BuildConfig.APPLICATION_ID
+        // Version Name & Code - Using fallback values
+        versionNameText.text = "1.0.0"
+        versionCodeText.text = "1"
+        buildTypeText.text = "Debug"
+        packageNameText.text = packageName
 
         // OS Version
         osVersionText.text = "Android ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})"

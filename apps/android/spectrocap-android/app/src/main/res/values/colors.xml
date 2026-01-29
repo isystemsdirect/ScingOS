@@ -1,45 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- IonMetal Colorway - Premium, modern, metallic feel -->
-    
-    <!-- Primary (Electric Blue) -->
-    <color name="primary">#0066FF</color>
-    <color name="on_primary">#FFFFFF</color>
-    <color name="primary_container">#002E7E</color>
-    <color name="on_primary_container">#E8F0FF</color>
-    
-    <!-- Secondary (Slate Gray) -->
-    <color name="secondary">#5A6B7D</color>
-    <color name="on_secondary">#FFFFFF</color>
-    <color name="secondary_container">#3F4F63</color>
-    <color name="on_secondary_container">#E8EEF7</color>
-    
-    <!-- Accent Glow (Cyan Accent) -->
-    <color name="accent_glow">#00D9FF</color>
-    <color name="on_accent_glow">#001A1F</color>
-    
-    <!-- Surface & Backgrounds -->
-    <color name="surface">#F5F7FA</color>
-    <color name="on_surface">#1A1C1F</color>
-    <color name="surface_variant">#E7EDF5</color>
-    <color name="on_surface_variant">#49525D</color>
-    
-    <!-- Background -->
-    <color name="background">#FEFFFE</color>
-    <color name="on_background">#1A1C1F</color>
-    
-    <!-- Outline & Dividers -->
-    <color name="outline">#79747E</color>
-    <color name="outline_variant">#CAC7D0</color>
-    
-    <!-- Error States -->
-    <color name="error">#B3261E</color>
-    <color name="on_error">#FFFFFF</color>
-    <color name="error_container">#F9DEDC</color>
-    <color name="on_error_container">#410E0B</color>
-    
-    <!-- Status Colors -->
-    <color name="success">#2E7D32</color>
-    <color name="warning">#F57C00</color>
-    <color name="info">#0066FF</color>
+    <!-- IonMetal Material Language (dark graphite surfaces, restrained cyan accent) -->
+
+    <!-- Accent (Electric cyan / ion-blue) used ONLY for active/focus/armed -->
+    <color name="accent_primary">#10C7B8</color>
+    <color name="on_accent_primary">#081A1A</color>
+
+    <!-- Surfaces (Neutral dominant) -->
+    <color name="surface">#1A1D20</color>
+    <color name="surface_alt">#202428</color>
+    <color name="background">#1A1D20</color>
+
+    <!-- Text -->
+    <color name="text_primary">#E9EDF2</color>
+    <color name="text_secondary">#C0C6CC</color>
+    <color name="text_disabled">#9AA3AD</color>
+
+    <!-- Borders / separators (soft charcoal) -->
+    <color name="border_neutral">#3A4046</color>
+
+    <!-- State colors -->
+    <color name="success">#28C773</color>
+    <color name="warning">#F5A623</color>
+    <color name="danger">#E14A4A</color>
+    <color name="info">#3BA0F0</color>
 </resources>

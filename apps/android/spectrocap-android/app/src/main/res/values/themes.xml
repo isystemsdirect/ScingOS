@@ -2,16 +2,12 @@
 <resources>
     <!-- IonMetal Colorway Theme - Premium token-based design -->
     
-    <!-- Main Theme (IonMetal) -->
-    <style name="Theme.SpectroCAP" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Primary brand colors (Electric Blue) -->
-        <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryDark">@color/primary_container</item>
-        <item name="colorAccent">@color/accent_glow</item>
-        
-        <!-- Surfaces -->
+    <!-- Main Theme (IonMetal, dark surfaces) -->
+    <style name="Theme.SpectroCAP" parent="Theme.AppCompat">
+        <!-- Cyan accent only for focus/active/armed visuals -->
+        <item name="colorAccent">@color/accent_primary</item>
         <item name="android:windowBackground">@color/background</item>
-        
+        <item name="android:textColor">@color/text_primary</item>
         <!-- Premium Button Styling -->
         <item name="android:buttonStyle">@style/PremiumButton</item>
     </style>
@@ -22,8 +18,9 @@
         <item name="android:minHeight">52dp</item>
         <item name="android:paddingStart">24dp</item>
         <item name="android:paddingEnd">24dp</item>
+        <!-- IonMetal surface with accent edge highlight (no full accent fills) -->
         <item name="android:background">@drawable/btn_rounded_primary</item>
-        <item name="android:textColor">@color/on_primary</item>
+        <item name="android:textColor">@color/text_primary</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:gravity">center</item>
@@ -37,7 +34,7 @@
         <item name="android:paddingStart">24dp</item>
         <item name="android:paddingEnd">24dp</item>
         <item name="android:background">@drawable/btn_rounded_secondary</item>
-        <item name="android:textColor">@color/primary</item>
+        <item name="android:textColor">@color/text_secondary</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:gravity">center</item>
@@ -57,18 +54,18 @@
     <style name="HeadlineStyle">
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/on_background</item>
+        <item name="android:textColor">@color/text_primary</item>
         <item name="android:letterSpacing">0.01</item>
     </style>
 
     <style name="BodyStyle">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/on_surface</item>
+        <item name="android:textColor">@color/text_secondary</item>
         <item name="android:lineSpacingMultiplier">1.5</item>
     </style>
 
     <style name="CaptionStyle">
         <item name="android:textSize">12sp</item>
-        <item name="android:textColor">@color/on_surface_variant</item>
+        <item name="android:textColor">@color/text_secondary</item>
     </style>
 </resources>

@@ -31,7 +31,3 @@
         android:letterSpacing="0.01" />
 
 </LinearLayout>
-        android:layout_marginTop="4dp"
-        android:letterSpacing="0.01" />
-
-</LinearLayout>

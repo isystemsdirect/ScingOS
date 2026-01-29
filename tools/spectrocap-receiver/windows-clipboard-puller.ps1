@@ -1,10 +1,16 @@
-# Windows Clipboard Puller — SpectroCAP Clipboard Bridge
+# Windows Clipboard Puller — SpectroCAP Clipboard Bridge (HTTPS)
 # Run this in a PowerShell window on your PC (where receiver is running)
 # Polls /clip/pull every 800ms and updates Windows clipboard when new content arrives
+# Now uses HTTPS on port 9443 with self-signed certificate
 
 # CONFIGURATION
-$RECEIVER_BASE = "http://localhost:8088"  # Change to your PC's LAN IP if running from different PC
+$RECEIVER_BASE = "https://localhost:9443"  # Change to your PC's LAN IP if running from different PC
 $POLL_INTERVAL_MS = 800                    # Poll frequency (ms)
+
+# HTTPS/TLS Configuration (ignore self-signed cert)
+$SkipCertCheck = @{
+  SkipCertificateCheck = $true
+}
 
 # STATE
 $LAST_TS = 0
@@ -20,7 +26,7 @@ Write-Host "`nPolling... (press Ctrl+C to stop)`n" -ForegroundColor Yellow
 while($true) {
   $POLL_COUNT += 1
   try {
-    $j = Invoke-RestMethod "$RECEIVER_BASE/clip/pull"
+    $j = Invoke-RestMethod "$RECEIVER_BASE/clip/pull" @SkipCertCheck
     if ($j.ok -and $j.ts -gt $LAST_TS -and $j.text) {
       # New clipboard content detected
       Set-Clipboard -Value $j.text

@@ -62,9 +62,9 @@ class MainActivity : AppCompatActivity() {
 
   private fun getReceiverConfig(): String {
     val host = prefs().getString("receiver_host", "192.168.0.37") ?: "192.168.0.37"
-    val port = prefs().getString("receiver_port", "8765") ?: "8765"
+    val port = prefs().getString("receiver_port", "9443") ?: "9443"
     val path = prefs().getString("endpoint_path", "/clip") ?: "/clip"
-    val useHttps = prefs().getBoolean("use_https", false)
+    val useHttps = prefs().getBoolean("use_https", true)
     val protocol = if (useHttps) "https" else "http"
     return "$protocol://$host:$port$path"
   }

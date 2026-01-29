@@ -10,8 +10,14 @@ import java.net.URL
 
 object Sender {
 
-  // Endpoint stored in SharedPreferences via UI; provide a safe default placeholder
-  fun defaultEndpoint(): String = "http://192.168.0.100:8088/ingest"
+  // Endpoint stored in SharedPreferences via UI; defaults to HTTPS on 9443
+  fun defaultEndpoint(): String = "https://192.168.0.37:9443/ingest"
+
+  // Build endpoint dynamically from components
+  fun buildEndpoint(host: String, port: String, useHttps: Boolean): String {
+    val protocol = if (useHttps) "https" else "http"
+    return "$protocol://$host:$port/ingest"
+  }
 
   fun sendOne(ctx: Context, endpoint: String, item: QueueItem): Pair<Boolean, String> {
     try {

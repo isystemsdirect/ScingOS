@@ -330,7 +330,13 @@ Comprehensive documentation is available in the `/docs` directory:
 - **[Firebase Integration](docs/FIREBASE-INTEGRATION.md)** - Backend setup
 - **[BFI Philosophy](docs/BFI-PHILOSOPHY.md)** - Bona Fide Intelligence principles
 - **[Deployment Guide](docs/DEPLOYMENT.md)** - Production deployment
-- **[AI Assistant Access](docs/AI-ASSISTANT-ACCESS.md)** - Guide for using ChatGPT and other AI assistants with this repository
+ - **[AI Assistant Access](docs/AI-ASSISTANT-ACCESS.md)** - Guide for using ChatGPT and other AI assistants with this repository
+
+### SpectroCAP UI/UX (IonMetal)
+- [SPECTROCAP_IONMETAL_UI_CB.md](SPECTROCAP_IONMETAL_UI_CB.md) — Consolidated IonMetal CB (design authority)
+- [SPECTROCAP_UI_VISUAL_SYSTEM.md](SPECTROCAP_UI_VISUAL_SYSTEM.md) — Visual system spec
+- [SPECTROCAP_SETTINGS_ARCHITECTURE.md](SPECTROCAP_SETTINGS_ARCHITECTURE.md) — Settings architecture
+- [design/spectrocap.tokens.json](design/spectrocap.tokens.json) — Design tokens
 
 ## Canon Glossary
 
