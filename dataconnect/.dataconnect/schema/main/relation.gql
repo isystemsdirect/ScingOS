@@ -1,0 +1,49 @@
+extend type AvatarState {
+  """
+  Implicit metadata field that cannot be written. It provides extra information about query results.
+  """
+  _metadata: _Metadata @fdc_generated(from: "AvatarState", purpose: METADATA_FIELD)
+  """
+  ✨ Count the number of rows in the `AvatarState` table.
+  """
+  _count: Int! @fdc_generated(from: "AvatarState.", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `AvatarState` table where the `id` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  id_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "AvatarState.id", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `AvatarState` table where the `label` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  label_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "AvatarState.label", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `AvatarState` table where the `updatedAt` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  updatedAt_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "AvatarState.updatedAt", purpose: QUERY_COUNT)
+  """
+  ✨ Minimum of the `updatedAt` field in the `AvatarState` table.
+  """
+  updatedAt_min: Date @fdc_generated(from: "AvatarState.updatedAt", purpose: QUERY_MIN)
+  """
+  ✨ Maximum of the `updatedAt` field in the `AvatarState` table.
+  """
+  updatedAt_max: Date @fdc_generated(from: "AvatarState.updatedAt", purpose: QUERY_MAX)
+  """
+  A generated field that is used for caching results in SDKs.
+  """
+  _id: ID! @fdc_generated(from: "AvatarState.id", purpose: GLOBAL_ID)
+}

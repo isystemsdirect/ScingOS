@@ -1,0 +1,114 @@
+extend type Mutation {
+  """
+  ✨ Insert a single `AvatarState` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  avatarState_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: AvatarState_Data!
+  ): AvatarState_KeyOutput! @fdc_generated(from: "AvatarState", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert `AvatarState` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  avatarState_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [AvatarState_Data!]!
+  ): [AvatarState_KeyOutput!]! @fdc_generated(from: "AvatarState", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert or update a single `AvatarState` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `AvatarState`.
+  """
+  avatarState_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: AvatarState_Data!
+  ): AvatarState_KeyOutput! @fdc_generated(from: "AvatarState", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update `AvatarState` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `AvatarState`.
+  """
+  avatarState_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [AvatarState_Data!]!
+  ): [AvatarState_KeyOutput!]! @fdc_generated(from: "AvatarState", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Update a single `AvatarState` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `AvatarState` or `null` if not found.
+  """
+  avatarState_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: AvatarState_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: AvatarState_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: AvatarState_Data!
+  ): AvatarState_KeyOutput @fdc_generated(from: "AvatarState", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update `AvatarState` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  avatarState_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: AvatarState_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: AvatarState_Data!
+  ): Int! @fdc_generated(from: "AvatarState", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Delete a single `AvatarState` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  avatarState_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: AvatarState_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: AvatarState_FirstRow
+  ): AvatarState_KeyOutput @fdc_generated(from: "AvatarState", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete `AvatarState` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  avatarState_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: AvatarState_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "AvatarState", purpose: DELETE_MULTIPLE)
+}

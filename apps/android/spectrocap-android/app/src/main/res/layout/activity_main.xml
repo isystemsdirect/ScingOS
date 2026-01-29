@@ -89,7 +89,7 @@
             android:layout_height="wrap_content"
             android:padding="8dp"
             android:textSize="11sp"
-            android:textFamily="monospace"
+            android:fontFamily="monospace"
             android:text="Ready.\n" />
 
     </ScrollView>

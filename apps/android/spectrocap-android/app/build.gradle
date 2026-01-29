@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace 'com.scingular.spectrocap'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.scingular.spectrocap"
@@ -28,6 +28,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = '11'
+        freeCompilerArgs = ['-Xskip-metadata-version-check']
     }
     packagingOptions {
         resources {
@@ -46,8 +47,8 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3'
     
-    // Firebase BOM
-    implementation platform('com.google.firebase:firebase-bom:33.5.1')
+    // Firebase BOM (32.x compatible with Kotlin 1.9.23)
+    implementation platform('com.google.firebase:firebase-bom:32.8.1')
     
     // Firebase Services
     implementation 'com.google.firebase:firebase-auth-ktx'
@@ -58,7 +59,7 @@ dependencies {
     implementation 'androidx.security:security-crypto:1.1.0-alpha06'
     
     // Cryptography: LazySodium (libsodium wrapper for Android, Phase 2A)
-    implementation 'com.goterl:lazysodium-android:6.0.2'
+    implementation 'com.goterl:lazysodium-android:5.2.0'
     
     // Utilities
     implementation 'commons-codec:commons-codec:1.15'
@@ -69,3 +70,4 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }
+

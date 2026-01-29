@@ -5,7 +5,7 @@
  * SpectroCAP™ Phase 1 — Windows Tauri Client
  */
 
-import { writeText } from '@tauri-apps/api/core';
+import { invoke } from '@tauri-apps/api/core';
 import { finalizePaste } from './lariCap';
 
 /**
@@ -17,7 +17,7 @@ export async function copyToClipboard(text: string): Promise<void> {
     const finalizedText = await finalizePaste(text);
     
     // Write to clipboard
-    await writeText(finalizedText);
+    await invoke('plugin:clipboard|write_text', { text: finalizedText });
     console.log('[Clipboard] Text copied to clipboard');
   } catch (error) {
     console.error('[Clipboard] Failed to copy to clipboard:', error);
