@@ -18,4 +18,4 @@ This folder was generated because the repo checkout did not contain any existing
 ## Build
 After WiX Toolset is installed (candle/light on PATH):
 - candle Package.wxs -out out\\Package.wixobj
-- light out\\Package.wixobj -out out\\ScingR.msi
+- light out\\Package.wixobj -out out\\ScingR.msi

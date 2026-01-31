@@ -1,0 +1,31 @@
+{
+  "scpsc_version": "1.0",
+  "signal_id": "00000000-0000-0000-0000-000000000001",
+  "signal_class": "INTENT",
+  "timestamp": "2026-01-31T00:00:00Z",
+  "principal": {
+    "principal_id": "00000000-0000-0000-0000-0000000000AA",
+    "principal_type": "human",
+    "authentication_ref": "auth:example"
+  },
+  "delegated_authority": {
+    "dia_id": "00000000-0000-0000-0000-0000000000BB",
+    "scope": ["sdk:vscode","project:scingos","env:dev"],
+    "constraints": { "risk_level": "medium", "rollback_required": true },
+    "expires_at": "2026-01-31T00:15:00Z"
+  },
+  "lari": {
+    "lari_version": "1.0",
+    "intent_class": "analyze",
+    "intent_payload": { "note": "example" }
+  },
+  "governance": {
+    "bane_g_decision": "condition",
+    "bane_l_required": true
+  },
+  "integrity": {
+    "signature_alg": "ed25519",
+    "signature": "BASE64_PLACEHOLDER",
+    "hash_chain_prev": null
+  }
+}
