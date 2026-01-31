@@ -3,17 +3,72 @@
   "$id": "scpsc://schema/envelope.json",
   "title": "SCPSC Signal Envelope",
   "type": "object",
-  "required": ["scpsc_version","signal_id","signal_class","timestamp","principal","delegated_authority","lari","governance","integrity"],
+  "required": [
+    "scpsc_version",
+    "signal_id",
+    "signal_class",
+    "timestamp",
+    "principal",
+    "delegated_authority",
+    "lari",
+    "governance",
+    "integrity"
+  ],
   "properties": {
     "scpsc_version": { "type": "string" },
     "signal_id": { "type": "string" },
-    "signal_class": { "type": "string", "enum": ["INTENT","EXECUTION","STATE","GOVERNANCE"] },
+    "signal_class": { "type": "string", "enum": ["INTENT", "EXECUTION", "STATE", "GOVERNANCE"] },
     "timestamp": { "type": "string" },
-    "principal": { "type": "object" },
-    "delegated_authority": { "type": "object" },
-    "lari": { "type": "object" },
-    "governance": { "type": "object" },
-    "integrity": { "type": "object" }
+    "principal": {
+      "type": "object",
+      "required": ["principal_id", "principal_type", "authentication_ref"],
+      "properties": {
+        "principal_id": { "type": "string" },
+        "principal_type": { "type": "string", "enum": ["human", "institution", "service"] },
+        "authentication_ref": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "delegated_authority": {
+      "type": "object",
+      "required": ["dia_id", "scope", "expires_at"],
+      "properties": {
+        "dia_id": { "type": "string" },
+        "scope": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+        "constraints": { "type": "object" },
+        "expires_at": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "lari": {
+      "type": "object",
+      "required": ["lari_version", "intent_class", "intent_payload"],
+      "properties": {
+        "lari_version": { "type": "string" },
+        "intent_class": { "type": "string" },
+        "intent_payload": { "type": "object" }
+      },
+      "additionalProperties": false
+    },
+    "governance": {
+      "type": "object",
+      "required": ["bane_l_required"],
+      "properties": {
+        "bane_g_decision": { "type": "string" },
+        "bane_l_required": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "integrity": {
+      "type": "object",
+      "required": ["signature_alg", "signature"],
+      "properties": {
+        "signature_alg": { "type": "string" },
+        "signature": { "type": "string" },
+        "hash_chain_prev": {}
+      },
+      "additionalProperties": false
+    }
   },
   "additionalProperties": false
 }

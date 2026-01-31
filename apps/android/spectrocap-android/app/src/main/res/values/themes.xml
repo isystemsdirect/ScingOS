@@ -1,36 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
-
-    <style name="Theme.SpectroCAP.IonMetal" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Core -->
-        <item name="colorPrimary">@color/im_accent_primary</item>
-        <item name="colorOnPrimary">@color/im_bg_primary</item>
-
-        <item name="colorSecondary">@color/im_accent_warning</item>
-        <item name="colorOnSecondary">@color/im_bg_primary</item>
-
-        <item name="colorTertiary">@color/im_accent_critical</item>
-        <item name="colorOnTertiary">@color/im_bg_primary</item>
-
-        <!-- Surfaces -->
-        <item name="android:colorBackground">@color/im_bg_primary</item>
-        <item name="colorBackground">@color/im_bg_primary</item>
-        <item name="colorSurface">@color/im_bg_surface</item>
-        <item name="colorOnSurface">@color/im_text_primary</item>
-
-        <!-- HARD LOCK: prevent OneUI forced-dark / contrast overrides -->
-        <item name="android:forceDarkAllowed">false</item>
-
-        <!-- System UI -->
-        <item name="android:statusBarColor">@color/im_bg_primary</item>
-        <item name="android:navigationBarColor">@color/im_bg_primary</item>
-        <item name="android:windowLightStatusBar">false</item>
-        <item name="android:windowLightNavigationBar">false</item>
-
-        <!-- Prevent bright launch flash -->
-        <item name="android:windowBackground">@color/im_bg_primary</item>
-        <item name="android:windowSplashScreenBackground">@color/im_bg_primary</item>
-        <item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="s">@android:color/transparent</item>
+<resources>
+    <style name="Theme.SpectroCAP" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <!-- Other style customizations -->
     </style>
-
 </resources>

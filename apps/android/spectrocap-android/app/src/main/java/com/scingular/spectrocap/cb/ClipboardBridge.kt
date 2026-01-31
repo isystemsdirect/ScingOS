@@ -248,7 +248,7 @@ class ClipboardBridgeController(
       val ready = receiver.ensureReady(timeoutMs)
       if (ready !is ReceiverState.Ready) {
         val msg = when (ready) {
-          is ReceiverState.Waiting -> "Waiting for receiver: ${'$'}{ready.reason}"
+          is ReceiverState.Waiting -> "Waiting for receiver: ${ready.reason}"
           else -> "Waiting for receiver"
         }
         _status.value = CbUiStatus.Working(msg)
@@ -261,7 +261,7 @@ class ClipboardBridgeController(
       val attempts = retries.coerceAtLeast(1)
       repeat(attempts) { idx ->
         val attempt = idx + 1
-        _status.value = CbUiStatus.Working("Sending… (attempt ${'$'}attempt/${'$'}attempts)")
+        _status.value = CbUiStatus.Working("Sending… (attempt $attempt/$attempts)")
         val res = receiver.sendClipboard(payload, timeoutMs)
         if (res.success) {
           _status.value = CbUiStatus.Success
@@ -273,7 +273,7 @@ class ClipboardBridgeController(
         }
       }
 
-      _status.value = CbUiStatus.Error("Send failed: ${'$'}{lastError ?: "Unknown error"}")
+      _status.value = CbUiStatus.Error("Send failed: ${lastError ?: "Unknown error"}")
       delay(1200)
       _status.value = CbUiStatus.Idle
     }
@@ -332,10 +332,9 @@ fun ClipboardBridgeSection(
 
     AnimatedVisibility(visible = enabled) {
       Column(Modifier.padding(top = 10.dp)) {
-        val preview = latest?.text?.take(160)?.replace("
-", " ") ?: "—"
+        val preview = latest?.text?.take(160)?.replace("\n", " ") ?: "—"
         Text(
-          text = "Latest clipboard: ${'$'}preview",
+          text = "Latest clipboard: $preview",
           style = MaterialTheme.typography.bodySmall,
           maxLines = 2,
           overflow = TextOverflow.Ellipsis
@@ -354,16 +353,16 @@ private fun OneGiantCbCard(
 ) {
   val subtitle = when {
     !enabled -> "Disabled"
-    status is CbUiStatus.Working -> "Active • ${'$'}{status.message}"
+    status is CbUiStatus.Working -> "Active • ${status.message}"
     receiverState is ReceiverState.Ready -> "Active • Ready"
     receiverState is ReceiverState.Waiting -> "Active • Waiting for receiver"
     else -> "Active • Checking…"
   }
 
   val icon = when {
-    !enabled -> Icons.Filled.PowerSettingsNew
-    status is CbUiStatus.Working -> Icons.Filled.Sync
-    else -> Icons.Filled.PowerSettingsNew
+    !enabled -> Icons.Default.PowerSettingsNew
+    status is CbUiStatus.Working -> Icons.Default.Sync
+    else -> Icons.Default.PowerSettingsNew
   }
 
   ElevatedCard(
@@ -412,7 +411,7 @@ private fun ClipboardBridgeStatusOverlay(
         if (working.progress == null) {
           CircularProgressIndicator()
         } else {
-          LinearProgressIndicator(progress = { working.progress!! })
+          LinearProgressIndicator(progress = working.progress)
         }
         Spacer(Modifier.height(16.dp))
         TextButton(onClick = onCancel) { Text("Cancel") }

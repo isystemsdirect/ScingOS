@@ -16,7 +16,6 @@
     <!-- Legacy alias names to avoid resource merge errors in existing XML/drawables -->
     <color name="surface">@color/im_bg_surface</color>
     <color name="surface_alt">@color/im_bg_elevated</color>
-    <color name="background">@color/im_bg_primary</color>
 
     <color name="text_primary">@color/im_text_primary</color>
     <color name="text_secondary">@color/im_text_secondary</color>

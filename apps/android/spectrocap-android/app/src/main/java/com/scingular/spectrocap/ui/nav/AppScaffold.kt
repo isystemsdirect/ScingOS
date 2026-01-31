@@ -1,5 +1,8 @@
 package com.scingular.spectrocap.ui.nav
 
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -16,16 +19,15 @@ import androidx.navigation.compose.rememberNavController
 import com.scingular.spectrocap.ui.screens.HomeScreen
 import com.scingular.spectrocap.ui.screens.LegalScreen
 import com.scingular.spectrocap.ui.screens.SettingsScreen
-import com.scingular.spectrocap.ui.theme.IonMetalColor
 
 @Composable
 fun AppScaffold() {
     val nav = rememberNavController()
 
     Scaffold(
-        containerColor = IonMetalColor.BG_PRIMARY,
+        containerColor = MaterialTheme.colorScheme.background,
         bottomBar = { IonBottomBar(nav) }
-    ) { padding ->
+    ) { _ ->
         NavHost(
             navController = nav,
             startDestination = Dest.Home.route
@@ -48,7 +50,7 @@ private fun IonBottomBar(nav: NavHostController) {
     val route = backStack?.destination?.route
 
     NavigationBar(
-        containerColor = IonMetalColor.BG_SURFACE,
+        containerColor = MaterialTheme.colorScheme.surface,
         tonalElevation = 0.dp
     ) {
         IonBottomItem(
@@ -69,16 +71,16 @@ private fun IonBottomBar(nav: NavHostController) {
 }
 
 @Composable
-private fun IonBottomItem(label: String, selected: Boolean, onClick: () -> Unit) {
+private fun RowScope.IonBottomItem(label: String, selected: Boolean, onClick: () -> Unit) {
     NavigationBarItem(
         selected = selected,
         onClick = onClick,
         icon = { /* Intentionally empty: IonMetal = no clutter */ },
         label = { Text(label) },
         colors = NavigationBarItemDefaults.colors(
-            selectedTextColor = IonMetalColor.TEXT_PRIMARY,
-            unselectedTextColor = IonMetalColor.TEXT_MUTED,
-            indicatorColor = IonMetalColor.BG_SURFACE
+            selectedTextColor = MaterialTheme.colorScheme.onSurface,
+            unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            indicatorColor = MaterialTheme.colorScheme.surface
         )
     )
 }

@@ -60,6 +60,32 @@ class SettingsRepository(private val context: Context) {
     suspend fun setReceiverIp(value: String) {
         context.dataStore.edit { it[Keys.RECEIVER_IP] = value }
     }
-    
-    // ... other setters would be implemented here
+
+    suspend fun setReceiverPort(value: String) {
+        context.dataStore.edit { it[Keys.RECEIVER_PORT] = value }
+    }
+
+    suspend fun setVerboseLogging(value: Boolean) {
+        context.dataStore.edit { it[Keys.VERBOSE_LOGGING] = value }
+    }
+
+    suspend fun setNetworkTimeoutMs(value: Int) {
+        context.dataStore.edit { it[Keys.NETWORK_TIMEOUT_MS] = value }
+    }
+
+    suspend fun setNetworkRetryAttempts(value: Int) {
+        context.dataStore.edit { it[Keys.NETWORK_RETRY_ATTEMPS] = value }
+    }
+
+    suspend fun setAutoSendClipboard(value: Boolean) {
+        context.dataStore.edit { it[Keys.AUTO_SEND_CLIPBOARD] = value }
+    }
+
+    suspend fun setConfirmBeforeSend(value: Boolean) {
+        context.dataStore.edit { it[Keys.CONFIRM_BEFORE_SEND] = value }
+    }
+
+    suspend fun setClearClipboardAfterSend(value: Boolean) {
+        context.dataStore.edit { it[Keys.CLEAR_CLIPBOARD_AFTER_SEND] = value }
+    }
 }

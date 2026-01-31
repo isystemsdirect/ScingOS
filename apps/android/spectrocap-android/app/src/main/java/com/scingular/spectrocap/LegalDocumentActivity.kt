@@ -1,58 +1,74 @@
 package com.scingular.spectrocap
 
-import android.content.Context
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import android.widget.ScrollView
-import android.widget.TextView
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import com.scingular.spectrocap.ui.theme.SpectroCAPTheme
 import java.io.InputStream
 
-/**
- * Generic Legal Document Viewer Activity
- * Loads and displays markdown/text files from assets/legal/
- */
-open class LegalDocumentActivity : AppCompatActivity() {
+open class LegalDocumentActivity : ComponentActivity() {
 
     protected open val documentFileName: String = ""
-    protected open val titleResId: Int = R.string.about_title
+    protected open val titleResId: Int = R.string.app_name
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_legal_document)
-
-        // Set action bar title
-        supportActionBar?.title = getString(titleResId)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        // Load and display document
-        if (documentFileName.isNotEmpty()) {
-            loadDocument(documentFileName)
+        setContent {
+            SpectroCAPTheme {
+                LegalDocumentScreen(
+                    title = getString(titleResId),
+                    fileName = documentFileName,
+                    onBack = { finish() }
+                )
+            }
         }
     }
+}
 
-    private fun loadDocument(fileName: String) {
-        try {
-            val content = readAsset("legal/$fileName")
-            val docTextView = findViewById<TextView>(R.id.documentText)
-            docTextView.text = content
-        } catch (e: Exception) {
-            val docTextView = findViewById<TextView>(R.id.documentText)
-            docTextView.text = "Error loading document: ${e.message}"
-        }
-    }
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun LegalDocumentScreen(title: String, fileName: String, onBack: () -> Unit) {
+    val context = LocalContext.current
+    val scrollState = rememberScrollState()
 
-    private fun readAsset(path: String): String {
+    fun readAsset(path: String): String {
         return try {
-            val inputStream: InputStream = assets.open(path)
+            val inputStream: InputStream = context.assets.open(path)
             inputStream.bufferedReader().use { it.readText() }
         } catch (e: Exception) {
             "Unable to load file: $path\n\n${e.message}"
         }
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        finish()
-        return true
+    val content = readAsset("legal/$fileName")
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(title) },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                }
+            )
+        }
+    ) { padding ->
+        Text(
+            text = content,
+            modifier = Modifier
+                .padding(padding)
+                .verticalScroll(scrollState)
+        )
     }
 }
 

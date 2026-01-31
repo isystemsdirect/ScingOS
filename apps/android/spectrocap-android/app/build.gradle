@@ -2,16 +2,17 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'com.google.gms.google-services'
+    id 'org.jetbrains.kotlin.plugin.compose'
 }
 
 android {
     namespace 'com.scingular.spectrocap'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.scingular.spectrocap"
         minSdk 26
-        targetSdk 34
+        targetSdk 35
         versionCode 1
         versionName "0.1.0-phase1"
     }
@@ -33,9 +34,6 @@ android {
     buildFeatures {
         compose true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion '1.5.12'
-    }
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
@@ -51,6 +49,8 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.preference:preference-ktx:1.2.1'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation "androidx.datastore:datastore-preferences:1.1.1"
     
     // Kotlin
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.9.23'
@@ -81,6 +81,7 @@ dependencies {
     implementation 'androidx.compose.ui:ui-tooling-preview'
     debugImplementation 'androidx.compose.ui:ui-tooling'
     implementation 'androidx.compose.material3:material3'
+    implementation 'androidx.compose.material:material-icons-extended'
     implementation 'androidx.navigation:navigation-compose:2.8.3'
     implementation 'androidx.compose.runtime:runtime'
     implementation 'androidx.compose.foundation:foundation'

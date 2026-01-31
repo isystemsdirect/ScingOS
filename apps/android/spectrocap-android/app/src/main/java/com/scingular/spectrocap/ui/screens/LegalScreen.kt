@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -16,28 +16,24 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.scingular.spectrocap.ui.theme.IonMetalColor
-import com.scingular.spectrocap.ui.theme.IonDivider
-import com.scingular.spectrocap.ui.theme.ionEnter
 
 @Composable
 fun LegalScreen(onBack: () -> Unit) {
-    Surface(color = IonMetalColor.BG_PRIMARY) {
+    Surface(color = MaterialTheme.colorScheme.background) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 20.dp, vertical = 18.dp)
-                .ionEnter()
         ) {
             // Minimal top bar
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Documents & Legal", color = IonMetalColor.TEXT_PRIMARY, style = MaterialTheme.typography.titleLarge)
-                TextButton(onClick = onBack) { Text("Back", color = IonMetalColor.TEXT_SECONDARY) }
+                Text("Documents & Legal", color = MaterialTheme.colorScheme.onBackground, style = MaterialTheme.typography.titleLarge)
+                TextButton(onClick = onBack) { Text("Back", color = MaterialTheme.colorScheme.onSurfaceVariant) }
             }
-            Divider(color = IonMetalColor.STROKE_SUBTLE, modifier = Modifier.padding(vertical = 12.dp))
+            HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
 
             // Viewer (typography-first dark reader)
             Column(
@@ -46,19 +42,19 @@ fun LegalScreen(onBack: () -> Unit) {
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                Text("SpectroCAP™", color = IonMetalColor.TEXT_PRIMARY, style = MaterialTheme.typography.titleMedium)
-                Text("Powered by SCINGULAR™", color = IonMetalColor.TEXT_SECONDARY)
-                Text("© 2026 Inspection Systems Direct Inc.", color = IonMetalColor.TEXT_SECONDARY)
+                Text("SpectroCAP™", color = MaterialTheme.colorScheme.onBackground, style = MaterialTheme.typography.titleMedium)
+                Text("Powered by SCINGULAR™", color = MaterialTheme.colorScheme.onSurface)
+                Text("© 2026 Inspection Systems Direct Inc.", color = MaterialTheme.colorScheme.onSurface)
 
-                IonDivider(modifier = Modifier.padding(vertical = 12.dp))
+                HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
 
-                Text("Terms of Use", color = IonMetalColor.TEXT_PRIMARY, style = MaterialTheme.typography.titleMedium)
-                Text("Placeholder. Replace with legal content.", color = IonMetalColor.TEXT_SECONDARY)
+                Text("Terms of Use", color = MaterialTheme.colorScheme.onBackground, style = MaterialTheme.typography.titleMedium)
+                Text("Placeholder. Replace with legal content.", color = MaterialTheme.colorScheme.onSurface)
 
-                IonDivider(modifier = Modifier.padding(vertical = 12.dp))
+                HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
 
-                Text("Privacy Policy", color = IonMetalColor.TEXT_PRIMARY, style = MaterialTheme.typography.titleMedium)
-                Text("Placeholder. Replace with legal content.", color = IonMetalColor.TEXT_SECONDARY)
+                Text("Privacy Policy", color = MaterialTheme.colorScheme.onBackground, style = MaterialTheme.typography.titleMedium)
+                Text("Placeholder. Replace with legal content.", color = MaterialTheme.colorScheme.onSurface)
             }
         }
     }

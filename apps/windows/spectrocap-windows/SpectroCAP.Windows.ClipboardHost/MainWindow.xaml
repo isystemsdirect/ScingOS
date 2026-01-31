@@ -1,0 +1,31 @@
+﻿<Window x:Class="SpectroCAP.Windows.ClipboardHost.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="SpectroCAP Clipboard Host" Height="360" Width="720"
+        WindowStartupLocation="CenterScreen">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" FontSize="20" FontWeight="SemiBold" Text="SpectroCAP — Windows Clipboard Host" />
+
+        <StackPanel Grid.Row="1" Margin="0,12,0,0">
+            <TextBlock Text="LAN Endpoint" FontWeight="SemiBold"/>
+            <TextBlock Name="EndpointText" Text="(loading...)" FontFamily="Consolas"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Margin="0,12,0,0">
+            <TextBlock Text="Pair Token (set this in Android Receiver Config)" FontWeight="SemiBold"/>
+            <TextBox Name="TokenBox" FontFamily="Consolas" FontSize="14" IsReadOnly="True" />
+            <Button Name="CopyTokenBtn" Content="Copy Token" Width="120" Margin="0,8,0,0" HorizontalAlignment="Left" Click="CopyTokenBtn_Click"/>
+        </StackPanel>
+
+        <GroupBox Grid.Row="3" Header="Live Log" Margin="0,12,0,0">
+            <TextBox Name="LogBox" FontFamily="Consolas" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+        </GroupBox>
+    </Grid>
+</Window>

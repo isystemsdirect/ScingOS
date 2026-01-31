@@ -2,53 +2,67 @@ package com.scingular.spectrocap
 
 import android.os.Build
 import android.os.Bundle
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import com.scingular.spectrocap.ui.theme.SpectroCAPTheme
 
-/**
- * VersioningActivity: Display app version, build info, and package details
- */
-class VersioningActivity : AppCompatActivity() {
-
+class VersioningActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_versioning)
-
-        // Set action bar
-        supportActionBar?.title = getString(R.string.versioning_title)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        // Populate version info
-        displayVersionInfo()
+        setContent {
+            SpectroCAPTheme {
+                VersioningScreen { finish() }
+            }
+        }
     }
+}
 
-    private fun displayVersionInfo() {
-        val appNameText = findViewById<TextView>(R.id.appNameValue)
-        val versionNameText = findViewById<TextView>(R.id.versionNameValue)
-        val versionCodeText = findViewById<TextView>(R.id.versionCodeValue)
-        val buildTypeText = findViewById<TextView>(R.id.buildTypeValue)
-        val packageNameText = findViewById<TextView>(R.id.packageNameValue)
-        val osVersionText = findViewById<TextView>(R.id.osVersionValue)
-        val deviceText = findViewById<TextView>(R.id.deviceValue)
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun VersioningScreen(onBack: () -> Unit) {
+    val context = LocalContext.current
 
-        // App Name
-        appNameText.text = getString(R.string.app_name)
-
-        // Version Name & Code - Using fallback values
-        versionNameText.text = "1.0.0"
-        versionCodeText.text = "1"
-        buildTypeText.text = "Debug"
-        packageNameText.text = packageName
-
-        // OS Version
-        osVersionText.text = "Android ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})"
-
-        // Device Model
-        deviceText.text = "${Build.MANUFACTURER} ${Build.MODEL}"
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Versioning") },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                }
+            )
+        }
+    ) { padding ->
+        Column(modifier = Modifier.padding(padding).padding(16.dp)) {
+            VersionInfoRow("App Name", stringResource(R.string.app_name))
+            VersionInfoRow("Version Name", "1.0.0") // Replace with BuildConfig if available
+            VersionInfoRow("Version Code", "1") // Replace with BuildConfig if available
+            VersionInfoRow("Build Type", "Debug") // Replace with BuildConfig if available
+            VersionInfoRow("Package Name", context.packageName)
+            VersionInfoRow("OS Version", "${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})")
+            VersionInfoRow("Device", "${Build.MANUFACTURER} ${Build.MODEL}")
+        }
     }
+}
 
-    override fun onSupportNavigateUp(): Boolean {
-        finish()
-        return true
+@Composable
+fun VersionInfoRow(label: String, value: String) {
+    Row(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+        Text(text = label, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+        Text(text = value, modifier = Modifier.weight(1f))
     }
 }

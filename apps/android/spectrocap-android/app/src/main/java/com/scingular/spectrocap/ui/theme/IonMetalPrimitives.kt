@@ -1,7 +1,7 @@
 package com.scingular.spectrocap.ui.theme
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -24,7 +24,7 @@ fun IonSurface(
 
 @Composable
 fun IonDivider(modifier: Modifier = Modifier) {
-    Divider(
+    HorizontalDivider(
         modifier = modifier,
         color = IonMetalColor.STROKE_SUBTLE,
         thickness = 1.dp

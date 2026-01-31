@@ -1,0 +1,12 @@
+{
+  "scpsc_version": "1.0",
+  "signal_id": "00000000-0000-0000-0000-000000000002",
+  "signal_class": "INTENT",
+  "timestamp": "2026-01-31T00:00:00Z",
+  "principal": {},
+  "delegated_authority": {},
+  "lari": {},
+  "governance": {},
+  "integrity": {},
+  "unknown_extra": "MUST_FAIL"
+}

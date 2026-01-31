@@ -76,7 +76,14 @@ The Android client for SpectroCAP™ Phase 1 enables users to send clipboard tex
 - **Android SDK 34** (Platform, Build Tools 34.0.0+)
 - **Android NDK** (optional; not required for Phase 1)
 - **Gradle 8.2.0** or later (included with Android Studio)
-- **JDK 11+** (bundled with Android Studio)
+- **JDK 17** (Bundled with Android Studio)
+
+### JDK Configuration
+The project is configured to use the JDK 17 bundled with Android Studio. To ensure you are using the correct version:
+
+1.  **Check for Android Studio Updates**: Go to `Help → Check for Updates`. Update to the latest stable version if available.
+2.  **Verify Gradle JDK Settings**: Go to `File → Settings → Build, Execution, Deployment → Gradle`. Ensure **Gradle JDK** is set to the version bundled with Android Studio (e.g., `jbr-17`).
+3.  **Confirm JDK Version in Terminal**: Open the Terminal in Android Studio and run `./gradlew -v`. The output should show `JVM: 17.x.x`.
 
 ### Development Environment
 - Windows 10/11 or macOS/Linux

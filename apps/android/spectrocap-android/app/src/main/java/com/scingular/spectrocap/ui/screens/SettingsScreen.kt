@@ -3,93 +3,103 @@ package com.scingular.spectrocap.ui.screens
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.scingular.spectrocap.ui.theme.IonMetalColor
-import com.scingular.spectrocap.ui.theme.IonDivider
-import com.scingular.spectrocap.ui.theme.IonSurface
-import com.scingular.spectrocap.ui.theme.IonPressable
-import com.scingular.spectrocap.ui.theme.ionEnter
 
 @Composable
 fun SettingsScreen(
     onOpenLegal: () -> Unit,
     onBack: () -> Unit
 ) {
-    Surface(color = IonMetalColor.BG_PRIMARY) {
+    Surface(color = MaterialTheme.colorScheme.background) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 20.dp, vertical = 18.dp)
-                .ionEnter(),
+                .padding(horizontal = 20.dp, vertical = 18.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             // HEADER
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Settings", color = IonMetalColor.TEXT_PRIMARY, style = MaterialTheme.typography.titleLarge)
-                TextButton(onClick = onBack) { Text("Back", color = IonMetalColor.TEXT_SECONDARY) }
+                Text("Settings", color = MaterialTheme.colorScheme.onBackground, style = MaterialTheme.typography.titleLarge)
+                TextButton(onClick = onBack) { Text("Back") }
             }
-            Divider(color = IonMetalColor.STROKE_SUBTLE)
+            HorizontalDivider()
 
             // CORE
-            IonSection(title = "Core") {
-                IonSurface { Column {
-                    IonRow("Behavior"); IonDivider()
-                    IonRow("Appearance"); IonDivider()
-                    IonRow("Clipboard Rules")
-                } }
+            SettingsSection(title = "Core") {
+                SettingsRow(label = "Behavior")
+                HorizontalDivider()
+                SettingsRow(label = "Appearance")
+                HorizontalDivider()
+                SettingsRow(label = "Clipboard Rules")
             }
 
             // SYSTEM
-            IonSection(title = "System") {
-                IonSurface { Column {
-                    IonRow("Documents & Legal", onClick = onOpenLegal); IonDivider()
-                    IonRow("Diagnostics (read-only)"); IonDivider()
-                    IonRow("About SpectroCAP™")
-                } }
+            SettingsSection(title = "System") {
+                SettingsRow(label = "Documents & Legal", onClick = onOpenLegal)
+                HorizontalDivider()
+                SettingsRow(label = "Diagnostics (read-only)")
+                HorizontalDivider()
+                SettingsRow(label = "About SpectroCAP™")
             }
 
             Spacer(modifier = Modifier.weight(1f))
 
             // FOOTER
-            Divider(color = IonMetalColor.STROKE_SUBTLE)
-            Text("Build ID • SCINGULAR Mark", color = IonMetalColor.TEXT_MUTED, style = MaterialTheme.typography.labelLarge)
+            HorizontalDivider()
+            Text(
+                "Build ID • SCINGULAR Mark",
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                style = MaterialTheme.typography.labelLarge,
+                modifier = Modifier.padding(top = 16.dp).align(Alignment.CenterHorizontally)
+            )
         }
     }
 }
 
 @Composable
-private fun IonSection(title: String, content: @Composable () -> Unit) {
+private fun SettingsSection(title: String, content: @Composable ColumnScope.() -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text(title, color = IonMetalColor.TEXT_SECONDARY, style = MaterialTheme.typography.labelLarge)
-        IonSurface { Column(modifier = Modifier.fillMaxWidth()) { content() } }
+        Text(
+            title,
+            color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.typography.labelLarge,
+            modifier = Modifier.padding(start = 16.dp)
+        )
+        Surface(tonalElevation = 1.dp, shape = MaterialTheme.shapes.medium) {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                content()
+            }
+        }
     }
 }
 
-@Composable
-private fun IonRow(label: String, onClick: (() -> Unit)? = null) {
-    val base = Modifier
-        .fillMaxWidth()
-        .then(if (onClick != null) Modifier.clickable { onClick() } else Modifier)
-        .padding(horizontal = 16.dp, vertical = 14.dp)
 
-    IonPressable(modifier = base) { _, _ ->
-        Column(modifier = Modifier.fillMaxWidth()) {
-            Text(label, color = IonMetalColor.TEXT_PRIMARY, style = MaterialTheme.typography.bodyLarge)
-        }
+@Composable
+private fun SettingsRow(label: String, onClick: (() -> Unit)? = null) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .then(if (onClick != null) Modifier.clickable { onClick() } else Modifier)
+            .padding(horizontal = 16.dp, vertical = 14.dp)
+    ) {
+        Text(label, style = MaterialTheme.typography.bodyLarge)
     }
 }
