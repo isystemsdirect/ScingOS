@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace 'com.scingular.spectrocap'
-    compileSdk 35
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.scingular.spectrocap"

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "scpsc://schema/envelope.json",
+  "title": "SCPSC Signal Envelope",
+  "type": "object",
+  "required": ["scpsc_version","signal_id","signal_class","timestamp","principal","delegated_authority","lari","governance","integrity"],
+  "properties": {
+    "scpsc_version": { "type": "string" },
+    "signal_id": { "type": "string" },
+    "signal_class": { "type": "string", "enum": ["INTENT","EXECUTION","STATE","GOVERNANCE"] },
+    "timestamp": { "type": "string" },
+    "principal": { "type": "object" },
+    "delegated_authority": { "type": "object" },
+    "lari": { "type": "object" },
+    "governance": { "type": "object" },
+    "integrity": { "type": "object" }
+  },
+  "additionalProperties": false
+}

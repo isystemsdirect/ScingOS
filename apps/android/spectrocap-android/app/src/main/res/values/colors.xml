@@ -12,4 +12,21 @@
     <color name="im_accent_primary">#7FAFB2</color>
     <color name="im_accent_warning">#B89B5E</color>
     <color name="im_accent_critical">#9E4A4A</color>
+
+    <!-- Legacy alias names to avoid resource merge errors in existing XML/drawables -->
+    <color name="surface">@color/im_bg_surface</color>
+    <color name="surface_alt">@color/im_bg_elevated</color>
+    <color name="background">@color/im_bg_primary</color>
+
+    <color name="text_primary">@color/im_text_primary</color>
+    <color name="text_secondary">@color/im_text_secondary</color>
+    <color name="text_muted">@color/im_text_muted</color>
+
+    <color name="accent_primary">@color/im_accent_primary</color>
+    <color name="on_accent_primary">@color/im_bg_primary</color>
+
+    <color name="on_surface">@color/im_text_primary</color>
+    <color name="on_surface_variant">@color/im_text_secondary</color>
+
+    <color name="border_neutral">#3A4046</color>
 </resources>
