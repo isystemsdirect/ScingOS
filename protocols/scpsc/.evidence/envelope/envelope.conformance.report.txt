@@ -1,0 +1,22 @@
+SCPSC Envelope Conformance Report
+Generated: 2026-01-31T17:35:45.330Z
+Schema: spec/schemas/envelope.schema.json
+Vectors: 2
+
+FAIL  test/vectors/envelope/negative.unknown-field.json
+  - /: must NOT have additional properties
+  - /principal: must have required property 'principal_id'
+  - /principal: must have required property 'principal_type'
+  - /principal: must have required property 'authentication_ref'
+  - /delegated_authority: must have required property 'dia_id'
+  - /delegated_authority: must have required property 'scope'
+  - /delegated_authority: must have required property 'expires_at'
+  - /lari: must have required property 'lari_version'
+  - /lari: must have required property 'intent_class'
+  - /lari: must have required property 'intent_payload'
+  - /governance: must have required property 'bane_l_required'
+  - /integrity: must have required property 'signature_alg'
+  - /integrity: must have required property 'signature'
+PASS  test/vectors/envelope/positive.intent.json
+
+Summary: 1 pass / 1 fail / 2 total

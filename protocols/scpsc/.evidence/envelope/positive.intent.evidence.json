@@ -1,0 +1,5 @@
+{
+  "vector": "test/vectors/envelope/positive.intent.json",
+  "pass": true,
+  "errors": []
+}

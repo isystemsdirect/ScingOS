@@ -17,3 +17,8 @@ This matrix SHALL map every SCPSC normative requirement to at least one test met
 | SCPSC-ENV-006 | idempotency semantics MUST be defined (replay resistance) | RFC review | RFC section 8 + vectors |  |
 | SCPSC-GOV-001 | Dual-consent (BANE-G ∧ BANE-L) SHALL be required for execution | RFC review | RFC section 7 |  |
 | SCPSC-AUD-001 | Every executable actuation SHALL emit audit evidence | RFC review | RFC section 9 |  |
+
+## Evidence Artifacts (Generated)
+- .evidence/envelope/envelope.conformance.report.json
+- .evidence/envelope/envelope.conformance.report.txt
+- .evidence/envelope/*.evidence.json

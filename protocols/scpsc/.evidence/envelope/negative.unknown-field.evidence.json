@@ -1,0 +1,123 @@
+{
+  "vector": "test/vectors/envelope/negative.unknown-field.json",
+  "pass": false,
+  "errors": [
+    {
+      "instancePath": "",
+      "schemaPath": "#/additionalProperties",
+      "keyword": "additionalProperties",
+      "message": "must NOT have additional properties",
+      "params": {
+        "additionalProperty": "unknown_extra"
+      }
+    },
+    {
+      "instancePath": "/principal",
+      "schemaPath": "#/properties/principal/required",
+      "keyword": "required",
+      "message": "must have required property 'principal_id'",
+      "params": {
+        "missingProperty": "principal_id"
+      }
+    },
+    {
+      "instancePath": "/principal",
+      "schemaPath": "#/properties/principal/required",
+      "keyword": "required",
+      "message": "must have required property 'principal_type'",
+      "params": {
+        "missingProperty": "principal_type"
+      }
+    },
+    {
+      "instancePath": "/principal",
+      "schemaPath": "#/properties/principal/required",
+      "keyword": "required",
+      "message": "must have required property 'authentication_ref'",
+      "params": {
+        "missingProperty": "authentication_ref"
+      }
+    },
+    {
+      "instancePath": "/delegated_authority",
+      "schemaPath": "#/properties/delegated_authority/required",
+      "keyword": "required",
+      "message": "must have required property 'dia_id'",
+      "params": {
+        "missingProperty": "dia_id"
+      }
+    },
+    {
+      "instancePath": "/delegated_authority",
+      "schemaPath": "#/properties/delegated_authority/required",
+      "keyword": "required",
+      "message": "must have required property 'scope'",
+      "params": {
+        "missingProperty": "scope"
+      }
+    },
+    {
+      "instancePath": "/delegated_authority",
+      "schemaPath": "#/properties/delegated_authority/required",
+      "keyword": "required",
+      "message": "must have required property 'expires_at'",
+      "params": {
+        "missingProperty": "expires_at"
+      }
+    },
+    {
+      "instancePath": "/lari",
+      "schemaPath": "#/properties/lari/required",
+      "keyword": "required",
+      "message": "must have required property 'lari_version'",
+      "params": {
+        "missingProperty": "lari_version"
+      }
+    },
+    {
+      "instancePath": "/lari",
+      "schemaPath": "#/properties/lari/required",
+      "keyword": "required",
+      "message": "must have required property 'intent_class'",
+      "params": {
+        "missingProperty": "intent_class"
+      }
+    },
+    {
+      "instancePath": "/lari",
+      "schemaPath": "#/properties/lari/required",
+      "keyword": "required",
+      "message": "must have required property 'intent_payload'",
+      "params": {
+        "missingProperty": "intent_payload"
+      }
+    },
+    {
+      "instancePath": "/governance",
+      "schemaPath": "#/properties/governance/required",
+      "keyword": "required",
+      "message": "must have required property 'bane_l_required'",
+      "params": {
+        "missingProperty": "bane_l_required"
+      }
+    },
+    {
+      "instancePath": "/integrity",
+      "schemaPath": "#/properties/integrity/required",
+      "keyword": "required",
+      "message": "must have required property 'signature_alg'",
+      "params": {
+        "missingProperty": "signature_alg"
+      }
+    },
+    {
+      "instancePath": "/integrity",
+      "schemaPath": "#/properties/integrity/required",
+      "keyword": "required",
+      "message": "must have required property 'signature'",
+      "params": {
+        "missingProperty": "signature"
+      }
+    }
+  ]
+}
