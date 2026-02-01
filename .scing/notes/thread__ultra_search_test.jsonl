@@ -1,0 +1,3 @@
+﻿{"topic":"ux","ts":"2026-02-01T00:17:10-06:00","text":"Search should be instant, cross-thread, and feel like a command palette.","from":"human","tags":["search","ux","ultra"],"role":"note"}
+{"topic":"research","ts":"2026-02-01T00:17:10-06:00","text":"MCP clients can share state via repo notes. Full-text search should return thread + preview + timestamp.","from":"perplexity","tags":["mcp","notes"],"role":"assistant"}
+{"topic":"build","ts":"2026-02-01T00:17:10-06:00","text":"Implement /api/search and UI results panel. Next: highlight matches + keyboard nav + jump-to-line.","from":"chatgpt","tags":["api","ui","search"],"role":"assistant"}

@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "ts": "2026-02-01T00:00:01.000Z",
+  "app": "spectrocap",
+  "kind": "intent",
+  "id": "seed2abcd34",
+  "ref": null,
+  "topic": "receiver_config_get",
+  "payload": {
+    "keys": ["receiver_ip","receiver_port","receiver_mode"],
+    "device": "seed"
+  },
+  "policy": { "plan_ack": true }
+}

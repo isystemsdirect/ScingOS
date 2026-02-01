@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "ts": "2026-02-01T00:00:00.000Z",
+  "app": "spectrocap",
+  "kind": "intent",
+  "id": "seed1abcd12",
+  "ref": null,
+  "topic": "clipboard_push",
+  "payload": {
+    "content": "SEED: SpectroLINE™ clipboard_push",
+    "mime": "text/plain",
+    "device": "seed"
+  },
+  "policy": { "plan_ack": true }
+}

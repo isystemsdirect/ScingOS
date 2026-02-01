@@ -1,0 +1,15 @@
+﻿{
+    "ref":  null,
+    "id":  "627dc6d630fb",
+    "kind":  "intent",
+    "ts":  "2026-02-01T22:23:08.1936637Z",
+    "policy":  {
+                   "plan_ack":  true
+               },
+    "v":  1,
+    "payload":  {
+                    "prompt":  "OP:COMMIT \"Checkpoint: SpectroLINE lane + ScingGPT OPS bridge (runner 1.2.0-ops)\""
+                },
+    "app":  "user",
+    "topic":  "chat"
+}

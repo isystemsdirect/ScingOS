@@ -1,0 +1,15 @@
+﻿{
+    "ref":  null,
+    "id":  "f8ba9b1a99ff",
+    "kind":  "intent",
+    "ts":  "2026-02-01T22:22:20.7273545Z",
+    "policy":  {
+                   "plan_ack":  true
+               },
+    "v":  1,
+    "payload":  {
+                    "prompt":  "OP:STATUS OP:LIST OP:DIFF"
+                },
+    "app":  "user",
+    "topic":  "chat"
+}

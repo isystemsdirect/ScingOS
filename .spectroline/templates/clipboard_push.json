@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "ts": "2026-02-01T00:00:00.000Z",
+  "app": "spectrocap",
+  "kind": "intent",
+  "id": "__ID__",
+  "ref": null,
+  "topic": "clipboard_push",
+  "payload": {
+    "content": "__CLIPBOARD_TEXT__",
+    "mime": "text/plain",
+    "device": "__DEVICE__"
+  },
+  "policy": { "plan_ack": true }
+}

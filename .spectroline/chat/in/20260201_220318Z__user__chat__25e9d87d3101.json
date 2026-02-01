@@ -1,0 +1,15 @@
+﻿{
+    "ref":  null,
+    "id":  "25e9d87d3101",
+    "kind":  "intent",
+    "ts":  "2026-02-01T22:03:18.1374516Z",
+    "policy":  {
+                   "plan_ack":  true
+               },
+    "v":  1,
+    "payload":  {
+                    "prompt":  "Confirm connection: list your tools and perform file_write proof to ScingOS\\.tmp"
+                },
+    "app":  "user",
+    "topic":  "chat"
+}

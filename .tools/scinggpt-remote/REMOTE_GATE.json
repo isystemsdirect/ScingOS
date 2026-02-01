@@ -1,0 +1,19 @@
+{
+  "mode": "read_only",
+  "allowed_tools": [
+    "repo_list",
+    "git_status",
+    "git_diff",
+    "file_read",
+    "convo_get"
+  ],
+  "denied_tools": [
+    "file_write",
+    "git_add",
+    "git_commit",
+    "git_push",
+    "convo_append"
+  ],
+  "allowed_repo_root": "G\\\\GIT\\\\isystemsdirect\\\\ScingOS",
+  "notes": "Flip to write mode only after HTTPS auth is enforced."
+}

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SpectroLINE Packet",
+  "type": "object",
+  "required": ["v","ts","app","kind","id","ref","topic","payload","policy"],
+  "properties": {
+    "v": { "type": "integer", "minimum": 1 },
+    "ts": { "type": "string" },
+    "app": { "type": "string", "minLength": 1 },
+    "kind": { "type": "string", "enum": ["intent","result","ack","event","state"] },
+    "id": { "type": "string", "minLength": 6 },
+    "ref": { "type": ["string","null"] },
+    "topic": { "type": "string", "minLength": 2 },
+    "payload": { "type": "object" },
+    "policy": {
+      "type": "object",
+      "required": ["plan_ack"],
+      "properties": {
+        "plan_ack": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "scing-firebase-mcp",
   "description": "SCINGULAR MCP bridge for Firebase and Next.js analysis",
   "version": "1.0.0",
@@ -9,6 +9,13 @@
       "command": "node",
       "args": ["mcp/server.mjs"],
       "env": {}
+    },
+    {
+      "id": "ScingGPT-MCP",
+      "type": "stdio",
+      "command": "node",
+      "args": ["G:/GIT/isystemsdirect/scinggpt-mcp/dist/server.js"],
+      "env": { "NODE_OPTIONS": "--enable-source-maps" }
     }
   ],
   "tools": [
@@ -25,4 +32,5 @@
       }
     }
   ]
+}
 }

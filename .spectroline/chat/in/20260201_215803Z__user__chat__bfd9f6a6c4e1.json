@@ -1,0 +1,15 @@
+﻿{
+    "ref":  null,
+    "id":  "bfd9f6a6c4e1",
+    "kind":  "intent",
+    "ts":  "2026-02-01T21:58:03.6775714Z",
+    "policy":  {
+                   "plan_ack":  true
+               },
+    "v":  1,
+    "payload":  {
+                    "prompt":  "Say hello and list available tools"
+                },
+    "app":  "user",
+    "topic":  "chat"
+}
