@@ -22,3 +22,8 @@ This matrix SHALL map every SCPSC normative requirement to at least one test met
 - .evidence/envelope/envelope.conformance.report.json
 - .evidence/envelope/envelope.conformance.report.txt
 - .evidence/envelope/*.evidence.json
+
+## LARI Evidence Artifacts (Generated)
+- .evidence/lari/lari.intent.conformance.report.json
+- .evidence/lari/lari.intent.conformance.report.txt
+- .evidence/lari/*.evidence.json

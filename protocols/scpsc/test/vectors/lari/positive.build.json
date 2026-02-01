@@ -1,0 +1,9 @@
+{
+  "lari_version": "1.0",
+  "intent_class": "build",
+  "intent_payload": {
+    "summary": "Run unit tests and build",
+    "commands": ["npm ci", "npm test", "npm run build"],
+    "fail_fast": true
+  }
+}

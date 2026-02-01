@@ -1,0 +1,8 @@
+{
+  "lari_version": "1.0",
+  "intent_class": "govern",
+  "intent_payload": {
+    "summary": "MUST_FAIL invalid directive",
+    "directive": "SELF_DESTRUCT"
+  }
+}

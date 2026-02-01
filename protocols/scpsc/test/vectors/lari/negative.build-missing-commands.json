@@ -1,0 +1,7 @@
+{
+  "lari_version": "1.0",
+  "intent_class": "build",
+  "intent_payload": {
+    "summary": "MUST_FAIL missing commands"
+  }
+}

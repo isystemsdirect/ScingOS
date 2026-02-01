@@ -1,0 +1,9 @@
+{
+  "lari_version": "1.0",
+  "intent_class": "observe",
+  "intent_payload": {
+    "summary": "Subscribe to build + governance channels",
+    "channels": ["telemetry:build","gov:decisions"],
+    "duration_s": 120
+  }
+}

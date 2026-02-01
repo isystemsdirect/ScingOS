@@ -1,0 +1,9 @@
+{
+  "lari_version": "1.0",
+  "intent_class": "govern",
+  "intent_payload": {
+    "summary": "Lock down endpoint due to scope violation",
+    "directive": "LOCKDOWN",
+    "reason": "policy_violation_detected"
+  }
+}

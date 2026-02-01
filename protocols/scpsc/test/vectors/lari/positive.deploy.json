@@ -1,0 +1,10 @@
+{
+  "lari_version": "1.0",
+  "intent_class": "deploy",
+  "intent_payload": {
+    "summary": "Deploy artifact to staging",
+    "environment": "staging",
+    "artifact_ref": "artifact:scpsc@0.0.1",
+    "rollback_plan_ref": "plan:rollback-staging-v1"
+  }
+}
