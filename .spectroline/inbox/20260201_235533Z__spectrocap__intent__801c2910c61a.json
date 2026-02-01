@@ -1,0 +1,17 @@
+﻿{
+    "v":  1,
+    "ts":  "2026-02-01T23:55:33.8070171Z",
+    "app":  "spectrocap",
+    "kind":  "intent",
+    "id":  "801c2910c61a",
+    "ref":  null,
+    "topic":  "clipboard_push",
+    "payload":  {
+                    "content":  "HELLO",
+                    "mime":  "text/plain",
+                    "device":  "note20u"
+                },
+    "policy":  {
+                   "plan_ack":  true
+               }
+}

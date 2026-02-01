@@ -3,7 +3,8 @@ param(
   [Parameter(Mandatory=$true)][string]$App,
   [Parameter(Mandatory=$false)][string]$Kind = "intent",
   [Parameter(Mandatory=$false)][string]$Ref = "",
-  [Parameter(Mandatory=$false)][string]$PayloadJson = "{}"
+  [Parameter(Mandatory=$false)][string]$PayloadJson = "{}",
+  [Parameter(Mandatory=$false)][string]$PayloadFile = ""
 )
 
 $ErrorActionPreference="Stop"
@@ -16,10 +17,16 @@ function New-Id { ([guid]::NewGuid().ToString("N")).Substring(0,12) }
 function Stamp { (Get-Date).ToUniversalTime().ToString("yyyyMMdd_HHmmssZ") }
 
 $id = New-Id
-$tsIso = (Get-Date -AsUTC -Format o)
+$tsIso = (Get-Date).ToUniversalTime().ToString("o")
 $refVal = if ([string]::IsNullOrWhiteSpace($Ref)) { $null } else { $Ref }
 
-try { $payloadObj = $PayloadJson | ConvertFrom-Json } catch { throw "PayloadJson must be valid JSON." }
+try {
+  if (-not [string]::IsNullOrWhiteSpace($PayloadFile) -and (Test-Path $PayloadFile)) {
+    $payloadObj = Get-Content $PayloadFile -Raw | ConvertFrom-Json
+  } else {
+    $payloadObj = $PayloadJson | ConvertFrom-Json
+  }
+} catch { throw "PayloadJson must be valid JSON or provide -PayloadFile" }
 
 $pkt = [ordered]@{
   v = 1

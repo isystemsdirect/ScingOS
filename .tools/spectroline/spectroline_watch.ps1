@@ -38,7 +38,7 @@ while ($true) {
       if ($kind -eq "intent") {
         $ack = [ordered]@{
           v=1
-          ts=(Get-Date -AsUTC -Format o)
+          ts=((Get-Date).ToUniversalTime().ToString("o"))
           app="spectroline-watcher"
           kind="ack"
           id=("$id-out")
@@ -56,14 +56,14 @@ while ($true) {
         ($ack | ConvertTo-Json -Depth 20) | Set-Content -Path $outFile -Encoding UTF8
 
         $audit = Join-Path $LOGS "watcher.audit.jsonl"
-        ("{0}`t{1}`t{2}`t{3}" -f (Get-Date -AsUTC -Format o), $id, $topic, $outFile) | Add-Content -Path $audit -Encoding UTF8
+        ("{0}`t{1}`t{2}`t{3}" -f ((Get-Date).ToUniversalTime().ToString("o")), $id, $topic, $outFile) | Add-Content -Path $audit -Encoding UTF8
       }
 
       $seen += $f.Name
       Save-Seen
     } catch {
       $audit = Join-Path $LOGS "watcher.errors.jsonl"
-      ("{0}`t{1}`t{2}" -f (Get-Date -AsUTC -Format o), $f.Name, $_.Exception.Message) | Add-Content -Path $audit -Encoding UTF8
+      ("{0}`t{1}`t{2}" -f ((Get-Date).ToUniversalTime().ToString("o")), $f.Name, $_.Exception.Message) | Add-Content -Path $audit -Encoding UTF8
       $seen += $f.Name
       Save-Seen
     }
