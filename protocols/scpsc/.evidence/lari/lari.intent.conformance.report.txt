@@ -1,0 +1,39 @@
+SCPSC LARI Intent Conformance Report
+Generated: 2026-02-01T00:56:32.912Z
+Schema: spec/schemas/lari.intent.schema.json
+Vectors: 4
+
+FAIL  test/vectors/lari/negative.modify-missing-rollback.json
+  - /intent_payload: must have required property 'mode'
+  - /intent_payload: must NOT have additional properties
+  - /intent_payload: must have required property 'commands'
+  - /intent_payload: must NOT have additional properties
+  - /intent_payload: must NOT have additional properties
+  - /intent_payload: must have required property 'rollback_required'
+  - /intent_payload: must have required property 'environment'
+  - /intent_payload: must have required property 'artifact_ref'
+  - /intent_payload: must NOT have additional properties
+  - /intent_payload: must NOT have additional properties
+  - /intent_payload: must have required property 'channels'
+  - /intent_payload: must NOT have additional properties
+  - /intent_payload: must NOT have additional properties
+  - /intent_payload: must have required property 'directive'
+  - /intent_payload: must NOT have additional properties
+  - /intent_payload: must NOT have additional properties
+  - /intent_payload: must match exactly one schema in oneOf
+FAIL  test/vectors/lari/negative.unknown-intent-class.json
+  - /intent_class: must be equal to one of the allowed values
+  - /intent_payload: must have required property 'mode'
+  - /intent_payload: must have required property 'commands'
+  - /intent_payload: must have required property 'changeset_id'
+  - /intent_payload: must have required property 'rollback_required'
+  - /intent_payload: must have required property 'targets'
+  - /intent_payload: must have required property 'environment'
+  - /intent_payload: must have required property 'artifact_ref'
+  - /intent_payload: must have required property 'channels'
+  - /intent_payload: must have required property 'directive'
+  - /intent_payload: must match exactly one schema in oneOf
+PASS  test/vectors/lari/positive.analyze.json
+PASS  test/vectors/lari/positive.modify.json
+
+Summary: 2 pass / 2 fail / 4 total

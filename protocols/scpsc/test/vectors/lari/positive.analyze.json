@@ -1,0 +1,9 @@
+{
+  "lari_version": "1.0",
+  "intent_class": "analyze",
+  "intent_payload": {
+    "summary": "Review build logs for errors",
+    "mode": "log_review",
+    "targets": ["logs:build"]
+  }
+}

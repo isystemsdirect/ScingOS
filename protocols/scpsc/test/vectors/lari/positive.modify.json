@@ -1,0 +1,10 @@
+{
+  "lari_version": "1.0",
+  "intent_class": "modify",
+  "intent_payload": {
+    "summary": "Apply bounded edits to SCPSC RFC files",
+    "changeset_id": "chg_00000001",
+    "rollback_required": true,
+    "targets": ["protocols/scpsc/spec/rfc"]
+  }
+}

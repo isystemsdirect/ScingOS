@@ -1,0 +1,7 @@
+{
+  "lari_version": "1.0",
+  "intent_class": "unknown_new_class",
+  "intent_payload": {
+    "summary": "MUST_FAIL unknown class"
+  }
+}

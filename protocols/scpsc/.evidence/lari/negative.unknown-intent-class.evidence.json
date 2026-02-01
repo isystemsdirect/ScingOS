@@ -1,0 +1,112 @@
+{
+  "vector": "test/vectors/lari/negative.unknown-intent-class.json",
+  "pass": false,
+  "errors": [
+    {
+      "instancePath": "/intent_class",
+      "schemaPath": "#/properties/intent_class/enum",
+      "keyword": "enum",
+      "message": "must be equal to one of the allowed values",
+      "params": {
+        "allowedValues": [
+          "analyze",
+          "build",
+          "modify",
+          "deploy",
+          "observe",
+          "govern"
+        ]
+      }
+    },
+    {
+      "instancePath": "/intent_payload",
+      "schemaPath": "#/$defs/analyzePayload/required",
+      "keyword": "required",
+      "message": "must have required property 'mode'",
+      "params": {
+        "missingProperty": "mode"
+      }
+    },
+    {
+      "instancePath": "/intent_payload",
+      "schemaPath": "#/$defs/buildPayload/required",
+      "keyword": "required",
+      "message": "must have required property 'commands'",
+      "params": {
+        "missingProperty": "commands"
+      }
+    },
+    {
+      "instancePath": "/intent_payload",
+      "schemaPath": "#/$defs/modifyPayload/required",
+      "keyword": "required",
+      "message": "must have required property 'changeset_id'",
+      "params": {
+        "missingProperty": "changeset_id"
+      }
+    },
+    {
+      "instancePath": "/intent_payload",
+      "schemaPath": "#/$defs/modifyPayload/required",
+      "keyword": "required",
+      "message": "must have required property 'rollback_required'",
+      "params": {
+        "missingProperty": "rollback_required"
+      }
+    },
+    {
+      "instancePath": "/intent_payload",
+      "schemaPath": "#/$defs/modifyPayload/required",
+      "keyword": "required",
+      "message": "must have required property 'targets'",
+      "params": {
+        "missingProperty": "targets"
+      }
+    },
+    {
+      "instancePath": "/intent_payload",
+      "schemaPath": "#/$defs/deployPayload/required",
+      "keyword": "required",
+      "message": "must have required property 'environment'",
+      "params": {
+        "missingProperty": "environment"
+      }
+    },
+    {
+      "instancePath": "/intent_payload",
+      "schemaPath": "#/$defs/deployPayload/required",
+      "keyword": "required",
+      "message": "must have required property 'artifact_ref'",
+      "params": {
+        "missingProperty": "artifact_ref"
+      }
+    },
+    {
+      "instancePath": "/intent_payload",
+      "schemaPath": "#/$defs/observePayload/required",
+      "keyword": "required",
+      "message": "must have required property 'channels'",
+      "params": {
+        "missingProperty": "channels"
+      }
+    },
+    {
+      "instancePath": "/intent_payload",
+      "schemaPath": "#/$defs/governPayload/required",
+      "keyword": "required",
+      "message": "must have required property 'directive'",
+      "params": {
+        "missingProperty": "directive"
+      }
+    },
+    {
+      "instancePath": "/intent_payload",
+      "schemaPath": "#/properties/intent_payload/oneOf",
+      "keyword": "oneOf",
+      "message": "must match exactly one schema in oneOf",
+      "params": {
+        "passingSchemas": null
+      }
+    }
+  ]
+}

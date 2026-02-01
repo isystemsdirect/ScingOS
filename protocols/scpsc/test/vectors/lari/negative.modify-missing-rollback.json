@@ -1,0 +1,9 @@
+{
+  "lari_version": "1.0",
+  "intent_class": "modify",
+  "intent_payload": {
+    "summary": "MUST_FAIL missing rollback_required",
+    "changeset_id": "chg_00000002",
+    "targets": ["protocols/scpsc"]
+  }
+}

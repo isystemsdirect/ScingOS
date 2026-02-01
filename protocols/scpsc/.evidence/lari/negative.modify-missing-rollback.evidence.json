@@ -1,0 +1,159 @@
+{
+  "vector": "test/vectors/lari/negative.modify-missing-rollback.json",
+  "pass": false,
+  "errors": [
+    {
+      "instancePath": "/intent_payload",
+      "schemaPath": "#/$defs/analyzePayload/required",
+      "keyword": "required",
+      "message": "must have required property 'mode'",
+      "params": {
+        "missingProperty": "mode"
+      }
+    },
+    {
+      "instancePath": "/intent_payload",
+      "schemaPath": "#/$defs/analyzePayload/additionalProperties",
+      "keyword": "additionalProperties",
+      "message": "must NOT have additional properties",
+      "params": {
+        "additionalProperty": "changeset_id"
+      }
+    },
+    {
+      "instancePath": "/intent_payload",
+      "schemaPath": "#/$defs/buildPayload/required",
+      "keyword": "required",
+      "message": "must have required property 'commands'",
+      "params": {
+        "missingProperty": "commands"
+      }
+    },
+    {
+      "instancePath": "/intent_payload",
+      "schemaPath": "#/$defs/buildPayload/additionalProperties",
+      "keyword": "additionalProperties",
+      "message": "must NOT have additional properties",
+      "params": {
+        "additionalProperty": "changeset_id"
+      }
+    },
+    {
+      "instancePath": "/intent_payload",
+      "schemaPath": "#/$defs/buildPayload/additionalProperties",
+      "keyword": "additionalProperties",
+      "message": "must NOT have additional properties",
+      "params": {
+        "additionalProperty": "targets"
+      }
+    },
+    {
+      "instancePath": "/intent_payload",
+      "schemaPath": "#/$defs/modifyPayload/required",
+      "keyword": "required",
+      "message": "must have required property 'rollback_required'",
+      "params": {
+        "missingProperty": "rollback_required"
+      }
+    },
+    {
+      "instancePath": "/intent_payload",
+      "schemaPath": "#/$defs/deployPayload/required",
+      "keyword": "required",
+      "message": "must have required property 'environment'",
+      "params": {
+        "missingProperty": "environment"
+      }
+    },
+    {
+      "instancePath": "/intent_payload",
+      "schemaPath": "#/$defs/deployPayload/required",
+      "keyword": "required",
+      "message": "must have required property 'artifact_ref'",
+      "params": {
+        "missingProperty": "artifact_ref"
+      }
+    },
+    {
+      "instancePath": "/intent_payload",
+      "schemaPath": "#/$defs/deployPayload/additionalProperties",
+      "keyword": "additionalProperties",
+      "message": "must NOT have additional properties",
+      "params": {
+        "additionalProperty": "changeset_id"
+      }
+    },
+    {
+      "instancePath": "/intent_payload",
+      "schemaPath": "#/$defs/deployPayload/additionalProperties",
+      "keyword": "additionalProperties",
+      "message": "must NOT have additional properties",
+      "params": {
+        "additionalProperty": "targets"
+      }
+    },
+    {
+      "instancePath": "/intent_payload",
+      "schemaPath": "#/$defs/observePayload/required",
+      "keyword": "required",
+      "message": "must have required property 'channels'",
+      "params": {
+        "missingProperty": "channels"
+      }
+    },
+    {
+      "instancePath": "/intent_payload",
+      "schemaPath": "#/$defs/observePayload/additionalProperties",
+      "keyword": "additionalProperties",
+      "message": "must NOT have additional properties",
+      "params": {
+        "additionalProperty": "changeset_id"
+      }
+    },
+    {
+      "instancePath": "/intent_payload",
+      "schemaPath": "#/$defs/observePayload/additionalProperties",
+      "keyword": "additionalProperties",
+      "message": "must NOT have additional properties",
+      "params": {
+        "additionalProperty": "targets"
+      }
+    },
+    {
+      "instancePath": "/intent_payload",
+      "schemaPath": "#/$defs/governPayload/required",
+      "keyword": "required",
+      "message": "must have required property 'directive'",
+      "params": {
+        "missingProperty": "directive"
+      }
+    },
+    {
+      "instancePath": "/intent_payload",
+      "schemaPath": "#/$defs/governPayload/additionalProperties",
+      "keyword": "additionalProperties",
+      "message": "must NOT have additional properties",
+      "params": {
+        "additionalProperty": "changeset_id"
+      }
+    },
+    {
+      "instancePath": "/intent_payload",
+      "schemaPath": "#/$defs/governPayload/additionalProperties",
+      "keyword": "additionalProperties",
+      "message": "must NOT have additional properties",
+      "params": {
+        "additionalProperty": "targets"
+      }
+    },
+    {
+      "instancePath": "/intent_payload",
+      "schemaPath": "#/properties/intent_payload/oneOf",
+      "keyword": "oneOf",
+      "message": "must match exactly one schema in oneOf",
+      "params": {
+        "passingSchemas": null
+      }
+    }
+  ]
+}

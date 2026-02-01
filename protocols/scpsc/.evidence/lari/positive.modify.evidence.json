@@ -1,0 +1,5 @@
+{
+  "vector": "test/vectors/lari/positive.modify.json",
+  "pass": true,
+  "errors": []
+}
