@@ -1,25 +1,9 @@
 {
-  "vector": "test/vectors/lari/negative.unknown-intent-class.json",
+  "vector": "test/vectors/lari/negative.govern-invalid-directive.json",
   "expected": "fail",
   "pass": false,
   "match": true,
   "errors": [
-    {
-      "instancePath": "/intent_class",
-      "schemaPath": "#/properties/intent_class/enum",
-      "keyword": "enum",
-      "message": "must be equal to one of the allowed values",
-      "params": {
-        "allowedValues": [
-          "analyze",
-          "build",
-          "modify",
-          "deploy",
-          "observe",
-          "govern"
-        ]
-      }
-    },
     {
       "instancePath": "/intent_payload",
       "schemaPath": "#/$defs/analyzePayload/required",
@@ -31,11 +15,29 @@
     },
     {
       "instancePath": "/intent_payload",
+      "schemaPath": "#/$defs/analyzePayload/additionalProperties",
+      "keyword": "additionalProperties",
+      "message": "must NOT have additional properties",
+      "params": {
+        "additionalProperty": "directive"
+      }
+    },
+    {
+      "instancePath": "/intent_payload",
       "schemaPath": "#/$defs/buildPayload/required",
       "keyword": "required",
       "message": "must have required property 'commands'",
       "params": {
         "missingProperty": "commands"
+      }
+    },
+    {
+      "instancePath": "/intent_payload",
+      "schemaPath": "#/$defs/buildPayload/additionalProperties",
+      "keyword": "additionalProperties",
+      "message": "must NOT have additional properties",
+      "params": {
+        "additionalProperty": "directive"
       }
     },
     {
@@ -67,6 +69,15 @@
     },
     {
       "instancePath": "/intent_payload",
+      "schemaPath": "#/$defs/modifyPayload/additionalProperties",
+      "keyword": "additionalProperties",
+      "message": "must NOT have additional properties",
+      "params": {
+        "additionalProperty": "directive"
+      }
+    },
+    {
+      "instancePath": "/intent_payload",
       "schemaPath": "#/$defs/deployPayload/required",
       "keyword": "required",
       "message": "must have required property 'environment'",
@@ -85,6 +96,15 @@
     },
     {
       "instancePath": "/intent_payload",
+      "schemaPath": "#/$defs/deployPayload/additionalProperties",
+      "keyword": "additionalProperties",
+      "message": "must NOT have additional properties",
+      "params": {
+        "additionalProperty": "directive"
+      }
+    },
+    {
+      "instancePath": "/intent_payload",
       "schemaPath": "#/$defs/observePayload/required",
       "keyword": "required",
       "message": "must have required property 'channels'",
@@ -94,11 +114,24 @@
     },
     {
       "instancePath": "/intent_payload",
-      "schemaPath": "#/$defs/governPayload/required",
-      "keyword": "required",
-      "message": "must have required property 'directive'",
+      "schemaPath": "#/$defs/observePayload/additionalProperties",
+      "keyword": "additionalProperties",
+      "message": "must NOT have additional properties",
       "params": {
-        "missingProperty": "directive"
+        "additionalProperty": "directive"
+      }
+    },
+    {
+      "instancePath": "/intent_payload/directive",
+      "schemaPath": "#/$defs/governPayload/properties/directive/enum",
+      "keyword": "enum",
+      "message": "must be equal to one of the allowed values",
+      "params": {
+        "allowedValues": [
+          "LOCKDOWN",
+          "REVOKE_DIA",
+          "REQUIRE_APPROVAL"
+        ]
       }
     },
     {

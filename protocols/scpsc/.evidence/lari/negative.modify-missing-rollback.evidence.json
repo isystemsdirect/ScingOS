@@ -1,6 +1,8 @@
 {
   "vector": "test/vectors/lari/negative.modify-missing-rollback.json",
+  "expected": "fail",
   "pass": false,
+  "match": true,
   "errors": [
     {
       "instancePath": "/intent_payload",

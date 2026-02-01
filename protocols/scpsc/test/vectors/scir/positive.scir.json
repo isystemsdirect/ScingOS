@@ -1,0 +1,11 @@
+{
+  "scir_version": "1.0",
+  "authority": {
+    "principal": "user:teon",
+    "scope": ["scpsc"],
+    "expires_at": "2030-01-01T00:00:00Z"
+  },
+  "governance": { "decision": "allow", "risk": "low" },
+  "contract": { "intent_class": "analyze", "summary": "Read-only analysis" },
+  "evidence": { "emit": ["decision_trace"] }
+}

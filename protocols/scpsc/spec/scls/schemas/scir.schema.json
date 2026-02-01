@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "scingular://schema/scir.json",
+  "type": "object",
+  "required": ["scir_version","authority","governance","contract","evidence"],
+  "properties": {
+    "scir_version": { "type": "string" },
+
+    "authority": {
+      "type": "object",
+      "required": ["principal","scope","expires_at"],
+      "properties": {
+        "principal": { "type": "string" },
+        "scope": { "type": "array", "items": { "type": "string" } },
+        "expires_at": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
+    },
+
+    "governance": {
+      "type": "object",
+      "required": ["decision","risk"],
+      "properties": {
+        "decision": { "enum": ["allow","deny","condition","lockdown"] },
+        "risk": { "enum": ["low","medium","high"] }
+      },
+      "additionalProperties": false
+    },
+
+    "contract": {
+      "type": "object",
+      "required": ["intent_class","summary"],
+      "properties": {
+        "intent_class": { "type": "string" },
+        "summary": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+
+    "evidence": {
+      "type": "object",
+      "required": ["emit"],
+      "properties": {
+        "emit": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

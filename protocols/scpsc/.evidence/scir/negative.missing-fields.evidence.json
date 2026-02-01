@@ -1,0 +1,28 @@
+{
+  "vector": "test/vectors/scir/negative.missing-fields.json",
+  "expected": "fail",
+  "pass": false,
+  "match": true,
+  "errors": [
+    {
+      "instancePath": "",
+      "message": "must have required property 'governance'"
+    },
+    {
+      "instancePath": "",
+      "message": "must have required property 'contract'"
+    },
+    {
+      "instancePath": "",
+      "message": "must have required property 'evidence'"
+    },
+    {
+      "instancePath": "/authority",
+      "message": "must have required property 'scope'"
+    },
+    {
+      "instancePath": "/authority",
+      "message": "must have required property 'expires_at'"
+    }
+  ]
+}

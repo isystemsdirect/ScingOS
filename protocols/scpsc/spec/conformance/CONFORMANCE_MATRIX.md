@@ -19,11 +19,9 @@ This matrix SHALL map every SCPSC normative requirement to at least one test met
 | SCPSC-AUD-001 | Every executable actuation SHALL emit audit evidence | RFC review | RFC section 9 |  |
 
 ## Evidence Artifacts (Generated)
-- .evidence/envelope/envelope.conformance.report.json
-- .evidence/envelope/envelope.conformance.report.txt
-- .evidence/envelope/*.evidence.json
 
-## LARI Evidence Artifacts (Generated)
-- .evidence/lari/lari.intent.conformance.report.json
-- .evidence/lari/lari.intent.conformance.report.txt
+## SCIR Evidence (Generated)
+ - .evidence/scir/*.evidence.json
+ - spec/scls/schemas/scir.schema.json
+ - SGLS-RFC-0001
 - .evidence/lari/*.evidence.json

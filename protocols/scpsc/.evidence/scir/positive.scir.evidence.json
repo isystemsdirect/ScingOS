@@ -1,5 +1,5 @@
 {
-  "vector": "test/vectors/lari/positive.modify.json",
+  "vector": "test/vectors/scir/positive.scir.json",
   "expected": "pass",
   "pass": true,
   "match": true,

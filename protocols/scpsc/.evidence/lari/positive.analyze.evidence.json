@@ -1,5 +1,7 @@
 {
   "vector": "test/vectors/lari/positive.analyze.json",
+  "expected": "pass",
   "pass": true,
+  "match": true,
   "errors": []
 }
