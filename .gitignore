@@ -149,3 +149,8 @@ build_logs/
 *.rmeta
 *.pdb
 *.exe
+
+# --- SPECTROSpectroLINE™ AI lane: runtime artifacts (keep auditable locally, not in git) ---
+.spectroline/ai/outbox/
+.spectroline/ai/logs/
+.spectroline/ai/state/

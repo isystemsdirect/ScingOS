@@ -1,0 +1,19 @@
+{
+  "v": 1,
+  "ts": "1970-01-01T00:00:00Z",
+  "app": "scinggpt",
+  "kind": "intent",
+  "id": "REPLACE_ID",
+  "ref": null,
+  "topic": "ai_query",
+  "payload": {
+    "mode": "fanout",
+    "providers": [],
+    "task": {
+      "title": "Contradiction Test",
+      "prompt": "Provide the correct Windows steps to allow a PowerShell HttpListener to serve http://127.0.0.1:8789/health reliably. Include URLACL + firewall notes. Keep it short but exact.",
+      "constraints": { "citations": true, "timeout_sec": 90 }
+    }
+  },
+  "policy": { "plan_ack": true }
+}
