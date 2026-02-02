@@ -1,0 +1,5 @@
+{
+  "intent": "Compare MCP security priorities across compute, research, and audit lanes.",
+  "federate": true,
+  "providers_allowlist": ["openai","perplexity","anthropic"]
+}

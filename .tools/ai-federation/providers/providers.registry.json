@@ -5,23 +5,23 @@
     {
       "id": "openai",
       "enabled": true,
-      "roles": ["compute", "code", "structural-reasoning"],
+      "roles": ["compute", "code", "general"],
       "priority": 10,
       "purpose_charter": "Primary compute/coding substrate. Use for calculations, structured reasoning, schema transforms, refactors, deterministic generation.",
       "env_keys": ["OPENAI_API_KEY"]
     },
     {
       "id": "perplexity",
-      "enabled": false,
+      "enabled": true,
       "roles": ["research", "citation", "documental"],
-      "priority": 7,
+      "priority": 8,
       "purpose_charter": "Documental research and source-grounded synthesis. Use for web-backed fact finding, citations, current-event research, and document-style reports.",
       "env_keys": ["PERPLEXITY_API_KEY"]
     },
     {
       "id": "anthropic",
-      "enabled": false,
-      "roles": ["writing", "analysis", "narrative"],
+      "enabled": true,
+      "roles": ["audit", "policy", "safety", "invariants"],
       "priority": 7,
       "purpose_charter": "Longform writing and editorial refinement. Use for tone/voice, clarity, stakeholder prose, and narrative structuring.",
       "env_keys": ["ANTHROPIC_API_KEY"]

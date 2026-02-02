@@ -1,0 +1,4 @@
+{
+  "intent": "Normalize dataset statistics and compute integrity checksum.",
+  "target_role": "compute"
+}

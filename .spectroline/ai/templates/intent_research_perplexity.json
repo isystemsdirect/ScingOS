@@ -1,0 +1,5 @@
+{
+  "intent": "Summarize MCP security hardening best practices with citations.",
+  "target_role": "research",
+  "citations": true
+}
