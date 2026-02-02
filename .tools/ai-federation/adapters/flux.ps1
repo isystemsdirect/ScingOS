@@ -1,4 +1,15 @@
-param([Parameter(Mandatory=$true)][string]$Prompt)
+param(
+	[Parameter(Mandatory=$true)][string]$Prompt,
+	[string]$Model = "",
+	[int]$TimeoutSec = 60,
+	[switch]$WantCitations
+)
+
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
-throw 'FLUX adapter is not configured. Provide FLUX_API_KEY and endpoint before enabling.'
+
+Write-Host "[flux] RESERVED / DISABLED — adapter placeholder." -ForegroundColor Yellow
+Write-Host "Roles: image, photorealism, materials" -ForegroundColor DarkGray
+Write-Host "Required env key(s): BFL_API_KEY, FLUX_API_KEY" -ForegroundColor DarkGray
+
+throw "flux is disabled or unconfigured. Add keys, then enable in registry."

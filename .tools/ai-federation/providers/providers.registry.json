@@ -40,7 +40,7 @@
       "roles": ["image", "photorealism", "materials"],
       "priority": 6,
       "purpose_charter": "Image generation and photorealism-focused tasks. Use for visual synthesis and material studies when approved.",
-      "env_keys": ["FLUX_API_KEY"]
+      "env_keys": ["BFL_API_KEY", "FLUX_API_KEY"]
     },
     {
       "id": "runway",
