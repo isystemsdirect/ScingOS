@@ -156,7 +156,6 @@ build_logs/
 .spectroline/ai/state/
 .spectroline/ai/inbox/
 
-# Allow VS Code tasks while keeping .vscode ignored
-!.vscode/
-.vscode/*
+# VS Code (track tasks only)
+.vscode/
 !.vscode/tasks.json
