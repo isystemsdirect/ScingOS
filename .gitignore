@@ -149,3 +149,14 @@ build_logs/
 *.rmeta
 *.pdb
 *.exe
+
+# --- SPECTROSpectroLINE™ AI lane: runtime artifacts (keep auditable locally, not in git) ---
+.spectroline/ai/outbox/
+.spectroline/ai/logs/
+.spectroline/ai/state/
+.spectroline/ai/inbox/
+
+# Allow VS Code tasks while keeping .vscode ignored
+!.vscode/
+.vscode/*
+!.vscode/tasks.json
