@@ -1,3 +1,87 @@
+# ENV_LOCAL_LOADER + PROVIDER_GOVERNANCE
+function Import-DotEnvLocal {
+  param([string]$Path)
+  if(-not (Test-Path $Path)){ return }
+  Get-Content $Path | ForEach-Object {
+    $line = $_
+    if([string]::IsNullOrWhiteSpace($line)) { return }
+    $t = $line.Trim()
+    if($t.StartsWith('#')) { return }
+    if($t -notmatch '=') { return }
+    $k, $v = $t.Split('=', 2)
+    $k = $k.Trim()
+    $v = $v.Trim()
+    if([string]::IsNullOrWhiteSpace($k)) { return }
+    if( ($v.StartsWith('"') -and $v.EndsWith('"')) -or ($v.StartsWith("'") -and $v.EndsWith("'")) ){
+      $v = $v.Substring(1, $v.Length-2)
+    }
+    if(-not [string]::IsNullOrWhiteSpace($v)){
+      [Environment]::SetEnvironmentVariable($k, $v, 'Process')
+    }
+  }
+}
+
+function Read-ProviderRegistry {
+  param([string]$Path)
+  if(-not (Test-Path $Path)){ throw "Missing provider registry: $Path" }
+  return (Get-Content $Path -Raw | ConvertFrom-Json)
+}
+
+function Get-EnabledProviders {
+  param($Registry)
+  return @($Registry.providers | Where-Object { $_.enabled -eq $true })
+}
+
+function Resolve-TargetProviders {
+  param(
+    [object]$Registry,
+    [object]$Intent
+  )
+  $enabled = Get-EnabledProviders -Registry $Registry
+
+  # Intent allowlist intersection
+  if($Intent.providers_allowlist -and $Intent.providers_allowlist.Count -gt 0){
+    $allow = @($Intent.providers_allowlist | ForEach-Object { ("{0}" -f $_).ToLower() })
+    return @($enabled | Where-Object { $allow -contains ($_.id.ToLower()) })
+  }
+
+  # Explicit target provider (must be enabled)
+  if($Intent.target_provider){
+    $pid = ($Intent.target_provider.ToString()).ToLower()
+    return @($enabled | Where-Object { ($_.id.ToLower()) -eq $pid })
+  }
+
+  # Federation: use all enabled
+  if($Intent.federate -eq $true){
+    return @($enabled)
+  }
+
+  # Role routing: default role compute
+  $role = "compute"
+  if($Intent.target_role){ $role = $Intent.target_role.ToString() }
+  $cands = @($enabled | Where-Object { $_.roles -contains $role })
+  if($cands.Count -gt 0){
+    return @($cands | Sort-Object priority -Descending | Select-Object -First 1)
+  }
+
+  # Fallback: registry default role, else first enabled
+  $defRole = $Registry.default_role
+  if($defRole){
+    $cands2 = @($enabled | Where-Object { $_.roles -contains $defRole })
+    if($cands2.Count -gt 0){
+      return @($cands2 | Sort-Object priority -Descending | Select-Object -First 1)
+    }
+  }
+  return @($enabled | Select-Object -First 1)
+}
+
+# Load .env.local adjacent to .tools/ai-federation
+Import-DotEnvLocal -Path (Join-Path (Split-Path -Parent $PSScriptRoot) ".env.local")
+
+# Load provider registry
+$PROVIDER_REGISTRY_PATH = Join-Path (Split-Path -Parent $PSScriptRoot) "providers\providers.registry.json"
+$PROVIDER_REGISTRY = Read-ProviderRegistry -Path $PROVIDER_REGISTRY_PATH
+
 param(
   [Parameter(Mandatory=$true)][string]$Prompt,
   [string[]]$Providers = @("perplexity"),
@@ -79,3 +163,10 @@ $packet = [ordered]@{
 
 ($packet | ConvertTo-Json -Depth 20) | Set-Content -Path $outFile -Encoding UTF8
 Write-Host "WROTE: $outFile"
+
+# PROVIDER_SELECTION_SHIM
+function Select-Providers-ForIntent {
+  param([object]$Intent)
+  $sel = Resolve-TargetProviders -Registry $PROVIDER_REGISTRY -Intent $Intent
+  return @($sel)
+}

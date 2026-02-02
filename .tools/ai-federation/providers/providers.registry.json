@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "default_role": "compute",
+  "providers": [
+    {
+      "id": "openai",
+      "enabled": true,
+      "roles": ["compute", "code", "structural-reasoning"],
+      "priority": 10,
+      "purpose_charter": "Primary compute/coding substrate. Use for calculations, structured reasoning, schema transforms, refactors, deterministic generation.",
+      "env_keys": ["OPENAI_API_KEY"]
+    },
+    {
+      "id": "perplexity",
+      "enabled": false,
+      "roles": ["research", "citation", "documental"],
+      "priority": 7,
+      "purpose_charter": "Documental research and source-grounded synthesis. Use for web-backed fact finding, citations, current-event research, and document-style reports.",
+      "env_keys": ["PERPLEXITY_API_KEY"]
+    },
+    {
+      "id": "anthropic",
+      "enabled": false,
+      "roles": ["writing", "analysis", "narrative"],
+      "priority": 7,
+      "purpose_charter": "Longform writing and editorial refinement. Use for tone/voice, clarity, stakeholder prose, and narrative structuring.",
+      "env_keys": ["ANTHROPIC_API_KEY"]
+    },
+    {
+      "id": "google",
+      "enabled": false,
+      "roles": ["vision", "multimodal", "docs"],
+      "priority": 6,
+      "purpose_charter": "Multimodal and document understanding lane. Use for image/video analysis and mixed-format interpretation when required.",
+      "env_keys": ["GOOGLE_API_KEY"]
+    }
+  ]
+}
