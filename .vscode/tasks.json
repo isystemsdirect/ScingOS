@@ -1,0 +1,176 @@
+{
+    "version":  "2.0.0",
+    "tasks":  [
+                  {
+                      "label":  "SpectroLINE: Start Bridge (HTTP 8789)",
+                      "problemMatcher":  [
+
+                                         ],
+                      "command":  "powershell",
+                      "type":  "shell",
+                      "args":  [
+                                   "-ExecutionPolicy",
+                                   "Bypass",
+                                   "-File",
+                                   ".tools\\spectroline\\spectroline_bridge_http.ps1",
+                                   "-Port",
+                                   "8789"
+                               ],
+                      "options":  {
+                                      "cwd":  "${workspaceFolder}"
+                                  },
+                      "group":  {
+                                    "kind":  "build",
+                                    "isDefault":  false
+                                }
+                  },
+                  {
+                      "label":  "SpectroLINE: Start Watcher",
+                      "problemMatcher":  [
+
+                                         ],
+                      "command":  "powershell",
+                      "type":  "shell",
+                      "args":  [
+                                   "-ExecutionPolicy",
+                                   "Bypass",
+                                   "-File",
+                                   ".tools\\spectroline\\spectroline_watch.ps1"
+                               ],
+                      "options":  {
+                                      "cwd":  "${workspaceFolder}"
+                                  },
+                      "group":  {
+                                    "kind":  "build",
+                                    "isDefault":  false
+                                }
+                  },
+                  {
+                      "label": "AI Federation: Fanout (Perplexity)",
+                      "type": "shell",
+                      "command": "powershell",
+                      "args": [
+                          "-ExecutionPolicy","Bypass","-File",".tools\\ai-federation\\run\\ai_router.ps1",
+                          "-Mode","fanout","-Providers","perplexity",
+                          "-Prompt","Summarize MCP security best practices for gated proxies and repo-backed audit lanes.",
+                          "-Citations"
+                      ],
+                      "options": { "cwd": "${workspaceFolder}" },
+                      "problemMatcher": [],
+                      "group": { "kind": "test", "isDefault": false }
+                  },
+                  {
+                      "label": "AI Federation: Consensus (Perplexity)",
+                      "type": "shell",
+                      "command": "powershell",
+                      "args": [
+                          "-ExecutionPolicy","Bypass","-File",".tools\\ai-federation\\run\\ai_router.ps1",
+                          "-Mode","consensus","-Providers","perplexity",
+                          "-Prompt","Give 8 steps to harden a Windows local MCP server + optional remote proxy with auth. Provide citations if available.",
+                          "-Citations"
+                      ],
+                      "options": { "cwd": "${workspaceFolder}" },
+                      "problemMatcher": [],
+                      "group": { "kind": "test", "isDefault": false }
+                  },
+                  {
+                      "label":  "SpectroLINE: Daily Driver (spark + validate)",
+                      "problemMatcher":  [
+
+                                         ],
+                      "command":  "powershell",
+                      "type":  "shell",
+                      "args":  [
+                                   "-ExecutionPolicy",
+                                   "Bypass",
+                                   "-File",
+                                   ".tools\\spectroline\\spectroline_daily_driver.ps1",
+                                   "-ClipboardText",
+                                   "HELLO",
+                                   "-Device",
+                                   "note20u",
+                                   "-BridgePort",
+                                   "8789",
+                                   "-DoValidate"
+                               ],
+                      "options":  {
+                                      "cwd":  "${workspaceFolder}"
+                                  },
+                      "group":  {
+                                    "kind":  "test",
+                                    "isDefault":  true
+                                }
+                  },
+                  {
+                      "label":  "SpectroLINE: OPS Snapshot (STATUS+LIST+DIFF)",
+                      "problemMatcher":  [
+
+                                         ],
+                      "command":  "powershell",
+                      "type":  "shell",
+                      "args":  [
+                                   "-ExecutionPolicy",
+                                   "Bypass",
+                                   "-File",
+                                   ".tools\\scinggpt\\ask_scinggpt.ps1",
+                                   "OP:STATUS OP:LIST OP:DIFF"
+                               ],
+                      "options":  {
+                                      "cwd":  "${workspaceFolder}"
+                                  },
+                      "group":  {
+                                    "kind":  "test",
+                                    "isDefault":  false
+                                }
+                  },
+                  {
+                      "label": "AI Federation: Start Inbox Watcher",
+                      "type": "shell",
+                      "command": "powershell",
+                      "args": [
+                          "-ExecutionPolicy","Bypass","-File",
+                          ".tools\\ai-federation\\run\\ai_inbox_watcher.ps1",
+                          "-Verbose"
+                      ],
+                      "options": { "cwd": "${workspaceFolder}" },
+                      "problemMatcher": [],
+                      "group": { "kind": "build", "isDefault": false }
+                  },
+                  {
+                      "label": "AI Federation: Run Latest Intent Once",
+                      "type": "shell",
+                      "command": "powershell",
+                      "args": [
+                          "-ExecutionPolicy","Bypass","-Command",
+                          "$in = \".spectroline\\ai\\inbox\"; $f = Get-ChildItem $in -Filter \"*.json\" -File | Sort-Object LastWriteTime -Descending | Select-Object -First 1; if(-not $f){ throw \"No inbox intents.\" }; powershell -ExecutionPolicy Bypass -File .tools\\ai-federation\\run\\ai_run_intent.ps1 -IntentPath $f.FullName"
+                      ],
+                      "options": { "cwd": "${workspaceFolder}" },
+                      "problemMatcher": [],
+                      "group": { "kind": "test", "isDefault": true }
+                  },
+                  {
+                      "label": "AI Federation: Seed Contradiction-Test Intent",
+                      "type": "shell",
+                      "command": "powershell",
+                      "args": [
+                          "-ExecutionPolicy","Bypass","-Command",
+                          "$id = ([guid]::NewGuid().ToString(\"N\").Substring(0,12)); $ts=(Get-Date).ToUniversalTime().ToString(\"yyyyMMdd_HHmmssZ\"); $tpl=\".spectroline\\ai\\templates\\ai_query_contradiction_test.intent.json\"; $dst=(\".spectroline\\ai\\inbox\\{0}__scinggpt__intent__{1}.json\" -f $ts,$id); $o = Get-Content $tpl -Raw | ConvertFrom-Json; $o.id = $id; $o.ts = (Get-Date).ToUniversalTime().ToString(\"o\"); $o | ConvertTo-Json -Depth 40 | Set-Content -Path $dst -Encoding UTF8; Write-Host (\"SEEDED: \" + $dst)"
+                      ],
+                      "options": { "cwd": "${workspaceFolder}" },
+                      "problemMatcher": [],
+                      "group": { "kind": "test", "isDefault": false }
+                  },
+                  {
+                      "label": "AI Federation: Full Lock-In (E2E)",
+                      "type": "shell",
+                      "command": "powershell",
+                      "args": [
+                          "-ExecutionPolicy","Bypass","-File",
+                          ".tools\\ai-federation\\run\\ai_full_lockin.ps1"
+                      ],
+                      "options": { "cwd": "${workspaceFolder}" },
+                      "problemMatcher": [],
+                      "group": { "kind": "build", "isDefault": false }
+                  }
+              ]
+}
