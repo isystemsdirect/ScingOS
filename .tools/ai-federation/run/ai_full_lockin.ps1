@@ -1,8 +1,16 @@
+param([string]$Root)
+
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 # ---------- [0] ROOT + PATHS ----------
 $ROOT = "G:\GIT\isystemsdirect\ScingOS"
+
+# ROOT_OVERRIDE: allow targeting a specific worktree root for artifacts
+if ($null -ne $Root -and -not [string]::IsNullOrWhiteSpace($Root)) {
+  try { $ROOT = (Resolve-Path $Root).Path } catch { $ROOT = $Root }
+}
+
 Set-Location $ROOT
 
 function IsoUtc { (Get-Date).ToUniversalTime().ToString("o") }
