@@ -1,3 +1,12 @@
+param(
+  [Parameter(Mandatory=$true)][string]$Prompt,
+  [string[]]$Providers = @("perplexity"),
+  [ValidateSet("single","fanout","consensus","judge","assemble")][string]$Mode="fanout",
+  [string]$OutDir = "",
+  [switch]$Citations,
+  [int]$TimeoutSec = 90
+)
+
 # ENV_LOCAL_LOADER + PROVIDER_GOVERNANCE
 function Import-DotEnvLocal {
   param([string]$Path)
@@ -82,14 +91,6 @@ Import-DotEnvLocal -Path (Join-Path (Split-Path -Parent $PSScriptRoot) ".env.loc
 $PROVIDER_REGISTRY_PATH = Join-Path (Split-Path -Parent $PSScriptRoot) "providers\providers.registry.json"
 $PROVIDER_REGISTRY = Read-ProviderRegistry -Path $PROVIDER_REGISTRY_PATH
 
-param(
-  [Parameter(Mandatory=$true)][string]$Prompt,
-  [string[]]$Providers = @("perplexity"),
-  [ValidateSet("single","fanout","consensus","judge","assemble")][string]$Mode="fanout",
-  [string]$OutDir = "",
-  [switch]$Citations
-)
-
 Set-StrictMode -Version Latest
 $ErrorActionPreference="Stop"
 
@@ -98,11 +99,24 @@ function TsFile { (Get-Date).ToUniversalTime().ToString("yyyyMMdd_HHmmssZ") }
 function Uid    { ([guid]::NewGuid().ToString("N").Substring(0,12)) }
 
 $here   = Split-Path -Parent $MyInvocation.MyCommand.Path
-$scingos = Resolve-Path (Join-Path $here "..\..") | Select-Object -ExpandProperty Path
+# From run/ -> repo root is three levels up: run -> ai-federation -> .tools -> repo
+$scingos = Resolve-Path (Join-Path $here "..\..\..") | Select-Object -ExpandProperty Path
 $aiOut  = if ($OutDir) { $OutDir } else { Join-Path $scingos ".spectroline\ai\outbox" }
 New-Item -ItemType Directory -Force -Path $aiOut | Out-Null
 
 $adapters = Join-Path $scingos ".tools\ai-federation\adapters"
+
+# Determine providers to call: explicit list or enabled from registry
+$provList = @()
+if ($Providers -and $Providers.Count -gt 0) {
+  $provList = @($Providers)
+} else {
+  try {
+    $provList = @((Get-EnabledProviders -Registry $PROVIDER_REGISTRY) | Select-Object -ExpandProperty id)
+  } catch {
+    $provList = @("perplexity")
+  }
+}
 
 function Call-Provider([string]$p, [string]$prompt) {
   $adapter = Join-Path $adapters ("{0}.ps1" -f $p.ToLower())
@@ -119,7 +133,7 @@ $ts = TsFile
 $outFile = Join-Path $aiOut ("{0}__scinggpt__result__{1}.json" -f $ts, $id)
 
 $results = @()
-foreach ($p in $Providers) {
+foreach ($p in $provList) {
   try {
     $r = Call-Provider $p $Prompt
     $results += [ordered]@{ provider=$p; ok=$true; model=$r.model; answer=$r.answer; citations=$r.citations }
@@ -154,7 +168,7 @@ $packet = [ordered]@{
   payload=[ordered]@{
     mode=$Mode
     prompt=$Prompt
-    providers=$Providers
+    providers=$provList
     results=$results
     summary=$summary
   }
