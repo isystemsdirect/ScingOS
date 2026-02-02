@@ -33,6 +33,19 @@
       "priority": 6,
       "purpose_charter": "Multimodal and document understanding lane. Use for image/video analysis and mixed-format interpretation when required.",
       "env_keys": ["GOOGLE_API_KEY"]
+    },
+    {
+      "id": "vertex",
+      "type": "embedded",
+      "enabled": false,
+      "roles": ["canonical", "internal", "bfi-core", "sovereign"],
+      "trust_level": "sovereign",
+      "network_scope": "private",
+      "execution_mode": "endpoint",
+      "priority": 100,
+      "auth": "gcp_service_account",
+      "env_keys": ["GOOGLE_APPLICATION_CREDENTIALS", "VERTEX_PROJECT_ID", "VERTEX_LOCATION"],
+      "notes": "Reserved for ScingGPT internal cognition and BFI-aligned models"
     }
   ]
 }

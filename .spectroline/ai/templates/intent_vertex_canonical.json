@@ -1,0 +1,6 @@
+{
+  "intent": "Canonical internal reasoning task reserved for ScingGPT sovereign cognition.",
+  "target_provider": "vertex",
+  "execution_scope": "internal",
+  "classification": "BFI_CANONICAL"
+}
