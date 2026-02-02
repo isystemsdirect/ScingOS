@@ -35,6 +35,38 @@
       "env_keys": ["GOOGLE_API_KEY"]
     },
     {
+      "id": "flux",
+      "enabled": false,
+      "roles": ["image", "photorealism", "materials"],
+      "priority": 6,
+      "purpose_charter": "Image generation and photorealism-focused tasks. Use for visual synthesis and material studies when approved.",
+      "env_keys": ["FLUX_API_KEY"]
+    },
+    {
+      "id": "runway",
+      "enabled": false,
+      "roles": ["video", "motion", "cinematic"],
+      "priority": 6,
+      "purpose_charter": "Video and motion generation. Use for cinematic sequences and motion planning when approved.",
+      "env_keys": ["RUNWAY_API_KEY"]
+    },
+    {
+      "id": "ideogram",
+      "enabled": false,
+      "roles": ["text-image", "ui", "typography"],
+      "priority": 6,
+      "purpose_charter": "Text-to-image with UI/typography focus. Use for interface mockups and typographic composition when approved.",
+      "env_keys": ["IDEOGRAM_API_KEY"]
+    },
+    {
+      "id": "fireworks",
+      "enabled": false,
+      "roles": ["fast-inference", "vision", "edge"],
+      "priority": 6,
+      "purpose_charter": "Fast inference and edge-friendly vision models. Use for low-latency tasks when approved.",
+      "env_keys": ["FIREWORKS_API_KEY"]
+    },
+    {
       "id": "vertex",
       "type": "embedded",
       "enabled": false,
