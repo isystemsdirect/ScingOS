@@ -19,7 +19,7 @@ object Sender {
     return "$protocol://$host:$port/ingest"
   }
 
-  fun sendOne(endpoint: String, item: QueueItem): Pair<Boolean, String> {
+  fun sendOne(ctx: Context, endpoint: String, item: QueueItem): Pair<Boolean, String> {
     try {
       val f = File(item.filePath)
       if (!f.exists()) return Pair(false, "Missing file: ${item.filePath}")
@@ -60,7 +60,7 @@ object Sender {
       if (it.status != "QUEUED") continue
       it.attempts += 1
 
-      val (ok, msg) = sendOne(endpoint, it)
+      val (ok, msg) = sendOne(ctx, endpoint, it)
       if (ok) {
         it.status = "SENT"
         it.lastError = ""

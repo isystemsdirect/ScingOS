@@ -1,6 +1,6 @@
 param(
-  [Parameter(Mandatory=$true, Position=0)]
-  [string]$Prompt
+  [Parameter(Mandatory=$true, Position=0, ValueFromRemainingArguments=$true)]
+  [string[]]$PromptParts
 )
 
 $ErrorActionPreference="Stop"
@@ -20,6 +20,8 @@ $RUNNER        = Join-Path $SDK_DIR "ask_runner.mjs"
 
 function New-Stamp { (Get-Date).ToUniversalTime().ToString("yyyyMMdd_HHmmssZ") }
 function New-Id { ([guid]::NewGuid().ToString("N")).Substring(0,12) }
+
+$Prompt = ($PromptParts -join ' ')
 
 $id = New-Id
 $ts = New-Stamp

@@ -1,0 +1,7 @@
+﻿{
+    "ts":  "2026-02-02T02:26:43.4549608Z",
+    "inbox_latest":  "20260202_022608Z__spectrocap__intent__b43b611b5293.json",
+    "outbox_latest":  "20260202_022644Z__spectroline-watcher__ack__32e9c052525c.json",
+    "chatout_latest":  "20260202T022623_241Z__scinggpt__chat__4940b2f57f8b.json",
+    "note":  "SpectroLINE daily driver snapshot"
+}

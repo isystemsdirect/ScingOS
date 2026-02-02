@@ -1,1 +1,5 @@
-﻿{ "content":"HELLO", "mime":"text/plain", "device":"note20u" }
+﻿{
+    "mime":  "text/plain",
+    "content":  "HELLO",
+    "device":  "note20u"
+}

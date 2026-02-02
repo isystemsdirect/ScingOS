@@ -1,0 +1,17 @@
+﻿{
+    "v":  1,
+    "ts":  "2026-02-02T03:00:27.6985487Z",
+    "app":  "spectroline-watcher",
+    "kind":  "ack",
+    "id":  "b43b611b5293-out",
+    "ref":  "b43b611b5293",
+    "topic":  "clipboard_push_ack",
+    "payload":  {
+                    "ok":  true,
+                    "note":  "ACK by local watcher (lane proof-of-life)",
+                    "received_file":  "20260202_022608Z__spectrocap__intent__b43b611b5293.json"
+                },
+    "policy":  {
+                   "plan_ack":  true
+               }
+}

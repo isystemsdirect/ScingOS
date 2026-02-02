@@ -1,0 +1,19 @@
+{
+  "v": 1,
+  "ts": "2026-02-01T12:00:00Z",
+  "app": "scinggpt",
+  "kind": "intent",
+  "id": "federationseed",
+  "ref": null,
+  "topic": "ai_query",
+  "payload": {
+    "mode": "fanout",
+    "providers": ["perplexity"],
+    "task": {
+      "title": "Federation bootstrap",
+      "prompt": "Define a secure architecture for multi-AI routing into a repo-backed lane with audit logs and policy gates.",
+      "constraints": { "citations": true }
+    }
+  },
+  "policy": { "plan_ack": true }
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "spectroline.ai.packet",
+  "type": "object",
+  "required": ["v","ts","app","kind","id","topic","payload","policy"],
+  "properties": {
+    "v": { "type": "integer", "minimum": 1 },
+    "ts": { "type": "string" },
+    "app": { "type": "string" },
+    "kind": { "type": "string", "enum": ["intent","result","ack","event","state"] },
+    "id": { "type": "string" },
+    "ref": { "type": ["string","null"] },
+    "topic": { "type": "string" },
+    "payload": { "type": "object" },
+    "policy": {
+      "type":"object",
+      "properties": { "plan_ack": { "type":"boolean" } },
+      "required": ["plan_ack"]
+    }
+  }
+}

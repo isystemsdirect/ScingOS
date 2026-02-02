@@ -1,0 +1,15 @@
+﻿{
+    "ref":  null,
+    "id":  "886a513ade76",
+    "kind":  "intent",
+    "ts":  "2026-02-02T02:18:10.0033781Z",
+    "policy":  {
+                   "plan_ack":  true
+               },
+    "v":  1,
+    "payload":  {
+                    "prompt":  "OP:COMMITPUSH Checkpoint: SpectroLINE lane + bridge stabilized + golden pass + driver proven OP:REMOTE origin OP:BRANCH scpsc-ultra-grade-foundation-clean"
+                },
+    "app":  "user",
+    "topic":  "chat"
+}

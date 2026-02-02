@@ -1,0 +1,22 @@
+{
+  "v": 1,
+  "ts": "ISO_UTC",
+  "app": "scinggpt",
+  "kind": "intent",
+  "id": "ID",
+  "ref": null,
+  "topic": "ai_query",
+  "payload": {
+    "mode": "fanout",
+    "providers": ["perplexity"],
+    "task": {
+      "title": "Describe the goal in 1 line",
+      "prompt": "Your prompt here",
+      "constraints": {
+        "style": "ultra-grade concise",
+        "citations": true
+      }
+    }
+  },
+  "policy": { "plan_ack": true }
+}
