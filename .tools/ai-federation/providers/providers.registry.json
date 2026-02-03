@@ -56,7 +56,12 @@
       "roles": ["text-image", "ui", "typography"],
       "priority": 6,
       "purpose_charter": "Text-to-image with UI/typography focus. Use for interface mockups and typographic composition when approved.",
-      "env_keys": ["IDEOGRAM_API_KEY"]
+      "env_keys": ["IDEOGRAM_API_KEY"],
+      "lock": {
+        "mode": "requires_env",
+        "reason": "Locked until IDEOGRAM_API_KEY is configured (API access costs extra).",
+        "requires": ["IDEOGRAM_API_KEY"]
+      }
     },
     {
       "id": "fireworks",
