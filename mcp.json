@@ -1,4 +1,5 @@
-﻿{
+﻿
+'''''''''''''''''''''{
   "name": "scing-firebase-mcp",
   "description": "SCINGULAR MCP bridge for Firebase and Next.js analysis",
   "version": "1.0.0",
