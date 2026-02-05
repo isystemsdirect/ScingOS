@@ -2,6 +2,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
+import { waitFor } from '@testing-library/dom';
 import { useSession } from '@renderer/hooks/useSession';
 import { useMCP } from '@renderer/hooks/useMCP';
 
@@ -14,7 +15,7 @@ describe('useSession hook', () => {
     const { result } = renderHook(() => useSession());
     
     // Wait for initial load
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
     });
 
@@ -25,7 +26,7 @@ describe('useSession hook', () => {
   it('should create a new session', async () => {
     const { result } = renderHook(() => useSession());
     
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
     });
 
@@ -41,7 +42,7 @@ describe('useSession hook', () => {
   it('should delete a session', async () => {
     const { result } = renderHook(() => useSession());
     
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
     });
 
@@ -60,14 +61,26 @@ describe('useSession hook', () => {
 describe('useMCP hook', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+
+    // Provide default MCP implementation to avoid undefined access in hooks
+    window.scinggpt = window.scinggpt ?? ({} as typeof window.scinggpt);
+    window.scinggpt.mcp = {
+      connect: vi.fn().mockResolvedValue({ success: true }),
+      disconnect: vi.fn().mockResolvedValue(undefined),
+      execute: vi.fn(),
+      getStatus: vi.fn().mockResolvedValue({ connected: false, toolCount: 0 }),
+      listTools: vi.fn().mockResolvedValue([]),
+    };
   });
 
-  it('should start disconnected', () => {
+  it('should start disconnected', async () => {
     const { result } = renderHook(() => useMCP());
     
-    expect(result.current.status.connected).toBe(false);
-    expect(result.current.status.toolCount).toBe(0);
-    expect(result.current.tools).toEqual([]);
+    await waitFor(() => {
+      expect(result.current.status.connected).toBe(false);
+      expect(result.current.status.toolCount).toBe(0);
+      expect(result.current.tools).toEqual([]);
+    });
   });
 
   it('should connect to MCP server', async () => {
@@ -75,7 +88,11 @@ describe('useMCP hook', () => {
     window.scinggpt.mcp.connect = vi.fn().mockResolvedValue({ success: true });
     window.scinggpt.mcp.getStatus = vi.fn().mockResolvedValue({ connected: true, toolCount: 5 });
     window.scinggpt.mcp.listTools = vi.fn().mockResolvedValue([
-      { name: 'test_tool', description: 'Test', inputSchema: {} },
+      { name: 'test_tool_1', description: 'Test', inputSchema: {} },
+      { name: 'test_tool_2', description: 'Test', inputSchema: {} },
+      { name: 'test_tool_3', description: 'Test', inputSchema: {} },
+      { name: 'test_tool_4', description: 'Test', inputSchema: {} },
+      { name: 'test_tool_5', description: 'Test', inputSchema: {} },
     ]);
 
     const { result } = renderHook(() => useMCP());

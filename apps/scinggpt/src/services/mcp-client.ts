@@ -1,7 +1,6 @@
 // ScingGPT - MCP Client Service
 
-import type { MCPServerConfig, ToolCall } from '../shared/types';
-import { MCP_PATHS } from '../shared/constants';
+import type { ToolCall } from '../shared/types';
 
 interface MCPTool {
   name: string;
@@ -9,17 +8,9 @@ interface MCPTool {
   inputSchema: Record<string, unknown>;
 }
 
-interface MCPResource {
-  uri: string;
-  name: string;
-  description?: string;
-  mimeType?: string;
-}
-
 class MCPClientService {
   private connected = false;
   private tools: MCPTool[] = [];
-  private resources: MCPResource[] = [];
 
   /**
    * Connect to MCP server via IPC bridge
@@ -47,7 +38,6 @@ class MCPClientService {
     await window.scinggpt.mcp.disconnect();
     this.connected = false;
     this.tools = [];
-    this.resources = [];
   }
 
   /**

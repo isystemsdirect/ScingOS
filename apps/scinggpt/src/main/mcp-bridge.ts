@@ -111,7 +111,7 @@ export class MCPBridge extends EventEmitter {
    */
   private async initialize(): Promise<void> {
     // Send initialize request
-    const initResult = await this.sendRequest('initialize', {
+    await this.sendRequest('initialize', {
       protocolVersion: '2024-11-05',
       capabilities: {
         roots: { listChanged: true },

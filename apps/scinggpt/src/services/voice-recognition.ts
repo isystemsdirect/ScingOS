@@ -3,11 +3,40 @@
 import type { VoiceConfig, VoiceState } from '../shared/types';
 import { DEFAULTS } from '../shared/constants';
 
+type SpeechRecognitionErrorLike = { error: string };
+type SpeechRecognitionResultLike = {
+  resultIndex: number;
+  results: Array<{
+    isFinal: boolean;
+    0: { transcript: string; confidence: number };
+  }>;
+};
+
+type SpeechRecognitionLike = {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  onstart: (() => void) | null;
+  onend: (() => void) | null;
+  onerror: ((event: SpeechRecognitionErrorLike) => void) | null;
+  onresult: ((event: SpeechRecognitionResultLike) => void) | null;
+  start: () => void;
+  stop: () => void;
+  abort?: () => void;
+};
+
+type SpeechRecognitionCtor = new () => SpeechRecognitionLike;
+
+type SpeechWindow = Window & {
+  SpeechRecognition?: SpeechRecognitionCtor;
+  webkitSpeechRecognition?: SpeechRecognitionCtor;
+};
+
 type VoiceCallback = (transcript: string, isFinal: boolean) => void;
 type StateCallback = (state: VoiceState) => void;
 
 class VoiceRecognitionService {
-  private recognition: SpeechRecognition | null = null;
+  private recognition: SpeechRecognitionLike | null = null;
   private isSupported = false;
   private config: VoiceConfig = {
     enabled: true,
@@ -37,8 +66,8 @@ class VoiceRecognitionService {
       return;
     }
 
-    const SpeechRecognition =
-      window.SpeechRecognition || (window as Window & { webkitSpeechRecognition?: typeof SpeechRecognition }).webkitSpeechRecognition;
+    const speechWindow = window as SpeechWindow;
+    const SpeechRecognition = speechWindow.SpeechRecognition || speechWindow.webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
       this.isSupported = false;
@@ -69,7 +98,7 @@ class VoiceRecognitionService {
       this.updateState({ isListening: false, isProcessing: false });
     };
 
-    this.recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
+    this.recognition.onerror = (event: SpeechRecognitionErrorLike) => {
       let errorMessage = 'Recognition error';
 
       switch (event.error) {
@@ -96,7 +125,7 @@ class VoiceRecognitionService {
       });
     };
 
-    this.recognition.onresult = (event: SpeechRecognitionEvent) => {
+    this.recognition.onresult = (event: SpeechRecognitionResultLike) => {
       let finalTranscript = '';
       let interimTranscript = '';
 
@@ -196,7 +225,7 @@ class VoiceRecognitionService {
     try {
       this.updateState({ transcript: '' });
       this.recognition.start();
-    } catch (error) {
+    } catch {
       // Already started
     }
   }

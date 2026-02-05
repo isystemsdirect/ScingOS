@@ -19,7 +19,6 @@ import {
   getDoc,
   setDoc,
   updateDoc,
-  deleteDoc,
   query,
   where,
   orderBy,
@@ -27,8 +26,11 @@ import {
   onSnapshot,
   Unsubscribe,
   serverTimestamp,
+  type DocumentData,
+  type DocumentSnapshot,
+  type QueryDocumentSnapshot,
+  type Timestamp,
 } from 'firebase/firestore';
-import { getStorage, FirebaseStorage } from 'firebase/storage';
 import type { FirebaseConfig, UserProfile, Session, ChatMessage } from '../shared/types';
 import { COLLECTIONS } from '../shared/constants';
 
@@ -36,7 +38,6 @@ class FirebaseService {
   private app: FirebaseApp | null = null;
   private auth: Auth | null = null;
   private db: Firestore | null = null;
-  private storage: FirebaseStorage | null = null;
   private unsubscribers: Unsubscribe[] = [];
 
   /**
@@ -51,14 +52,14 @@ class FirebaseService {
     this.app = initializeApp(config);
     this.auth = getAuth(this.app);
     this.db = getFirestore(this.app);
-    this.storage = getStorage(this.app);
   }
 
   /**
    * Get current user
    */
   getCurrentUser(): User | null {
-    return this.auth?.currentUser || null;
+    const auth = this.auth as (Auth & { currentUser?: User | null }) | null;
+    return auth?.currentUser ?? null;
   }
 
   /**
@@ -103,7 +104,7 @@ class FirebaseService {
     if (!this.db) throw new Error('Firebase not initialized');
     const docRef = doc(this.db, COLLECTIONS.USERS, uid);
     const docSnap = await getDoc(docRef);
-    return docSnap.exists() ? (docSnap.data() as UserProfile) : null;
+    return docSnap.exists() ? (docSnap.data() as unknown as UserProfile) : null;
   }
 
   /**
@@ -142,12 +143,15 @@ class FirebaseService {
       orderBy('updatedAt', 'desc')
     );
     const snapshot = await getDocs(q);
-    return snapshot.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-      createdAt: new Date(doc.data().createdAt),
-      updatedAt: doc.data().updatedAt?.toDate() || new Date(),
-    })) as Session[];
+    return snapshot.docs.map((docSnap: QueryDocumentSnapshot<DocumentData>) => {
+      const data = docSnap.data() as unknown as Session & { createdAt: string; updatedAt?: Timestamp };
+      return {
+        ...data,
+        id: docSnap.id,
+        createdAt: new Date(data.createdAt),
+        updatedAt: data.updatedAt?.toDate() || new Date(),
+      } as Session;
+    });
   }
 
   /**
@@ -159,9 +163,9 @@ class FirebaseService {
   ): Unsubscribe {
     if (!this.db) throw new Error('Firebase not initialized');
     const docRef = doc(this.db, COLLECTIONS.SESSIONS, sessionId);
-    const unsubscribe = onSnapshot(docRef, (snapshot) => {
+    const unsubscribe = onSnapshot(docRef, (snapshot: DocumentSnapshot<DocumentData>) => {
       if (snapshot.exists()) {
-        const data = snapshot.data();
+        const data = snapshot.data() as unknown as Session & { createdAt: string; updatedAt?: Timestamp };
         callback({
           ...data,
           id: snapshot.id,
@@ -199,11 +203,14 @@ class FirebaseService {
       orderBy('timestamp', 'asc')
     );
     const snapshot = await getDocs(q);
-    return snapshot.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-      timestamp: new Date(doc.data().timestamp),
-    })) as ChatMessage[];
+    return snapshot.docs.map((docSnap: QueryDocumentSnapshot<DocumentData>) => {
+      const data = docSnap.data() as unknown as ChatMessage & { timestamp: string };
+      return {
+        ...data,
+        id: docSnap.id,
+        timestamp: new Date(data.timestamp),
+      } as ChatMessage;
+    });
   }
 
   /**

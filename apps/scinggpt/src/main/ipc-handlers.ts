@@ -36,7 +36,7 @@ export function registerIpcHandlers(ipcMain: IpcMain, managers: Managers): void 
   });
 
   // Chat handlers
-  ipcMain.handle(IPC_CHANNELS.CHAT_SEND, async (event, message: string) => {
+  ipcMain.handle(IPC_CHANNELS.CHAT_SEND, async (_event, message: string) => {
     try {
       const response = await mcpBridge.sendMessage(message);
       return { success: true, data: response };

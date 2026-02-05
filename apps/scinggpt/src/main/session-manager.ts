@@ -2,8 +2,7 @@
 
 import Store from 'electron-store';
 import { v4 as uuidv4 } from 'uuid';
-import type { Session, ChatMessage, AppConfig, UserPreferences, SessionStatus } from '../shared/types';
-import { DEFAULTS, COLLECTIONS, MCP_PATHS } from '../shared/constants';
+import type { Session, ChatMessage, AppConfig, UserPreferences } from '../shared/types';
 
 interface StoreSchema {
   sessions: Record<string, Session>;

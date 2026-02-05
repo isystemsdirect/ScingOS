@@ -1,6 +1,6 @@
 // ScingGPT - Voice Input Component
 
-import { useState, useEffect, useCallback } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useVoice } from '../hooks/useVoice';
 
 export default function VoiceInput() {

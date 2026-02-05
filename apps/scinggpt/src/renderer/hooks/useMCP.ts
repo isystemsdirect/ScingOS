@@ -42,7 +42,7 @@ export function useMCP(): UseMCPReturn {
       if (currentStatus.connected) {
         await refreshTools();
       }
-    } catch (err) {
+    } catch {
       // MCP not connected yet
     }
   };

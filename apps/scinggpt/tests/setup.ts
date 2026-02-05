@@ -1,5 +1,6 @@
 // Test setup file
 
+import { vi } from 'vitest';
 import '@testing-library/jest-dom';
 
 // Mock Electron IPC
@@ -79,3 +80,13 @@ Object.defineProperty(window, 'webkitSpeechRecognition', {
   value: mockSpeechRecognition,
   writable: true,
 });
+
+declare global {
+  interface Window {
+    scinggpt: Window['scinggpt'];
+    SpeechRecognition: any;
+    webkitSpeechRecognition: any;
+  }
+}
+
+export {};

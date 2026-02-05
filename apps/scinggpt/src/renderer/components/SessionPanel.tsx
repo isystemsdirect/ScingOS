@@ -1,6 +1,6 @@
 // ScingGPT - Session Panel Component
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useSession } from '../hooks/useSession';
 import type { Session } from '../../shared/types';
 

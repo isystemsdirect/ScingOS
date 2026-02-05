@@ -3,6 +3,35 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import type { VoiceState } from '../../shared/types';
 
+type SpeechRecognitionErrorLike = { error: string };
+type SpeechRecognitionResultLike = {
+  resultIndex: number;
+  results: Array<{
+    isFinal: boolean;
+    0: { transcript: string; confidence: number };
+  }>;
+};
+
+type SpeechRecognitionLike = {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  onstart: (() => void) | null;
+  onend: (() => void) | null;
+  onerror: ((event: SpeechRecognitionErrorLike) => void) | null;
+  onresult: ((event: SpeechRecognitionResultLike) => void) | null;
+  start: () => void;
+  stop: () => void;
+  abort?: () => void;
+};
+
+type SpeechRecognitionCtor = new () => SpeechRecognitionLike;
+
+type SpeechWindow = Window & {
+  SpeechRecognition?: SpeechRecognitionCtor;
+  webkitSpeechRecognition?: SpeechRecognitionCtor;
+};
+
 interface UseVoiceReturn extends VoiceState {
   startListening: () => void;
   stopListening: () => void;
@@ -16,14 +45,14 @@ export function useVoice(): UseVoiceReturn {
   const [confidence, setConfidence] = useState(0);
   const [error, setError] = useState<string | null>(null);
   
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
 
   // Initialize speech recognition
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const SpeechRecognition =
-      (window as Window).SpeechRecognition || (window as Window & { webkitSpeechRecognition?: typeof SpeechRecognition }).webkitSpeechRecognition;
+    const speechWindow = window as SpeechWindow;
+    const SpeechRecognition = speechWindow.SpeechRecognition || speechWindow.webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
       setError('Speech recognition not supported in this browser');
@@ -45,7 +74,7 @@ export function useVoice(): UseVoiceReturn {
       setIsProcessing(false);
     };
 
-    recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
+    recognition.onerror = (event: SpeechRecognitionErrorLike) => {
       setIsListening(false);
       setIsProcessing(false);
       
@@ -64,7 +93,7 @@ export function useVoice(): UseVoiceReturn {
       }
     };
 
-    recognition.onresult = (event: SpeechRecognitionEvent) => {
+    recognition.onresult = (event: SpeechRecognitionResultLike) => {
       let finalTranscript = '';
       let interimTranscript = '';
 
@@ -100,7 +129,7 @@ export function useVoice(): UseVoiceReturn {
       setError(null);
       try {
         recognitionRef.current.start();
-      } catch (err) {
+      } catch {
         // Already started
       }
     }
@@ -127,12 +156,4 @@ export function useVoice(): UseVoiceReturn {
     stopListening,
     clearTranscript,
   };
-}
-
-// Type augmentation for Web Speech API
-declare global {
-  interface Window {
-    SpeechRecognition: typeof SpeechRecognition;
-    webkitSpeechRecognition: typeof SpeechRecognition;
-  }
 }

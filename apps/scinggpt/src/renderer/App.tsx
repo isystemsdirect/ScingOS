@@ -7,7 +7,7 @@ import { useSession } from './hooks/useSession';
 import { useMCP } from './hooks/useMCP';
 
 function App() {
-  const { session, createSession, isLoading: sessionLoading } = useSession();
+  const { session, createSession } = useSession();
   const { status: mcpStatus, connect: connectMCP } = useMCP();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
